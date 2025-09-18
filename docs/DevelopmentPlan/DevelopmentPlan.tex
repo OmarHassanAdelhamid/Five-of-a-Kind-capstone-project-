@@ -91,6 +91,40 @@ likely change throughout the year.}
   \item Use of CI/CD
 \end{itemize}
 
+Git will be utilized as the primary, centralized collaboration space for both project
+source code and its related documentation. Members will create new branches for each
+feature to be implemented, as well as per each member (eg. branches will not be shared).
+When a member is complete with their work on a given branch, they will create a pull request
+with appropriate labels and assignees. For instance, an acceptable assignee could be someone
+working on a related feature. Labels should give an estimate of how long it might take to
+review. Each pull request should also be linked to a given issue.
+
+A milestone will be created for each deliverable (both documentation and revisions) and issues
+created will be associated with it. Issue templates will be used in the following ways:
+
+\begin{itemize}
+  \item lecture: to track attendance as well as general notes/questions
+  \item meeting(s): to record meeting minutes, attendance, and catch up members that miss the meeting
+  \item peer review: to request another team review a given section
+\end{itemize}
+
+Additionally, for general issues, new labels will be created:
+
+\begin{itemize}
+  \item documentation
+  \item code
+  \item question
+  \item easy / hard
+  \item bug-fix
+  \item need help
+\end{itemize}
+
+All issues should also contain a reasonable description describing the bug / feature / 
+section of documentation.
+
+To incorporate continuous integration, upon each push/pull request, all tests in the test suite
+will be run automatically via GitHub Actions.
+
 \section{Project Decomposition and Scheduling}
 
 \begin{itemize}
