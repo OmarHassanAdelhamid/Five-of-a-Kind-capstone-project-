@@ -174,7 +174,41 @@ management.
 
 \section{Coding Standard}
 
-\wss{What coding standard will you adopt?}
+To ensure consistency, maintainability, and readability, the project will adopt
+established coding standards for all areas of development.
+
+For the \textbf{frontend} (TypeScript/React):
+\begin{itemize}
+  \item Variable and function names will use \textbf{camelCase}, while
+  \textbf{PascalCase} will be used for React components.
+  \item The principle of \textbf{DRY} (Don’t Repeat Yourself) will guide code
+  organization, promoting modular components and reusable utility functions.
+  \item File and folder structures will be organized in a consistent
+  \textbf{kebab-case} format for directories and filenames.
+\end{itemize}
+
+For the \textbf{backend} (Python/FastAPI):
+\begin{itemize}
+  \item Code will follow the \textbf{PEP~8} style guide
+  \item Variable and function names will use \textbf{snake\_case}, while classes
+  will be written in \textbf{PascalCase}.
+\end{itemize}
+
+Across both frontend and backend:
+\begin{itemize}
+  \item All code will be documented through inline comments and docstrings,
+  particularly for APIs.
+  \item \textbf{Unit tests} will accompany critical modules, following a goal of
+  80\% code coverage.
+  \item Commit messages will be written clearly and consistently, referencing
+  related issues when applicable.
+  \item Team members will adhere to software engineering principles such as
+  \textbf{single responsibility}, \textbf{modularity}, and \textbf{clarity over
+  cleverness}.
+\end{itemize}
+
+These conventions aim to produce code that is readable, maintainable, and
+collaborative.
 
 \newpage{}
 
