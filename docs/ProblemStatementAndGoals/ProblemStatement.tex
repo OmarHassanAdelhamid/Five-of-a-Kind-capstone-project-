@@ -47,14 +47,14 @@ directions on top of an imported design.
 
 
 \subsection{Inputs and Outputs}
-\textbf{Inputs (Day 1).}
+\textbf{Inputs}
 \begin{itemize}
   \item Mesh CAD file exported from common tools (e.g., AutoCAD) and ingested as a mesh for voxelization (e.g., STL/OBJ).
   \item Voxel grid initially fixed at $300 \times 300\,\mu\text{m}$ (XY) and $110\,\mu\text{m}$ (Z) to form cubes at the stated dimensions.
   \item User interaction via a UI that slices the object into layers (bottom$\rightarrow$top) and allows selecting one or multiple voxels within a layer to assign magnetization.
 \end{itemize}
 
-\noindent\textbf{Outputs (Day 1).}
+\noindent\textbf{Outputs }
 \begin{itemize}
   \item A Java-readable export containing per-voxel data for the custom printer pipeline (voxel location/layer and magnetization direction metadata).
 \end{itemize}
