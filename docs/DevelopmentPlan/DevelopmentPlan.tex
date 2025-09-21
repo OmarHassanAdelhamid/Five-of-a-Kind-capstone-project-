@@ -306,41 +306,105 @@ you will be able to overcome this risk?
 
 \section{Expected Technology}
 
-\wss{What programming language or languages do you expect to use?  What external
-libraries?  What frameworks?  What technologies.  Are there major components of
-the implementation that you expect you will implement, despite the existence of
-libraries that provide the required functionality.  For projects with machine
-learning, will you use pre-trained models, or be training your own model?  }
+The implementation of this project will be primarily web-based, with a
+browser-accessible frontend and a local server backend with local saves on the client machine. The frontend will be
+developed using \textbf{TypeScript} and \textbf{React}, with
+\textbf{Redux Toolkit} for state management. For 3D voxel visualization and
+interaction, the project expects to use \textbf{Three.js}, integrated with
+React for rendering and manipulation.
 
-\wss{The implementation decisions can, and likely will, change over the course
-of the project.  The initial documentation should be written in an abstract way;
-it should be agnostic of the implementation choices, unless the implementation
-choices are project constraints.  However, recording our initial thoughts on
-implementation helps understand the challenge level and feasibility of a
-project.  It may also help with early identification of areas where project
-members will need to augment their training.}
+On the backend, the project anticipates using \textbf{Python} with
+\textbf{FastAPI} to provide REST endpoints for validating and normalizing voxel
+data, as well as managing persistence. A local instance of
+\textbf{PostgreSQL} is expected for structured storage of voxel geometries,
+materials, and related metadata.
 
-Topics to discuss include the following:
+For code quality, the frontend will adopt \textbf{ESLint} as a linter, with
+\textbf{Jest} for unit and integration testing. The backend will rely on
+\textbf{pytest} for automated testing, with a tentative coverage goal of
+approximately 80\%. Code coverage reporting will be handled with tools such as
+\textbf{Istanbul}.
 
+Version control and project management will be conducted through
+\textbf{git}, \textbf{GitHub}, and \textbf{GitHub Projects}, which will serve
+as the central platforms for collaboration, task tracking, and issue
+management. Continuous integration will be performed using
+\textbf{GitHub Actions}, with automated checks for linting, tests, and coverage
+included in the pipeline.
+
+
+% \wss{What programming language or languages do you expect to use?  What external
+% libraries?  What frameworks?  What technologies.  Are there major components of
+% the implementation that you expect you will implement, despite the existence of
+% libraries that provide the required functionality.  For projects with machine
+% learning, will you use pre-trained models, or be training your own model?  }
+
+% \wss{The implementation decisions can, and likely will, change over the course
+% of the project.  The initial documentation should be written in an abstract way;
+% it should be agnostic of the implementation choices, unless the implementation
+% choices are project constraints.  However, recording our initial thoughts on
+% implementation helps understand the challenge level and feasibility of a
+% project.  It may also help with early identification of areas where project
+% members will need to augment their training.}
+
+% Topics to discuss include the following:
+
+% \begin{itemize}
+% \item Specific programming language
+% \item Specific libraries
+% \item Pre-trained models
+% \item Specific linter tool (if appropriate)
+% \item Specific unit testing framework
+% \item Investigation of code coverage measuring tools
+% \item Specific plans for Continuous Integration (CI), or an explanation that CI
+%   is not being done
+% \item Specific performance measuring tools (like Valgrind), if
+%   appropriate
+% \item Tools you will likely be using?
+% \end{itemize}
+
+% \wss{git, GitHub and GitHub projects should be part of your technology.}
+
+/section{Coding Standard}
+
+To ensure consistency, maintainability, and readability, the project will adopt
+established coding standards for all areas of development.
+
+For the \textbf{frontend} (TypeScript/React):
 \begin{itemize}
-\item Specific programming language
-\item Specific libraries
-\item Pre-trained models
-\item Specific linter tool (if appropriate)
-\item Specific unit testing framework
-\item Investigation of code coverage measuring tools
-\item Specific plans for Continuous Integration (CI), or an explanation that CI
-  is not being done
-\item Specific performance measuring tools (like Valgrind), if
-  appropriate
-\item Tools you will likely be using?
+
+\item Variable and function names will use \textbf{camelCase}, while
+  \textbf{PascalCase} will be used for React components.
+  \item The principle of \textbf{DRY} (Don’t Repeat Yourself) will guide code
+  organization, promoting modular components and reusable utility functions.
+  \item File and folder structures will be organized in a consistent
+  \textbf{kebab-case} format for directories and filenames.
 \end{itemize}
 
-\wss{git, GitHub and GitHub projects should be part of your technology.}
+For the \textbf{backend} (Python/FastAPI):
+\begin{itemize}
+  \item Code will follow the \textbf{PEP~8} style guide
+  \item Variable and function names will use \textbf{snake\_case}, while classes
+  will be written in \textbf{PascalCase}.
+\end{itemize}
 
-\section{Coding Standard}
+Across both frontend and backend:
+\begin{itemize}
+  \item All code will be documented through inline comments and docstrings,
+  particularly for APIs.
+  \item \textbf{Unit tests} will accompany critical modules, following a goal of
+  80\% code coverage.
+  \item Commit messages will be written clearly and consistently, referencing
+  related issues when applicable.
+  \item Team members will adhere to software engineering principles such as
+  \textbf{single responsibility}, \textbf{modularity}, and \textbf{clarity over
+  cleverness}.
+\end{itemize}
 
-\wss{What coding standard will you adopt?}
+These conventions aim to produce code that is readable, maintainable, and
+collaborative.
+
+% \wss{What coding standard will you adopt?}
 
 \newpage{}
 
