@@ -330,6 +330,40 @@ There are two primary risks associated with this demo:
 
 \section{Expected Technology}
 
+\iffalse
+\wss{What programming language or languages do you expect to use?  What external
+libraries?  What frameworks?  What technologies.  Are there major components of
+the implementation that you expect you will implement, despite the existence of
+libraries that provide the required functionality.  For projects with machine
+learning, will you use pre-trained models, or be training your own model?  }
+
+\wss{The implementation decisions can, and likely will, change over the course
+of the project.  The initial documentation should be written in an abstract way;
+it should be agnostic of the implementation choices, unless the implementation
+choices are project constraints.  However, recording our initial thoughts on
+implementation helps understand the challenge level and feasibility of a
+project.  It may also help with early identification of areas where project
+members will need to augment their training.}
+
+Topics to discuss include the following:
+
+\begin{itemize}
+\item Specific programming language
+\item Specific libraries
+\item Pre-trained models
+\item Specific linter tool (if appropriate)
+\item Specific unit testing framework
+\item Investigation of code coverage measuring tools
+\item Specific plans for Continuous Integration (CI), or an explanation that CI
+  is not being done
+\item Specific performance measuring tools (like Valgrind), if
+  appropriate
+\item Tools you will likely be using?
+\end{itemize}
+
+\wss{git, GitHub and GitHub projects should be part of your technology.}
+\fi
+
 The implementation of this project will be primarily web-based, with a
 browser-accessible frontend and a local server backend with local saves on the client machine. The frontend will be
 developed using \textbf{TypeScript} and \textbf{React}, with
@@ -356,40 +390,11 @@ management. Continuous integration will be performed using
 \textbf{GitHub Actions}, with automated checks for linting, tests, and coverage
 included in the pipeline.
 
-
-% \wss{What programming language or languages do you expect to use?  What external
-% libraries?  What frameworks?  What technologies.  Are there major components of
-% the implementation that you expect you will implement, despite the existence of
-% libraries that provide the required functionality.  For projects with machine
-% learning, will you use pre-trained models, or be training your own model?  }
-
-% \wss{The implementation decisions can, and likely will, change over the course
-% of the project.  The initial documentation should be written in an abstract way;
-% it should be agnostic of the implementation choices, unless the implementation
-% choices are project constraints.  However, recording our initial thoughts on
-% implementation helps understand the challenge level and feasibility of a
-% project.  It may also help with early identification of areas where project
-% members will need to augment their training.}
-
-% Topics to discuss include the following:
-
-% \begin{itemize}
-% \item Specific programming language
-% \item Specific libraries
-% \item Pre-trained models
-% \item Specific linter tool (if appropriate)
-% \item Specific unit testing framework
-% \item Investigation of code coverage measuring tools
-% \item Specific plans for Continuous Integration (CI), or an explanation that CI
-%   is not being done
-% \item Specific performance measuring tools (like Valgrind), if
-%   appropriate
-% \item Tools you will likely be using?
-% \end{itemize}
-
-% \wss{git, GitHub and GitHub projects should be part of your technology.}
-
 /section{Coding Standard}
+
+\iffalse
+\wss{What coding standard will you adopt?}
+\fi
 
 To ensure consistency, maintainability, and readability, the project will adopt
 established coding standards for all areas of development.
@@ -428,8 +433,6 @@ Across both frontend and backend:
 These conventions aim to produce code that is readable, maintainable, and
 collaborative.
 
-% \wss{What coding standard will you adopt?}
-
 \newpage{}
 
 \section*{Appendix --- Reflection}
@@ -452,35 +455,67 @@ In this deliverable, the group did not have any disagreements. We were able to c
 
 \section*{Appendix --- Team Charter}
 
+\iffalse
 \wss{borrows from
 \href{https://engineering.up.edu/industry_partnerships/files/team-charter.pdf}
 {University of Portland Team Charter}}
+\fi
 
 \subsection*{External Goals}
 
+\iffalse
 \wss{What are your team's external goals for this project? These are not the
 goals related to the functionality or quality fo the project.  These are the
 goals on what the team wishes to achieve with the project.  Potential goals are
 to win a prize at the Capstone EXPO, or to have something to talk about in
 interviews, or to get an A+, etc.}
+\fi
+
+Besides our overall goal of achieving an A+ for this project, as a group we hope to 
+contribute to a final product that genuinely assists Dr. Onaizah and her team in their 
+studies and is potentially useful outside of this context. Additionally, project success 
+and the value of the work experience is a useful asset we each can list as prior 
+experience in interviews. 
 
 \subsection*{Attendance}
 
 \subsubsection*{Expectations}
 
+\iffalse
 \wss{What are your team's expectations regarding meeting attendance (being on
 time, leaving early, missing meetings, etc.)?}
+\fi
+
+Our group expects each member to attend as many meetings as they can, being on time 
+or early if possible, and staying until all discussion points are satisfied. Any 
+absences from meetings are expected to be brought up at the time of meeting arrangement 
+or as soon as the member is aware of the absence. Any member repeatedly missing meetings 
+will be dealt with through group discussion, aiming to find a solution that works for all members.
 
 \subsubsection*{Acceptable Excuse}
 
+\iffalse
 \wss{What constitutes an acceptable excuse for missing a meeting or a deadline?
 What types of excuses will not be considered acceptable?}
+\fi
+
+All members are aware that we each have busy schedules. That being said, these 
+schedules should not interfere with deadlines; other members will not repeatedly 
+do the work of another member due to a busy schedule. Personal emergencies or illness 
+are valid excuses. Similarly, missing meetings due to professional obligations (eg. 
+TA-ing a course) is valid. Forgetting, or using a busy schedule as a repeated excuse, is not.
 
 \subsubsection*{In Case of Emergency}
 
+\iffalse
 \wss{What process will team members follow if they have an emergency and cannot
 attend a team meeting or complete their individual work promised for a team
 deliverable?}
+\fi
+
+Should an aforementioned emergency occur, the grouop member will let the team know as 
+soon as possible on WhatsApp to allow the rest of the group to swiftly redistribute 
+their work, or reschedule.
 
 \subsection*{Accountability and Teamwork}
 
@@ -573,7 +608,20 @@ The team will make an effort to build team cohesion through the following method
 
 \subsubsection*{Decision Making} 
 
+\iffalse
 \wss{How will you make decisions in your group? Consensus?  Vote? How will you
 handle disagreements? }
+\fi
+
+As a group, we believe the best way to make decisions is through concensus and discussion, 
+as this ensures all members are satisfied with decision outcomes. However should the case 
+arise that concensus cannot be reached, a vote will be held between conflicting parties.
+
+Should a major disagreement result from one of these decisions, during the next meeting 
+the team will focus on resolving it, with the main goal to get the entire group back on 
+the same page and put personal feelings aside. Ultimately, the group shares the same goals 
+and in these situations, that is what should be kept in mind. Should a resolution not be found, 
+whichever goal is most related to the issue should be brought up as a reminder to all 
+parties and a logical decision between options will be made with the goal central to discussion.
 
 \end{document}
