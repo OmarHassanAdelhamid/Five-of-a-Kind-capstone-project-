@@ -8,6 +8,59 @@ endif::[]
 .High Level use cases diagram
 image::models/use_case.svg[scale=70%,align="center"]
 
-{emptysec}
+The use case diagram above highlights how we anticipate our direct stakeholders will interact with the voxel magnetization system for the principal use cases. More details for these usages are as follows:
+
+* [[uc1,UC1]] *UC1: Import CAD Design.* 
+
+    1. Researcher/Engineer obtains a finished 3D design from CAD software (e.g., AutoCAD).
+    2. Researcher/Engineer exports the design as a mesh file (STL/OBJ format).
+    3. Researcher/Engineer imports the mesh file into the voxel magnetization system.
+    4. System converts the mesh to a voxel grid with fixed dimensions (300×300μm XY, 110μm Z).
+    5. System displays the voxelized model ready for magnetization assignment.
+
+* [[uc2,UC2]] *UC2: Browse and Select Voxels.* 
+
+    1. Researcher/Engineer opens the voxel magnetization system.
+    2. System displays the imported model sliced into layers from bottom to top.
+    3. Researcher/Engineer navigates through layers to view the voxel structure.
+    4. Researcher/Engineer selects individual voxels or multiple voxels within a layer.
+    5. System highlights selected voxels for magnetization assignment.
+    6. Researcher/Engineer can modify selections across different layers.
+
+* [[uc3,UC3]] *UC3: Assign Magnetization Directions.* 
+
+    1. Researcher/Engineer selects voxels requiring magnetization assignment.
+    2. Researcher/Engineer specifies magnetization direction for selected voxels.
+    3. System applies the magnetization direction to the selected voxels.
+    4. System provides visual feedback showing magnetization direction vectors.
+    5. Researcher/Engineer can modify magnetization directions without restarting the design.
+    6. System maintains undo/redo functionality for magnetization changes.
+    7. Researcher/Engineer completes magnetization assignment for all required voxels.
+
+* [[uc4,UC4]] *UC4: Export Magnetization Data.* 
+
+    1. Researcher/Engineer completes magnetization assignment for the entire model.
+    2. Researcher/Engineer initiates export process from the system.
+    3. System generates Java-readable file containing per-voxel magnetization data.
+    4. System includes voxel location, layer information, and magnetization direction metadata.
+    5. System validates export file format for compatibility with custom printer software.
+    6. Researcher/Engineer receives the exported file for printer pipeline integration.
+
+* [[uc5,UC5]] *UC5: Validate Magnetization Plan.* 
+
+    1. Supervisor/PI reviews the completed magnetization assignment.
+    2. Supervisor/PI examines the exported magnetization data file.
+    3. Supervisor/PI verifies that magnetization directions align with experiment goals.
+    4. Supervisor/PI approves or requests modifications to the magnetization plan.
+    5. System provides visualization tools for supervisor review and validation.
+
+* [[uc6,UC6]] *UC6: Execute Printer Workflow.*
+
+    1. Lab Operator/Printer Owner receives the exported magnetization data file.
+    2. Lab Operator/Printer Owner loads the file into the custom printer software.
+    3. Lab Operator/Printer Owner configures printer settings based on voxel specifications.
+    4. Lab Operator/Printer Owner executes the printing process with magnetization data.
+    5. System ensures correct voxel placement and magnetization during printing.
+    6. Lab Operator/Printer Owner monitors printing progress and quality.
 
 
