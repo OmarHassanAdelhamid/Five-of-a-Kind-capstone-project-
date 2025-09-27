@@ -5,4 +5,8 @@ ifdef::env-draft[]
 TIP: _List of elements of the environment that may affect or be affected by the system and project. It includes other systems to which the system must be interfaced. These components may include existing systems, particularly software systems, with which the system will interact — by using their APIs (program interfaces), or by providing APIs to them, or both. These are interfaces provided to the system from the outside world. They are distinct from both: interfaces provided by the system to the outside world (<<s3>>); and technology elements that the system's development will require (<<p5>>)._  <<BM22>>
 endif::[]
 
-{emptysec}
+There are two primary components that the system interacts with:
+
+* *External CAD Software.* This component is any external software responsible for generating files users will import and use the system to convert. In this way, the system indirectly interacts with this software; if this software changes how it exports files, the system would be affected. 
+
+* *3D Printer Mesh Generator.* This component is the pre-existing software that operates on the files the system will export. Similar to the above, should this software change the file needed as input, the system would be affected.
