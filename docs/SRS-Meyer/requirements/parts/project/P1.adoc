@@ -6,16 +6,22 @@ TIP: _Main responsibilities in the project; required project staff and their nee
 endif::[]
 
 * Researchers
-- Researchers are the primary users of the voxel magnetization system. They are responsible for designing and creating 3D CAD models for magnetized objects, using the system to assign magnetization directions to voxels, and validating that magnetization assignments meet experimental requirements. 
+- Researchers are the primary users of the voxel magnetization system and key collaborators in the development process. They inform the development team about functional requirements, provide feedback on system usability and workflow efficiency, and validate that the system meets experimental needs. They are responsible for designing and creating 3D CAD models for magnetized objects, using the system to assign magnetization directions to voxels, and validating that magnetization assignments meet experimental requirements.
+
 * Lab Operators/Printer Owners
-- Lab Operators/Printer Owners are technical personnel who operate the custom 3D printer. They consume exported voxel data files from the system, execute the custom printer workflow using the generated files, and ensure correct printer operation and output quality. They should have technical training in 3D printing operations, experience with custom manufacturing equipment, and knowledge of material properties and printing parameters.
+- Lab Operators/Printer Owners are technical personnel who operate the custom 3D printer and serve as the first testers of the completed system. They consume exported voxel data files from the system, execute the custom printer workflow using the generated files, and ensure correct printer operation and output quality. They provide critical feedback on the integration between the voxel magnetization system and the existing printer workflow, helping identify issues and improvements needed for practical deployment.
+
 * Manager
 - Managers are responsible for monitoring project deadlines and ensuring the team stays on track. They coordinate with course deadlines and group-established milestones, facilitate communication between team members, and track progress against project timeline. They are also responsible for creating comprehensive meeting reports as GitHub issues, and maintaining records of decisions, action items, and deadlines.
+
 * Communicators
 - Communicators organize and schedule team meetings, facilitate meeting discussions and ensure agenda coverage, and coordinate meeting logistics (location, time, format). They also handle primary communication with supervisor and stakeholders, send formal emails to the Researcher, and convey important information between external parties and team.
+
 * Document Reviewer
-- Document Reviewers review project documentation for consistency and quality, organize peer review processes for deliverables, and ensure proper formatting, grammar, and technical accuracy. 
+- Document Reviewers review project documentation for consistency and quality, organize peer review processes for deliverables, and ensure proper formatting, grammar, and technical accuracy.
+
 * Code Reviewer
-- Code Reviewers review all code contributions and pull requests, ensure code quality, consistency, and adherence to standards, and monitor integration of individual contributions. They should have strong programming skills in TypeScript/React and Python, experience with code review processes and best practices, understanding of software testing and quality assurance, and knowledge of version control and CI/CD practices.
+- Code Reviewers review all code contributions and pull requests, ensure code quality, consistency, and adherence to standards, and monitor integration of individual contributions. They should have strong programming skills, experience with code review processes and best practices, understanding of software testing and quality assurance, and knowledge of version control and development workflows.
+
 * Software Developer
-- Software Developers are responsible for implementing the voxel magnetization system using TypeScript/JavaScript for frontend development, Python for backend services, and understanding Java for printer integration. They should have experience with React for user interface development, Three.js for 3D visualization and interaction, FastAPI for backend API development, and Redux Toolkit for state management. They should also be familiar with Git and GitHub for version control, PostgreSQL for data persistence, ESLint and pytest for code quality, and GitHub Actions for continuous integration. 
+- Software Developers are responsible for implementing the voxel magnetization system across frontend and backend components. They should have strong programming skills, experience with web development frameworks, understanding of database systems, familiarity with version control systems, and ability to work with 3D visualization libraries and APIs.
