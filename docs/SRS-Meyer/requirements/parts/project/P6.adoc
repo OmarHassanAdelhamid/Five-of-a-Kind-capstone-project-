@@ -1,9 +1,52 @@
 [#p6,reftext=P.6]
-=== (P.6) Risk and mitigation analysis
+=== (P.6) Risk and Mitigation Analysis
 
 ifdef::env-draft[]
 TIP: _Potential obstacles to meeting the schedule of <<p4>>, and measures for adapting the plan if they do arise. It is essential to be on the lookout for events that could derail the project, and devise mitigation strategies. It can include a SWOT analysis (Strengths, Weaknesses, Opportunities, Threats) for the project._  <<BM22>>
 endif::[]
 
+(P.6.1) Risks
 
-{emptysec}
+* **Risk #1: Unfamiliarity with CAD File Processing Libraries**
+	- The team has limited experience with libraries required for reading and processing mesh CAD files in STL and OBJ formats. This unfamiliarity may result in difficulties with file conversion and voxelization, which are core features of the system. The risk is much smaller during the proof of concept demonstration phase when the team will be largely unfamiliar with both the required libraries and Dr. Onaizah's existing codebase. To mitigate this risk, the team will allocate additional time for library research and experimentation during the early development phases. The proof of concept demonstration will focus specifically on validating the file conversion pipeline with simple CAD files, and the team will seek guidance from Dr. Onaizah and Kaitlyn Clancy on existing printer workflow integration.
+
+* **Risk #2: Performance Issues with 3D Rendering and Large Voxel Grids**
+	- The system must efficiently render and interact with large voxel grids, which may contain thousands of individual voxels. Initial iterations may experience performance issues due to lack of team experience with 3D rendering libraries like Three.js. High memory usage and slow responsiveness could result from inefficient handling of large voxel grids, reducing the user experience quality. To mitigate this risk, the proof of concept will focus on rendering still images as a first step, and the team will research optimization strategies for 3D rendering. The system will implement progressive loading and level-of-detail techniques to manage memory usage and maintain responsiveness.
+
+* **Risk #3: Integration Challenges with Existing 3D Printer Workflow**
+	- The system must export data in Java-readable format for integration with Dr. Onaizah's existing custom 3D printer workflow. The team has limited understanding of the existing printer system and may face challenges in ensuring compatibility and correct data format. This integration is critical for the system's success, as it enables the exported voxel data to be consumed by the existing printer system. To mitigate this risk, the team will schedule regular meetings with Dr. Onaizah and Kaitlyn Clancy to understand the existing workflow requirements. The proof of concept will include validation of the export format, and the team will maintain close communication with the printer operators throughout development.
+
+(P.6.2) Threats
+
+* **Threat #1: Technology Dependency Failures**
+	- The system depends on several external technologies including CAD file processing libraries, 3D rendering libraries, and database systems. If any of these technologies become unavailable, the project could be derailed. To address this threat, the team will research multiple library options for each critical component and maintain awareness of technology roadmaps. The system will be designed with modular layered architecture (pipeline) to allow for technology substitution if needed.
+
+* **Threat #2: Schedule Delays Due to Technical Complexity**
+	- The technical complexity of voxelization, 3D rendering, and printer integration may lead to schedule delays that could impact deliverable deadlines. The team's limited experience with these technologies increases the likelihood of unexpected technical challenges. To address this threat, the team will maintain conservative time estimates for technical tasks and implement regular milestone check-ins. The proof of concept demonstration will serve as an early validation point to identify and address major technical risks before full implementation.
+
+* **Threat #3: Stakeholder Availability and Communication Gaps**
+	- The project success depends heavily on communication with Dr. Onaizah, Kaitlyn Clancy, and other stakeholders. If these key personnel become unavailable or communication breaks down, the project could lose critical guidance and validation. To address this threat, the team will maintain regular bi-weekly updates with Dr. Onaizah and establish backup communication channels. All stakeholder interactions will be documented to ensure efficient knowledge transfer.
+
+(P.6.3) SWOT Analysis
+
+**Strengths:**
+- Strong team collaboration and established communication protocols
+- Clear project scope and well-defined requirements
+- Access to domain expertise through Dr. Onaizah and Kaitlyn Clancy
+- Comprehensive development plan with regular milestone check-ins
+
+**Weaknesses:**
+- Limited team experience with CAD file processing and 3D rendering libraries
+- Unfamiliarity with existing 3D printer workflow and integration requirements
+- Potential performance challenges with large voxel grid rendering
+
+**Opportunities:**
+- Potential for significant impact on research workflow efficiency
+- Opportunity to learn advanced 3D visualization and rendering techniques
+- Possibility of extending system capabilities beyond initial scope
+- Potential for publication or presentation of research results
+
+**Threats:**
+- Technology dependency risks and library availability
+- Schedule delays due to technical complexity
+- Integration challenges with existing systems
