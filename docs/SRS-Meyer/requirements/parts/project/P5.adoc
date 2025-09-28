@@ -5,4 +5,20 @@ ifdef::env-draft[]
 TIP: _External systems, hardware and software, expected to be necessary for building the system. It lists external technology elements, such as program libraries and hardware devices, that the project is expected to require. Although the actual use of such products belongs to design and implementation rather than requirements, it is part of the requirements task to identify elements whose availability is critical to the success of the project — an important element of risk analysis (<<p6>>)._  <<BM22>>
 endif::[]
 
-{emptysec}
+* CAD File Processing Libraries
+	- The system requires libraries capable of reading and processing mesh CAD files in STL and OBJ formats. These libraries are critical for the voxelization process that converts 3D models into voxel grids. The availability and reliability of these libraries directly impacts the system's ability to import designs from common CAD tools like AutoCAD and SolidWorks. Without these libraries, the core functionality of the system cannot be implemented.
+
+* 3D Visualization and Rendering Libraries
+	- Three.js is essential for providing interactive layer-by-layer voxel viewing and selection capabilities. These libraries must support efficient rendering of large voxel grids and provide user interaction capabilities for voxel selection. The performance and capabilities of the library directly affect the user experience and system responsiveness, particularly when handling complex 3D models with many voxels.
+
+* Database Management System
+	- PostgreSQL is required for structured storage of voxel geometries, materials, metadata, user configurations, and project files. The database system must provide reliable data persistence, efficient querying capabilities, and data integrity features. The availability and performance of the database system is critical for maintaining system state and ensuring data consistency across user sessions.
+
+* Web Development Frameworks
+	- React and TypeScript are required for frontend development, providing the user interface for voxel selection and magnetization assignment. FastAPI and Python are required for backend services, providing REST endpoints for voxel data validation and management. These frameworks are essential for implementing the web-based architecture and ensuring cross-platform compatibility between Windows with WSL and native Linux environments.
+
+* Custom 3D Printer Integration
+	- The system must interface with Dr. Onaizah's existing custom 3D printer workflow, which requires Java-readable export formats. The availability and compatibility of this integration is critical for the system's success, as it enables the exported voxel data to be consumed by the existing printer system. This integration represents a key dependency on external hardware and software systems.
+
+* Development Environment Requirements
+	- The system requires commodity hardware (laptop/desktop) sufficient for interactive layer viewing and voxel selection. The development environment must support both Windows with WSL and native Linux platforms. The availability of appropriate development hardware is essential for system development and testing.
