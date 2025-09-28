@@ -7,133 +7,143 @@ endif::[]
 
 ==== (S.4.1) Import and Voxelize CAD Model
 
-* Use case: UC1, UC2
-* Primary Actor: Researcher/Engineer
-* Supporting Actors: System
-* Precondition: Researcher has a completed 3D CAD model in STL/OBJ format and the voxel magnetization system is running on their desktop/laptop.
-* Trigger: Researcher wants to begin the magnetization assignment process for a new 3D printed object.
-* Main Success Scenario:
-** 1. Researcher opens the voxel magnetization system application.
-** 2. Researcher navigates to the "Import Model" section and selects their CAD file (STL/OBJ format).
-** 3. System validates the file format and displays file information (dimensions, triangle count, etc.).
-** 4. Researcher confirms the import and system begins voxelization process.
-** 5. System converts the mesh to a voxel grid with fixed dimensions (300×300 μm XY, 110 μm Z).
-** 6. System displays the voxelized model in the 3D viewer with layer navigation controls.
-** 7. System shows total number of voxels and layers in the model.
-** 8. Researcher can now begin layer-by-layer magnetization assignment.
-* Secondary Scenarios:
-** 3.1. File format is invalid or corrupted - System displays error message and requests valid file.
-** 4.1. File is too large for available memory - System suggests reducing model complexity or increasing system resources.
-** 5.1. Voxelization fails due to mesh issues - System provides diagnostic information and suggests mesh repair.
-** 6.1. System performance is slow during rendering - System provides optimization options or simplified view modes.
-* Success Postcondition: CAD model is successfully converted to voxel grid and ready for magnetization assignment.
+* **Use case**: UC1, UC2
+* **Primary Actor**: Researcher/Engineer
+* **Supporting Actors**: System
+* **Precondition**: Researcher has a completed 3D CAD model in STL/OBJ format and the voxel magnetization system is running on their desktop/laptop.
+* **Trigger**: Researcher wants to begin the magnetization assignment process for a new 3D printed object.
+* **Main Success Scenario**:
+
+    - 1. Researcher opens the voxel magnetization system application.
+    - 2. Researcher navigates to the "Import Model" section and selects their CAD file (STL/OBJ format).
+    - 3. System validates the file format and displays file information (dimensions, triangle count, etc.).
+    - 4. Researcher confirms the import and system begins voxelization process.
+    - 5. System converts the mesh to a voxel grid with fixed dimensions.
+    - 6. System displays the voxelized model in the 3D viewer with layer navigation controls.
+    - 7. System shows total number of voxels and layers in the model.
+    - 8. Researcher can now begin layer-by-layer magnetization assignment.
+* **Secondary Scenarios**:
+
+    - 3.1. File format is invalid or corrupted - System displays error message and requests valid file.
+    - 4.1. File is too large for available memory - System suggests reducing model complexity or increasing system resources.
+    - 5.1. Voxelization fails due to mesh issues - System provides diagnostic information and suggests mesh repair.
+    - 6.1. System performance is slow during rendering - System provides optimization options or simplified view modes.
+* **Success Postcondition** : CAD model is successfully converted to voxel grid and ready for magnetization assignment.
 
 This scenario is important because it establishes the foundation for the entire magnetization workflow. The ability to reliably import and convert CAD models to voxels is critical for researchers who need to work with existing designs rather than rebuilding them from scratch. The fixed voxel dimensions ensure compatibility with the custom 3D printer while providing sufficient resolution for precise magnetization control.
 
 ==== (S.4.2) Assign Magnetization to Voxel Layer
 
-* Use case: UC2, UC3
-* Primary Actor: Researcher/Engineer
-* Supporting Actors: System
-* Precondition: CAD model has been successfully imported and voxelized, researcher is viewing a specific layer in the 3D viewer.
-* Trigger: Researcher wants to assign magnetization directions to specific voxels within the current layer.
-* Main Success Scenario:
-** 1. Researcher navigates to a specific layer using the layer slider (bottom to top).
-** 2. System displays the 2D cross-section of voxels for the selected layer.
-** 3. Researcher selects individual voxels or multiple voxels using click/drag selection.
-** 4. System highlights selected voxels and shows current magnetization state.
-** 5. Researcher opens the magnetization direction panel and chooses from predefined directions (X+, X-, Y+, Y-, Z+, Z-).
-** 6. Researcher applies the selected magnetization direction to the chosen voxels.
-** 7. System updates the display to show the new magnetization assignments with color coding.
-** 8. System saves the changes to the project file automatically.
-** 9. Researcher can navigate to other layers and repeat the process.
-* Secondary Scenarios:
-** 3.1. Researcher accidentally selects wrong voxels - System provides undo functionality to revert selection.
-** 4.1. Researcher wants to clear magnetization from selected voxels - System provides "Clear" option.
-** 5.1. Researcher needs custom magnetization direction - System allows manual vector input for advanced users.
-** 6.1. System performance degrades with many selected voxels - System provides batch processing options.
-** 7.1. Researcher wants to copy magnetization pattern to other layers - System provides copy/paste functionality.
-* Success Postcondition: Selected voxels in the current layer have been assigned the desired magnetization directions.
+* **Use case**: UC2, UC3
+* **Primary Actor**: Researcher/Engineer
+* **Supporting Actors**: System
+* **Precondition**: CAD model has been successfully imported and voxelized, researcher is viewing a specific layer in the 3D viewer.
+* **Trigger**: Researcher wants to assign magnetization directions to specific voxels within the current layer.
+* **Main Success Scenario**:
+
+    - 1. Researcher navigates to a specific layer using the layer slider (bottom to top).
+    - 2. System displays the 2D cross-section of voxels for the selected layer.
+    - 3. Researcher selects individual voxels or multiple voxels using click/drag selection.
+    - 4. System highlights selected voxels and shows current magnetization state.
+    - 5. Researcher opens the magnetization direction panel and chooses from predefined directions (X+, X-, Y+, Y-, Z+, Z-).
+    - 6. Researcher applies the selected magnetization direction to the chosen voxels.
+    - 7. System updates the display to show the new magnetization assignments with color coding.
+    - 8. System saves the changes to the project file automatically.
+    - 9. Researcher can navigate to other layers and repeat the process.
+* **Secondary Scenarios**:
+
+    - 3.1. Researcher accidentally selects wrong voxels - System provides undo functionality to revert selection.
+    - 4.1. Researcher wants to clear magnetization from selected voxels - System provides "Clear" option.
+    - 5.1. Researcher needs custom magnetization direction - System allows manual vector input for advanced users.
+    - 6.1. System performance degrades with many selected voxels - System provides batch processing options.
+    - 7.1. Researcher wants to copy magnetization pattern to other layers - System provides copy/paste functionality.
+* **Success Postcondition**: Selected voxels in the current layer have been assigned the desired magnetization directions.
 
 This scenario is important because it represents the core functionality of the system - enabling precise control over magnetization at the voxel level. The layer-by-layer approach allows researchers to methodically assign magnetization patterns while maintaining spatial awareness of the 3D structure. The ability to select multiple voxels and apply consistent magnetization directions significantly reduces the time required compared to manual voxel-by-voxel assignment.
 
 ==== (S.4.3) Edit and Modify Existing Magnetization
 
-* Use case: UC3
-* Primary Actor: Researcher/Engineer
-* Supporting Actors: System
-* Precondition: Researcher has already assigned magnetization to some voxels and wants to make changes without restarting the entire process.
-* Trigger: Researcher discovers an error in magnetization assignment or wants to optimize the magnetization pattern.
-* Main Success Scenario:
-** 1. Researcher navigates to the layer containing voxels that need modification.
-** 2. System displays the current magnetization state with color-coded voxels.
-** 3. Researcher selects the voxels that need to be changed (individual or multiple selection).
-** 4. System shows the current magnetization direction of selected voxels.
-** 5. Researcher chooses a new magnetization direction from the direction panel.
-** 6. System applies the new magnetization and updates the visual display.
-** 7. System automatically saves the changes and maintains edit history.
-** 8. Researcher can use undo/redo functionality to revert or reapply changes.
-** 9. Researcher continues with other modifications as needed.
-* Secondary Scenarios:
-** 3.1. Researcher wants to select all voxels in current layer - System provides "Select All" option.
-** 4.1. Researcher wants to find voxels with specific magnetization - System provides search/filter functionality.
-** 5.1. Researcher wants to apply same change to multiple layers - System provides multi-layer editing mode.
-** 6.1. System loses power during editing - System has auto-save functionality to prevent data loss.
-** 7.1. Researcher wants to compare before/after states - System provides side-by-side view mode.
-* Success Postcondition: Magnetization assignments have been successfully modified without losing other work.
+* **Use case**: UC3
+* **Primary Actor**: Researcher/Engineer
+* **Supporting Actors**: System
+* **Precondition**: Researcher has already assigned magnetization to some voxels and wants to make changes without restarting the entire process.
+* **Trigger**: Researcher discovers an error in magnetization assignment or wants to optimize the magnetization pattern.
+* **Main Success Scenario**:
+
+    - 1. Researcher navigates to the layer containing voxels that need modification.
+    - 2. System displays the current magnetization state with color-coded voxels.
+    - 3. Researcher selects the voxels that need to be changed (individual or multiple selection).
+    - 4. System shows the current magnetization direction of selected voxels.
+    - 5. Researcher chooses a new magnetization direction from the direction panel.
+    - 6. System applies the new magnetization and updates the visual display.
+    - 7. System automatically saves the changes and maintains edit history.
+    - 8. Researcher can use undo/redo functionality to revert or reapply changes.
+    - 9. Researcher continues with other modifications as needed.
+* **Secondary Scenarios**:
+
+    - 3.1. Researcher wants to select all voxels in current layer - System provides "Select All" option.
+    - 4.1. Researcher wants to find voxels with specific magnetization - System provides search/filter functionality.
+    - 5.1. Researcher wants to apply same change to multiple layers - System provides multi-layer editing mode.
+    - 6.1. System loses power during editing - System has auto-save functionality to prevent data loss.
+    - 7.1. Researcher wants to compare before/after states - System provides side-by-side view mode.
+* **Success Postcondition**: Magnetization assignments have been successfully modified without losing other work.
 
 This scenario is important because it addresses the critical need for iterative design refinement. Researchers often need to make adjustments to their magnetization patterns based on simulation results or design requirements. The ability to edit existing assignments without restarting the entire process saves significant time and reduces frustration, making the system practical for real-world research workflows.
 
 ==== (S.4.4) Export Magnetization Data for 3D Printing
 
-* Use case: UC4
-* Primary Actor: Researcher/Engineer
-* Supporting Actors: Lab Operator, System
-* Precondition: Researcher has completed magnetization assignment for all layers and is ready to prepare the data for 3D printing.
-* Trigger: Researcher wants to export the voxel magnetization data to be used by the custom 3D printer software.
-* Main Success Scenario:
-** 1. Researcher navigates to the "Export" section of the application.
-** 2. System displays export options and file format information.
-** 3. Researcher reviews the magnetization summary (total voxels, layers, magnetization distribution).
-** 4. Researcher selects the Java-readable export format for the custom printer pipeline.
-** 5. System validates all voxel data and checks for completeness.
-** 6. System generates the export file containing per-voxel location, layer, and magnetization direction metadata.
-** 7. System displays export confirmation with file size and location information.
-** 8. Researcher saves the file to the designated location for the lab operator.
-** 9. Lab operator receives the file and can load it into the custom printer software.
-* Secondary Scenarios:
-** 3.1. System detects incomplete magnetization data - System highlights missing areas and prevents export.
-** 4.1. Researcher wants to export only specific layers - System provides selective export options.
-** 5.1. Export file is too large for available storage - System provides compression options.
-** 6.1. System encounters errors during export - System provides detailed error log and recovery options.
-** 7.1. Lab operator reports issues with exported file - System provides validation tools and format verification.
-* Success Postcondition: Complete voxel magnetization data has been exported in the correct format for the 3D printer.
+* **Use case**: UC4
+* **Primary Actor**: Researcher/Engineer
+* **Supporting Actors**: Lab Operator, System
+* **Precondition**: Researcher has completed magnetization assignment for all layers and is ready to prepare the data for 3D printing.
+* **Trigger**: Researcher wants to export the voxel magnetization data to be used by the custom 3D printer software.
+* **Main Success Scenario**:
+
+    - 1. Researcher navigates to the "Export" section of the application.
+    - 2. System displays export options and file format information.
+    - 3. Researcher reviews the magnetization summary (total voxels, layers, magnetization distribution).
+    - 4. Researcher selects the Java-readable export format for the custom printer pipeline.
+    - 5. System validates all voxel data and checks for completeness.
+    - 6. System generates the export file containing per-voxel location, layer, and magnetization direction metadata.
+    - 7. System displays export confirmation with file size and location information.
+    - 8. Researcher saves the file to the designated location for the lab operator.
+    - 9. Lab operator receives the file and can load it into the custom printer software.
+* **Secondary Scenarios**:
+
+    - 3.1. System detects incomplete magnetization data - System highlights missing areas and prevents export.
+    - 4.1. Researcher wants to export only specific layers - System provides selective export options.
+    - 5.1. Export file is too large for available storage - System provides compression options.
+    - 6.1. System encounters errors during export - System provides detailed error log and recovery options.
+    - 7.1. Lab operator reports issues with exported file - System provides validation tools and format verification.
+* **Success Postcondition**: Complete voxel magnetization data has been exported in the correct format for the 3D printer.
 
 This scenario is important because it represents the final step in the workflow, ensuring that the researcher's magnetization design can be successfully transferred to the physical printing process. The export functionality must be reliable and produce files that are compatible with the existing printer software, maintaining the integrity of the magnetization data throughout the transition from design to manufacturing.
 
 ==== (S.4.5) Validate and Review Magnetization Design
 
-* Use case: UC1, UC5
-* Primary Actor: Researcher/Engineer
-* Supporting Actors: Supervisor/PI, System
-* Precondition: Researcher has completed magnetization assignment and wants to validate the design before export and printing.
-* Trigger: Researcher wants to review the complete magnetization pattern and ensure it meets the experiment's requirements.
-* Main Success Scenario:
-** 1. Researcher navigates to the "Review" section of the application.
-** 2. System displays the complete 3D model with magnetization visualization.
-** 3. Researcher can rotate, zoom, and examine the model from different angles.
-** 4. System provides layer-by-layer navigation to review specific sections.
-** 5. Researcher can filter the view to show only voxels with specific magnetization directions.
-** 6. System displays statistics about magnetization distribution and coverage.
-** 7. Researcher can generate a summary report of the magnetization pattern.
-** 8. Researcher can save screenshots or export visualization data for documentation.
-** 9. Researcher can share the design with supervisor for approval before printing.
-* Secondary Scenarios:
-** 3.1. Researcher wants to compare with original CAD model - System provides overlay view mode.
-** 4.1. System performance is slow with complex models - System provides simplified visualization modes.
-** 5.1. Researcher wants to validate against design requirements - System provides checklist and validation tools.
-** 6.1. Supervisor requests changes after review - Researcher can return to editing mode.
-** 7.1. Researcher wants to document the design process - System provides export options for reports and images.
-* Success Postcondition: Researcher has thoroughly reviewed the magnetization design and is confident it meets the experiment's requirements.
+* **Use case**: UC1, UC5
+* **Primary Actor**: Researcher/Engineer
+* **Supporting Actors**: Supervisor/PI, System
+* **Precondition**: Researcher has completed magnetization assignment and wants to validate the design before export and printing.
+* **Trigger**: Researcher wants to review the complete magnetization pattern and ensure it meets the experiment's requirements.
+* **Main Success Scenario**:
+
+    - 1. Researcher navigates to the "Review" section of the application.
+    - 2. System displays the complete 3D model with magnetization visualization.
+    - 3. Researcher can rotate, zoom, and examine the model from different angles.
+    - 4. System provides layer-by-layer navigation to review specific sections.
+    - 5. Researcher can filter the view to show only voxels with specific magnetization directions.
+    - 6. System displays statistics about magnetization distribution and coverage.
+    - 7. Researcher can generate a summary report of the magnetization pattern.
+    - 8. Researcher can save screenshots or export visualization data for documentation.
+    - 9. Researcher can share the design with supervisor for approval before printing.
+* **Secondary Scenarios**:
+
+    - 3.1. Researcher wants to compare with original CAD model - System provides overlay view mode.
+    - 4.1. System performance is slow with complex models - System provides simplified visualization modes.
+    - 5.1. Researcher wants to validate against design requirements - System provides checklist and validation tools.
+    - 6.1. Supervisor requests changes after review - Researcher can return to editing mode.
+    - 7.1. Researcher wants to document the design process - System provides export options for reports and images.
+* **Success Postcondition**: Researcher has thoroughly reviewed the magnetization design and is confident it meets the experiment's requirements.
 
 This scenario is important because it ensures quality control and validation before committing to the expensive and time-consuming 3D printing process. The ability to thoroughly review and validate the magnetization pattern helps prevent costly mistakes and ensures that the final printed object will have the desired magnetic properties. The visualization tools and reporting capabilities support both individual review and collaborative approval processes with supervisors and other stakeholders.
