@@ -5,4 +5,38 @@ ifdef::env-draft[]
 TIP: _Initially, description of what the requirements process will be; later, report on its steps. It starts out as a plan for conducting the requirements elicitation process, but is meant to be updated as part of that process so that it includes the key lessons of elicitation._  <<BM22>>
 endif::[]
 
-{emptysec}
+**Researchers (Primary Users)**:
+Interview Type: Structured Interviews
+
+Relevance: These interviews will focus on understanding the current workflow challenges and specific requirements for voxel magnetization in 3D printed objects. This helps identify pain points in the existing manual process and define functional requirements for the system.
+
+Most Important Question: "What are the most time-consuming aspects of your current voxel magnetization workflow, and how would an automated system need to function to significantly improve your productivity?"
+
+Relevance: Identifies core functional requirements and performance criteria that will drive system design and development priorities.
+
+**Lab Operators/Printer Owners (System Integrators)**:
+Interview Type: Technical Interviews
+
+Relevance: These interviews will focus on understanding the existing 3D printer workflow and integration requirements. This is critical for ensuring the system can properly interface with the existing hardware and software infrastructure.
+
+Most Important Question: "What specific data format and workflow requirements must the voxel magnetization system meet to integrate seamlessly with your existing 3D printer operations?"
+
+Relevance: Defines technical constraints and integration requirements that are essential for system success and user adoption.
+
+**Communicators (Stakeholder Liaison)**:
+Interview Type: Regular Consultation Meetings
+
+Relevance: The Communicators role will facilitate ongoing communication with Dr. Onaizah and other external stakeholders to provide guidance on project scope, technical requirements, and integration with existing research infrastructure.
+
+Most Important Question: "How can the voxel magnetization system best support research objectives while maintaining compatibility with existing laboratory workflows?"
+
+Relevance: Ensures the system meets research needs and integrates effectively with existing laboratory infrastructure and processes.
+
+**Software Developers (Technical Implementation)**:
+Interview Type: Technical Planning Sessions
+
+Relevance: Internal technical planning sessions will focus on understanding implementation requirements, technology constraints, and system architecture decisions.
+
+Most Important Question: "What are the technical specifications and data format requirements for the existing 3D printer system that the voxel magnetization system must interface with?"
+
+Relevance: Provides critical technical details for system integration and ensures compatibility with existing hardware and software systems.
