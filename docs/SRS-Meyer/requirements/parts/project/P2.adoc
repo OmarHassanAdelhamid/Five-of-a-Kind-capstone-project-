@@ -5,4 +5,26 @@ ifdef::env-draft[]
 TIP: _Any a priori choices binding the project to specific tools, hardware, languages or other technical parameters. Not all technical choices in projects derive from a pure technical analysis; some result from company policies. While some project members may dislike non-strictly-technical decisions, they are a fact of project life and must be documented, in particular for the benefit of one of the quality factors for requirements: "requirements must be justified"._  <<BM22>>
 endif::[]
 
-{emptysec}
+* The voxel magnetization system will use a web-based architecture with browser-accessible frontend and local server backend. This choice is imposed to ensure cross-platform compatibility and ease of deployment, as the system needs to work on both Windows with WSL and native Linux environments as specified in the problem statement.
+
+* The system will use TypeScript and React for frontend development. This choice is imposed to leverage modern web development practices and ensure maintainable, scalable code that can handle complex 3D visualization requirements.
+
+* The system will use Python with FastAPI for backend services. This choice is imposed to provide robust REST endpoints for voxel data validation and management, while maintaining compatibility with existing research workflows.
+
+* The system will use Three.js for 3D voxel visualization and interaction. This choice is imposed because it provides the necessary 3D rendering capabilities required for layer-by-layer voxel viewing and selection, which is a core requirement of the system.
+
+* The system will use PostgreSQL as the database management system (DBMS) for data persistence. This choice is imposed to provide structured storage of all system data including voxel geometries, materials, metadata, user configurations, and project files, ensuring data integrity and efficient querying capabilities.
+
+* The system will use Git and GitHub for version control and project management. This choice is imposed by the development plan to ensure proper collaboration, task tracking, and issue management throughout the project lifecycle.
+
+* The system will use GitHub Actions for continuous integration. This choice is imposed to automate code quality checks, testing, and deployment processes, ensuring consistent code quality and reducing manual overhead.
+
+* The system will use ESLint and pytest for code quality assurance. This choice is imposed to maintain code consistency and reliability across both frontend and backend components, with a target of 80% code coverage.
+
+* The system will export data in Java-readable format for integration with the existing custom 3D printer workflow. This choice is imposed by the requirement to interface with Dr. Onaizah's existing printer system, as specified in the problem statement.
+
+* The system will support STL and OBJ file formats for CAD import. This choice is imposed by the need to work with common CAD file formats that researchers typically export from tools like AutoCAD, as specified in the problem statement.
+
+* The system will use fixed voxel dimensions of 300 × 300 μm (XY) and 110 μm (Z) initially. This choice is imposed by the specific requirements of the custom 3D printer hardware, as documented in the problem statement.
+
+* The system will be designed for desktop/laptop platforms with Windows WSL or native Linux support. This choice is imposed by the target environment specified in the problem statement, which assumes commodity hardware sufficient for interactive layer viewing and voxel selection.
