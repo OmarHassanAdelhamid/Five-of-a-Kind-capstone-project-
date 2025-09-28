@@ -1,8 +1,47 @@
 [#p3,reftext=P.3]
-=== (P.3) Schedule and milestones
+=== (P.3) Schedule and Milestones
 
-ifdef::env-draft[]
-TIP: _List of tasks to be carried out and their scheduling. It defines the project's key dates._  <<BM22>>
-endif::[]
+The development of the Five-of-a-Kind voxel magnetization system is planned over multiple phases, beginning with comprehensive documentation and requirements analysis before transitioning to implementation. Our development strategy focuses on thorough planning and risk mitigation through proof of concept demonstrations, ensuring the system meets the specific needs of researchers working with magnetized 3D printed objects.
 
-{emptysec}
+**Phase 1: Documentation and Requirements (September - October 2025)**
+
+- **Problem Statement, Proof of Concept, and Development Plan** (September 22, 2025)
+  Complete initial project documentation including problem analysis, stakeholder identification, and development methodology. This establishes the foundation for all subsequent work and ensures team alignment on project scope and approach.
+
+- **SRS and Hazard Analysis Revision 0** (October 6, 2025)
+  Develop comprehensive software requirements specification and conduct hazard analysis to identify potential risks and safety considerations in the voxel magnetization workflow. This phase ensures all functional and non-functional requirements are properly documented and validated.
+
+**Phase 2: Verification and Validation Planning (October 2025)**
+
+- **V&V Plan Revision 0** (October 27, 2025)
+  Create detailed verification and validation plan to ensure the system will meet all specified requirements. This includes defining test strategies, acceptance criteria, and validation methods for the voxel magnetization system.
+
+**Phase 3: Design and Proof of Concept (November 2025)**
+
+- **Design Document Revision 1** (November 10, 2025)
+  Develop initial system architecture and detailed design specifications for the voxel magnetization system, including frontend UI design, backend architecture, and database schema.
+
+- **Proof of Concept Demonstration** (November 17-26, 2025)
+  Demonstrate core functionality including CAD file import, voxelization, and basic layer viewing capabilities. This milestone validates the technical feasibility of the approach and identifies any major technical risks that need to be addressed. UI is not needed for the PoC, only a capable product that can create a 100x100 standard print.
+
+**Phase 4: Implementation and Testing (January - March 2026)**
+
+- **Design Document Revision 0** (January 19, 2026)
+  Complete final system design incorporating lessons learned from proof of concept demonstration and any requirement refinements.
+
+- **Revision 0 Demonstration** (February 2-11, 2026)
+  Demonstrate working system with core functionality including voxel selection, magnetization assignment, and export capabilities. This milestone shows a functional system that meets the primary requirements.
+
+- **V&V Report and Extras Revision 0** (March 9, 2026)
+  Complete verification and validation activities, documenting test results and system performance. Deliver user manual and usability report as specified in the problem statement.
+
+**Phase 5: Final Delivery (March - April 2026)**
+
+- **Final Demonstration (Revision 1)** (March 23-26, 2026)
+  Present completed system with all features implemented, tested, and validated. Demonstrate full workflow from CAD import to printer-ready export.
+
+- **Final Documentation (Revision 1)** (April 6, 2026)
+  Deliver final documentation package including updated SRS, design documents, user manual, and all supporting materials.
+
+- **EXPO Demonstration** (TBD)
+  Present project at capstone expo, showcasing the voxel magnetization system to broader academic and industry audience.
