@@ -117,7 +117,7 @@ This scenario is important because it represents the last step in the workflow, 
 
 ==== (S.4.5) Validate and Review Magnetization Design
 
-* **Use case**: UC1, UC5
+* **Use case**: UC1, UC4
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: Supervisor, System
 * **Precondition**: User has completed magnetization assignment and wants to validate the design before export and printing.
