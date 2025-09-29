@@ -36,9 +36,8 @@ The use case diagram above highlights how we anticipate our direct stakeholders 
     2. User specifies magnetization direction for selected voxels.
     3. System applies the magnetization direction to the selected voxels.
     4. System provides visual feedback showing magnetization direction vectors.
-    5. User can modify magnetization directions without restarting the design.
-    6. System maintains undo/redo functionality for magnetization changes.
-    7. User completes magnetization assignment for all required voxels.
+    5. System maintains editing history, providing user the option to undo/redo.
+    6. User completes magnetization assignment for all required voxels.
 
 +
 
