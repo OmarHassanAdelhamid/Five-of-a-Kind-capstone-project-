@@ -1,8 +1,23 @@
 [#s1,reftext=S.1]
 === (S.1) Components
 
-ifdef::env-draft[]
+ifdef::!env-draft[]
 TIP: _Overall structure expressed by the list of major software and, if applicable, hardware parts._  <<BM22>>
 endif::[]
 
-{emptysec}
+* **[.mcmaster]#Slicing Manager#**: This component has the responsibility of interpreting and manipulating a 3D image contained within a compatible file. It centralizes the business logic for voxel slicing by defining how the image is partitioned into voxel blocks. It interacts with the Imaging Manager to provide the information regarding the 3D image that will be recreated.
+
+* **[.mcmaster]#Imaging Manager#:** This component is in charge of handling all tasks associated with recreating a 3D rendition of the model in our software. It interfaces with the Slicing Manager to gather information regarding image specification. It exposes a user interface that permits responsive 3D image interaction, allowing users to manipulate its orientation and examine it from all perspectives.
+
+* **[.mcmaster]#Magnetization Manager#:** This component takes on the responsibility of allowing users to magnetization each voxel block and encapsulates the resulting data. It centralizes the business logic of voxel block metadata annotations. It exposes a user interface that allows easy navigation and modification of each voxel block’s metadata.
+
+* **[.mcmaster]#Exportation Manager#:** This component acts as an integration gateway that facilitates seamless integration with pre-existing software developed for printing magnetized voxel blocks. It handles the business logic that dictates a structured data format to ensure printing compatibility and replication capability.
+
+The system will also interact with the three external components. These components will support the integration of providing geolocation information and allowing payment procedures.
+
+This system will not directly interact with any external components. However, as outlined by the Exportation Manager, our system must output a file that is compatible with external printing software to support the natural workflow of the printing process.
+
+The application of the overall system functionality will be handled by the [.mcmaster]#MagData# Platform, which is a desktop application. Users will be required to directly install the software on their laptop, as the [.mcmaster]#MagData Platform# will be a locally deployed software system.
+
+.Components involved in MagData platform
+image::models/components.svg[scale=60%,align="center"]
