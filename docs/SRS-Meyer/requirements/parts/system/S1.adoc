@@ -5,13 +5,14 @@ ifdef::!env-draft[]
 TIP: _Overall structure expressed by the list of major software and, if applicable, hardware parts._  <<BM22>>
 endif::[]
 
-* **[.mcmaster]#Slicing Manager#**: This component has the responsibility of interpreting and manipulating a 3D image contained within a compatible file. It centralizes the business logic for voxel slicing by defining how the image is partitioned into voxel blocks. It interacts with the Imaging Manager to provide the information regarding the 3D image that will be recreated.
+* **[.mcmaster]#Slicing Manager#**: This component has the responsibility of interpreting and manipulating a CAD mesh contained within a compatible file. It centralizes the business logic for voxel slicing by defining how the image is partitioned into voxels. Upon completing the slicing process it it interacts with the Imaging Manager by indicating all provided information is present and prompting it to being the process of recreating the 3D CAD. .
 
-* **[.mcmaster]#Imaging Manager#:** This component is in charge of handling all tasks associated with recreating a 3D rendition of the model in our software. It interfaces with the Slicing Manager to gather information regarding image specification. It exposes a user interface that permits responsive 3D image interaction, allowing users to manipulate its orientation and examine it from all perspectives.
 
-* **[.mcmaster]#Magnetization Manager#:** This component takes on the responsibility of allowing users to magnetization each voxel block and encapsulates the resulting data. It centralizes the business logic of voxel block metadata annotations. It exposes a user interface that allows easy navigation and modification of each voxel block’s metadata.
+* **[.mcmaster]#Imaging Manager#:** This component is in charge of handling all tasks associated with recreating a 3D rendition of the CAD design in our software. It interfaces with the Slicing Manager to gather information regarding image specification. It exposes a user interface that permits responsive 3D image interaction, allowing users to manipulate its orientation and examine it from all perspectives.
 
-* **[.mcmaster]#Exportation Manager#:** This component acts as an integration gateway that facilitates seamless integration with pre-existing software developed for printing magnetized voxel blocks. It handles the business logic that dictates a structured data format to ensure printing compatibility and replication capability.
+* **[.mcmaster]#Magnetization Manager#:** This component takes on the responsibility of allowing users to magnetize each voxel and/or voxels and encapsulates the resulting data. It centralizes the business logic of voxel  metadata annotations. It exposes a user interface that allows easy navigation and modification of each voxel's metadata.
+
+* **[.mcmaster]#Exportation Manager#:** This component acts as an integration gateway that facilitates seamless integration with pre-existing software developed for printing magnetized voxels. It handles the business logic that dictates a structured data format to ensure printing compatibility and replication capability.
 
 The system will also interact with the three external components. These components will support the integration of providing geolocation information and allowing payment procedures.
 

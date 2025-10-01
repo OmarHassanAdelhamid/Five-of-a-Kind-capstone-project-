@@ -30,9 +30,11 @@ endif::[]
 
 . [[F222]] *Adjust image:* Imaging Manager shall provide users with an intuitive interface that permits seamless navigation across multiple perspectives of the 3D model through rotation and resizing. (F222)
 
-. [[F223]] *Highlight selection:* Imaging manager shall provide users with visualization showcasing what part of the 3D model is currently selected. (F223)
+. [[F223]] *Recreate previous project:* Slicing Manager shall be able to accurately interpret and recreate a previously saved geometric model that has already been sliced and magnetized. (F223)
 
-. [[F224]] *Recreate previous project:* Slicing Manager shall be able to accurately interpret and recreate a previously saved geometric model that has already been sliced and magnetized. (F224)
+. [[F224]] *Highlight selection:* Imaging manager shall provide users with visualization showcasing what part of the 3D model is currently selected. (F224)
+
+. [[F225]] *Magnetization tracker:* Imaging manager shall integrate easy tracking of what has already been magnetized by adjusting the colour of the voxel. (F235)
 
 ===== Non-Functional Requirements
 
@@ -62,14 +64,18 @@ endif::[]
 
 ===== Functional Requirements
 
-. [[F241]] *Magnetization validation:* Exportation Manager shall validate that all voxels have received a magnetization value upon receiving a request to export a file for printing. (F241)
+. [[F241]] *Magnetization validation:* Exportation Manager shall validate that all voxels have received a assigned magnetization value upon receiving a request to export a file for printing (even if assigned value is simply null to indicate no magnetization required). (F241)
 
 . [[F242]] *Add to recent projects:* Exportation Manager shall add the file to a list of recent projects visible to the user for quick access and future edits. (F242)
 
 . [[F243]] *Export to print:* Exportation Manager shall generate a file that contains all metadata for each voxel in a structured format. (F243)
 
+. [[F244]] *Export model:* Exportation Manager shall generate a file that provides an updated model in the format of the original import file. (F244)
+
+. [[F245]] *Exportation progress tracker:* Exportation Manager shall provide a progress bar that gives a visual indicator of how far along the software is in the exportation process. (F245)
+
 ===== Non-Functional Requirements:
 
-. [[NF241]] *Printing compliance:* Exportation Manager shall ensure that the exported file is compatible and easily interpreted by the existing Java software that is used to interpret geometric models for printing. (NF241)
+. [[NF241]] *Fail safe:* Exportation Manager shall ensure voxel data and metadata remain intact and unaltered in the event of an incomplete export, preserving the integrity of the magnetized project file without loss.(NF241)
 
 . [[NF242]] *Exportation performance:* Exportation Manager shall export metadata files for geometric models at a minimum rate of 1000 voxels per second. (NF242)
