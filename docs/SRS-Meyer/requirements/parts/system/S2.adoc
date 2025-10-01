@@ -32,9 +32,11 @@ endif::[]
 
 . [[F223]] *Recreate previous project:* Slicing Manager shall be able to accurately interpret and recreate a previously saved geometric model that has already been sliced and magnetized. (F223)
 
-. [[F224]] *Highlight selection:* Imaging manager shall provide users with visualization showcasing what part of the 3D model is currently selected. (F224)
+. [[F224]] *Modify voxels in a model:* Slicing Manager shall be able to add and delete voxels of the same defined dimensions present in the rest of the model. (F224)
 
-. [[F225]] *Magnetization tracker:* Imaging manager shall integrate easy tracking of what has already been magnetized by adjusting the colour of the voxel. (F235)
+. [[F225]] *Highlight selection:* Imaging manager shall provide users with visualization showcasing what part of the 3D model is currently selected. (F225)
+
+. [[F226]] *Magnetization tracker:* Imaging manager shall integrate easy tracking of what has already been magnetized by adjusting the colour of the voxel. (F226)
 
 ===== Non-Functional Requirements
 
@@ -68,7 +70,7 @@ endif::[]
 
 . [[F242]] *Export to print:* Exportation Manager shall generate a file that contains all metadata for each voxel in a structured format. (F242)
 
-. [[F243]] *Export magnetization model:* Exportation Manager shall generate a CSV file that provides a voxel-by-voxel description of the model’s magnetization. (F243)
+. [[F243]] *Export magnetized model:* Exportation Manager shall generate a CSV file that provides a voxel-by-voxel description of the model’s magnetization. (F243)
 
 . [[F244]] *Exportation progress tracker:* Exportation Manager shall provide a progress bar that gives a visual indicator of how far along the software is in the exportation process. (F244)
 
