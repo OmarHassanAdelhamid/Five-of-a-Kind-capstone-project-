@@ -128,3 +128,6 @@ endif::[]
 |Low (Could-Have)
 |Reduces wait time to improve overall user experience but deemed not critical by key stakeholders.
 |===
+
+==== Prioritization Justification
+Prioritization was predominantly guided by assessing requirements against key metrics such as feasibility, functionality, stakeholder value and performance. High priority (must-have) was given to the requirements that directly align with the core stakeholder goals. Essentially, requirements encapsulate the critical functionality that is required to create a system that fulfils the primary desires of the stakeholders. Medium priority (should-have) aligns with requirements that will enhance the user experience but are not essential for the current MVP. It also takes into consideration certain factors such as scalability for larger projects that may occur in the future. Low priority (could-have) was reserved for features that do not add immediate value with the current scope or were deemed not as impactful to the overall user experience. Several performance factors related to the import and export of the files are also deemed as low-priority after discussion with key stakeholders since they are tasks that run independently of user interaction. Ideally, this approach will ensure vital functionality is delivered first while balancing technical feasibility and stakeholder expectations.

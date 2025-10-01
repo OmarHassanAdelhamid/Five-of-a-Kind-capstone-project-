@@ -8,7 +8,7 @@ endif::[]
 
 ==== (S.3.1) APIs
 
-Within the current scope of this project, there will be no API’s build into the software for external use.
+Within the current scope of this project, there will be no APIs build into the software for external use.
 
 ==== (S.3.2) Wireframe Mockup of Main Interface
 
