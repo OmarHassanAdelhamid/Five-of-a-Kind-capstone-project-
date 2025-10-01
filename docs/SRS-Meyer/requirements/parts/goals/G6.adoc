@@ -1,6 +1,14 @@
 [#g6,reftext=G.6]
 === (G.6) Limitations and Exclusions
+Below is a list of limitations that the system will not do:
 
+• System will not act as a replacement for full multiphysics simulation software such as COMSOL. While it provides voxel-level editing and visualization, it will not perform advanced physics simulations (e.g., fluid dynamics, stress-strain analysis, or electromagnetic field simulations).
+
+• System will not provide automatic optimization of material distributions. Users are responsible for deciding how to assign materials and magnetization properties; the tool only facilitates editing and visualization.
+
+• System will not guarantee the accuracy of exported designs beyond voxel-level conversion. Verification of compatibility with all 3D printers and fabrication processes is outside the project scope. (May be expanded on later)
+
+• System will not provide real-time error correction or printer control. The platform’s role concludes once a voxelized model is exported; any fabrication issues must be handled by the 3D printer’s native software.
 ifdef::env-draft[]
 TIP: _Aspects that the system need not address. It states what the system will not do. This chapter addresses a key quality attribute of good requirements: the requirements must be delimited (or “scoped”). <<g6>> is not, however, the place for an analysis of risks and obstacles, which pertain to the project rather than the goals and correspondingly appears in chapter <<p6>>._  <<BM22>>
 endif::[]
