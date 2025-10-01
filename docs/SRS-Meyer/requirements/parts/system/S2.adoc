@@ -11,7 +11,7 @@ endif::[]
 
 . [[F211]] *Define voxel block size:* Slicing Manager shall allow the user to configure the dimensions of the rectangular voxel prisms used to slice their geometric model. (F211)
 
-. [[F212]] *Adjust geometric model size:* Slicing Manager shall allow users to modify the dimensions of their model while verifying that it is evenly divisible by the chosen voxel size. (F212)
+. [[F212]] *Adjust CAD model size:* Slicing Manager shall allow users to modify the dimensions of their model while verifying that it is evenly divisible by the chosen voxel size. (F212)
 
 . [[F213]] *Start new project:* Slicing Manager shall allow a user to import a CAS from their personal device in order to start a new project. (F213)
 

@@ -1,8 +1,130 @@
 [#s5,reftext=S.5]
 === (S.5) Prioritization
 
-ifdef::env-draft[]
+ifdef::!env-draft[]
 TIP: _Classification of the behaviors, interfaces and scenarios (<<s2>>, <<s3>> and <<s4>>) by their degree of criticality. It is useful in particular if during the course of the project various pressures force the team to drop certain functions._  <<BM22>>
 endif::[]
 
-{emptysec}
+==== (S.5.1) Priority Table for Player Manager
+[cols="^16%, 25%, 16%, 43%, options="header"]
+|===
+|Requirement ID |Requirement Description |Priority Level |Reasoning
+
+|<<F211>> |Define voxel block size during slicing process
+|Low (Could-Have)
+|Not required by user for current usage but may simplify more complicated processes in the future.
+
+|<<F212>> |Adjust model to divide evenly into voxel block size
+|Medium (Should-Have)
+|Offers the flexibility to modify geometric model size to enhance overall user experience.
+
+|<<F213>> |Import CAS file for slicing
+|High (Must-Have)
+|Required for users to be able to start new projects with different models
+
+|<<NF211>> |Support slicing of models that contain up to 10,000 voxels
+|Medium (Should-Have)
+|Ensures software can sufficiently handles large scale projects.
+
+|<<NF212>> |Slice model at a minimum rate of 1000 voxels per second
+|Low (Could-Have)
+|Reduces wait time to improve user experience but not critical.
+|===
+
+==== (S.5.2) Priority Table for Imaging Manager
+[cols="^16%, 25%, 16%, 43%, options="header"]
+|===
+|Requirement ID |Requirement Description |Priority Level |Reasoning
+
+|<<F221>> |Generate 3D image showcasing sliced voxel
+|High (Must-Have)
+|Provides vital visualization of the model, which is a critical guide for magnetization.
+
+|<<F222>> |Adjust image to view different perspectives
+|High (Must-Have)
+|Provides quality experience by ensuring visualization is complete and extensive.
+
+|<<F223>> |Generate past projects with previous magnetization
+|Medium (Must-Have)
+|Improves user experience by avoiding full re-magnetization for minor changes.
+
+|<<F224>> |Modify model through the additions and deletions of voxels.
+|Low (Could-Have)
+|Allows quick and simple future edits to the model but not a critical function.
+
+|<<F225>> |Highlight current selection of voxels
+|High (Must-Have)
+|Provides active feedback based on current user interaction to improve usability.
+
+|<<F226>> |Visual tracking of what has been magnetized
+|Medium (Must-Have)
+|Provides users with easy visualization of remaining work, which improves usability in non-critical areas.
+
+|<<NF221>> |Update image change within 0.5 seconds
+|Medium (Should-Have)
+|Allows seamless user experience with smooth and responsive interaction.
+
+|<<NF222>> |Supports display of models with 10,000 voxel
+|Medium (Must-Have)
+|Ensures software can sufficiently handles large scale projects.
+|===
+
+==== (S.5.3) Priority Table for Magnetization Manager
+[cols="^16%, 25%, 16%, 43%, options="header"]
+|===
+|Requirement ID |Requirement Description |Priority Level |Reasoning
+
+|<<F231>> |View specific layer during magnetization
+|High (Must-Have)
+|Facilitates accessible interaction with voxels during magnetization.
+
+|<<F232>> |Set a specific magnetization value for voxel(s)
+|High (Must-Have)
+|Provides users with the ability to magnetize voxels, fulfilling one of the primary purposes of the application.
+
+|<<F233>> |Auto save progress  without manual action
+|Medium (Should-Have)
+|Strengthens dependability and user confidence within critical operations.
+
+|<<F234>> |Display a bar with favourite magnetizations
+|Low (Could-Have)
+|Improves user satisfaction by allowing quicker magnetization, but not critical to core functionality.
+
+|<<NF231>> |Ease of magnetization process
+|Medium (Should-Have)
+|Simples functionality to enhance usability in critical operations.
+
+|<<NF232>> |Update magnetization metadata with less than a second delay
+|Medium (Should-Have)
+|Crucial for guaranteeing prompt and effective updates to the model.
+|===
+
+==== (S.5.4) Priority Table for Exportation Manager
+[cols="^16%, 25%, 16%, 43%, options="header"]
+|===
+|Requirement ID |Requirement Description |Priority Level |Reasoning
+
+|<<F241>> |Validate all voxels are magnetized
+|Medium (Should-Have)
+|Helpful for users to ensure minimal issues during the printing stage.
+
+|<<F242>> |Export file for printing
+|High (Must-Have)
+|Essential function to allow users to use their magnetization model for printing.
+
+|<<F243>> |Export CSV file containing an updated model
+|Medium (Should-Have)
+|Streamlines process for future user modifications, but not essential for core functionality.
+
+|<<F244>> |Progress bar that tracks exportation progress
+|Low (Could-Have)
+|Enhances user experience by engaging user and reducing uncertainty, but not critical.
+
+|<<NF241>> |Fail safe to ensure preservation of data
+|High (Must-Have)
+|Promotes reliability and trust, maintaining a positive user experience.
+
+|<<NF242>> |Export model at a rate of at least 1000 voxels per second
+|Low (Could-Have)
+|Reduces wait time to improve overall user experience but deemed not critical by key stakeholders.
+|===
