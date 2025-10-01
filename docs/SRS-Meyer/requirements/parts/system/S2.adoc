@@ -50,7 +50,7 @@ endif::[]
 
 . [[F232]] *Set magnetization:* Magnetization manager shall allow users to set a specific magnetization value for either an individual or a  group of selected voxels. (F232)
 
-. [[F233]] *Magnetization tracker:* Magnetization manager shall integrate easy tracking of what has already been magnetized by adjusting the colour of the voxel. (F233)
+. [[F233]] *Auto save progress:* Magnetization manager shall save any changes made to the magnetization configuration without requiring manual action to preserve data. (F233)
 
 . [[F234]] *Favourite bar:* Magnetization manager shall allow users to define and maintain a list of ‘favourite’ magnetizations for quick selection and easy reuse. (F234)
 
@@ -68,7 +68,7 @@ endif::[]
 
 . [[F242]] *Export to print:* Exportation Manager shall generate a file that contains all metadata for each voxel in a structured format. (F242)
 
-. [[F243]] *Export model:* Exportation Manager shall generate a file that provides an updated model in the format of the original import file. (F243)
+. [[F243]] *Export magnetization model:* Exportation Manager shall generate a CSV file that provides a voxel-by-voxel description of the model’s magnetization. (F243)
 
 . [[F244]] *Exportation progress tracker:* Exportation Manager shall provide a progress bar that gives a visual indicator of how far along the software is in the exportation process. (F244)
 
