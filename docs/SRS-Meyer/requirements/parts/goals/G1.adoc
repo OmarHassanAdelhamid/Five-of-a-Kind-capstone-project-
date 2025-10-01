@@ -1,6 +1,6 @@
 [#g1,reftext=G.1]
 === (G.1) Context and Overall Objectives
-
+At McMaster University, the Engineering Research Department working on robotics and soft robotics has faced challenges in efficiently designing and modifying voxel-based 3D-printed components. While 3D printers and traditional CAD software are used, existing tools are time-consuming and inflexible, making voxel-level edits difficult and lengthy. By developing a tailored voxel design tool, Team Five of a Kind aims to provide a cost-effective and user-friendly solution that enables researchers to efficiently edit and magnetize voxels layer by layer. This tool will streamline the design process, enhance flexibility, and directly support the department’s research in multi-material 3D printing.
 ifdef::env-draft[]
 TIP: _High-level view of the project: organizational context and reason for building a system. It explains why the project is needed, recalls the business context, and presents the general business objectives._  <<BM22>>
 endif::[]
