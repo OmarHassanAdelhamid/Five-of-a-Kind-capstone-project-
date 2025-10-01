@@ -18,6 +18,7 @@ The system will also interact with the three external components. These componen
 
 This system will not directly interact with any external components. However, as outlined by the Exportation Manager, our system must output a file that is compatible with external printing software to support the natural workflow of the printing process.
 
+<<<
 The application of the overall system functionality will be handled by the [.mcmaster]#MagData# Platform, which is a desktop application. Users will be required to directly install the software on their laptop, as the [.mcmaster]#MagData Platform# will be a locally deployed software system.
 
 .Components involved in MagData platform
