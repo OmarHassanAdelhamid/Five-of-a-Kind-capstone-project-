@@ -66,13 +66,11 @@ endif::[]
 
 . [[F241]] *Magnetization validation:* Exportation Manager shall validate that all voxels have received a assigned magnetization value upon receiving a request to export a file for printing (even if assigned value is simply null to indicate no magnetization required). (F241)
 
-. [[F242]] *Add to recent projects:* Exportation Manager shall add the file to a list of recent projects visible to the user for quick access and future edits. (F242)
+. [[F242]] *Export to print:* Exportation Manager shall generate a file that contains all metadata for each voxel in a structured format. (F242)
 
-. [[F243]] *Export to print:* Exportation Manager shall generate a file that contains all metadata for each voxel in a structured format. (F243)
+. [[F243]] *Export model:* Exportation Manager shall generate a file that provides an updated model in the format of the original import file. (F243)
 
-. [[F244]] *Export model:* Exportation Manager shall generate a file that provides an updated model in the format of the original import file. (F244)
-
-. [[F245]] *Exportation progress tracker:* Exportation Manager shall provide a progress bar that gives a visual indicator of how far along the software is in the exportation process. (F245)
+. [[F244]] *Exportation progress tracker:* Exportation Manager shall provide a progress bar that gives a visual indicator of how far along the software is in the exportation process. (F244)
 
 ===== Non-Functional Requirements:
 
