@@ -64,11 +64,63 @@ hazards.}
 
 \section{System Boundaries and Components}
 
+\iffalse
 \wss{Dividing the system into components will help you brainstorm the hazards.
 You shouldn't do a full design of the components, just get a feel for the major
 ones.  For projects that involve hardware, the components will typically include
 each individual piece of hardware.  If your software will have a database, or an
 important library, these are also potential components.}
+\fi
+
+As discussed in the SRS, the system consists of four primary modules, each responsible
+for a specific part of the transformation from the initial CAD file to the completed
+magnetized voxel file. All components operate locally, with dependencies limited to
+the library files needed to interact with necessary files.
+
+\subsection{Slicing Module}
+\begin{itemize}
+    \item \textbf{Purpose:} Converts input external files into internal native type and interprets existing native files.
+    \item \textbf{Key Functions:} 
+    \begin{itemize}
+        \item Parse CAD files (as per F213)
+        \item Generate output voxel files for program use (as per F213, NF211)
+    \end{itemize}
+    \item \textbf{Integration:} Indirectly receives CAD files from external CAD applications.
+\end{itemize}
+
+\subsection{Visualization Module}
+\begin{itemize}
+    \item \textbf{Purpose:} Renders interactible 3D images for model visualization.
+    \item \textbf{Key Functions:} 
+    \begin{itemize}
+        \item Interpret voxel files (as per **)
+        \item Generate an interactible 3D visualization of the voxel model (as per F221, F222)
+        \item Visualize voxels selected by the user (as per F223)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Magnetization Module}
+\begin{itemize}
+    \item \textbf{Purpose:} Tracks and stores user edits.
+    \item \textbf{Key Functions:} 
+    \begin{itemize}
+        \item Set magnetization vectors for sets of selected voxels (as per F232)
+        \item Store per-voxel magnetizations within internal voxel files (as per F232, NF232)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Exportation Module}
+\begin{itemize}
+    \item \textbf{Purpose:} Handles saving and exporting of user files.
+    \item \textbf{Key Functions:} 
+    \begin{itemize}
+        \item Save voxel models for later editing (as per **)
+        \item Export internal voxel files as *java-readable* format (as per F243, NF241*)
+        \item Validate that each voxel has been magnetized (as per **)
+    \end{itemize}
+    \item \textbf{Integration:} **
+\end{itemize}
+
 
 \section{Critical Assumptions}
 
