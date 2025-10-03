@@ -3,6 +3,9 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{float}
+\usepackage{pdflscape} % For landscape pages
+\usepackage{geometry}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -77,8 +80,8 @@ minimize the number of assumptions that remove potential hazards.  For instance,
 you could assume a part will never fail, but it is generally better to include
 this potential failure mode.}
 
-\section{Failure Mode and Effect Analysis}
 
+\iffalse
 \wss{Include your FMEA table here. This is the most important part of this document.}
 \wss{The safety requirements in the table do not have to have the prefix SR.
 The most important thing is to show traceability to your SRS. You might trace to
@@ -87,6 +90,32 @@ requirements.}
 \wss{If no safety requirement can be devised, other mitigation strategies can be
 entered in the table, including strategies involving providing additional
 documentation, and/or test cases.}
+\fi
+
+\newgeometry{top=1.5cm, bottom=2cm, left=1.5cm, right=3cm} 
+\begin{landscape}
+\section{Failure Mode and Effect Analysis}
+\begin{table}[H]
+\centering
+\caption{Failure Mode and Effect Analysis (FMEA)}
+\renewcommand{\arraystretch}{1.3} 
+\footnotesize 
+\begin{tabular}{|p{3cm}|p{3cm}|p{3.8cm}|p{3.8cm}|p{5.5cm}|p{2cm}|p{1cm}|}
+\hline
+\textbf{Component} & \textbf{Failure Mode} & \textbf{Causes of Failure(s)} & \textbf{Effects of Failure(s)} & \textbf{Recommended Action(s)} & \textbf{SR} & \textbf{Ref.} \\
+\hline
+Slicing Manager & The system does not process the CAD file correctly as the user is expecting. & \textbullet{} The inputed STL file is corrupted therefore it can't be read by the system.\newline \textbullet{} The input file is not in the correct format so the system can't process it.& \textbullet{} The system can't process the file therefore it can't be sliced. \newline \textbullet{} Due to the confusion in system not reading the file, this will result in user frustration. \newline \textbullet{} It will lead to user spending more time to get the system to process the file. & When the file is first inputted into the system, the system will validate that the file is first in the correct format, and that it does not contain any corrupt information. This will then lead to the system prompting the user to re-enter the file or input a new one in. & F211, NF211 & H1 \\
+\hline
+Imaging Manager & The system fails to render the 3D image of the model & \textbullet{} The device that is being used to run the system does not have enough memory to render the image. \newline \textbullet{} The device's GPU driver is not working correctly or is not up to date as required for the system to render the image. & \textbullet{} Model is not displayed leading to poor user experience. \newline \textbullet{} Designers can't proceed with the design review, and fall back to using their old design software to add magnetization and material properties to the design. & The system should check if the device has enough memory to render the image, and if the GPU driver is working correctly. If not, the system should prompt the user to use a different device or update the GPU driver. & F221, NF221 & H2 \\
+\hline
+Exportation Manager & Exported file is missing magnetization and material properties& \textbullet{} The system does not export the magnetization and material properties to the CSV file correctly. \newline \textbullet{} The system fails to save the magnetization and material properties for certain voxels & \textbullet{} The Java program that reads the CSV file receives incomplete data causing print failure or defects. \newline \textbullet{} The Java program reads the file correctly, however the printer crashes due to missing magnetization and material properties. \newline \textbullet{} Material will be wasted if printer crashes after printing a few layers. & The system should validate that the magnetization and material properties are saved for all voxels. If not, the system should prompt the user to re-export the file. & F242, NF241 & H3 \\
+\hline
+Exportation Manager & File format is exported in the incorrect format & \textbullet{} The system does not export the CSV file in the correct structure and format. & The Java program can't read the file correctly because of the wrong format therefore causing the program to crash. & The system should check that the structure of the CSV file is correct and matches the required format. & F241 & H4 \\
+\hline
+\end{tabular}
+\end{table}
+\end{landscape}
+\restoregeometry
 
 \section{Safety and Security Requirements}
 
