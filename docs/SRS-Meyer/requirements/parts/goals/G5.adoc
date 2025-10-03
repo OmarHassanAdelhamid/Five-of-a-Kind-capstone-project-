@@ -6,8 +6,48 @@ TIP: _Fundamental usage paths through the system. It presents the main scenarios
 endif::[]
 
 .High Level use cases diagram
-image::models/use_case.svg[scale=70%,align="center"]
+//image::models/use_case.svg[scale=70%,align="center"]
 
-{emptysec}
+The use case diagram above highlights how we anticipate our direct stakeholders will interact with the voxel magnetization system for the principal use cases. More details for these usages are as follows:
+
+* [[uc1,UC1]] *UC1: Import CAD Design.* 
+
+    1. User obtains a finished 3D design as a mesh file (STL/OBJ format) from CAD software (e.g., AutoCAD).
+    2. User opens the voxel magnetization system and selects the option to import the mesh file.
+    3. System converts the mesh to a voxel grid with fixed dimensions.
+    4. System displays the voxelized model ready for magnetization assignment.
+
++
+
+* [[uc2,UC2]] *UC2: Browse and Select Voxels.* 
+
+    1. User opens the voxel magnetization system and selects an existing voxel model file.
+    2. System loads and displays the selected voxel model, sliced into layers from bottom to top.
+    3. User navigates through layers to view the voxel structure.
+    4. User selects individual voxels or multiple voxels within a layer.
+    5. System highlights selected voxels for magnetization assignment.
+    6. User can modify selections across different layers.
+
++
+
+* [[uc3,UC3]] *UC3: Assign Magnetization Directions.* 
+
+    1. User selects voxels requiring magnetization assignment.
+    2. User specifies magnetization direction for selected voxels.
+    3. System applies the magnetization direction to the selected voxels.
+    4. System provides visual feedback showing magnetization direction vectors.
+    5. System maintains editing history, providing user the option to undo/redo.
+    6. User completes magnetization assignment for all required voxels.
+
++
+
+* [[uc4,UC4]] *UC4: Export Magnetization Data.* 
+
+    1. User completes magnetization assignment for the entire model.
+    2. User initiates export process from the system.
+    3. System generates a printer-ready file containing per-voxel magnetization data, including voxel location, layer information, and magnetization direction metadata, ensuring compatibility with custom printer software.
+    4. User receives the exported file for printer pipeline integration.
+
+
 
 
