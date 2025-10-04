@@ -1,8 +1,114 @@
 [#s2,reftext=S.2]
 === (S.2) Functionality
 
-ifdef::env-draft[]
+ifndef::env-draft[]
 TIP: _**This is the bulk of the System book, describing elements of functionality (behaviors)**. This chapter corresponds to the traditional view of requirements as defining "**what the system does**”. It is organized as one section, S.2.n, for each of the components identified in <<s1>>, describing the corresponding behaviors (functional and non-functional properties)._  <<BM22>>
 endif::[]
 
-{emptysec}
+The following section outlines the specific functional and non-functional requirements, where each requirement has been defined within a specific component scope.
+
+Deriving certain performance factors within the requirements assumes the following:
+* an optimal voxel size of 5.5mm
+* a 9 x 15 printer grid
+* each section of the grid permits a maximum of 518,400 voxels per layer
+* maximum 200 layers
+
+For certain requirements, variables have been defined. A description of each variable as well as its assigned value has been included below:
+
+* *MAX_VOXELS* = 13,996,800,000 voxels
+considers the maximum number of voxels contained within the entire model
+
+* *MAX_DISPLAY* = 103,680,000 voxels
+considers the maximum number of voxels that will be displayed at a given time.
+it will mimic division similarly to the 9 x 15 grid division.
+
+* *MIN_RATE* = 500,000 voxels per second
+considers how fast voxel data will be generated during file import and export
+
+==== (2.2.1) Import Manager
+
+===== Functional Requirements
+
+. [[F211]] *New project creation:* Import Manager shall allow a user to start a new project with the option to import an initial CAS model from their personal device that will be sliced. (F211)
+
+. [[F212]] *Past project access:* Import Manager shall allow a user to import a past project file in order to reopen a project with all magnetization and material properties preserved. (F212)
+
+. [[F213]] *Voxel block size:* Import Manager shall allow the user to configure the voxel dimensions into which their geometric model will be sliced. (F213)
+
+. [[F214]] *Geometric model size:* Import Manager shall allow users to modify the dimensions of their model and scale the model in accordance with these dimensions. (F214)
+
+. [[F215]] *Model adjustment:* Import Manager shall resolve partial voxels and interpret them in the best way that preserves the integrity and accuracy of the provided model. (F215)
+
+. [[F216]] *Model division:* Import Manager shall partition the model into user-manageable display sections that do not surpass the MAX_DISPLAY threshold. (F216)
+
+===== Non-Functional Requirements
+
+. [[NF211]] *Scalable projects:* Import Manager shall support the generation of sliced models that contain up to MAX_VOXELS without loss of functionality. (NF211)
+
+. [[NF212]] *Slicing process performance:* Import Manager shall generate the voxel data file at a minimum rate of MIN_RATE. (NF212)
+
+==== (2.2.2) Visualization Manager
+
+===== Functional Requirements
+
+. [[F221]] *3D image rendition:* Visualization Manager shall recreate a 3D model with clear visualization of sliced voxels. (F221)
+
+. [[F222]] *Partition division:* Visualization Manager shall provide users with simplistic navigation across user-manageable display sections to ensure access to all model partitions. (F222)
+
+. [[F223]] *Image interaction:* Visualization Manager shall provide users with an intuitive interface that permits seamless navigation across multiple perspectives of the 3D model. (F223)
+
+. [[F224]] *Manual voxel alteration:* Visualization Manager shall allow users to add and delete voxels of the same defined dimensions present in the rest of the model. (F224)
+
+. [[F225]] *Layer focus:* Visualization Manager shall allow users to isolate a specific layer to facilitate property assignments, rendering all other voxels irrelevant while that layer is in focus. (F225)
+
+. [[F226]] *Highlight voxel selection:* Visualization Manager shall provide users with visualization that showcases which voxels are currently selected within a specific layer. (F226)
+
+. [[F227]] *Magnetization tracker:* Visualization Manager shall integrate easy tracking of property assignments by adjusting the colour of the voxel. (F227)
+
+<<<
+===== Non-Functional Requirements
+
+. [[NF221]] *Image updates:* Visualization Manager shall update any changes to the perspective of the 3D model with a latency of less than 500ms to allow a seamless user interaction. (NF221)
+
+. [[NF222]] *Visual scalability:* Visualization Manager shall support the visual display of voxel models that contain up to MAX_VOXELS without significant degradation of performance or loss of functionality. (NF222)
+
+==== (2.2.3) Property Manager
+
+===== Functional Requirements
+
+. [[F231]] *Magnetization assignment:* Property Manager shall allow users to set a desired magnetization value for either an individual or a group of selected voxels. (F231)
+
+. [[F232]] *Favourite bar:* Property Manager shall allow users to define and maintain a list of ‘favourite’ magnetizations for quick selection and easy reuse. (F232)
+
+. [[F233]] *Material assignment:* Property Manager shall allow users to assign a specific material to the voxels currently selected. (F233)
+
+. [[F234]] *Material labels:* Property Manager shall ease the process of recalling what material number correlates to a chosen material by providing the ability to assign a label to a material number. (F234)
+
+. [[F235]] *Property replication:* Property Manager shall allow users to select a group of voxels and replicate the defined properties of those voxels to other layers. (F235)
+
+. [[F236]] *Auto save progress:* Property Manager shall save any changes made to set property configurations without requiring manual action to preserve data. (F236)
+
+===== Non-Functional Requirements
+
+. [[NF231]] *Ease of use:* Property Manager shall ensure that the process of magnetizing a large group of selected voxels can be completed in 5 steps or less, creating an intuitive interface. (NF231)
+
+. [[NF232]] *Metadata update:* Property Manager shall update the voxel magnetization metadata with a latency of less than 1s to allow consistent, synchronized model modification updates. (NF232)
+
+==== (2.2.4) Export Manager
+
+===== Functional Requirements
+
+. [[F241]] *Property validation:* Export Manager shall validate that all voxels have received an assigned magnetization value upon receiving a request to export a file for printing (even if the assigned value is simply null to indicate no magnetization required). (F241)
+
+. [[F242]] *Print export:* Export Manager shall generate a file that contains all metadata for each voxel in a structured format. (F242)
+
+. [[F243]] *Model export:* Export Manager shall generate a project file that maintains the same data structure as defined in the software to allow easy rebuilding of past projects. (F243)
+
+. [[F244]] *Exportation progress tracker:* Export Manager shall provide a progress bar that gives a visual indicator of how far along the software is in the exportation process. (F244)
+
+===== Non-Functional Requirements
+
+. [[NF241]] *Fail safe:* Export Manager shall ensure voxel data and metadata remain intact and unaltered in the event of an incomplete export, preserving the integrity of the magnetized project file without loss. (NF241)
+
+. [[NF242]] *Exportation performance:* Export Manager shall export metadata files for geometric models at a minimum rate of MIN_RATE. (NF242)
+
