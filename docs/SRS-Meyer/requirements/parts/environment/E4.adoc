@@ -7,7 +7,7 @@ endif::[]
 
 Assumptions made to simplify system scope are as follows:
 
-* *Operating System Support:* We assume that only recent Linux distributions that are made use of by primary users will need to be supported. For the first development iteration, this is sufficient to satisfy all potential users.
+* *Operating System Support:* We assume that only recent Windows releases and Linux distributions that are made use of by primary users will need to be supported. For the first development iteration, this is sufficient to satisfy all potential users.
 
 * *Processing Power:* We assume that the lab computers possess at least the resources required to handle rudimentary 3D graphics. 
 
