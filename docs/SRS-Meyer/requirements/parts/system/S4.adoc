@@ -122,7 +122,9 @@ This scenario is important because it addresses the critical need for iterative 
     - 5.1.2 User makes a mistake in removing created voxels - System provides 'Redo' option.
     - 5.2 User wants to create voxels with pre-defined properties - System provides option to enter a material ID or vector.
     - 9.1 User makes a mistake in which voxels are deleted - System provides 'Undo' option to revert deletion.
-* **Success Postcondition**: 
+* **Success Postcondition**: Voxels within the current layer have been successfully created or deleted to the user's desire.
+
+This scenario is important as it reflects both the user's ability to create voxel models from scratch, or correct any undesired voxel placements after conversion from a CAD file. Being able to edit models at this level is critical to success in satisfying the designer's vision.
 
 ==== (S.4.5) Export Voxel Property Assignment Data for 3D Printing
 
