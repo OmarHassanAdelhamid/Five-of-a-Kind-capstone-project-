@@ -9,38 +9,41 @@ endif::[]
 
 To ensure that the requirements are fulfilled to their intended functionality, several validation approaches will be applied. 
 
-    - *Automated Testing*: The Slicing Manager incluses the voxel configuartion, geometric resizing, and project importing. These features are the basis of the problem, so they need to be tested to ensure correctness and consistency. To do this, automated testing will be implemented to oversee the correctness of the features. 
-    - *Manual Testing*: The usability elements in this project includes the voxel navigation, model visualization, and magnetization assignment, all which are beneficial for the core functionality of the system. These features need to be tested to evaluate the overall user experience during the workflows of the system.
-    - *Integrated Testing*: This testing strategy will be used to confirm the integration between the Slicing, Imaging, Magnetization, and Exportation Managers. To ensure the exchange of any voxel and metadata between managers is handled correctly.
+    - *Automated Testing*: The Import Manager includes the voxel configuration, model resizing, and project importing. These features are the basis of the problem, so they need to be tested to ensure correctness and consistency. To do this, automated testing will be implemented to oversee the correctness of the features. 
+    - *Manual Testing*: The usability elements in this project includes the voxel navigation, model visualization, and property assignment, all of which are beneficial for the core functionality of the system. These features need to be tested to evaluate the overall user experience during the workflows of the system.
+    - *Integrated Testing*: This testing strategy will be used to confirm the integration between the Import, Visualisation, Property, and Exportation Managers. To ensure the exchange of any voxel and metadata between managers is handled correctly.
     - *Stakeholder Pre-Development Meeting*: Gather feedback from stakeholder to fix or improve the system. The goal is to gather actionable feedback on the core functionality of the system in terms of the correctness of features. The quantitative metrics may not apply here directly however, the feedback will promote system improvement.
 
 ==== Non-Functional Requirements
 
-    - *Scalability*: The system should handle voxel models containing up to *10,000 voxels*, with the ability to scale futhur without significant performance degradation. The parts of the system that need to be tested are the Slicing and Imaging Managers, as they include many of the voxel model features. This will be validated using load and stress testing, simulating large voxel models to confirm performance stability.
+    - *Scalability*: The system should handle voxel models containing up to MAX_VOXELS, with the ability to scale futher without significant performance degradation. The parts of the system that need to be tested are the Import and Visualisation Managers, as they include many of the voxel model features. This will be validated using load and stress testing, simulating large voxel models to confirm performance stability.
     ** Covered requirements <<NF211>>, <<NF222>>
-    - *Performance*: An important requirement that this system should meet is the performance which is required for the different components. The Slicing Manager should generate voxel files at a minimum rate of 1000 voxels per second, the Imaging Manager should update perspectives in under 500ms, and the Magnetization Manager must update metadata in under 1s. These performance requirements will be validated by setting benchmarks and running stress tests to confirm that each component consistently meets the thresholds.
+    - *Performance*: An important requirement that this system should meet is the performance which is required for the different components. The Import Manager should generate voxel files at a minimum rate of MIN_RATE, the Visualisation Manager should update perspectives in under MAX_VIEW_LATENCY, the Magnetization Manager must update metadata in under MAX_EDIT_LATENCY, and the Export Manager should generate voxel metadata files at a minimum rate of MIN_RATE. These performance requirements will be validated by setting benchmarks and running stress tests to confirm that each component consistently meets the thresholds.
     ** Covered requirements <<NF212>>, <<NF221>>, <<NF232>>, <<NF242>>
-    - *Ease of Use*: To ensure that the system is easy to use for the stakeholders, the interface and workflows will be tested for clairty, minimal steps to complete the core tasks, and accessibilituy of commonly used features. For example, the Magnetization Manager should enable group magnetization in five steps or fewer.
+    - *Ease of Use*: To ensure that the system is easy to use for the stakeholders, the interface and workflows will be tested for clairty, minimal steps to complete the core tasks, and accessibilituy of commonly used features. For example, the Property Manager should enable group edits in MAX_INTERACTIONS or fewer.
     ** Covered requirement <<NF231>>
     - *Compliance*: As this system will interact with other systems such as AutoCAD and the existing Java printing software, the system should be validated for compatibility with both input files it receives and output files it generates. This will be validated through integration testing with the receiving and target software.
     ** Covered requirement <<NF241>>
 
-The most important scenario in S.4 is <<S.4.2>>: Assign Magnetization to Voxel Layer. This scenario is one of the primary reasons for this system to be created. Therefore, these are five tests that validate this scenario across multiple levels of testing include:
+The most important scenario in S.4 is <<S.4.2>>: Assign Properties to Voxels within a Layer. This scenario is one of the primary reasons for this system to be created. Therefore, these are five tests that validate this scenario across multiple levels of testing include:
 
-    - *Layer Navigation and Voxel Selection Test*: Validate that the system correctly displays 2D cross-sections for selected layers and allows users to select individual or multiple voxels using click/drag selection. The system must highlight selected voxels and show their current magnetization state.
+    - *Layer Navigation and Voxel Selection Test*: Validate that the system correctly displays 2D cross-sections for selected layers and allows users to select individual or multiple voxels using click/drag selection. The system must highlight selected voxels and show their current magnetization state and material assignments.
     ** Corresponds to <<F231>>, <<F223>>
 
-    - *Magnetization Direction Assignment Test*: Validate that the system correctly applies selected magnetization directions to chosen voxels and updates the visual display with appropriate color coding. The system must maintain the magnetization state and allow users to navigate between layers while preserving assignments.
-    ** Corresponds to <<F232>>, <<F233>>
+    - *Magnetization Vector Assignment Test*: Validate that the system correctly applies selected magnetization directions to chosen voxels and updates the visual display with appropriate colouring upon request. The system must maintain the magnetization state and allow users to navigate between layers while preserving assignments.
+    ** Corresponds to <<F231>>, <<F227>>
 
-    - *Multi-Voxel Selection and Batch Assignment Test*: Validate the functionality for selecting multiple voxels and applying consistent magnetization directions to the entire selection. The system must handle performance gracefully when many voxels are selected and provide appropriate feedback.
-    ** Corresponds to <<F231>>, <<F232>>
+    - *Material Assignment Test*: Validate that the system correctly applies selected material ID to chosen voxels and updates the visual display with appropriate colors. The system must maintain the material ID and allow users to navigate between layers while preserving assignments.
+    ** Corresponds to <<F233>>, <<F227>>
+
+    - *Multi-Voxel Selection and Batch Assignment Test*: Validate the functionality for selecting multiple voxels and applying consistent properties to the entire selection. The system must handle performance gracefully when many voxels are selected and provide appropriate feedback.
+    ** Corresponds to <<F231>>, <<F233>>
 
     - *Undo and Clear Operations Test*: Validate the system's ability to revert selections and clear magnetization assignments. The system must provide 'Undo' options for accidental selections and 'Clear' functionality for removing magnetization from selected voxels.
-    ** Corresponds to <<F232>>
+    ** Corresponds to <<F!!!>>
 
     - *Auto-Save and Data Persistence Test*: Validate the system's automatic saving functionality and data persistence capabilities. The system must save changes to the project file automatically and maintain data integrity during layer navigation and magnetization assignment operations.
-    ** Corresponds to <<F224>>
+    ** Corresponds to <<F236>>
 
 
 ==== Traceability Matrix
@@ -50,11 +53,13 @@ The most important scenario in S.4 is <<S.4.2>>: Assign Magnetization to Voxel L
 
 | Test 1 | Validate layer navigation and voxel selection functionality | <<F231>>, <<F223>>
 
-| Test 2 | Validate magnetization direction assignment and visual updates | <<F232>>, <<F233>>
+| Test 2 | Validate magnetization vector assignment and visual updates | <<F231>>, <<F227>>
 
-| Test 3 | Validate multi-voxel selection and batch assignment | <<F231>>, <<F232>>
+| Test 3 | Validate material assignment and visual updates | <<F233>>, <<F227>>
 
-| Test  4 | Validate undo and clear operations | <<F232>>
+| Test 4 | Validate multi-voxel selection and batch assignment | <<F231>>, <<F233>>
 
-| Test 5 | Validate auto-save and data persistence | <<F224>>
+| Test 5 | Validate undo and clear operations | <<F!!!>>
+
+| Test 6 | Validate auto-save and data persistence | <<F236>>
 |===
