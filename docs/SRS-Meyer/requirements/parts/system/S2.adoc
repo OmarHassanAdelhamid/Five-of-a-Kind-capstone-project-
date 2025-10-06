@@ -63,7 +63,9 @@ considers how fast voxel data will be generated during file import and export
 
 . [[F226]] *Highlight voxel selection:* Visualization Manager shall provide users with visualization that showcases which voxels are currently selected within a specific layer. (F226)
 
-. [[F227]] *Magnetization tracker:* Visualization Manager shall integrate easy tracking of property assignments by adjusting the colour of the voxel. (F227)
+. [[F227]] *Material assignment tracker:* Visualization Manager shall integrate easy tracking of voxels that have been assigned material IDs by adjusting the colour of the voxel to indicate assignment completeness. (F227)
+
+.[[F228]] *Magnetization assignment tracker:* Visualization Manager shall integrate easy tracking of voxels that have been assigned magnetization vectors by providing the option to toggle the colour all magnetized voxels. (F228)
 
 <<<
 ===== Non-Functional Requirements
