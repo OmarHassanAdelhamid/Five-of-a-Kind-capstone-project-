@@ -8,7 +8,7 @@ endif::[]
 The following section outlines the specific functional and non-functional requirements, where each requirement has been defined within a specific component scope.
 
 Deriving certain performance factors within the requirements assumes the following:
-* an optimal voxel size of 5.5mm
+* an optimal voxel size of 5.5nm
 * a 9 x 15 printer grid
 * each section of the grid permits a maximum of 518,400 voxels per layer
 * maximum 200 layers
