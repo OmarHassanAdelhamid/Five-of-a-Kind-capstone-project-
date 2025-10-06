@@ -5,6 +5,8 @@ ifdef::env-draft[]
 TIP: _Obligations and limits imposed on the project and system by the environment. This chapter defines non-negotiable restrictions coming from the environment (business rules, physical laws, engineering decisions), which the development will have to take into account._  <<BM22>>
 endif::[]
 
+This section details constraints imposed on the project. To summarize, key constraints include specifically which files and operating systems the system must support.
+
 * *Operating System Support.* The system must support the Windows and Linux operating systems. This constraint is necessary to ensure the application can be installed and run on the lab computers utilised by the application's users.
 
 * *STL File Support.* To support the importing and converting of user-created external CAD files, the system must parse STL files. Information relating to the specifications of STL files can be found link:https://www.fabbers.com/tech/STL_Format[here.]
