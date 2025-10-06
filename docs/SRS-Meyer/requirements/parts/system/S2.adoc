@@ -7,23 +7,25 @@ endif::[]
 
 The following section outlines the specific functional and non-functional requirements, where each requirement has been defined within a specific component scope.
 
-Deriving certain performance factors within the requirements assumes the following:
-* an optimal voxel size of 5.5nm
-* a 9 x 15 printer grid
-* each section of the grid permits a maximum of 518,400 voxels per layer
-* maximum 200 layers
-
 For certain requirements, variables have been defined. A description of each variable as well as its assigned value has been included below:
 
+* *OPTIMAL_VOXEL_SIZE* = 5.5nm
+This was derived using the optimal voxel size specified by the stakeholder.
+
 * *MAX_VOXELS* = 13,996,800,000 voxels
-considers the maximum number of voxels contained within the entire model
+This considers the maximum number of voxels contained within the entire model.
+
+* *MAX_LAYER_DISPLAY* = 518,400 voxels
+This was derived assuming 960 voxels x 540 voxels per layer. It considers the maximum number of voxels contained within a single layer for a single display window
 
 * *MAX_DISPLAY* = 103,680,000 voxels
-considers the maximum number of voxels that will be displayed at a given time.
-it will mimic division similarly to the 9 x 15 grid division.
+This was derived assuming 960 voxels x 540 voxels per layer. It considers the maximum number of voxels that will be displayed at a given time.
 
 * *MIN_RATE* = 500,000 voxels per second
-considers how fast voxel data will be generated during file import and export
+This considers how fast voxel data will be generated during file import and export.
+
+* *MAX_EDIT_LATENCY* = 1 second
+This considers how quickly the system should respond to model modifications performed by the user.
 
 ==== (2.2.1) Import Manager
 
@@ -35,7 +37,7 @@ considers how fast voxel data will be generated during file import and export
 
 . [[F213]] *Voxel size:* Import Manager shall allow the user to configure the voxel dimensions into which their geometric model will be sliced. (F213)
 
-. [[F214]] *Geometric model size:* Import Manager shall allow users to modify the dimensions of their model and scale the model in accordance with these dimensions. (F214)
+. [[F214]] *Geometric model size:* Import Manager shall allow users to modify the dimensions of their model in order to scale the model to the desired printing size before being sliced into voxels. (F214)
 
 . [[F215]] *Model adjustment:* Import Manager shall resolve partial voxels and interpret them in the best way that preserves the integrity and accuracy of the provided model. (F215)
 
@@ -65,7 +67,7 @@ considers how fast voxel data will be generated during file import and export
 
 . [[F227]] *Material assignment tracker:* Visualization Manager shall integrate easy tracking of voxels that have been assigned material IDs by adjusting the colour of the voxel to indicate assignment completeness. (F227)
 
-.[[F228]] *Magnetization assignment tracker:* Visualization Manager shall integrate easy tracking of voxels that have been assigned magnetization vectors by providing the option to toggle the colour all magnetized voxels. (F228)
+.[[F228]] *Magnetization assignment tracker:* Visualization Manager shall integrate easy tracking of voxels that have been assigned magnetization vectors by providing the option to toggle the colour of all magnetized voxels. (F228)
 
 <<<
 ===== Non-Functional Requirements
@@ -73,6 +75,8 @@ considers how fast voxel data will be generated during file import and export
 . [[NF221]] *Image updates:* Visualization Manager shall update any changes to the perspective of the 3D model with a latency of less than 500ms to allow a seamless user interaction. (NF221)
 
 . [[NF222]] *Visual scalability:* Visualization Manager shall support the visual display of voxel models that contain up to MAX_VOXELS without significant degradation of performance or loss of functionality. (NF222)
+
+. [[NF223]] *Accessible colours:* Visualization Manager shall ensure all colours that highlight voxels have unique hex codes and can be distinctively recognized under standard lighting conditions. (NF223)
 
 ==== (2.2.3) Property Manager
 
@@ -90,11 +94,15 @@ considers how fast voxel data will be generated during file import and export
 
 . [[F236]] *Auto save progress:* Property Manager shall save any changes made to set property configurations without requiring manual action to preserve data. (F236)
 
+. [[F237]] *Edit history* Property Manager shall allow users to access edit history and revert the model to a previous version. (F237)
+
+. [[F238]] *Select layer* Property Manager shall allow users to select an entire layer at once to enable easy assignment of a common material and magnetization amongst all voxels within a layer. (F238)
+
 ===== Non-Functional Requirements
 
-. [[NF231]] *Ease of use:* Property Manager shall ensure that the process of magnetizing a large group of selected voxels can be completed in 5 steps or less, creating an intuitive interface. (NF231)
+. [[NF231]] *Ease of use:* Property Manager shall ensure that the process of magnetizing a large group of selected voxels can be completed in 5 steps or less with a user who is familiar with how the printer operates, creating an intuitive interface. (NF231)
 
-. [[NF232]] *Metadata update:* Property Manager shall update the voxel magnetization metadata with a latency of less than 1s to allow consistent, synchronized model modification updates. (NF232)
+. [[NF232]] *Metadata update:* Property Manager shall update the voxel magnetization metadata with a latency of less than MAX_EDIT_LATENCY to allow consistent, synchronized model modification updates. (NF232)
 
 ==== (2.2.4) Export Manager
 
@@ -104,9 +112,11 @@ considers how fast voxel data will be generated during file import and export
 
 . [[F242]] *Print export:* Export Manager shall generate a file that contains all metadata for each voxel in a structured format. (F242)
 
-. [[F243]] *Model export:* Export Manager shall generate a project file that maintains the same data structure as defined in the software to allow easy rebuilding of past projects. (F243)
+. [[F243]] *File export:* Export Manager shall access the file generated by the import manager upon project initialization and produce a standalone file that the user can name and save locally on their personal device outside of the software. (F243)
 
 . [[F244]] *Exportation progress tracker:* Export Manager shall provide a progress bar that gives a visual indicator of how far along the software is in the exportation process. (F244)
+
+. [[F245]] *Model summary:* Export Manager shall allow users the option to export a file that summarizes model statistics upon producing a standalone file of the model. (F245)
 
 ===== Non-Functional Requirements
 
