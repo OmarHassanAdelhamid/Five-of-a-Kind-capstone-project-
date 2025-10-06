@@ -11,4 +11,4 @@ There are two primary components that the system interacts with:
 
 * *External CAD Software.* This component is any external software responsible for generating files users will import and use the system to convert. In this way, the system indirectly interacts with this software; if this software changes how it exports files, the system would be affected. 
 
-* *3D Printer Mesh Generator.* This component is the pre-existing software that operates on the files the system will export. Similar to the above, should this software change the format of the file needed as input, the system would be affected.
+* *Custom 3D Printer Software.* This component is the pre-existing software that operates on the files the system will export. Similar to the above, should this software change the format of the file needed as input, the system would be affected.
