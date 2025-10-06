@@ -5,7 +5,7 @@ ifdef::env-draft[]
 TIP: _Properties of the environment that may be assumed, with the goal of facilitating the project and simplifying the system. It defines properties that are not imposed by the environment (like those in <<e3>>) but assumed to hold, as an explicit decision meant to facilitate the system's construction._  <<BM22>>
 endif::[]
 
-Assumptions made to simplify system scope are as follows:
+This section details any assumptions made that are not imposed upon the project. As follows are assumptions made to simplify project scope.
 
 * *Operating System Support:* We assume that only recent Windows releases and Linux distributions that are made use of by primary users will need to be supported. For the first development iteration, this is sufficient to satisfy all potential users.
 
