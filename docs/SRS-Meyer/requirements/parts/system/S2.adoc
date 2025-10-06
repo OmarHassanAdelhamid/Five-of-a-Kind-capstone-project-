@@ -33,7 +33,7 @@ considers how fast voxel data will be generated during file import and export
 
 . [[F212]] *Past project access:* Import Manager shall allow a user to import a past project file in order to reopen a project with all magnetization and material properties preserved. (F212)
 
-. [[F213]] *Voxel block size:* Import Manager shall allow the user to configure the voxel dimensions into which their geometric model will be sliced. (F213)
+. [[F213]] *Voxel size:* Import Manager shall allow the user to configure the voxel dimensions into which their geometric model will be sliced. (F213)
 
 . [[F214]] *Geometric model size:* Import Manager shall allow users to modify the dimensions of their model and scale the model in accordance with these dimensions. (F214)
 
