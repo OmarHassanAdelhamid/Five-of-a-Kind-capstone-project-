@@ -80,7 +80,7 @@ considers how fast voxel data will be generated during file import and export
 
 . [[F231]] *Magnetization assignment:* Property Manager shall allow users to set a desired magnetization value for either an individual or a group of selected voxels. (F231)
 
-. [[F232]] *Favourite bar:* Property Manager shall allow users to define and maintain a list of ‘favourite’ magnetizations for quick selection and easy reuse. (F232)
+. [[F232]] *Favourite bar:* Property Manager shall allow users to define and maintain a list of ‘favourite’ magnetization vectors for quick selection and easy reuse. (F232)
 
 . [[F233]] *Material assignment:* Property Manager shall allow users to assign a specific material to the voxels currently selected. (F233)
 
