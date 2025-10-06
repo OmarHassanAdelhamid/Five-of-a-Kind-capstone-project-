@@ -29,7 +29,7 @@ considers how fast voxel data will be generated during file import and export
 
 ===== Functional Requirements
 
-. [[F211]] *New project creation:* Import Manager shall allow a user to start a new project with the option to import an initial CAS model from their personal device that will be sliced. (F211)
+. [[F211]] *New project creation:* Import Manager shall allow a user to start a new project with the option to import an initial CAD file from their personal device that will be sliced. (F211)
 
 . [[F212]] *Past project access:* Import Manager shall allow a user to import a past project file in order to reopen a project with all magnetization and material properties preserved. (F212)
 
