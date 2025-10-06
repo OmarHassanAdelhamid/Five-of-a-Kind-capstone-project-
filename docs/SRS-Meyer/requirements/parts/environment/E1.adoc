@@ -5,6 +5,8 @@ ifdef::env-draft[]
 TIP: _Clear and precise definitions of all the vocabulary specific to the application domain, including technical terms, words from ordinary language used in a special meaning, and acronyms. It introduces the terminology of the project; not just of the environment in the strict sense, but of all its parts._  <<BM22>>
 endif::[]
 
+This section details all technical terms used throughout this project's documentation, as well as project-specific vocabulary (eg. words used in different contexts here) and any non-obvious acronyms.
+
 *Voxel*
 
 Traditionally, a voxel is the equivalent of a 3D pixel - values aligning to a regular 3D grid that takes on the appearance of a cube. Within our project, it is possible for the height of these voxels to change.
