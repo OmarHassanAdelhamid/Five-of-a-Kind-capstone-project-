@@ -5,11 +5,11 @@ ifdef::env-draft[]
 TIP: _Properties of the environment that the system's operation must preserve, i.e., properties of the environment that operations of the system may assume to hold when they start, and must maintain._  <<BM22>>
 endif::[]
 
-The following are assumptions related to system operations that we expect to hold.
+This section details assumptions related to system operations that we expect to hold throughout the system's usage. Included are both assumptions related to file usage and user characteristics.
 
 * The system assumes that imported models are printable (with reference to the custom 3D printer); it is assumed that users are knowledgeable to be able to recognize possible errors that may occur. Checking model geometry is considered out of project scope.
 
-* The system assumes that voxel height will not change after converting a CAD file; the system will not provide methods to alter the height of voxels after initial voxel model creation.
+* The system assumes that voxel height will not change after converting a CAD file; the system will not provide methods to alter the height of voxels after initial project creation.
 
 * The system assumes that users are aware of any associated physics with respect to model simulation; simulation of models is considered out of project scope.
 
