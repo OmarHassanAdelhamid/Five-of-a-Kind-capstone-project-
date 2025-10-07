@@ -1,8 +1,17 @@
 [#s3,reftext=S.3]
 === (S.3) Interfaces
 
-ifdef::env-draft[]
+ifndef::env-draft[]
 TIP: _How the system makes the functionality of <<s2>> available to the rest of the world, particularly user interfaces and program interfaces (APIs). It specifies how that functionality will be made available to the rest of the world, including people (users) and other systems. These are interfaces provided by the system to the outside; the other way around, interfaces from other systems, which the system may use, are specified in <<e2>>._  <<BM22>>
 endif::[]
 
-{emptysec}
+Users will use this interface to interact with the generated 3D rendition of the CAD model while also viewing voxel layers to execute the core functionality of assigning magnetization and materials to voxels. It should demonstrate seamless and user-friendly navigation across multiple perspectives of the 3D model through rotation and resizing while allowing easy access to the different voxel layers and an intuitive process for property assignment and model modifications. The provided wireframe mockups showcase the simplest design that captures the essential functionalities in a well-organized interface that users will be able to navigate naturally without confusion.
+
+.Interface after initialize 3D rendition is generated.
+image::models/interface1.png[scale=25%,align="center"]
+
+.Accessing partition division through interface.
+image::models/interface2.png[scale=25%,align="center"]
+
+.Entering layer focus interface for property assignment.
+image::models/interface3.png[scale=25%,align="center"]
