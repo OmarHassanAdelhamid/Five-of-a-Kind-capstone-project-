@@ -1,47 +1,158 @@
 [#p3,reftext=P.3]
 === (P.3) Schedule and Milestones
 
-The development of the Five-of-a-Kind voxel magnetization system is planned over multiple phases, beginning with comprehensive documentation and requirements analysis before transitioning to implementation. Our development strategy focuses on thorough planning and risk mitigation through proof of concept demonstrations, ensuring the system meets the specific needs of researchers working with magnetized 3D printed objects.
+The development of the Five-of-a-Kind voxel magnetization system is planned over multiple sprints, beginning with comprehensive documentation and requirements analysis before transitioning to implementation. Our development strategy focuses on thorough planning and risk mitigation through proof of concept demonstrations, ensuring the system meets the specific needs of researchers working with magnetized 3D printed objects. The system addresses the critical bottleneck in current CAD workflows where researchers must manually rebuild objects voxel-by-voxel to assign magnetization directions, consuming hours per part and making iteration fragile.
 
-**Phase 1: Documentation and Requirements (September - October 2025)**
+**Sprint 1: Documentation and Requirements Foundation (September - October 2025)**
 
-- **Problem Statement, Proof of Concept, and Development Plan** (September 22, 2025)
-  Complete initial project documentation including problem analysis, stakeholder identification, and development methodology. This establishes the foundation for all subsequent work and ensures team alignment on project scope and approach.
+- **Epic 1: Problem Statement, Proof of Concept, and Development Plan** (September 22, 2025)
+  Complete initial project documentation including problem analysis, stakeholder identification, and development methodology. This establishes the foundation for all subsequent work and ensures team alignment on project scope and approach. The problem statement defines the core challenge: enabling per-layer voxel viewing, selection (single or multiple voxels), and re-assignment of magnetization directions on top of an imported CAD design, eliminating the need to rebuild objects manually in COMSOL.
+  
+  *Sprint 1.1 Tasks:*
+  - Research and document current CAD workflow bottlenecks
+  - Interview stakeholders (researchers, lab operators, supervisors)
+  - Define project scope and constraints
+  - Create initial proof of concept plan
+  - Establish team roles and communication protocols
+  - Set up GitHub repository and project management tools
 
-- **SRS and Hazard Analysis Revision 0** (October 6, 2025)
-  Develop comprehensive software requirements specification and conduct hazard analysis to identify potential risks and safety considerations in the voxel magnetization workflow. This phase ensures all functional and non-functional requirements are properly documented and validated.
+- **Epic 2: SRS and Hazard Analysis Development** (October 6, 2025)
+  Develop comprehensive software requirements specification and conduct hazard analysis to identify potential risks and safety considerations in the voxel magnetization workflow. This phase ensures all functional and non-functional requirements are properly documented and validated, including the system's ability to handle STL/OBJ mesh files, maintain fixed voxel dimensions of 300×300μm (XY) and 110μm (Z), and export Java-readable files for the custom printer pipeline. This epic includes the completion of system architecture documentation (S1-S5) defining the four core components: Slicing Manager, Imaging Manager, Magnetization Manager, and Exportation Manager, along with their functional requirements, interfaces, and prioritization framework.
+  
+  *Sprint 1.2 Tasks:*
+  - Define functional requirements for each component (F211-F244)
+  - Specify non-functional requirements and performance targets (NF211-NF242)
+  - Create component architecture diagrams (PlantUML)
+  - Design wireframe mockups for main interface
+  - Conduct hazard analysis and identify critical assumptions
+  - Prioritize requirements using MoSCoW methodology
+  - Document system interfaces and external dependencies
 
-**Phase 2: Verification and Validation Planning (October 2025)**
+- **Epic 3: Verification and Validation Planning** (October 27, 2025)
+  Create detailed verification and validation plan to ensure the system will meet all specified requirements. This includes defining test strategies, acceptance criteria, and validation methods for the voxel magnetization system, particularly focusing on the accuracy of voxelization, magnetization assignment, and export format compatibility with the existing 3D printer workflow.
+  
+  *Sprint 1.3 Tasks:*
+  - Define unit testing strategy for each component
+  - Plan integration testing between components
+  - Design system testing scenarios
+  - Create user acceptance testing criteria
+  - Establish performance benchmarking procedures
+  - Plan validation with stakeholders (researchers, lab operators)
+  - Document test data requirements and test cases
 
-- **V&V Plan Revision 0** (October 27, 2025)
-  Create detailed verification and validation plan to ensure the system will meet all specified requirements. This includes defining test strategies, acceptance criteria, and validation methods for the voxel magnetization system.
+**Sprint 2: Design and Proof of Concept (November 2025)**
 
-**Phase 3: Design and Proof of Concept (November 2025)**
+- **Epic 4: System Architecture and Design Specification** (November 10, 2025)
+  Develop initial system architecture and detailed design specifications for the voxel magnetization system, including web-based frontend UI design, local server backend architecture, and PostgreSQL database schema. The design will incorporate the team's technology choices: TypeScript/React frontend with Three.js for 3D visualization, Python/FastAPI backend, and local data storage to maintain edit history and enable undo/redo functionality. This epic will detail the four core components: Slicing Manager (CAD file import and voxelization with 300×300μm XY, 110μm Z dimensions), Imaging Manager (3D visualization with <500ms update latency), Magnetization Manager (layer-based voxel selection and magnetization assignment), and Exportation Manager (Java-readable file export at 1000 voxels/second minimum rate).
+  
+  *Sprint 2.1 Tasks:*
+  - Design database schema for voxel data and magnetization metadata
+  - Create API specifications for component communication
+  - Design React component hierarchy for frontend
+  - Plan Three.js integration for 3D visualization
+  - Design file I/O interfaces for STL/OBJ import
+  - Create data flow diagrams between components
+  - Design error handling and validation strategies
+  - Plan local storage architecture for edit history
 
-- **Design Document Revision 1** (November 10, 2025)
-  Develop initial system architecture and detailed design specifications for the voxel magnetization system, including frontend UI design, backend architecture, and database schema.
+- **Epic 5: Proof of Concept Demonstration** (November 17-26, 2025)
+  Demonstrate core functionality including CAD file import, voxelization, and basic layer viewing capabilities. This milestone validates the technical feasibility of the approach and identifies any major technical risks that need to be addressed. The PoC will show the process of importing a CAD file, converting it to voxels with the fixed dimensions, and exporting the altered file to the existing 3D printing software. UI is not needed for the PoC, only a capable product that can create a 100x100 standard print.
+  
+  *Sprint 2.2 Tasks:*
+  - Implement basic STL/OBJ file parser
+  - Create voxelization algorithm with fixed dimensions (300×300μm XY, 110μm Z)
+  - Build command-line interface for file processing
+  - Implement basic voxel data structure
+  - Create Java-readable export format generator
+  - Test with sample CAD files (100x100 voxel limit)
+  - Validate export compatibility with existing printer software
+  - Document performance metrics and bottlenecks
+  - Create demonstration script and test data
 
-- **Proof of Concept Demonstration** (November 17-26, 2025)
-  Demonstrate core functionality including CAD file import, voxelization, and basic layer viewing capabilities. This milestone validates the technical feasibility of the approach and identifies any major technical risks that need to be addressed. UI is not needed for the PoC, only a capable product that can create a 100x100 standard print.
+**Sprint 3: Core Implementation and Testing (January - February 2026)**
 
-**Phase 4: Implementation and Testing (January - March 2026)**
+- **Epic 6: Final System Design Integration** (January 19, 2026)
+  Complete final system design incorporating lessons learned from proof of concept demonstration and any requirement refinements. This includes detailed specifications for the layered UI that allows browsing from bottom to top, voxel selection capabilities, and magnetization assignment with undo/redo functionality. The design will implement the MagData Platform as a locally deployed desktop application with wireframe mockups showing the main interface for 3D model interaction, layer navigation, and magnetization controls. Priority implementation will focus on must-have requirements: CAD file import (F213), 3D image generation (F221), layer viewing (F231), magnetization assignment (F232), and export functionality (F242).
+  
+  *Sprint 3.1 Tasks:*
+  - Refine system architecture based on PoC learnings
+  - Create detailed UI/UX specifications and wireframes
+  - Design component interaction protocols
+  - Plan state management for React frontend
+  - Design undo/redo system architecture
+  - Create detailed API documentation
+  - Plan error handling and user feedback systems
+  - Design responsive layout for different screen sizes
 
-- **Design Document Revision 0** (January 19, 2026)
-  Complete final system design incorporating lessons learned from proof of concept demonstration and any requirement refinements.
+- **Epic 7: Revision 0 System Demonstration** (February 2-11, 2026)
+  Demonstrate working system with core functionality including voxel selection, magnetization assignment, and export capabilities. This milestone shows a functional system that meets the primary requirements: importing mesh CAD files, providing layered UI for voxel selection, enabling magnetization direction assignment, and generating Java-readable exports for the custom printer. The demonstration will showcase the complete workflow from CAD import through the Slicing Manager, 3D visualization via the Imaging Manager, magnetization assignment through the Magnetization Manager, and final export via the Exportation Manager, validating the component architecture and interface design.
+  
+  *Sprint 3.2 Tasks:*
+  - Implement Slicing Manager: CAD file import and voxelization (F213)
+  - Build Imaging Manager: 3D visualization with Three.js (F221, F222)
+  - Create Magnetization Manager: layer navigation and voxel selection (F231, F232)
+  - Develop Exportation Manager: Java-readable file export (F242)
+  - Implement auto-save functionality (F233)
+  - Add voxel selection highlighting (F225)
+  - Create magnetization tracking visualization (F226)
+  - Build progress tracking for export operations (F244)
+  - Implement data validation and fail-safe mechanisms (NF241)
+  - Create comprehensive test suite for all components
+  - Conduct integration testing between components
+  - Prepare demonstration scenarios and test data
 
-- **Revision 0 Demonstration** (February 2-11, 2026)
-  Demonstrate working system with core functionality including voxel selection, magnetization assignment, and export capabilities. This milestone shows a functional system that meets the primary requirements.
+**Sprint 4: Validation and Final Delivery (March - April 2026)**
 
-- **V&V Report and Extras Revision 0** (March 9, 2026)
-  Complete verification and validation activities, documenting test results and system performance. Deliver user manual and usability report as specified in the problem statement.
+- **Epic 8: Verification, Validation, and Extras** (March 9, 2026)
+  Complete verification and validation activities, documenting test results and system performance. Deliver user manual and usability report as specified in the problem statement. The user manual will provide comprehensive guidance on using the software's key features that differentiate it from normal CAD software, while the usability report will document findings from testing with researchers and lab operators. Validation will ensure all must-have requirements are met: system supports up to 10,000 voxels (NF211, NF222), maintains <500ms image update latency (NF221), provides <1s magnetization metadata updates (NF232), and achieves 1000 voxels/second export performance (NF212, NF242).
+  
+  *Sprint 4.1 Tasks:*
+  - Implement should-have features: model size adjustment (F212), favorite magnetization bar (F234)
+  - Add could-have features: voxel block size configuration (F211), CSV export (F243)
+  - Conduct performance testing: validate 10,000 voxel support (NF211, NF222)
+  - Test latency requirements: <500ms image updates (NF221), <1s metadata updates (NF232)
+  - Validate export performance: 1000 voxels/second minimum (NF212, NF242)
+  - Conduct user acceptance testing with researchers and lab operators
+  - Create comprehensive user manual with step-by-step instructions
+  - Document usability testing results and recommendations
+  - Perform system integration testing with external printer software
+  - Create installation and deployment documentation
 
-**Phase 5: Final Delivery (March - April 2026)**
+- **Epic 9: Final System Demonstration** (March 23-26, 2026)
+  Present completed system with all features implemented, tested, and validated. Demonstrate full workflow from CAD import to printer-ready export, showing how the system eliminates the manual voxel-by-voxel rebuilding process and enables efficient iteration on magnetization designs.
+  
+  *Sprint 4.2 Tasks:*
+  - Prepare comprehensive demonstration scenarios
+  - Create sample CAD files for different complexity levels
+  - Practice demonstration workflow and timing
+  - Prepare presentation materials and technical documentation
+  - Set up demonstration environment and backup systems
+  - Conduct final system validation and bug fixes
+  - Prepare Q&A materials for stakeholder questions
+  - Document demonstration results and feedback
+  - Create video recording of demonstration for future reference
 
-- **Final Demonstration (Revision 1)** (March 23-26, 2026)
-  Present completed system with all features implemented, tested, and validated. Demonstrate full workflow from CAD import to printer-ready export.
+- **Epic 10: Final Documentation and EXPO** (April 6, 2026 & TBD)
+  Deliver final documentation package including updated SRS, design documents, user manual, and all supporting materials. Present project at capstone expo, showcasing the voxel magnetization system to broader academic and industry audience, highlighting its potential impact on research workflows involving magnetized 3D printed objects.
+  
+  *Sprint 4.3 Tasks:*
+  - Update all documentation based on final implementation
+  - Create final SRS revision incorporating all changes
+  - Complete design document with final architecture details
+  - Finalize user manual with complete feature set
+  - Prepare EXPO presentation materials and booth setup
+  - Create project summary and impact statement
+  - Document lessons learned and future enhancement opportunities
+  - Archive project artifacts and code repository
+  - Prepare handover documentation for future maintenance
+  - Conduct final team retrospective and project closure
 
-- **Final Documentation (Revision 1)** (April 6, 2026)
-  Deliver final documentation package including updated SRS, design documents, user manual, and all supporting materials.
+---
 
-- **EXPO Demonstration** (TBD)
-  Present project at capstone expo, showcasing the voxel magnetization system to broader academic and industry audience.
+**Justification for Proof of Concept Focus**
+
+The proof of concept demonstration is strategically positioned to address the two primary risks identified in the development plan: unfamiliarity with dependencies for file conversion and ensuring the automated process is more efficient than manual rebuilding. By demonstrating successful CAD file import, voxelization with fixed dimensions (300×300μm XY, 110μm Z), and export to the existing Java-based printer program, we validate the core technical approach before investing in full UI development.
+
+This approach allows us to identify and address any major technical challenges early in the development process, particularly around file format handling, voxelization algorithms, and integration with the existing printer workflow. The PoC will use command-line interfaces to focus on the core functionality, ensuring that the fundamental technical approach is sound before building the user interface layer.
+
+The sprint-based approach also aligns with the team's development methodology, which emphasizes thorough planning, risk mitigation, and iterative validation. By completing comprehensive documentation and requirements analysis first, we ensure that the implementation phase is well-informed and addresses the specific needs of researchers working with magnetized 3D printed objects.
