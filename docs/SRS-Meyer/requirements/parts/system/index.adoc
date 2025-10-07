@@ -13,5 +13,3 @@ include::S3.adoc[]
 include::S4.adoc[]
 
 include::S5.adoc[]
-
-include::S6.adoc[]
