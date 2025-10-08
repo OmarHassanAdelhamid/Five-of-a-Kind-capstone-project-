@@ -1,8 +1,322 @@
 [#s2,reftext=S.2]
-=== (S.2) Functionality
+=== (S.2) Functionality & Prioritization
 
-ifdef::env-draft[]
+ifndef::env-draft[]
 TIP: _**This is the bulk of the System book, describing elements of functionality (behaviors)**. This chapter corresponds to the traditional view of requirements as defining "**what the system does**”. It is organized as one section, S.2.n, for each of the components identified in <<s1>>, describing the corresponding behaviors (functional and non-functional properties)._  <<BM22>>
 endif::[]
 
-{emptysec}
+The following section outlines the specific functional and non-functional requirements, where each requirement has been defined within the scope of a specified component. Each requirement contains a section underneath that outlines the priority, likelihood of change, and justification to convey its relative importance and potential variability.
+
+For certain requirements, variables have been defined. A description of each variable as well as its assigned value has been included below:
+
+* *OPTIMAL_VOXEL_SIZE* = 5.5nm
+This was derived using the optimal voxel size specified by the stakeholder.
+
+* *MAX_VOXELS* = 13,996,800,000 voxels
+This considers the maximum number of voxels contained within the entire model.
+
+* *MAX_LAYER_DISPLAY* = 518,400 voxels
+This was derived assuming 960 voxels x 540 voxels per layer. It considers the maximum number of voxels contained within a single layer for a single display window
+
+* *MAX_DISPLAY* = 103,680,000 voxels
+This was derived assuming 960 voxels x 540 voxels per layer. It considers the maximum number of voxels that will be displayed at a given time.
+
+* *MIN_RATE* = 500,000 voxels per second
+This considers how fast voxel data will be generated during file import and export.
+
+* *MAX_EDIT_LATENCY* = 1 second
+This considers how quickly the system should respond to model modifications performed by the user.
+
+==== (2.2.1) Import Manager
+
+===== Functional Requirements
+
+. [[F211]] *New project creation:* Import Manager shall allow a user to start a new project with the option to import an initial CAD file from their personal device that will be sliced. (F211)
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It’s required for users to be able to start new projects without having to build a model voxel-by-voxel. It contains critical functionality, which means there’s limited flexibility for change.
+
+. [[F212]] *Past project access:* Import Manager shall allow a user to import a past project file in order to reopen a project with all magnetization and material properties preserved. (F212)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It will improve user experience by avoiding full re-magnetization for minor adjustments to the model. There’s minimal chance of change because it is the simplest method to streamline future edits to past models.
+
+
+. [[F213]] *Voxel size:* Import Manager shall allow the user to configure the voxel dimensions into which their geometric model will be sliced. (F213)
+
++
+[.maroon]#_Priority:_# Low (could-have) +
+[.maroon]#_Likelihood of change:_# Medium +
+[.maroon]#_Justification:_# It’s not required by the user for current usage but may simplify more complicated processes in the future. Change may occur depending on how it impacts the core functionality of voxel slicing.
+
+
+. [[F214]] *Geometric model size:* Import Manager shall allow users to modify the dimensions of their model in order to scale the model to the desired printing size before being sliced into voxels. (F214)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Medium +
+[.maroon]#_Justification:_# It offers the flexibility to modify geometric model size to enhance overall user experience. Change may occur depending on how it impacts the core functionality of voxel slicing.
+
+
+. [[F215]] *Model adjustment:* Import Manager shall resolve partial voxels and interpret them in the best way that preserves the integrity and accuracy of the provided model. (F215)
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It ensures that the model is preserved, minimizing user effort to achieve voxel-level accuracy. It contains critical functionality, which means there’s limited flexibility for change.
+
+
+. [[F216]] *Model division:* Import Manager shall partition the model into user-manageable display sections that do not surpass the MAX_DISPLAY threshold. (F216)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# High +
+[.maroon]#_Justification:_# It can improve user experience by creating easy-to-handle partitions and preventing lag that may arise from high-demand visuals. The MAX_DISPLAY threshold is subject to alteration to ensure optimal visuals.
+
+
+===== Non-Functional Requirements
+
+. [[NF211]] *Scalable projects:* Import Manager shall support the generation of sliced models that contain up to MAX_VOXELS without loss of functionality. (NF211)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# High +
+[.maroon]#_Justification:_# It will ensure the software can sufficiently handle large-scale projects. The MAX_VOXELS threshold is subject to change depending on software constraints and realistic current needs of a typical user.
+
+
+. [[NF212]] *Slicing process performance:* Import Manager shall generate the voxel data file at a minimum rate of MIN_RATE. (NF212)
+
++
+[.maroon]#_Priority:_# Low (could-have) +
+[.maroon]#_Likelihood of change:_# High +
+[.maroon]#_Justification:_# It reduces wait time to improve user experience but is not critical. Changes to the MIN_RATE threshold may be necessary in order to sufficiently support the execution of a high-demand operation.
+
+
+==== (2.2.2) Visualization Manager
+
+===== Functional Requirements
+
+. [[F221]] *3D image rendition:* Visualization Manager shall recreate a 3D model with clear visualization of sliced voxels. (F221)
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It provides vital visualization of the model, which is a critical guide for property assignment. Due to its critical nature, there’s limited flexibility for change.
+
+
+. [[F222]] *Partition division:* Visualization Manager shall provide users with simplistic navigation across user-manageable display sections to ensure access to all model partitions. (F222)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# High +
+[.maroon]#_Justification:_# Its priority is linked to the Model division requirement. Once the Model division requirement is implemented, its priority is elevated to ensure a smooth and positive user experience once the model is divided into partitions. Modifications will likely be tightly coupled with any changes in the Model division requirement.
+
+
+. [[F223]] *Image interaction:* Visualization Manager shall provide users with an intuitive interface that permits seamless navigation across multiple perspectives of the 3D model. (F223)
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Medium +
+[.maroon]#_Justification:_# It provides users with a quality experience by ensuring complete and extensive visualization. Variations may occur depending on the perspectives required to satisfy the user’s visualization needs.
+
+
+. [[F225]] *Layer focus:* Visualization Manager shall allow users to isolate a specific layer to facilitate property assignments, rendering all other voxels irrelevant while that layer is in focus. (F225)
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It facilitates accessible interaction with voxels during property assignment. There’s minimal chance of change because it is the simplest method to access voxels inside a 3D model.
+
+
+. [[F226]] *Highlight voxel selection:* Visualization Manager shall provide users with visualization that showcases which voxels are currently selected within a specific layer. (F226)
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It provides active feedback based on current user interaction to improve usability. It contains critical visualization functionality which means there’s limited flexibility for change.
+
+
+. [[F227]] *Material assignment tracker:* Visualization Manager shall integrate easy tracking of voxels that have been assigned material IDs by adjusting the colour of the voxel to indicate assignment completeness. (F227)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Medium +
+[.maroon]#_Justification:_# It provides users with easy visualization of remaining material assignment work, which improves usability in non-critical areas. There’s a possibility of change regarding how it is displayed to users.
+
+
+. [[F228]] *Magnetization assignment tracker:* Visualization Manager shall integrate easy tracking of voxels that have been assigned magnetization vectors by providing the option to toggle the colour of all magnetized voxels. (F228)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Medium +
+[.maroon]#_Justification:_# It provides users with easy visualization of remaining voxels that require magnetization, which improves usability in non-critical areas. Similarly to the Material tracker, there’s a possibility of change regarding what constitutes complete magnetization and how it is displayed to users.
+
+<<<
+===== Non-Functional Requirements
+
+. [[NF221]] *Image updates:* Visualization Manager shall update any changes to the perspective of the 3D model with a latency of less than 500ms to allow a seamless user interaction. (NF221)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# High +
+[.maroon]#_Justification:_# It allows a seamless user experience with smooth and responsive interaction. The latency threshold is likely to change in relation to technical feasibility as long as there is no significant lag that may interfere with user interaction.
+
+
+. [[NF222]] *Visual scalability:* Visualization Manager shall support the visual display of voxel models that contain up to MAX_VOXELS without significant degradation of performance or loss of functionality. (NF222)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# High +
+[.maroon]#_Justification:_# It will ensure software can sufficiently handle large-scale visuals within a project. The MAX_DISPLAY threshold is subject to change to ensure optimal visuals where there is minimal risk of undesirable lag.
+
+
+. [[NF223]] *Accessible colours:* Visualization Manager shall ensure all colours that highlight voxels have unique hex codes and can be distinctively recognized under standard lighting conditions. (NF223)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# Its priority is linked to any tracker requirement. Once visual tracking is implemented, its priority is elevated to support distinct visualization of desired features for an improved user experience. It contains critical standards for easy visualization which means there’s limited flexibility for change.
+
+==== (2.2.3) Editing Manager
+
+===== Functional Requirements
+
+. [[F231]] *Magnetization assignment:* Editing Manager shall allow users to set a desired magnetization value for either an individual or a group of selected voxels. (F231)
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It provides users with the ability to magnetize voxels, fulfilling one of the key stakeholder needs. Its critical nature means there’s limited capacity for change.
+
+
+. [[F232]] *Favourite bar:* Editing Manager shall allow users to define and maintain a list of ‘favourite’ magnetization vectors for quick selection and easy reuse. (F232)
+
++
+[.maroon]#_Priority:_# Low (could-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It improves user satisfaction by allowing quicker magnetization, though not critical to core functionality. There’s minimal chance of change because it is the simplest method to streamline the assignment process of frequently applied magnetization values.
+
+. [[F233]] *Material assignment:* Editing Manager shall allow users to assign a specific material to the voxels currently selected. (F233)
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It provides users with the ability to assign specific materials to each voxel, fulfilling one of the key stakeholder needs. Its critical nature means there’s limited capacity for change.
+
+. [[F234]] *Material labels:* Editing Manager shall ease the process of recalling what material number correlates to a chosen material by providing the ability to assign a label to a material number. (F234)
+
++
+[.maroon]#_Priority:_# Low (could-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It supports a smoother user experience by ensuring clarity in how material numbers correspond to specific materials within individual projects. There’s minimal chance of change since labels are the most direct method to convey this information.
+
+. [[F235]] *Property replication:* Editing Manager shall allow users to select a group of voxels and replicate the defined properties of those voxels to other layers. (F235)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It streamlines repetitive assignment processes to improve workflow efficiency. The core functionality is not expected to experience significant change even if there are multiple ways to integrate the requirement.
+
+. [[F236]] *Auto save progress:* Editing Manager shall save any changes made to set property configurations without requiring manual action to preserve data. (F236)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It strengthens dependability and user confidence within critical operations. There’s minimal chance of change because it is the simplest method to ensure data preservation during user interaction.
+
+. [[F237]] *Edit history* Editing Manager shall allow users to access edit history and revert the model to a previous version. (F237)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# High +
+[.maroon]#_Justification:_# It facilitates positive user interaction when inevitable mistakes are made during assignment and editing. There will likely be change regarding what constitutes a previous version (i.e., how far back within modification history a user can revert).
+
+. [[F238]] *Select layer* Editing Manager shall allow users to select an entire layer at once to enable easy assignment of a common material and magnetization amongst all voxels within a layer. (F238)
+
++
+[.maroon]#_Priority:_# Low (could-have) +
+[.maroon]#_Likelihood of change:_# High +
+[.maroon]#_Justification:_# It promotes efficiency and reduces the time required for wide-scale property assignment. Change may occur if the software already sufficiently supports large-scale assignment and the feature becomes redundant.
+
+. [[F239]] *Manual voxel alteration:* Editing Manager shall allow users to add and delete voxels of the same defined dimensions present in the rest of the model. (F239)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It provides users with greater control over small model adjustments through quick and simple voxel edits. There’s minimal chance of change because it is the simplest method to allow voxel-level edits.
+
+. [[F2310]] *Reset Voxels:* Editing Manager shall allow users to reset all property assignments to their unassigned state for either an individual or a group of selected voxels. (F2310)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It eases the process of user correction for widespread mistakes. There’s minimal chance of change since it encapsulates what a user would require to restore a blank canvas for property assignment.
+
+===== Non-Functional Requirements
+
+. [[NF231]] *Ease of use:* Editing Manager shall ensure that the process of a material or magnetization property to a large group of selected voxels can be completed in 5 steps or less by a user who is familiar with how the printer operates, creating an intuitive interface. (NF231)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Medium +
+[.maroon]#_Justification:_# It ensures simple functionality to enhance usability in critical operations. The standards for what defines an intuitive interface may be altered to better reflect user familiarity with the property assignment process.
+
+. [[NF232]] *Metadata update:* Editing Manager shall update the voxel magnetization metadata with a latency of less than MAX_EDIT_LATENCY to allow consistent, synchronized model modification updates. (NF232)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Medium +
+[.maroon]#_Justification:_# It is crucial for guaranteeing prompt and effective updates to the model. The latency threshold may change in relation to technical feasibility as long as there is no significant lag that jeopardizes update consistency.
+
+==== (2.2.4) Export Manager
+
+===== Functional Requirements
+
+. [[F241]] *Property validation:* Export Manager shall validate that all voxels have received an assigned magnetization value upon receiving a request to export a file for printing (even if the assigned value is simply null to indicate no magnetization required). (F241)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Medium +
+[.maroon]#_Justification:_# It helps users ensure minimal issues during the printing stage. It may require modification if assigning null magnetization to unmagnetized voxels is determined to be unnecessarily demanding for users.
+
+. [[F242]] *File export:* Export Manager shall produce a standalone file, containing all metadata for each voxel, that the user can name and save locally on their personal device outside of the software. (F242)
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It is an essential function that enables users to print their model with complete property assignments. Due to its critical nature, there’s limited flexibility for change.
+
+. [[F243]] *Exportation progress tracker:* Export Manager shall provide a progress bar that gives a visual indicator of how far along the software is in the exportation process. (F243)
+
++
+[.maroon]#_Priority:_# Low (could-have) +
+[.maroon]#_Likelihood of change:_# High +
+[.maroon]#_Justification:_# It can enhance the user experience by engaging users and reducing uncertainty, though not critical. Given the intensive nature of file export, changes may be required to improve progress tracking reliability.
+
+. [[F244]] *Model summary:* Export Manager shall allow users the option to export a file that summarizes model statistics upon producing a standalone file of the model. (F244)
+
++
+[.maroon]#_Priority:_# Low (could-have) +
+[.maroon]#_Likelihood of change:_# High +
+[.maroon]#_Justification:_# It provides helpful information to the user regarding their overall model but is not critical to core functionality. The exported statistics will likely be adjusted to include data most relevant to a typical user.
+
+===== Non-Functional Requirements
+
+. [[NF241]] *Fail safe:* Export Manager shall ensure voxel data and metadata remain intact and unaltered in the event of an incomplete export, preserving the integrity of the magnetized project file without loss. (NF241)
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It promotes reliability and trust, maintaining a positive user experience. It is crucial that previous work is not lost during a failed export, which means there’s limited flexibility for change.
+
+. [[NF242]] *Exportation performance:* Export Manager shall export metadata files for geometric models at a minimum rate of MIN_RATE. (NF242)
+
++
+[.maroon]#_Priority:_# Low (could-have) +
+[.maroon]#_Likelihood of change:_# High +
+[.maroon]#_Justification:_# It ensures reduced wait time and improves overall user experience, though it is not critical. Changes to the MIN_RATE threshold may be necessary to sufficiently support high-demand operations.
+

@@ -5,4 +5,193 @@ ifdef::env-draft[]
 TIP: _Examples of interaction between the environment (or human users) and the system, expressed as user stories. Such scenarios are not by themselves a substitute for precise descriptions of functionality (<<s3>>), but provide an important complement by specifying cases that these behavior descriptions must support; they also serve as a basis for developing test cases. The scenarios most relevant for stakeholders are given in chapter <<g5>> in the Goals book, at a general level, as use cases; in contrast, <<s4>> can refer to system components and functionality (from other chapters of the System book) as well as special and erroneous cases, and introduce more specific scenarios._  <<BM22>>
 endif::[]
 
-{emptysec}
+==== (S.4.1) Import and Voxelize CAD Model
+
+* **Use case**: UC1, UC2
+* **Primary Actor**: Researcher/Engineer
+* **Supporting Actors**: System
+* **Precondition**: User has a completed 3D CAD file and the system is running on their desktop/laptop.
+* **Trigger**: User wants to begin the property assignment process for a new 3D model.
+* **Main Success Scenario**:
+
+    - 1. User opens the voxel property assignment system application.
+    - 2. User navigates to "Import Model" and selects their CAD file.
+    - 3. System validates the file format and displays file information (dimensions, triangle count, etc.).
+    - 4. User specifies voxel size and model dimensions, before selecting option to import.
+    - 5. System converts the file to a voxel grid with specified dimensions.
+    - 6. System displays the voxelized model in the 3D viewer with layer navigation controls.
+    - 7. System reports total number of voxels and layers in the model.
+    - 8. User can now begin layer-by-layer property assignment.
+* **Secondary Scenarios**:
+
+    - 2.1. User wishes to begin with a blank project - System skips steps to import CAD file and begins with a blank project file.
+    - 3.1. File format is invalid or corrupted - System displays error message and requests valid file.
+    - 4.1. File is too large for available memory - System suggests reducing model complexity or increasing system resources.
+    - 5.1. Voxelization fails due to mesh issues - System provides diagnostic information and suggests mesh repair.
+    - 6.1. System performance is slow during rendering - System provides optimization options or simplified view modes.
+* **Success Postcondition** : CAD model is successfully converted to voxel grid and ready for magnetization assignment.
+
+This scenario is important as it establishes the foundation for the entire project. The ability to reliably import and convert a CAD file to voxels is critical for users who need to work with existing designs rather than starting from scratch.
+
+==== (S.4.2) Assign Properties to Voxels within a Layer
+
+* **Use case**: UC2, UC3
+* **Primary Actor**: Researcher/Engineer
+* **Supporting Actors**: System
+* **Precondition**: CAD model has been successfully imported, or the model being constructed has a set of voxels, user is viewing a specific layer in the 3D viewer.
+* **Trigger**: User wants to assign magnetization vectors and/or material IDs to specific voxels within the current layer.
+* **Main Success Scenario**:
+
+    - 1. User navigates to a specific layer using the layer slider (bottom to top).
+    - 2. System displays the 2D cross-section of voxels for the selected layer, including current magnetization states and material assignments.
+    - 3. User selects individual voxels or multiple voxels using click/drag selection.
+    - 4. System highlights selected voxels.
+    - 5. User opens the magnetization panel and specifies a magnetization direction for that set of chosen voxels.
+    - 6. System applies the selected magnetization vector to the chosen voxels.
+    - 7. System updates the voxels being displayed to indicate that the selected voxels have been magnetized.
+    - 8. User opens the material assignment panel and selects a material ID.
+    - 9. System applies the selected material to the chosen voxels.
+    - 10. System updates the voxels being displayed to indicate that the selected voxels have a material assignment.
+    - 11. System saves the changes to the project file automatically.
+    - 12. User can navigate to other layers and repeat the process.
+* **Secondary Scenarios**:
+
+    - 3.1. User accidentally selects wrong voxels - System offers an option to unselect all voxels.
+    - 4.1. User wants to clear magnetization from selected voxels - System provides a 'Clear Vectors' option within magnetization panel.
+    - 4.2. User wants to clear material assignments from selected voxels - System provides a 'Clear Materials' option within material assignment panel.
+    - 5.1. User does not need to specify a custom vector - System presents an option to select from a list of specified 'favourite' magnetization vectors.
+    - 6.1. System performance degrades with many selected voxels - System displays error message and asks users to select fewer voxels.
+    - 8.1. User needs to specify a new material ID - System provides a 'Specify new material ID' option within material assignment panel.
+    - 11.1. User accidentally edits wrong voxels - System offers an 'Undo' option to revert changes to previous edit.
+    - 12.1. User wants to copy magnetization pattern to other layers - System provides copy/paste functionality.
+* **Success Postcondition**: Selected voxels in the current layer have been assigned the desired magnetization directions.
+
+This scenario is improtant because it provides the core functionality of this system, which is allowing users to precisly control both magnetization vectors and material assignments at the voxel level. The layer by layer approach allows users to assign properties while also maintaining a 3D view of the structure. The ability to select multiple voxels and apply the same properties to all of them significantly reduces the time required compared to manual voxel-by-voxel assignment.
+
+==== (S.4.3) Edit and Modify Existing Voxel Properties
+
+* **Use case**: UC3
+* **Primary Actor**: Researcher/Engineer
+* **Supporting Actors**: System
+* **Precondition**: User has already assigned properties to some voxels and wants to make changes without restarting the entire process.
+* **Trigger**: User discovers an error in property assignment or wants to optimize property patterns.
+* **Main Success Scenario**:
+
+    - 1. User navigates to the layer containing voxels that need modification.
+    - 2. System displays the current states of all voxels, with the option to indicating those with assigned magnetization vectors and colors indicating material assignments.
+    - 3. User selects the voxels that need to be changed (individual or multiple selection).
+    - 4. System highlights selected voxels and presents the magnetization direction and material assignment panels.
+    - 5. User specifies a new magnetization vector within the presented direction panel.
+    - 6. System applies the new magnetization to the selected voxels and updates the visual display accordingly.
+    - 7. User selects a new material ID within the presented material panel
+    - 8. System applies the new material assignment to the selected voxels and updates the visual display accordingly.
+    - 9. System automatically saves the changes and maintains edit history.
+    - 10. User continues with other modifications as needed.
+* **Secondary Scenarios**:
+
+    - 3.1. User wants to select all voxels in current layer - System provides "Select All" option.
+    - 4.1. User wants to find voxels with specific magnetization - System provides a visual tool to highlight and select all voxels with a specified magnetization.
+    - 4.2. User wants to find voxels with specific material ID - System provides a visual tool to highlight and select all voxels with a specified material ID.
+    - 8.1. System loses power during editing - System has auto-save functionality to prevent data loss.
+* **Success Postcondition**: Magnetization assignments have been successfully modified without losing other work.
+
+This scenario is important because it addresses the critical need for iterative design refinement. Users often need to make adjustments to property assignments based on simulation results or design requirements. The ability to edit existing assignments without restarting the entire process saves significant time and reduces frustration, making the system practical for real-world research workflows.
+
+==== (S.4.4) Add and Delete Voxels from within a Layer
+
+* **Use case**: UC4
+* **Primary Actor**: Researcher/Engineer
+* **Supporting Actors**: System
+* **Precondition**: User has created a project (via import or from scratch) and wants to edit the voxels present.
+* **Trigger**: User wishes to add or remove a voxel from the model.
+* **Main Success Scenario**:
+
+    - 1. User navigates to the layer they wish to add voxels to, or remove voxels from.
+    - 2. User selects within the layer where they wish to place new voxel(s).
+    - 3. System highlights the space where the new voxel(s) would be placed.
+    - 4. User selects to add new voxel(s) at the indicated space.
+    - 5. System creates new blank voxel(s) at the highlighted space and updates the visual display accordingly.
+    - 6. User selects the voxel(s) they wish to delete.
+    - 7. System highlights the voxel(s) that will be deleted.
+    - 8. User selects to delete the voxel(s).
+    - 9. System removes the voxel(s) and updates the visual display accordingly.
+    - 10. System automatically saves these changes and maintains edit history.
+* **Secondary Scenarios**:
+
+    - 5.1 User makes a mistake in where voxels are being created - System provides 'Undo' option to revert to previous state.
+    - 5.1.2 User makes a mistake in removing created voxels - System provides 'Redo' option.
+    - 5.2 User wants to create voxels with pre-defined properties - System provides option to enter a material ID or vector.
+    - 9.1 User makes a mistake in which voxels are deleted - System provides 'Undo' option to revert deletion.
+* **Success Postcondition**: Voxels within the current layer have been successfully created or deleted to the user's desire.
+
+This scenario is important as it reflects both the user's ability to create voxel models from scratch, or correct any undesired voxel placements after conversion from a CAD file. Being able to edit models at this level is critical to success in satisfying the designer's vision.
+
+==== (S.4.5) Export Voxel Property Assignment Data for 3D Printing
+
+* **Use case**: UC5
+* **Primary Actor**: Researcher/Engineer
+* **Supporting Actors**: Lab Operator, System
+* **Precondition**: User has completed property assignments for all layers and is ready to prepare the data for 3D printing.
+* **Trigger**: User wants to export the voxel metadata to be used by the custom 3D printer software.
+* **Main Success Scenario**:
+
+    - 1. User navigates to the "Export and Save" section of the application.
+    - 2. System displays export options and file format information.
+    - 3. User reviews property assignment summary (total voxels, layers, counts of each material ID, number of unique magnetization vectors).
+    - 4. User selects the designated location for the system to export the file to.
+    - 5. System validates all voxel data and checks for completeness.
+    - 6. System generates the export file containing per-voxel location,  magnetization vector, and material assignment metadata.
+    - 7. System displays export confirmation with file size and location information.
+    - 8. Lab operator receives the file and can load it into the custom printer software.
+* **Secondary Scenarios**:
+
+    - 5.1. System detects incomplete magnetization data - System warns user of missing magnetization assignments, gives user option to export anyway and highlights voxels with missing assignments.
+    - 5.2. System detects incomplete material assignments - System warns user of missing material assignments, highlights voxels with missing assignments and prevents export.
+    - 5.3. Export file is too large for available storage - System displays detailed error about storage space
+    - 6.1. System encounters errors during export - System provides detailed error log and recovery options.
+    - 7.1. Lab operator reports issues with exported file - System provides validation tools and format verification.
+* **Success Postcondition**: Complete voxel magnetization data has been exported in the correct format for the 3D printer.
+
+This scenario is important because it represents the last step in the workflow, ensuring that the users can take what they have been working on and successfully transfer it to a physical printing process. The export functionality must be reliable and produce a file that is compatible with the existing  printing pipeline, while maintaining the magnetization data (CSV) throughout the transition.
+
+==== (S.4.6) Validate and Review Magnetization Design
+
+* **Use case**: UC1, UC5
+* **Primary Actor**: Researcher/Engineer
+* **Supporting Actors**: Supervisor, System
+* **Precondition**: User has completed magnetization assignment and wants to validate the design before export and printing.
+* **Trigger**: User wants to review the complete magnetization pattern and ensure it meets the their needs.
+* **Main Success Scenario**:
+
+    - 1. System displays the complete 3D model with magnetization visualization.
+    - 2. User can rotate, zoom, and examine the model from different angles.
+    - 3. System provides layer-by-layer navigation to review specific sections.
+    - 4. User can filter the view to show only voxels with specific magnetization directions.
+* **Secondary Scenarios**:
+
+    - 4.1. Supervisor requests changes after review - User can return to editing mode.
+* **Success Postcondition**: User has thoroughly reviewed the magnetization design and is confident it meets their needs.
+
+This scenario is important because it ensures quality and validation before moving on to the final step of exporting the file. This prevents the expensive and time-consuming 3D printing process on a file that is not what's needed. 
+
+==== (S.4.7) Save Voxel Project File for Later Editing
+
+* **Use case**: UC5
+* **Primary Actor**: Researcher/Engineer
+* **Supporting Actors**: System
+* **Precondition**: User has begun a project.
+* **Trigger**: User wants to save progress to resume at a later time.
+* **Main Success Scenario**:
+
+    - 1. User navigates to the "Export and Save" section of the application.
+    - 2. System displays export options and file format information.
+    - 3. User selects "Save Project".
+    - 4. System saves all progress to the current project file and informs the user the save was successful.
+    - 5. System displays save information including file location. 
+* **Secondary Scenarios**:
+
+    - 3.1. User wants to save progress to a different file - System provides "Save as" option and prompts user to enter a new filename and location.
+    - 4.1. System encounters an error during save process - System provides detailed error log and recovery options.
+* **Success Postcondition**: Project file is saved correctly and it is safe to close the program.
+
+This scenario is important as users may not be able to complete all of the work in one sitting, or they may want to create many variations of the same base project during the design process. Saved project files must be complete and correct to maximise user satisfaction and reduce any user frustration with lost progress.

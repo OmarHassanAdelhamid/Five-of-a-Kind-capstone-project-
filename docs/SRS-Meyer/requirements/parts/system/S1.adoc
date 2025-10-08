@@ -1,8 +1,25 @@
 [#s1,reftext=S.1]
 === (S.1) Components
 
-ifdef::env-draft[]
+ifndef::env-draft[]
 TIP: _Overall structure expressed by the list of major software and, if applicable, hardware parts._  <<BM22>>
 endif::[]
 
-{emptysec}
+* **[.mcmaster]#Import Manager#**: This component has the responsibility of interpreting and manipulating a CAD mesh contained within a compatible file. It centralizes the business logic for model initialization through defined display segments as well as voxel slicing, which further partitions the display segments into voxels. Upon completing the slicing process, it interacts with the Visualization Manager by indicating all provided information is present and prompting it to begin the process of recreating the 3D CAD..
+
+
+* **[.mcmaster]#Visualization Manager#:** This component is in charge of handling all tasks associated with recreating a 3D rendition of the CAD design in our software and subsequent user interaction during individual voxel access. It interacts with the Import Manager to gather information regarding image specification. It exposes a user interface that permits responsive 3D image interaction, allowing users to manipulate and examine it from all perspectives. It also centralizes the business logic related to intuitive visualization that enables extensive user understanding of the current model state.
+
+* **[.mcmaster]#Editing Manager#:** This component takes on the responsibility of facilitating and capturing all data from user modifications on a voxel level. This includes the assignment of desired properties on an individual or multi-voxel scale. It centralizes the business logic of voxel alterations and metadata annotations. It exposes a user interface that allows easy navigation and modification of each voxel's metadata.
+
+* **[.mcmaster]#Exportation Manager#:**  This component acts as an integration gateway that facilitates seamless integration with pre-existing software developed for printing magnetized, multi-material models. It handles the business logic that dictates file exportation with complete metadata annotations, proper printing compatibility and capability for future regeneration within the software.
+
+The system will also interact with the three external components. These components will support the integration of providing geolocation information and allowing payment procedures.
+
+<<<
+This system will not directly interact with any external components. However, as outlined by the Exportation Manager, our system must output a file that is compatible with external printing software to support the natural workflow of the printing process.
+
+The application of the overall system functionality will be handled by the [.mcmaster]#MagData# Platform, which is a desktop application. Users will be required to directly install the software on their laptop, as the [.mcmaster]#MagData Platform# will be a locally deployed software system.
+
+.Components involved in MagData platform
+image::models/components.svg[scale=50%,align="center"]
