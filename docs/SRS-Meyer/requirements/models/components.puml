@@ -1,0 +1,43 @@
+@startuml
+
+!include ../_style/puml.style
+
+[MagData Platform] as MP
+[Import Manager] as SM
+[Visualization Manager] as IM
+[Editing Manager] as MM
+[Export Manager] as EM
+[«external»\nExternal Printing Software] as EP
+
+
+interface “Access file” as Access
+interface “Execute Voxel \nSlicing" as Slice
+
+interface “Generate 3D \nRendition" as Image
+interface “Manage Visuals During \n User Interaction” as Interaction
+
+interface “Modify Voxels" as Magnetize
+interface “Update Metadata” as Modify
+
+interface “Get File” as Print
+interface “Export File" as Export
+
+:User: .right.> MP
+MP .up.> Magnetize
+Magnetize -up- MM
+MM .right.> Modify
+
+MP .right.> Access
+Access -right- SM
+SM .up.> Slice
+
+SM .right.> Image
+Image -right- IM
+IM .up.> Interaction
+
+MP .down.> Print
+Print -right- EM
+EM .right.> Export
+Export -right- EP
+
+@enduml
