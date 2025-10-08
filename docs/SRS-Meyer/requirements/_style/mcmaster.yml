@@ -40,6 +40,8 @@ role:
   red:
     background-color: #333333
     font-color: #FF0000
+  maroon:
+    font-color: #AC1455
 
 footer:
   vertical_align: top

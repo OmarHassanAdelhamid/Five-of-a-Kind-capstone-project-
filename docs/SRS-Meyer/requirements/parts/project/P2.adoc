@@ -5,4 +5,10 @@ ifdef::env-draft[]
 TIP: _Any a priori choices binding the project to specific tools, hardware, languages or other technical parameters. Not all technical choices in projects derive from a pure technical analysis; some result from company policies. While some project members may dislike non-strictly-technical decisions, they are a fact of project life and must be documented, in particular for the benefit of one of the quality factors for requirements: "requirements must be justified"._  <<BM22>>
 endif::[]
 
-{emptysec}
+* The system will use a web-based architecture with browser-accessible frontend. This choice is imposed to ensure cross-platform compatibility and ease of deployment.
+
+* The system will use a local server backend with local data storage on the client machine. It should also use a relational database management system, like PostgreSQL. This is required to keep track of all edits done.
+
+* The system will use Git and GitHub for version control and project management. This choice is imposed by the development plan to ensure proper collaboration, task tracking, and issue management throughout the project lifecycle.
+
+* The system will use GitHub Actions for continuous integration. This choice is imposed to automate code quality checks, testing, and deployment processes, ensuring consistent code quality and reducing manual overhead.
