@@ -8,7 +8,7 @@ endif::[]
 .High Level use cases diagram
 //image::models/use_case.svg[scale=70%,align="center"]
 
-The use case diagram above highlights how we anticipate our direct stakeholders will interact with the voxel magnetization system for the principal use cases. More details for these usages are as follows:
+The use case diagram above highlights how we anticipate our direct stakeholders will interact with the voxel property assignment system for the principal use cases. More details for these usages are as follows:
 
 * [[uc1,UC1]] *UC1: Import CAD File.* 
 
