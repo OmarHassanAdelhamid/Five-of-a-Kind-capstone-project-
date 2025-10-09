@@ -17,7 +17,7 @@ A collection of voxels that the user can manipulate, assigning each voxel proper
 
 *Project File*
 
-A file that contains the data related to a voxel model, as well as other saved data the system stores.
+A file that contains the data related to a voxel model, as well as other saved data the system stores with a project (eg. display sections).
 
 *Grid*
 
@@ -30,6 +30,10 @@ A 3D polar coordinate the user enters to specify the magnitude and direction of 
 *Material ID*
 
 A non-negative whole number that represents the material of an individual voxel. Users can link a color and name to these IDs. Also referred to as a material assignment.
+
+*Display Section*
+
+A portion of the voxel model that is displayed at a time. For large models, the model is broken down into parts; only one is displayed at a time. This is done to save computer resources.
 
 *CAD (Computer Aided Design) Software*
 
@@ -47,7 +51,7 @@ Alternative way of referring to the 3D model contained within a CAD file; these 
 
 The software used by Researchers/Lab Operators that controls the custom 3D printer. This software takes the files the system exports (printer-ready files) as input.
 
-*Printer-ready File / Metadata File*
+*Export File / Printer-ready File / Metadata File*
 
 A file generated from a project file, containing all data related to each voxel (coordinates, material assignment, magnetization). 
 

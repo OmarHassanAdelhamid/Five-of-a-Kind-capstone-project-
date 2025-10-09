@@ -40,9 +40,7 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
-... & ... & ...\\
+October 10, 2025 & All & Created initial revision of Hazard Analysis\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -97,13 +95,13 @@ the library files needed to interact with necessary files.
     \item \textbf{Purpose:} Renders interactible 3D images for model visualization.
     \item \textbf{Key Functions:} 
     \begin{itemize}
-        \item Generate an interactible 3D visualization of the voxel model (as per F221, F223, NF221)
-        \item Allow users to view layers of the voxel model in isolation (as per F225) %this number will need to be updated
-        \item Visualize voxels selected by the user (as per F226)                      %same with this one.
+        \item Generate an interactible 3D visualization of the voxel model (as per F221, F223, NF221, NF222)
+        \item Allow users to view layers of the voxel model in isolation (as per F224)
+        \item Visualize voxels selected by the user (as per F225)
     \end{itemize}
 \end{itemize}
 
-\subsection{Property Module}
+\subsection{Editing Module}
 \begin{itemize}
     \item \textbf{Purpose:} Tracks and stores user edits to voxel properties.
     \item \textbf{Key Functions:} 
@@ -118,7 +116,7 @@ the library files needed to interact with necessary files.
     \item \textbf{Purpose:} Handles saving and exporting of user files.
     \item \textbf{Key Functions:} 
     \begin{itemize}
-        \item Save voxel models for later editing (as per F243)
+        \item Export voxel models as a native project file (as per F243)
         \item Export project file as printer-ready format (as per F242, NF241)
         \item Validate that each voxel has properties assigned correctly (as per F241)
     \end{itemize}
@@ -158,11 +156,11 @@ In this section, we will be analyzing the failure modes and effects of the syste
 \hline
 \textbf{Component} & \textbf{Failure Mode} & \textbf{Causes of Failure(s)} & \textbf{Effects of Failure(s)} & \textbf{Recommended Action(s)} & \textbf{SR} & \textbf{Ref.} \\
 \hline
-Import Module & The system does not process the CAD file correctly as the user is expecting. & \textbullet{} The inputed STL file is corrupted therefore it can't be read by the system.\newline \textbullet{} The input file is not in the correct format so the system can't process it.& \textbullet{} The system can't process the file therefore it can't be sliced. \newline \textbullet{} Due to the confusion in system not reading the file, this will result in user frustration. \newline \textbullet{} It will lead to user spending more time to get the system to process the file. & When the file is first inputted into the system, the system will validate that the file is first in the correct format, and that it does not contain any corrupt information. This will then lead to the system prompting the user to re-enter the file or input a new one in. & F212, NF211, SCR1, SCR9 & H1 \\
+Import Module & The system does not process the CAD file correctly as the user is expecting. & \textbullet{} The inputed STL file is corrupted therefore it can't be read by the system.\newline \textbullet{} The input file is not in the correct format so the system can't process it.& \textbullet{} The system can't process the file therefore it can't be sliced. \newline \textbullet{} Due to the confusion in system not reading the file, this will result in user frustration. \newline \textbullet{} It will lead to user spending more time to get the system to process the file. & When the file is first inputted into the system, the system will validate that the file is first in the correct format, and that it does not contain any corrupt information. This will then lead to the system prompting the user to re-enter the file or input a new one in. & F211, NF211, SCR1, SCR9 & H1 \\
 \hline
 Visualization Module & The system fails to render the 3D image of the model & \textbullet{} The device that is being used to run the system does not have enough memory to render the image. \newline \textbullet{} The device's GPU driver is not working correctly or is not up to date as required for the system to render the image. & \textbullet{} Model is not displayed leading to poor user experience. \newline \textbullet{} Designers can't proceed with the design review, and fall back to using their old design software to add magnetization and material properties to the design. & The system should check if the device has enough memory to render the image, and if the GPU driver is working correctly. If not, the system should prompt the user to use a different device or update the GPU driver. & F221, NF221, SCR2, SCR9 & H2 \\
 \hline
-Visualization Module & The voxels displayed as selected/currently editing do not match the voxels actually being edited. & \textbullet{} Logical error in the system's selection/editing mechanism. \newline \textbullet{} UI rendering bug not accurately reflecting the backend state. \newline \textbullet{} Inconsistent data synchronization between front-end display and back-end data model. & \textbullet{} Poor user experience (UX) as the user thinks they're doing one thing, but the system is actually editing something completely different. \newline \textbullet{} Incorrect modifications to the model. \newline \textbullet{} Loss of user trust in the system's accuracy. \newline \textbullet{} Time wasted correcting errors. & The system shall ensure real-time synchronization between the UI display of selected/edited voxels and the backend data model.  & F226, FF228, NF221, SCR3, SCR8 & H3 \\
+Visualization Module & The voxels displayed as selected/currently editing do not match the voxels actually being edited. & \textbullet{} Logical error in the system's selection/editing mechanism. \newline \textbullet{} UI rendering bug not accurately reflecting the backend state. \newline \textbullet{} Inconsistent data synchronization between front-end display and back-end data model. & \textbullet{} Poor user experience (UX) as the user thinks they're doing one thing, but the system is actually editing something completely different. \newline \textbullet{} Incorrect modifications to the model. \newline \textbullet{} Loss of user trust in the system's accuracy. \newline \textbullet{} Time wasted correcting errors. & The system shall ensure real-time synchronization between the UI display of selected/edited voxels and the backend data model.  & F225, F227, F228, NF221, SCR3, SCR8 & H3 \\
 \hline
 \end{tabular}
 \end{table}
@@ -176,11 +174,11 @@ Visualization Module & The voxels displayed as selected/currently editing do not
 \hline
 \textbf{Component} & \textbf{Failure Mode} & \textbf{Causes of Failure(s)} & \textbf{Effects of Failure(s)} & \textbf{Recommended Action(s)} & \textbf{SR} & \textbf{Ref.} \\
 \hline
-Export Module and Property Module & Exported file is missing magnetization and material properties& \textbullet{} The system does not export the magnetization and material properties to the CSV file correctly. \newline \textbullet{} The system fails to save the magnetization and material properties for certain voxels & \textbullet{} The Java program that reads the CSV file receives incomplete data causing print failure or defects. \newline \textbullet{} The Java program reads the file correctly, however the printer crashes due to missing magnetization and material properties. \newline \textbullet{} Material will be wasted if printer crashes after printing a few layers. & The system should validate that the magnetization and material properties are saved for all voxels. If not, the system should prompt the user to re-export the file. & F231, F233, NF232, SCR4 & H4 \\
+Export Module and Editing Module & Exported file is missing magnetization and material properties& \textbullet{} The system does not export the magnetization and material properties to the metadata file correctly. \newline \textbullet{} The system fails to save the magnetization and material properties for certain voxels & \textbullet{} The custom 3D printer software that reads the metadata file receives incomplete data causing print failure or defects. \newline \textbullet{} The custom 3D printer software reads the file correctly, however the printer crashes due to missing magnetization and material properties. \newline \textbullet{} Material will be wasted if printer crashes after printing a few layers. & The system should validate that the magnetization and material properties are saved for all voxels. If not, the system should prompt the user to re-export the file. & F231, F233, NF232, F241, F242, SCR4 & H4 \\
 \hline
-Export Module & File format is exported in the incorrect format & \textbullet{} The system does not export the CSV file in the correct structure and format. & The Java program can't read the file correctly because of the wrong format therefore causing the program to crash. & The system should check that the structure of the CSV file is correct and matches the required format. & F241, F242, NF241, SCR5 & H5 \\
+Export Module & File format is exported in the incorrect format & \textbullet{} The system does not export the metadata file in the correct structure and format. & The custom 3D printer software can't read the file correctly because of the wrong format therefore causing the program to crash. & The system should check that the structure of the metadata file is correct and matches the required format. & F241, F242, NF241, SCR5 & H5 \\
 \hline
-Full System & User progress is lost & \textbullet{} Unexpected software bug that causes the system to crash, which causes the system to lose its state. \newline \textbullet{} The user experiences a hardware malfunction (e.g., power loss, memory failure), which causes the system to lose its state. & \textbullet{} User loses signifcant work and would need to re-do the work. \newline \textbullet{} User will start getting frustrated and lose trust in the system. \newline \textbullet{} User will lose signicant time in the total workflow of their design due to the need to re-do the work. & The system shall implement a auto-saving mechanism to periodically save the state of the user's process to allow for recovery in case of a system shutdown or failure. & F234, SCR6, SCR7 & H6 \\
+Full System & User progress is lost & \textbullet{} Unexpected software bug that causes the system to crash, which causes the system to lose its state. \newline \textbullet{} The user experiences a hardware malfunction (e.g., power loss, memory failure), which causes the system to lose its state. & \textbullet{} User loses signifcant work and would need to re-do the work. \newline \textbullet{} User will start getting frustrated and lose trust in the system. \newline \textbullet{} User will lose signicant time in the total workflow of their design due to the need to re-do the work. & The system shall implement a auto-saving mechanism to periodically save the state of the user's process to allow for recovery in case of a system shutdown or failure. & F236, NF241, SCR6, SCR7 & H6 \\
 \hline
 \end{tabular}
 \end{table}
@@ -197,39 +195,46 @@ In this section, we will be analyzing the safety requirements of the system. The
     \begin{tabular}{|l|c|}
         \toprule \textbf{Symbol} & \textbf{Value} \\
         \midrule
-        MAX\_VOXEL\_COUNT & 103,680,000 voxels \\
+        OPTIMAL\_VOXEL\_SIZE & 5.5nm \\
+        MAX\_VOXELS & 13,996,800,000 voxels \\
+        MAX\_LAYER\_DISPLAY & 518,400 voxels \\
+        MAX\_DISPLAY & 103,680,000 voxels \\
         MAX\_VOXEL\_SELECTION & 1000 voxels \\
+        MIN\_RATE & 500,000 voxels per second \\
+        MAX\_EDIT\_LATENCY & 1 second \\
+        MAX\_VIEW\_LATENCY & 500ms \\
+        MAX\_INTERACTIONS & 5\\
         INPUT\_FILE\_VALIDATION\_THRESH & 100\% \\
         MIN\_RENDER\_MEMORY & 16 GB \\
         UI\_SYNC\_ACCURACY & 100\% \\
         EXPORT\_COMPLETENESS\_THRESH & 100\% \\
-        CSV\_FORMAT\_VALIDATION & 100\% \\
+        METADATA\_FORMAT\_VALIDATION & 100\% \\
         AUTO\_SAVE\_INTERVAL & 5 minutes \\
         UNDO\_HISTORY\_SIZE & 10 actions \\
         FILE\_IMPORT\_EXPORT\_TIMEOUT &  2 minutes \\
         FEEDBACK\_UPDATE\_TIME & 30 seconds \\
         \bottomrule
     \end{tabular}
-    \caption{Symbolic Constants}
+    \caption{Expanded Table of Symbolic Constants. This includes constants from SRS S.2, with the addition of new constants derived during the hazard analysis process.}
     \label{tab:sym}
 \end{table}
 \begin{enumerate}
 \renewcommand{\labelenumi}{SCR \arabic{enumi}.}
 
-\item \emph{The system shall validated the importaed CAD files (STL/OBJ) for their format correctness before processing the model.}\\
+\item \emph{The system shall validate the imported CAD files for their format correctness before processing the model.}\\
     \quad {\bf Rationale:} The corrupted files can cause the system to fail and prevent successful voxelization to the workflow disruption.\\
     \quad {\bf Fit Criterion:} \texttt{INPUT\_FILE\_VALIDATION\_THRESH} of the imported files must pass the validation checks, and the system should reject any files that fail to do so.\\
     \quad {\bf Associated Hazards:} H1\\
     \quad {\bf Priority:} High
 
 \item \emph{The system shall check if the device has enough memory and GPU capabilities before attempting to render 3D models and voxel grids.}\\
-    \quad {\bf Rationale:} The insufficient memory or outdated GPU drivers can cause rendering failures with the system, preventing users from visualizing their models and proceeding with property assignments.\\
+    \quad {\bf Rationale:} Insufficient memory or outdated GPU drivers can cause rendering failures with the system, preventing users from visualizing their models and proceeding with property assignments.\\
     \quad {\bf Fit Criterion:} The hardware where the system is running on must have at least \texttt{MIN\_RENDER\_MEMORY} of memory, and the GPU driver must be compatible with the system.\\
     \quad {\bf Associated Hazards:} H2\\
     \quad {\bf Priority:} Medium
 
 \item \emph{The system shall maintain real-time synchronization between the UI component of selected/edited voxels and the backend data model.}\\
-    \quad {\bf Rationale:} Any failures in this synchronization can lead to user editing unintended voxels, causing incorrect property assignment and loss of user trust in system accuracy.\\
+    \quad {\bf Rationale:} Any failures in this synchronization can lead to the user editing unintended voxels, causing incorrect property assignment and loss of user trust in system accuracy.\\
     \quad {\bf Fit Criterion:} \texttt{UI\_SYNC\_ACCURACY} of voxel selections and edits must be accurately reflected in both UI display and backend data model.\\
     \quad {\bf Associated Hazards:} H3\\
     \quad {\bf Priority:} High
@@ -240,14 +245,14 @@ In this section, we will be analyzing the safety requirements of the system. The
     \quad {\bf Associated Hazards:} H4\\
     \quad {\bf Priority:} High
 
-\item \emph{The system shall validate the CSV file format and structure before exporting the file, ensuring that it is compatible with the next system that will read the file.}\\
-    \quad {\bf Rationale:} Incorrect CSV format can cause the Java printer program to crash, preventing the user from continuing with the workflow, leading to user frustration.\\
-    \quad {\bf Fit Criterion:} \texttt{CSV\_FORMAT\_VALIDATION} of exported CSV files must match the required structure and format expected by the next system that will read the file.\\
+\item \emph{The system shall validate the metadata file format and structure before exporting the file, ensuring that it is compatible with the next system that will read the file.}\\
+    \quad {\bf Rationale:} Incorrect metadata format can cause the custom 3D printer program to crash, preventing the user from continuing with the workflow, leading to user frustration.\\
+    \quad {\bf Fit Criterion:} \texttt{METADATA\_FORMAT\_VALIDATION} of exported metadata files must match the required structure and format expected by the next system that will read the file.\\
     \quad {\bf Associated Hazards:} H5\\
     \quad {\bf Priority:} High
 
 \item \emph{The system shall implement auto-saving functionality to preserve user progress and enable recovery from any system crashes or hardware failures.}\\
-    \quad {\bf Rationale:} Any sysetm crashes or hardware failures can lead to signicant amount of work loss,which would require the user to restart the workflow from scratch, which would be very time consuming and frustrating.\\
+    \quad {\bf Rationale:} Any system crashes or hardware failures can lead to signicant amount of work loss, which would require the user to restart the workflow from scratch, which would be very time consuming and frustrating.\\
     \quad {\bf Fit Criterion:} The system must automatically save user progress every \texttt{AUTO\_SAVE\_INTERVAL}.\\
     \quad {\bf Associated Hazards:} H6\\
     \quad {\bf Priority:} High
@@ -259,7 +264,7 @@ In this section, we will be analyzing the safety requirements of the system. The
     \quad {\bf Priority:} Medium
 
 \item \emph{The system shall limit the number of voxels that can be selected simultaneously to prevent any performance issues.}\\
-    \quad {\bf Rationale:} Slecting too many voxels at a time can cause system slowdowns, UI freezing and an overall poor user experience.\\
+    \quad {\bf Rationale:} Selecting too many voxels at a time can cause system slowdowns, UI freezing and an overall poor user experience.\\
     \quad {\bf Fit Criterion:} The system must limit voxel selection to a maximum of \texttt{MAX\_VOXEL\_SELECTION} voxels at any time and provide clear feedback when limits are reached.\\
     \quad {\bf Associated Hazards:} H3\\
     \quad {\bf Priority:} Medium
