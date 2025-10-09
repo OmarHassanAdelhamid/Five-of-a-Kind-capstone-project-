@@ -57,7 +57,47 @@ October 10, 2025 & All & Created initial revision of Hazard Analysis\\
 
 \section{Introduction}
 
-\wss{You can include your definition of what a hazard is here.}
+The following sections aim to provide insight into our project and the role that hazard analysis
+plays throughout its development. It introduces the concept of a hazard and how it may manifest
+in software development. It then connects those ideas back to the scope of our current project.
+
+\subsection{Problem Statement}
+
+Recently, master's students at McMaster University have been developing cutting-edge 3D
+printer technology that has the capabilities of incorporating complex elements of
+magnetization and multi-material components. However, with this innovative new design
+comes the challenge of limited software capabilities that are unable to support the
+unique needs of property assignment while simultaneously allowing an efficient and
+intuitive design. Currently, developers of the 3D printer are forced to design their
+model outside of COMSOL, which is the current software that permits magnetization assignment.
+To build their model for printing, they must build their entire model voxel-by-voxel in
+COMSOL, individually assigning each voxel a specific magnetization. This leads to an
+unintuitive, time-consuming process that is unideal as they look to further test and develop
+their printer. They require new software that can take a model built through AutoCAD and
+provide a replica that has been sliced into voxels with the ability to easily assign
+magnetization and material values to each voxel.
+
+\subsection{Hazard Analysis Introduction}
+
+As defined by the Canadian Centre for Occupational Health and Safety, a hazard can be
+defined as any source of potential for harm, damage, or adverse effect to people, property,
+or the environment [1]. Many of the typical factors that can contribute to a hazard,
+including human error, unsafe working conditions, equipment malfunction, environmental
+influences, and inadequate safety procedures. However, from the perspective of a software
+developer, hazards can extend outside the factors listed above and may take form in data
+corruption, unstable system components, poor development processes, security risks and
+technological limitations. \par \vspace{1em}
+
+As described above, our project aims to create software that supports slicing a
+pre-existing model into voxels and permitting easy property assignment for future
+printing processes.This project has the potential to greatly reduce the time, energy
+and workload exerted on those using the multi-material 3D printer. However, to accomplish
+this, there are many potential hazards that must be mitigated during system development.
+These hazards may come from impractical technical implementations, incompatible input data
+structures with pre-existing software or faulty output generation that could result in
+unsafe or unintended behaviour in the physical system. Therefore, the hazard analysis
+outlined below aims to identify and assess all hazards to ensure that our team is able to
+successfully deploy a safe and reliable software system.
 
 \section{Scope and Purpose of Hazard Analysis}
 
@@ -327,5 +367,11 @@ Which requirements will be implemented in the future?}
     appreciable risks of this form), list at least 2 other types of risk in
     software products. Why are they important to consider?
 \end{enumerate}
+
+\section*{References}
+
+[1]  C. C. for O. H. and S. Government of Canada, “CCOHS: Hazard and Risk - Hazard Identification.”
+Accessed: Oct. 08, 2025. [Online]. Available: https://www.ccohs.ca/oshanswers/hsprograms/hazard/
+hazard_identification.html
 
 \end{document}
