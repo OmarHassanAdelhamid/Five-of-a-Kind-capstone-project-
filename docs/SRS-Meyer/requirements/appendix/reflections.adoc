@@ -83,7 +83,11 @@ _Conflict resolution approaches._
 
 *Integrated mediation:* This approach integrates a neutral party to help facilitate effective conversation between the two parties that disagree. It is still the responsibility of the two parties to come together with a final decision they both agree on. The mediator is not responsible for making a final decision that ends the disagreement. Rather, the mediator can help defuse tension and keep the conversation productive, ensuring both parties are able to interact with each other in an equitable and respectful manner. By introducing a mediator, this helps prevent misunderstandings or an imbalance in power.
 
+_Knowledge of STL file specifications._
 
+*Online research and documentation review.* The STL file format is well-documented, there are numerous of online resources and tutorials that details the structure of the file. Most famously *Adobe*, has a well documented page explaining STL file format and how to create one. This approach allows us to understand the STL file specifications theoretically.
+
+*Practical implementation through parsing and validation.* Working with existing libraries to write a basic parser for STL files will provide us with hands-on experience, this will help us understand the structure even more and how we can deal with it practically. This will involve reading, interpreting, and validating the data within STL files.
 
 _Omar_
 
@@ -103,11 +107,4 @@ _Olivia_
 
 _Khalid_
 
-For the second skill, *Knowledge of STL file specifications*, these are the ways that will help me in mastering the skill:
-
-* *Online research and documentation review.* The STL file format is well-documented, there are numerous of online resources and tutorials that details the structure of the file. Most famously *Adobe*, has a well documented page explaining STL file format and how to create one. This approach allows me to understand the STL file specifications theoretically.
-
-* *Practical implementation through parsing and validation.* Working with existing libraries to write a basic parser for STL files will provide me hands-on experience, this will help me understand the structure even more and how I can deal with it practically. This will involve reading, interpreting, and validating the data within STL files.
-
-I will primarily use the practical implementation approach. While theoretical knowledge is important, the system's requirement of validating and modifying STL files is a necessity, and any practical understanding can only be gained from hands-on experience working with the STL files. However, I will use online research and documentation when needed as a reference for specific details and edge cases encountered during implementation.
 
