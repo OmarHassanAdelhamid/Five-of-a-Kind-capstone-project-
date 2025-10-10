@@ -64,15 +64,15 @@ _Khalid_
 
 There are five major knowledges/skills our group will need:
 
-* _Knowledge of 3D rendering technologies_ notably how to ensure performance is acceptable. This will be intrinsically linked to which library is utilised.
+* _Knowledge of 3D rendering technologies,_ notably how to ensure performance is acceptable. This will be intrinsically linked to which library is utilised.
 
-* _Knowledge of STL file specifications_ This arises specifically from the constraint on input files to the system; knowledge of their format, how to validate and modify them will be essential.
+* _Knowledge of the custom 3D printer software._ While we will not be working with it directly, knowledge of how it expects to take input and how it can fail will be extremely useful assets when developing the export modules.
 
-* _Knowledge of the custom 3D printer software_ While we will not be working with it directly, knowledge of how it expects to take input and how it can fail will be extremely useful assets when developing the export modules.
+* _Developing intuitive user interfaces._ Despite there being many examples of good interfaces we can use as reference or inspiration, this skill will still be necessary both when creating the more custom parts of the interface, and when discussing with stakeholders what would work best for them (e.g. drawing out tacit knowledge).
 
-* _Developing intuitive user interfaces_ Despite there being many examples of good interfaces we can use as reference or inspiration, this skill will still be necessary both when creating the more custom parts of the interface, and when discussing with stakeholders what would work best for them (e.g. drawing out tacit knowledge).
+* _Conflict resolution._ Over the coming seven months, it is highly unlikely no conflicts between team members will arise, even minor ones. Being able to facilitate tough conversations and the ability to reduce tension and/or the stakes of a situation is important to maintaining group morale during stressful times.
 
-* _Conflict resolution_ Over the coming seven months, it is highly unlikely no conflicts between team members will arise, even minor ones. Being able to facilitate tough conversations and the ability to reduce tension and/or the stakes of a situation is important to maintaining group morale during stressful times.
+* _Knowledge of STL file specifications._ This arises specifically from the constraint on input files to the system; knowledge of their format, how to validate and modify them will be essential.
 
 *6. For each of the knowledge areas and skills identified in the previous question, what are at least two approaches to acquiring the knowledge or mastering the skill? Of the identified approaches, which will each team member pursue, and why did they make this choice?*
 
@@ -107,26 +107,27 @@ _Knowledge of STL file specifications_
 
 From the identified approaches, these are which each team member will pursue and why they made their choices:
 
-_Omar_
+*Omar*
 
-_Daniel_
+*Daniel*
 
-Regarding the fourth skill, there are two main avenues ahead of me to mastering the skill:
+_Knowledge of 3D rendering technologies:_ I plan to follow the first approach as it most closely aligns with the style of learning I am comfortable with; while creating a scaled-down 3D rendering program would be quite helpful before tackling this larger project, fitting this extra step into my schedule would be quite difficult and likely infeasible.
 
-* *Online research on best style/practices.* There is endless information available online related to developing intuitive, human-centered designs. This type of learning is something I am intimately familiar with from work on both personal projects and to catch up when a course is lacking.
+_Knowledge of custom 3D printer software:_ I will likely work with both of these approaches, as relying purely on documentation when an expert is available won't paint the entire picture. In my opinion for a specific knowledge such as this, using the documentation as a reference whilst asking any specific questions to the supervisor would be best.
 
-* I (along with other team members) are currently enrolled in a *course focused on human-centered design,* which includes a full project meant to develop this skill. This provides a more structured learning approach, also including collaboration.
+_Developing intuitive user inferfaces:_ I likely will pursue a mix of these approaches given what the project ends up warranting. Online research will supplement any knowledge the course does not provide (e.g. specific guidelines). The timeline of course completion aligns perfectly with when UI will likely be developed, so a majority of skill development will lean on the course.
 
-I likely will pursue a mix of these approaches given what the project ends up warranting. Online research will supplement any knowledge the course does not provide (e.g. specific guidelines). The timeline of course completion aligns perfectly with when UI will likely be developed, so a majority of skill development will lean on the course.
+_Conflict resolution:_ I find myself gravitating towards the first approach, familiar with it from previous group conflicts both within work and in personal contexts. I already try to see other people's points of view in everyday life, so this approach is natural to me.
 
-_Andrew_
+_Knowledge of STL file specifications:_ I plan to pursue mostly the second approach, consulting documentation when issues are encountered. With STL files being perceived as a much smaller scale knowledge base versus 3D rendering, creating a basic parser is much more manageable.
 
-_Olivia_
+*Andrew*
 
-_Khalid_
+*Olivia*
 
-_Knowledge of 3D rendering technologies_: For this skill, I will use the online tutorials and documentation for specific libraries/frameworks because it allows me to follow a structured and self-paced learning experience while also focusing on the fundamental concepts of rendering 3D visualizations.
-For the skill *Knowledge of 3D rendering technologies*, I will pursue *Online tutorials and documentation for specific libraries/frameworks*. By diving into documentation for libraries like Three.js, I can gain a solid theoretical foundation on how it can be implemented for our system.
+*Khalid*
+
+_Knowledge of 3D rendering technologies_: For this skill, I will use the online tutorials and documentation for specific libraries/frameworks because it allows me to follow a structured and self-paced learning experience while also focusing on the fundamental concepts of rendering 3D visualizations, gaining a solid theoretical foundation on how it can be implemented for our system.
 
 _Knowledge of the custom 3D printer software_: For this skill, I will take advantage of the interviews with the supervisor because they know best of the custom 3D printer software. This will give me the most up to date and specific information regarding the functionalities of the software. Also, it gives me someone that I can always ask questions to get clarifications from.
 
