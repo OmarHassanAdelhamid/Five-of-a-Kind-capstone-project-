@@ -3,7 +3,7 @@
 
 **Sprint 1 Backlog**
 
-The following user stories comprise the backlog for the first sprint, focusing on delivering the core documentation and requirements foundation for the Five-of-a-Kind voxel magnetization system. Each story is aligned with the epics identified for Sprint 1 and includes an assessment of its business value and a technical estimate in story points. The story points are assigned based on complexity and effort, following the scale:
+The following user stories comprise the backlog for the first sprint, focusing on delivering the core documentation and requirements foundation for the Five-of-a-Kind voxel magnetization system. Each story is written from the stakeholder's perspective and includes an assessment of its business value and a technical estimate in story points. The story points are assigned based on complexity and effort, following the scale:
 
 - **1 point**: Simple task using existing tools and templates.
 - **2 points**: Task requiring research, analysis, and documentation.
@@ -11,263 +11,263 @@ The following user stories comprise the backlog for the first sprint, focusing o
 
 ---
 
-**User Story 1: Research and Document Current CAD Workflow Bottlenecks**
+**User Story 1: Understand Current Workflow Pain Points**
 
-- **Story**: As a development team, we want to understand the current CAD workflow bottlenecks so that we can design a solution that addresses real user pain points.
+- **Story**: As a researcher, I want the development team to understand my current CAD workflow bottlenecks so that they can design a solution that addresses my real pain points with voxel-by-voxel magnetization.
 
     - **Business Value**: High  
       Understanding current workflow bottlenecks is fundamental to defining the problem and ensuring our solution provides genuine value to researchers and lab operators.
 
     - **Estimate**: **2 story points**
 
-    - **Detailed Account**: This task involves conducting research on current CAD workflows, interviewing stakeholders, and documenting the specific bottlenecks in voxel-by-voxel magnetization processes. It requires analysis of existing tools like COMSOL and understanding the manual rebuilding process. The research component and stakeholder interaction justify **2 story points**.
+    - **Reasoning**: This task involves conducting research on current CAD workflows, interviewing stakeholders, and documenting the specific bottlenecks in voxel-by-voxel magnetization processes. It requires analysis of existing tools like COMSOL and understanding the manual rebuilding process. The research component and stakeholder interaction justify **2 story points**.
 
 ---
 
-**User Story 2: Interview Stakeholders and Define Requirements**
+**User Story 2: Define System Requirements Based on User Needs**
 
-- **Story**: As a development team, we want to interview researchers, lab operators, and supervisors to understand their needs and constraints.
+- **Story**: As a lab operator, I want the development team to interview me and other stakeholders to understand our needs and constraints so that the system will actually work for our daily operations.
 
     - **Business Value**: High  
       Direct stakeholder input ensures our solution meets real user needs and aligns with research goals and operational constraints.
 
     - **Estimate**: **2 story points**
 
-    - **Detailed Account**: Conducting structured interviews with multiple stakeholder groups requires scheduling, preparation of interview questions, conducting sessions, and synthesizing findings. The coordination effort and analysis required justify **2 story points**.
+    - **Reasoning**: Conducting structured interviews with multiple stakeholder groups requires scheduling, preparation of interview questions, conducting sessions, and synthesizing findings. The coordination effort and analysis required justify **2 story points**.
 
 ---
 
-**User Story 3: Define Project Scope and Constraints**
+**User Story 3: Establish Project Foundation and Scope**
 
-- **Story**: As a development team, we want to clearly define the project scope and constraints so that we can focus our efforts on achievable goals.
+- **Story**: As a supervisor, I want the development team to clearly define the project scope and constraints so that we can focus efforts on achievable goals within our timeline and budget.
 
     - **Business Value**: High  
       Clear scope definition prevents scope creep and ensures the project delivers value within the available timeframe and resources.
 
     - **Estimate**: **1 story point**
 
-    - **Detailed Account**: This task involves synthesizing stakeholder input and technical constraints into a clear project scope document. It's primarily documentation work using established templates and frameworks, making it straightforward and assigned **1 story point**.
+    - **Reasoning**: This task involves synthesizing stakeholder input and technical constraints into a clear project scope document. It's primarily documentation work using established templates and frameworks, making it straightforward and assigned **1 story point**.
 
 ---
 
-**User Story 4: Create Initial Proof of Concept Plan**
+**User Story 4: Validate Technical Approach with Proof of Concept**
 
-- **Story**: As a development team, we want to create a detailed proof of concept plan to validate our technical approach before full implementation.
+- **Story**: As a researcher, I want the development team to create a detailed proof of concept plan to validate their technical approach before full implementation so that we can be confident the solution will work.
 
     - **Business Value**: High  
       A well-planned proof of concept reduces technical risk and ensures we can deliver the core functionality within project constraints.
 
     - **Estimate**: **2 story points**
 
-    - **Detailed Account**: Creating a comprehensive PoC plan requires technical analysis of file formats, voxelization algorithms, and integration requirements. It involves research into existing libraries and tools, and planning the demonstration approach. The technical complexity and research component justify **2 story points**.
+    - **Reasoning**: Creating a comprehensive PoC plan requires technical analysis of file formats, voxelization algorithms, and integration requirements. It involves research into existing libraries and tools, and planning the demonstration approach. The technical complexity and research component justify **2 story points**.
 
 ---
 
-**User Story 5: Establish Team Roles and Communication Protocols**
+**User Story 5: Establish Development Team Structure**
 
-- **Story**: As a development team, we want to establish clear roles and communication protocols to ensure effective collaboration throughout the project.
+- **Story**: As a supervisor, I want the development team to establish clear roles and communication protocols so that the project runs efficiently and we can track progress effectively.
 
     - **Business Value**: Medium  
       Clear roles and communication protocols improve team efficiency and reduce coordination overhead.
 
     - **Estimate**: **1 story point**
 
-    - **Detailed Account**: This task involves defining team roles based on the development plan, setting up communication channels, and establishing meeting schedules. It's primarily organizational work using established best practices, making it simple and assigned **1 story point**.
+    - **Reasoning**: This task involves defining team roles based on the development plan, setting up communication channels, and establishing meeting schedules. It's primarily organizational work using established best practices, making it simple and assigned **1 story point**.
 
 ---
 
-**User Story 6: Set Up GitHub Repository and Project Management Tools**
+**User Story 6: Set Up Project Management Infrastructure**
 
-- **Story**: As a development team, we want to set up our development environment and project management tools to support efficient collaboration.
+- **Story**: As a supervisor, I want the development team to set up proper project management tools so that we can track progress, manage version control, and ensure efficient collaboration throughout the project.
 
     - **Business Value**: Medium  
       Proper tool setup enables efficient development, version control, and project tracking throughout the project lifecycle.
 
     - **Estimate**: **1 story point**
 
-    - **Detailed Account**: Setting up GitHub repository, project boards, and development tools involves following established procedures and templates. It's straightforward configuration work, assigned **1 story point**.
+    - **Reasoning**: Setting up GitHub repository, project boards, and development tools involves following established procedures and templates. It's straightforward configuration work, assigned **1 story point**.
 
 ---
 
-**User Story 7: Define Functional Requirements for System Components**
+**User Story 7: Define Complete System Requirements**
 
-- **Story**: As a development team, we want to define detailed functional requirements for each system component (Slicing Manager, Imaging Manager, Magnetization Manager, Exportation Manager).
+- **Story**: As a lab operator, I want the development team to define detailed functional requirements for all system components so that the system will have all the features I need for my workflow.
 
     - **Business Value**: High  
       Detailed functional requirements provide the foundation for system design and implementation, ensuring all stakeholder needs are addressed.
 
     - **Estimate**: **5 story points**
 
-    - **Detailed Account**: This task requires detailed analysis of each component's responsibilities, defining specific requirements (F211-F244), and ensuring consistency across the system. It involves complex technical analysis and coordination between different functional areas, justifying **5 story points**.
+    - **Reasoning**: This task requires detailed analysis of each component's responsibilities, defining specific requirements (F211-F244), and ensuring consistency across the system. It involves complex technical analysis and coordination between different functional areas, justifying **5 story points**.
 
 ---
 
-**User Story 8: Specify Non-Functional Requirements and Performance Targets**
+**User Story 8: Establish Performance and Quality Standards**
 
-- **Story**: As a development team, we want to define non-functional requirements including performance targets, scalability, and quality attributes.
+- **Story**: As a researcher, I want the development team to define performance targets and quality attributes so that the system will be fast enough and reliable enough for my research needs.
 
     - **Business Value**: High  
       Non-functional requirements ensure the system meets performance expectations and can handle the required workload.
 
     - **Estimate**: **2 story points**
 
-    - **Detailed Account**: Defining performance targets (NF211-NF242) requires analysis of system requirements, stakeholder expectations, and technical constraints. It involves research into performance benchmarks and setting realistic targets, justifying **2 story points**.
+    - **Reasoning**: Defining performance targets (NF211-NF242) requires analysis of system requirements, stakeholder expectations, and technical constraints. It involves research into performance benchmarks and setting realistic targets, justifying **2 story points**.
 
 ---
 
-**User Story 9: Create Component Architecture Diagrams**
+**User Story 9: Create System Architecture Documentation**
 
-- **Story**: As a development team, we want to create visual architecture diagrams showing component relationships and data flow.
+- **Story**: As a supervisor, I want the development team to create visual architecture diagrams so that I can understand how the system will work and ensure it meets our technical requirements.
 
     - **Business Value**: Medium  
       Architecture diagrams provide clear visualization of system design and facilitate communication with stakeholders and team members.
 
     - **Estimate**: **2 story points**
 
-    - **Detailed Account**: Creating PlantUML diagrams requires understanding component interactions, data flow, and system architecture. It involves design work and technical documentation, justifying **2 story points**.
+    - **Reasoning**: Creating PlantUML diagrams requires understanding component interactions, data flow, and system architecture. It involves design work and technical documentation, justifying **2 story points**.
 
 ---
 
-**User Story 10: Design Wireframe Mockups for Main Interface**
+**User Story 10: Design User Interface Mockups**
 
-- **Story**: As a development team, we want to create wireframe mockups of the main user interface to guide development and validate design concepts.
+- **Story**: As a lab operator, I want the development team to create wireframe mockups of the main user interface so that I can see how the system will look and provide feedback before development starts.
 
     - **Business Value**: High  
       Wireframe mockups provide early visualization of the user experience and help identify potential usability issues.
 
     - **Estimate**: **2 story points**
 
-    - **Detailed Account**: Creating wireframes requires understanding user workflows, component interactions, and UI/UX principles. It involves design work and stakeholder feedback integration, justifying **2 story points**.
+    - **Reasoning**: Creating wireframes requires understanding user workflows, component interactions, and UI/UX principles. It involves design work and stakeholder feedback integration, justifying **2 story points**.
 
 ---
 
-**User Story 11: Conduct Hazard Analysis and Identify Critical Assumptions**
+**User Story 11: Identify System Risks and Safety Measures**
 
-- **Story**: As a development team, we want to conduct a comprehensive hazard analysis to identify potential risks and critical assumptions.
+- **Story**: As a supervisor, I want the development team to conduct a comprehensive hazard analysis so that we can identify potential risks and ensure appropriate safety measures are implemented.
 
     - **Business Value**: High  
       Hazard analysis helps identify potential failure modes and ensures appropriate safety measures are implemented.
 
     - **Estimate**: **2 story points**
 
-    - **Detailed Account**: Conducting hazard analysis requires systematic evaluation of potential failure modes, their consequences, and mitigation strategies. It involves technical analysis and risk assessment methodologies, justifying **2 story points**.
+    - **Reasoning**: Conducting hazard analysis requires systematic evaluation of potential failure modes, their consequences, and mitigation strategies. It involves technical analysis and risk assessment methodologies, justifying **2 story points**.
 
 ---
 
-**User Story 12: Prioritize Requirements Using MoSCoW Methodology**
+**User Story 12: Prioritize Features by Business Value**
 
-- **Story**: As a development team, we want to prioritize all requirements using MoSCoW methodology to focus on must-have features first.
+- **Story**: As a supervisor, I want the development team to prioritize all requirements using MoSCoW methodology so that we focus on must-have features first and deliver the most value within our constraints.
 
     - **Business Value**: High  
       Requirement prioritization ensures critical features are delivered first and helps manage scope within project constraints.
 
     - **Estimate**: **1 story point**
 
-    - **Detailed Account**: Prioritizing requirements involves applying MoSCoW methodology to categorize features based on stakeholder value and technical feasibility. It's primarily analytical work using established frameworks, assigned **1 story point**.
+    - **Reasoning**: Prioritizing requirements involves applying MoSCoW methodology to categorize features based on stakeholder value and technical feasibility. It's primarily analytical work using established frameworks, assigned **1 story point**.
 
 ---
 
-**User Story 13: Document System Interfaces and External Dependencies**
+**User Story 13: Document System Integration Requirements**
 
-- **Story**: As a development team, we want to document all system interfaces and external dependencies to understand integration requirements.
+- **Story**: As a lab operator, I want the development team to document all system interfaces and external dependencies so that the system will integrate properly with our existing equipment and software.
 
     - **Business Value**: Medium  
       Clear documentation of interfaces and dependencies helps identify integration challenges and external system requirements.
 
     - **Estimate**: **1 story point**
 
-    - **Detailed Account**: Documenting interfaces involves cataloging component interactions and external system dependencies. It's primarily documentation work using established templates, assigned **1 story point**.
+    - **Reasoning**: Documenting interfaces involves cataloging component interactions and external system dependencies. It's primarily documentation work using established templates, assigned **1 story point**.
 
 ---
 
-**User Story 14: Define Unit Testing Strategy for Each Component**
+**User Story 14: Establish Quality Assurance Strategy**
 
-- **Story**: As a development team, we want to define comprehensive unit testing strategies for each system component.
+- **Story**: As a supervisor, I want the development team to define comprehensive testing strategies so that the system will be reliable and defect-free when delivered.
 
     - **Business Value**: High  
-      Unit testing strategies ensure code quality and reduce the risk of defects in the final system.
+      Testing strategies ensure code quality and reduce the risk of defects in the final system.
 
     - **Estimate**: **2 story points**
 
-    - **Detailed Account**: Defining testing strategies requires understanding component responsibilities, identifying test scenarios, and selecting appropriate testing frameworks. It involves technical analysis and planning, justifying **2 story points**.
+    - **Reasoning**: Defining testing strategies requires understanding component responsibilities, identifying test scenarios, and selecting appropriate testing frameworks. It involves technical analysis and planning, justifying **2 story points**.
 
 ---
 
-**User Story 15: Plan Integration Testing Between Components**
+**User Story 15: Plan System Integration Testing**
 
-- **Story**: As a development team, we want to plan integration testing to ensure components work together correctly.
+- **Story**: As a lab operator, I want the development team to plan integration testing so that all system components work together correctly and the complete workflow functions as expected.
 
     - **Business Value**: High  
       Integration testing ensures the system functions as a cohesive whole and components interact properly.
 
     - **Estimate**: **2 story points**
 
-    - **Detailed Account**: Planning integration testing requires understanding component interfaces, data flow, and interaction patterns. It involves technical analysis and test scenario design, justifying **2 story points**.
+    - **Reasoning**: Planning integration testing requires understanding component interfaces, data flow, and interaction patterns. It involves technical analysis and test scenario design, justifying **2 story points**.
 
 ---
 
-**User Story 16: Design System Testing Scenarios**
+**User Story 16: Design End-to-End Testing Scenarios**
 
-- **Story**: As a development team, we want to design comprehensive system testing scenarios to validate end-to-end functionality.
+- **Story**: As a researcher, I want the development team to design comprehensive system testing scenarios so that the complete workflow from CAD import to printer export functions correctly.
 
     - **Business Value**: High  
       System testing scenarios ensure the complete workflow functions correctly and meets user requirements.
 
     - **Estimate**: **2 story points**
 
-    - **Detailed Account**: Designing system test scenarios requires understanding complete user workflows, edge cases, and performance requirements. It involves analysis of user stories and technical requirements, justifying **2 story points**.
+    - **Reasoning**: Designing system test scenarios requires understanding complete user workflows, edge cases, and performance requirements. It involves analysis of user stories and technical requirements, justifying **2 story points**.
 
 ---
 
-**User Story 17: Create User Acceptance Testing Criteria**
+**User Story 17: Define User Acceptance Criteria**
 
-- **Story**: As a development team, we want to define user acceptance testing criteria to ensure the system meets stakeholder expectations.
+- **Story**: As a lab operator, I want the development team to define user acceptance testing criteria so that I can validate the system meets my expectations before it's considered complete.
 
     - **Business Value**: High  
       User acceptance testing criteria provide clear validation standards and ensure stakeholder satisfaction.
 
     - **Estimate**: **1 story point**
 
-    - **Detailed Account**: Creating acceptance criteria involves translating stakeholder requirements into testable conditions. It's primarily documentation work using established templates, assigned **1 story point**.
+    - **Reasoning**: Creating acceptance criteria involves translating stakeholder requirements into testable conditions. It's primarily documentation work using established templates, assigned **1 story point**.
 
 ---
 
-**User Story 18: Establish Performance Benchmarking Procedures**
+**User Story 18: Establish Performance Validation Procedures**
 
-- **Story**: As a development team, we want to establish procedures for measuring and validating system performance against requirements.
+- **Story**: As a researcher, I want the development team to establish procedures for measuring and validating system performance so that the system will meet the speed and reliability requirements for my research.
 
     - **Business Value**: Medium  
       Performance benchmarking procedures ensure the system meets specified performance targets.
 
     - **Estimate**: **1 story point**
 
-    - **Detailed Account**: Establishing benchmarking procedures involves defining measurement approaches and success criteria. It's primarily planning work using established methodologies, assigned **1 story point**.
+    - **Reasoning**: Establishing benchmarking procedures involves defining measurement approaches and success criteria. It's primarily planning work using established methodologies, assigned **1 story point**.
 
 ---
 
-**User Story 19: Plan Validation with Stakeholders**
+**User Story 19: Plan User Validation Activities**
 
-- **Story**: As a development team, we want to plan validation activities with researchers and lab operators to ensure the system meets their needs.
+- **Story**: As a supervisor, I want the development team to plan validation activities with researchers and lab operators so that we can ensure the system meets real user needs before final delivery.
 
     - **Business Value**: High  
       Stakeholder validation ensures the system provides real value and meets user expectations.
 
     - **Estimate**: **1 story point**
 
-    - **Detailed Account**: Planning validation activities involves scheduling stakeholder sessions and preparing validation materials. It's primarily coordination work, assigned **1 story point**.
+    - **Reasoning**: Planning validation activities involves scheduling stakeholder sessions and preparing validation materials. It's primarily coordination work, assigned **1 story point**.
 
 ---
 
-**User Story 20: Document Test Data Requirements and Test Cases**
+**User Story 20: Prepare Comprehensive Test Documentation**
 
-- **Story**: As a development team, we want to document test data requirements and create comprehensive test cases.
+- **Story**: As a supervisor, I want the development team to document test data requirements and create comprehensive test cases so that we can ensure thorough testing coverage and quality assurance.
 
     - **Business Value**: Medium  
       Well-documented test cases ensure thorough testing coverage and facilitate test execution.
 
     - **Estimate**: **1 story point**
 
-    - **Detailed Account**: Documenting test cases involves creating test scenarios and identifying required test data. It's primarily documentation work using established templates, assigned **1 story point**.
+    - **Reasoning**: Documenting test cases involves creating test scenarios and identifying required test data. It's primarily documentation work using established templates, assigned **1 story point**.
 
 ---
 
@@ -311,228 +311,59 @@ The following user stories comprise the backlog for Sprint 2, focusing on system
 
 ---
 
-**User Story 21: Design Database Schema for Voxel Data and Magnetization Metadata**
+**User Story 21: Design Complete System Architecture and User Interface**
 
-- **Story**: As a development team, we want to design a comprehensive database schema to store voxel data and magnetization metadata efficiently.
-
-    - **Business Value**: High  
-      A well-designed database schema is essential for storing and retrieving voxel data, magnetization assignments, and edit history efficiently.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Designing the database schema requires understanding data relationships, query patterns, and performance requirements. It involves creating entity-relationship diagrams, defining table structures, and planning indexing strategies for optimal performance with large voxel datasets.
-
----
-
-**User Story 22: Create API Specifications for Component Communication**
-
-- **Story**: As a development team, we want to define clear API specifications for communication between system components.
+- **Story**: As a lab operator, I want the development team to design the complete system architecture and user interface so that the system will efficiently handle my voxel data, magnetization workflows, and provide an intuitive interface for interacting with my models.
 
     - **Business Value**: High  
-      Well-defined APIs ensure seamless integration between components and facilitate independent development and testing.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Creating API specifications involves defining endpoints, request/response formats, error handling, and authentication mechanisms. It requires understanding component interactions and data flow patterns to ensure efficient communication.
-
----
-
-**User Story 23: Design React Component Hierarchy for Frontend**
-
-- **Story**: As a development team, we want to design a clear React component hierarchy to support the user interface requirements.
-
-    - **Business Value**: High  
-      A well-structured component hierarchy enables maintainable, reusable UI components and efficient development.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Designing the component hierarchy requires understanding UI requirements, state management needs, and component reusability. It involves creating component diagrams and defining props interfaces for optimal development workflow.
-
----
-
-**User Story 24: Plan Three.js Integration for 3D Visualization**
-
-- **Story**: As a development team, we want to plan the integration of Three.js for 3D voxel visualization and interaction.
-
-    - **Business Value**: High  
-      Three.js integration is critical for providing the 3D visualization capabilities that are central to the system's functionality.
+      A well-designed system architecture and user interface are essential for storing and retrieving voxel data efficiently while providing the 3D visualization capabilities that are central to the system's functionality.
 
     - **Estimate**: **5 story points**
 
-    - **Detailed Account**: Planning Three.js integration involves understanding 3D rendering requirements, performance optimization strategies, and user interaction patterns. It requires research into Three.js capabilities, memory management for large voxel grids, and integration with React state management.
+    - **Reasoning**: This comprehensive task involves designing the complete system architecture, user interface design, and creating data flow documentation. It requires understanding user workflows, system requirements, and technical architecture decisions. The complexity and coordination across multiple areas justify **5 story points**.
 
 ---
 
-**User Story 25: Design File I/O Interfaces for STL/OBJ Import**
+**User Story 22: Design File Import and System Reliability Features**
 
-- **Story**: As a development team, we want to design robust file I/O interfaces for importing STL and OBJ CAD files.
+- **Story**: As a researcher, I want the development team to design robust file import functionality and system reliability features so that I can work with my existing CAD designs, convert them to voxel representations, and have confidence the system will handle errors gracefully.
 
     - **Business Value**: High  
-      Reliable file import functionality is essential for users to work with their existing CAD designs.
+      Reliable file import functionality and system reliability features are essential for users to work with their existing CAD designs and have confidence in the system's ability to handle issues gracefully.
 
-    - **Estimate**: **2 story points**
+    - **Estimate**: **3 story points**
 
-    - **Detailed Account**: Designing file I/O interfaces requires understanding STL/OBJ file formats, error handling for malformed files, and validation strategies. It involves research into parsing libraries and defining clear error messages for users.
-
----
-
-**User Story 26: Create Data Flow Diagrams Between Components**
-
-- **Story**: As a development team, we want to create comprehensive data flow diagrams showing how data moves between system components.
-
-    - **Business Value**: Medium  
-      Data flow diagrams provide clear visualization of system architecture and facilitate development coordination.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Creating data flow diagrams involves mapping data transformations, identifying data dependencies, and documenting component interfaces. It's primarily documentation work using established diagramming tools.
+    - **Reasoning**: This task involves designing file import capabilities for STL/OBJ files, comprehensive error handling and validation strategies, and edit history/undo-redo functionality. It requires understanding file formats, error handling, validation strategies, and user interaction patterns, justifying **3 story points**.
 
 ---
 
-**User Story 27: Design Error Handling and Validation Strategies**
+**User Story 23: Implement Core CAD Processing and Export Functionality**
 
-- **Story**: As a development team, we want to design comprehensive error handling and validation strategies for robust system operation.
+- **Story**: As a researcher, I want the development team to implement the ability to import my STL and OBJ CAD files, convert them to voxel grids, and export them to printer-compatible files so that I can complete the full workflow from CAD import to printer-ready output.
 
     - **Business Value**: High  
-      Robust error handling ensures system reliability and provides clear feedback to users when issues occur.
+      Core CAD processing and export functionality is fundamental to the system's ability to process user CAD files, convert them to the required format, and integrate with the existing 3D printer workflow.
 
-    - **Estimate**: **2 story points**
+    - **Estimate**: **8 story points**
 
-    - **Detailed Account**: Designing error handling strategies requires identifying potential failure points, defining error categories, and planning user-friendly error messages. It involves technical analysis and user experience considerations.
+    - **Reasoning**: This comprehensive implementation involves creating file parsers for STL/OBJ formats, implementing voxelization algorithms, creating efficient voxel data structures, implementing export functionality for printer integration, and creating a command-line interface for testing. It requires understanding file format specifications, 3D geometry algorithms, performance optimization, and integration testing. The significant development effort and technical complexity justify **8 story points**.
 
 ---
 
-**User Story 28: Plan Local Storage Architecture for Edit History**
+**User Story 24: Validate Proof of Concept and Create Demonstration**
 
-- **Story**: As a development team, we want to plan the local storage architecture to support undo/redo functionality and edit history.
+- **Story**: As a supervisor, I want the development team to validate the proof of concept with sample data and create demonstration materials so that we can showcase the technical feasibility and ensure the system works correctly before full development.
 
     - **Business Value**: High  
-      Edit history functionality is essential for user productivity and error recovery in the magnetization workflow.
+      Proof of concept validation and demonstration materials are essential for validating the technical approach, identifying issues early, and showcasing system capabilities to stakeholders.
 
-    - **Estimate**: **2 story points**
+    - **Estimate**: **3 story points**
 
-    - **Detailed Account**: Planning local storage architecture requires understanding memory constraints, performance implications, and data persistence strategies. It involves technical analysis of storage options and optimization techniques.
-
----
-
-**User Story 29: Implement Basic STL/OBJ File Parser**
-
-- **Story**: As a development team, we want to implement a basic file parser to read STL and OBJ CAD files.
-
-    - **Business Value**: High  
-      File parsing functionality is fundamental to the system's ability to process user CAD files.
-
-    - **Estimate**: **5 story points**
-
-    - **Detailed Account**: Implementing file parsers requires understanding file format specifications, handling edge cases, and creating robust error handling. It involves significant development effort and testing with various file types and sizes.
+    - **Reasoning**: This task involves testing with sample CAD files, validating outputs, testing export compatibility with existing printer software, documenting performance metrics, identifying bottlenecks, preparing demonstration materials, and ensuring reliable execution. It requires coordination with stakeholders, technical troubleshooting, analysis, and preparation work, justifying **3 story points**.
 
 ---
 
-**User Story 30: Create Voxelization Algorithm with Fixed Dimensions**
-
-- **Story**: As a development team, we want to implement the voxelization algorithm that converts 3D meshes to voxel grids with fixed dimensions (300×300μm XY, 110μm Z).
-
-    - **Business Value**: High  
-      The voxelization algorithm is core to the system's functionality and must accurately convert CAD models to voxel representations.
-
-    - **Estimate**: **5 story points**
-
-    - **Detailed Account**: Implementing voxelization requires understanding 3D geometry algorithms, optimizing for performance with large models, and ensuring accuracy with the specified dimensions. It involves complex mathematical calculations and performance optimization.
-
----
-
-**User Story 31: Build Command-Line Interface for File Processing**
-
-- **Story**: As a development team, we want to create a command-line interface for processing CAD files during proof of concept development.
-
-    - **Business Value**: Medium  
-      A command-line interface enables testing and validation of core functionality without UI complexity.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Building the CLI involves creating argument parsing, file handling, and output formatting. It requires understanding command-line best practices and creating user-friendly interfaces for testing purposes.
-
----
-
-**User Story 32: Implement Basic Voxel Data Structure**
-
-- **Story**: As a development team, we want to implement efficient data structures for storing and manipulating voxel data.
-
-    - **Business Value**: High  
-      Efficient voxel data structures are essential for system performance and memory management.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Implementing voxel data structures requires understanding memory optimization, access patterns, and data manipulation requirements. It involves technical analysis and performance considerations.
-
----
-
-**User Story 33: Create Java-Readable Export Format Generator**
-
-- **Story**: As a development team, we want to implement the export functionality that generates Java-readable files for the existing printer system.
-
-    - **Business Value**: High  
-      Export functionality is essential for integrating with the existing 3D printer workflow.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Creating the export generator requires understanding the existing printer system's file format requirements, data validation, and error handling. It involves integration testing with the printer system.
-
----
-
-**User Story 34: Test with Sample CAD Files (100x100 Voxel Limit)**
-
-- **Story**: As a development team, we want to test the proof of concept with sample CAD files within the 100x100 voxel limit.
-
-    - **Business Value**: High  
-      Testing with sample files validates the technical approach and identifies potential issues early.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Testing involves creating or obtaining sample CAD files, running them through the processing pipeline, and validating outputs. It's primarily testing and validation work.
-
----
-
-**User Story 35: Validate Export Compatibility with Existing Printer Software**
-
-- **Story**: As a development team, we want to validate that exported files are compatible with the existing 3D printer software.
-
-    - **Business Value**: High  
-      Compatibility validation ensures the system integrates properly with the existing workflow.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Validation requires testing exported files with the actual printer software, identifying compatibility issues, and iterating on the export format. It involves coordination with stakeholders and technical troubleshooting.
-
----
-
-**User Story 36: Document Performance Metrics and Bottlenecks**
-
-- **Story**: As a development team, we want to document performance metrics and identify bottlenecks in the proof of concept implementation.
-
-    - **Business Value**: Medium  
-      Performance documentation helps identify optimization opportunities and validates performance requirements.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Documenting performance involves measuring processing times, memory usage, and identifying bottlenecks. It's primarily analysis and documentation work.
-
----
-
-**User Story 37: Create Demonstration Script and Test Data**
-
-- **Story**: As a development team, we want to create a demonstration script and test data for the proof of concept presentation.
-
-    - **Business Value**: Medium  
-      A well-prepared demonstration showcases the technical feasibility and validates the approach.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Creating demonstration materials involves preparing sample files, writing demonstration scripts, and ensuring reliable execution. It's primarily preparation and documentation work.
-
----
-
-**Total Estimated Story Points for Sprint 2**: **42 story points**
+**Total Estimated Story Points for Sprint 2**: **16 story points**
 
 ---
 
@@ -542,267 +373,46 @@ The following user stories comprise the backlog for Sprint 3, focusing on core i
 
 ---
 
-**User Story 38: Refine System Architecture Based on PoC Learnings**
+**User Story 25: Refine System Design and Create Complete User Interface**
 
-- **Story**: As a development team, we want to refine the system architecture based on lessons learned from the proof of concept.
-
-    - **Business Value**: High  
-      Architecture refinement ensures the system design is optimized based on actual implementation experience.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Refining architecture requires analyzing PoC results, identifying performance bottlenecks, and updating design documents. It involves technical analysis and documentation updates.
-
----
-
-**User Story 39: Create Detailed UI/UX Specifications and Wireframes**
-
-- **Story**: As a development team, we want to create detailed UI/UX specifications and wireframes for the complete user interface.
+- **Story**: As a lab operator, I want the development team to refine the system design based on proof of concept learnings and create detailed user interface specifications so that the final system will be optimized and I can see exactly how it will work.
 
     - **Business Value**: High  
-      Detailed UI specifications ensure consistent user experience and guide development efforts.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Creating detailed specifications involves expanding wireframes, defining interaction patterns, and creating style guides. It requires design work and stakeholder feedback integration.
-
----
-
-**User Story 40: Design Component Interaction Protocols**
-
-- **Story**: As a development team, we want to design clear protocols for component interactions and data flow.
-
-    - **Business Value**: High  
-      Well-defined interaction protocols ensure reliable communication between system components.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Designing protocols involves defining message formats, error handling, and synchronization mechanisms. It's primarily technical documentation work.
-
----
-
-**User Story 41: Plan State Management for React Frontend**
-
-- **Story**: As a development team, we want to plan the state management architecture for the React frontend.
-
-    - **Business Value**: High  
-      Effective state management is essential for complex UI interactions and data consistency.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Planning state management requires understanding UI state requirements, data flow patterns, and performance considerations. It involves technical analysis and architecture decisions.
-
----
-
-**User Story 42: Design Undo/Redo System Architecture**
-
-- **Story**: As a development team, we want to design the architecture for undo/redo functionality.
-
-    - **Business Value**: High  
-      Undo/redo functionality is essential for user productivity and error recovery.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Designing undo/redo architecture requires understanding state management, memory optimization, and user interaction patterns. It involves technical analysis and performance considerations.
-
----
-
-**User Story 43: Create Detailed API Documentation**
-
-- **Story**: As a development team, we want to create comprehensive API documentation for all system interfaces.
-
-    - **Business Value**: Medium  
-      Detailed API documentation facilitates development, testing, and future maintenance.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Creating API documentation involves documenting endpoints, request/response formats, and usage examples. It's primarily documentation work using established tools.
-
----
-
-**User Story 44: Plan Error Handling and User Feedback Systems**
-
-- **Story**: As a development team, we want to plan comprehensive error handling and user feedback systems.
-
-    - **Business Value**: High  
-      Robust error handling and user feedback ensure good user experience and system reliability.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Planning error handling involves defining error categories, user messaging strategies, and recovery mechanisms. It's primarily planning and documentation work.
-
----
-
-**User Story 45: Design Responsive Layout for Different Screen Sizes**
-
-- **Story**: As a development team, we want to design responsive layouts that work across different screen sizes and devices.
-
-    - **Business Value**: Medium  
-      Responsive design ensures the system works well across different user environments.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Designing responsive layouts requires understanding different screen sizes, UI adaptation strategies, and user interaction patterns. It involves design work and technical considerations.
-
----
-
-**User Story 46: Implement Slicing Manager - CAD File Import and Voxelization (F213)**
-
-- **Story**: As a development team, we want to implement the Slicing Manager component for CAD file import and voxelization.
-
-    - **Business Value**: High  
-      The Slicing Manager is fundamental to the system's ability to process user CAD files.
+      System design refinement and complete user interface specifications ensure the system is optimized for performance and reliability while providing clear visualization of the user experience.
 
     - **Estimate**: **5 story points**
 
-    - **Detailed Account**: Implementing the Slicing Manager requires integrating file parsing, voxelization algorithms, and error handling. It involves significant development effort and testing with various file types.
+    - **Reasoning**: This comprehensive task involves refining system architecture based on PoC results, creating detailed UI/UX specifications, expanding wireframes, defining interaction patterns, designing responsive layouts, and finalizing system architecture documentation. It requires design work, stakeholder feedback integration, technical analysis, and architecture decisions, justifying **5 story points**.
 
 ---
 
-**User Story 47: Build Imaging Manager - 3D Visualization with Three.js (F221, F222)**
+**User Story 26: Implement Complete Voxel Magnetization System**
 
-- **Story**: As a development team, we want to implement the Imaging Manager for 3D visualization and user interaction.
+- **Story**: As a researcher, I want the development team to implement the complete voxel magnetization system so that I can import my CAD files, view them in 3D, navigate through layers, select individual voxels, assign magnetization directions, and export the results to printer-compatible files.
 
     - **Business Value**: High  
-      The Imaging Manager provides the core 3D visualization capabilities that are central to user experience.
+      The complete voxel magnetization system provides all core functionality including CAD import, 3D visualization, voxel manipulation, magnetization assignment, and printer integration - the primary purpose of the entire system.
 
-    - **Estimate**: **5 story points**
+    - **Estimate**: **13 story points**
 
-    - **Detailed Account**: Implementing the Imaging Manager requires Three.js integration, performance optimization, and user interaction handling. It involves complex 3D programming and React integration.
+    - **Reasoning**: This comprehensive implementation involves creating the complete Slicing Manager for CAD import and voxelization, implementing the Imaging Manager with 3D visualization and interaction capabilities, implementing the Magnetization Manager for layer navigation and voxel selection, implementing the Exportation Manager with auto-save functionality, and implementing system reliability and validation features. It requires significant development effort across multiple components, complex 3D programming, state management, and user interface programming, justifying **13 story points**.
 
 ---
 
-**User Story 48: Create Magnetization Manager - Layer Navigation and Voxel Selection (F231, F232)**
+**User Story 27: Create Comprehensive Testing and Demonstration**
 
-- **Story**: As a development team, we want to implement the Magnetization Manager for layer navigation and voxel selection.
+- **Story**: As a supervisor, I want the development team to create comprehensive testing for all system components and prepare demonstration scenarios so that the system will be reliable, defect-free, and we can showcase its capabilities.
 
     - **Business Value**: High  
-      The Magnetization Manager enables the core functionality of assigning magnetization directions to voxels.
+      Comprehensive testing ensures system reliability and facilitates future maintenance, while well-prepared demonstrations showcase system capabilities and validate functionality.
 
-    - **Estimate**: **5 story points**
+    - **Estimate**: **6 story points**
 
-    - **Detailed Account**: Implementing the Magnetization Manager requires layer management, voxel selection algorithms, and magnetization assignment logic. It involves complex UI interactions and state management.
-
----
-
-**User Story 49: Develop Exportation Manager - Java-Readable File Export (F242)**
-
-- **Story**: As a development team, we want to implement the Exportation Manager for generating printer-compatible files.
-
-    - **Business Value**: High  
-      The Exportation Manager enables integration with the existing 3D printer workflow.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Implementing the Exportation Manager requires file generation logic, data validation, and error handling. It involves integration with the existing printer system format.
+    - **Reasoning**: This task involves creating comprehensive unit and integration tests for all system components, conducting integration testing, and preparing demonstration scenarios and test data. It requires understanding component behavior, defining test scenarios, implementing automated tests, and coordination work, justifying **6 story points**.
 
 ---
 
-**User Story 50: Implement Auto-Save Functionality (F233)**
-
-- **Story**: As a development team, we want to implement auto-save functionality to preserve user work automatically.
-
-    - **Business Value**: High  
-      Auto-save functionality prevents data loss and improves user experience.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Implementing auto-save requires state management, persistence logic, and conflict resolution. It involves technical implementation and user experience considerations.
-
----
-
-**User Story 51: Add Voxel Selection Highlighting (F225)**
-
-- **Story**: As a development team, we want to implement visual highlighting for selected voxels.
-
-    - **Business Value**: High  
-      Visual feedback for voxel selection is essential for user interaction and workflow clarity.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Implementing highlighting requires 3D rendering updates, state management, and visual design. It involves Three.js programming and UI integration.
-
----
-
-**User Story 52: Create Magnetization Tracking Visualization (F226)**
-
-- **Story**: As a development team, we want to implement visual tracking of magnetization status for voxels.
-
-    - **Business Value**: High  
-      Magnetization tracking visualization helps users understand their progress and identify unmagnetized areas.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Implementing tracking visualization requires color coding, state management, and visual design. It involves 3D rendering and user interface programming.
-
----
-
-**User Story 53: Build Progress Tracking for Export Operations (F244)**
-
-- **Story**: As a development team, we want to implement progress tracking for export operations.
-
-    - **Business Value**: Medium  
-      Progress tracking provides user feedback during potentially long export operations.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Implementing progress tracking requires progress calculation, UI updates, and user feedback mechanisms. It's primarily UI programming work.
-
----
-
-**User Story 54: Implement Data Validation and Fail-Safe Mechanisms (NF241)**
-
-- **Story**: As a development team, we want to implement comprehensive data validation and fail-safe mechanisms.
-
-    - **Business Value**: High  
-      Data validation and fail-safe mechanisms ensure system reliability and data integrity.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Implementing validation requires error detection, recovery mechanisms, and user feedback. It involves technical implementation and testing.
-
----
-
-**User Story 55: Create Comprehensive Test Suite for All Components**
-
-- **Story**: As a development team, we want to create comprehensive unit and integration tests for all system components.
-
-    - **Business Value**: High  
-      Comprehensive testing ensures system reliability and facilitates future maintenance.
-
-    - **Estimate**: **5 story points**
-
-    - **Detailed Account**: Creating test suites requires understanding component behavior, defining test scenarios, and implementing automated tests. It involves significant development effort and testing strategy.
-
----
-
-**User Story 56: Conduct Integration Testing Between Components**
-
-- **Story**: As a development team, we want to conduct thorough integration testing to ensure components work together correctly.
-
-    - **Business Value**: High  
-      Integration testing validates the complete system functionality and component interactions.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Integration testing requires test scenario design, test data preparation, and systematic testing execution. It involves coordination and validation work.
-
----
-
-**User Story 57: Prepare Demonstration Scenarios and Test Data**
-
-- **Story**: As a development team, we want to prepare comprehensive demonstration scenarios and test data for the Revision 0 demonstration.
-
-    - **Business Value**: Medium  
-      Well-prepared demonstrations showcase system capabilities and validate functionality.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Preparing demonstrations involves creating test scenarios, preparing sample data, and ensuring reliable execution. It's primarily preparation and coordination work.
-
----
-
-**Total Estimated Story Points for Sprint 3**: **50 story points**
+**Total Estimated Story Points for Sprint 3**: **24 story points**
 
 ---
 
@@ -812,396 +422,71 @@ The following user stories comprise the backlog for Sprint 4, focusing on valida
 
 ---
 
-**User Story 58: Implement Should-Have Features - Model Size Adjustment (F212) and Favorite Magnetization Bar (F234)**
+**User Story 28: Implement Additional User Experience Features**
 
-- **Story**: As a development team, we want to implement should-have features that enhance user experience and workflow efficiency.
-
-    - **Business Value**: Medium  
-      Should-have features improve user experience and provide additional functionality beyond core requirements.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Implementing these features requires UI development, state management, and user interaction design. It involves moderate development effort and user experience considerations.
-
----
-
-**User Story 59: Add Could-Have Features - Voxel Block Size Configuration (F211) and CSV Export (F243)**
-
-- **Story**: As a development team, we want to implement could-have features that provide additional flexibility and export options.
-
-    - **Business Value**: Low  
-      Could-have features provide additional value but are not critical for core functionality.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Implementing these features requires configuration UI, file generation logic, and user interface updates. It involves moderate development effort and testing.
-
----
-
-**User Story 60: Conduct Performance Testing - Validate 10,000 Voxel Support (NF211, NF222)**
-
-- **Story**: As a development team, we want to validate that the system can handle models with up to 10,000 voxels without performance degradation.
-
-    - **Business Value**: High  
-      Performance validation ensures the system meets scalability requirements and handles realistic workloads.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Performance testing requires creating large test datasets, measuring performance metrics, and optimizing bottlenecks. It involves technical analysis and optimization work.
-
----
-
-**User Story 61: Test Latency Requirements - <500ms Image Updates (NF221) and <1s Metadata Updates (NF232)**
-
-- **Story**: As a development team, we want to validate that the system meets latency requirements for responsive user interaction.
-
-    - **Business Value**: High  
-      Latency validation ensures the system provides responsive user experience and meets performance targets.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Latency testing requires performance measurement, optimization analysis, and user experience validation. It involves technical testing and optimization work.
-
----
-
-**User Story 62: Validate Export Performance - 1000 Voxels/Second Minimum (NF212, NF242)**
-
-- **Story**: As a development team, we want to validate that export operations meet the minimum performance requirement of 1000 voxels per second.
-
-    - **Business Value**: High  
-      Export performance validation ensures the system can handle realistic workloads efficiently.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Performance validation requires benchmarking, optimization, and testing with various model sizes. It involves technical analysis and performance tuning.
-
----
-
-**User Story 63: Conduct User Acceptance Testing with Researchers and Lab Operators**
-
-- **Story**: As a development team, we want to conduct user acceptance testing with actual stakeholders to validate system usability and functionality.
-
-    - **Business Value**: High  
-      User acceptance testing ensures the system meets real user needs and provides value in actual workflows.
-
-    - **Estimate**: **5 story points**
-
-    - **Detailed Account**: User acceptance testing requires test planning, stakeholder coordination, test execution, and feedback analysis. It involves significant coordination and analysis effort.
-
----
-
-**User Story 64: Create Comprehensive User Manual with Step-by-Step Instructions**
-
-- **Story**: As a development team, we want to create a comprehensive user manual that enables users to effectively use the system.
-
-    - **Business Value**: High  
-      A comprehensive user manual is essential for user adoption and effective system utilization.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Creating the user manual requires understanding user workflows, creating clear instructions, and including screenshots and examples. It involves technical writing and user experience analysis.
-
----
-
-**User Story 65: Document Usability Testing Results and Recommendations**
-
-- **Story**: As a development team, we want to document usability testing results and provide recommendations for future improvements.
+- **Story**: As a researcher, I want the development team to implement additional features like model size adjustment, favorite magnetization settings, voxel block size configuration, and CSV export options so that I can work more efficiently and customize the system for my specific needs.
 
     - **Business Value**: Medium  
-      Usability documentation provides insights for future enhancements and validates user experience design.
+      Additional user experience features improve workflow efficiency and provide flexibility beyond core requirements, enhancing the overall user experience.
 
-    - **Estimate**: **1 story point**
+    - **Estimate**: **4 story points**
 
-    - **Detailed Account**: Documenting usability results requires analysis of test data, synthesis of findings, and creation of recommendations. It's primarily analysis and documentation work.
+    - **Reasoning**: Implementing these features requires UI development, state management, user interaction design, configuration UI, file generation logic, and user interface updates. It involves moderate development effort, user experience considerations, and testing, justifying **4 story points**.
 
 ---
 
-**User Story 66: Perform System Integration Testing with External Printer Software**
+**User Story 29: Validate System Performance and Conduct User Testing**
 
-- **Story**: As a development team, we want to perform comprehensive integration testing with the existing 3D printer software.
+- **Story**: As a researcher, I want the development team to validate that the system can handle large models with up to 10,000 voxels and conduct user acceptance testing so that I can work with complex models and the system meets real user needs.
 
     - **Business Value**: High  
-      Integration testing ensures seamless workflow integration with the existing printer system.
+      Performance validation ensures the system meets scalability requirements, while user acceptance testing validates the system meets real user needs and works effectively in actual workflows.
 
-    - **Estimate**: **2 story points**
+    - **Estimate**: **8 story points**
 
-    - **Detailed Account**: Integration testing requires coordination with stakeholders, test scenario execution, and issue resolution. It involves technical testing and stakeholder coordination.
-
----
-
-**User Story 67: Create Installation and Deployment Documentation**
-
-- **Story**: As a development team, we want to create clear installation and deployment documentation for system setup.
-
-    - **Business Value**: Medium  
-      Installation documentation enables users to set up and deploy the system successfully.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Creating installation documentation requires understanding system requirements, creating setup procedures, and testing installation processes. It's primarily documentation work.
+    - **Reasoning**: This comprehensive task involves validating 10,000 voxel support, testing latency requirements, validating export performance, conducting user acceptance testing with stakeholders, and system integration testing with external printer software. It requires creating large test datasets, measuring performance metrics, optimizing bottlenecks, test planning, stakeholder coordination, and technical testing, justifying **8 story points**.
 
 ---
 
-**User Story 68: Prepare Comprehensive Demonstration Scenarios**
+**User Story 30: Create Complete User Documentation and Installation Guide**
 
-- **Story**: As a development team, we want to prepare comprehensive demonstration scenarios for the final system presentation.
+- **Story**: As a lab operator, I want the development team to create comprehensive user documentation and installation guides so that I can effectively use the system, troubleshoot issues, and set it up successfully in our lab environment.
 
     - **Business Value**: High  
-      Well-prepared demonstrations showcase the complete system capabilities and validate project success.
+      Complete user documentation and installation guides are essential for user adoption, effective system utilization, and successful deployment.
 
-    - **Estimate**: **2 story points**
+    - **Estimate**: **3 story points**
 
-    - **Detailed Account**: Preparing demonstrations requires scenario design, test data preparation, and presentation planning. It involves coordination and preparation work.
-
----
-
-**User Story 69: Create Sample CAD Files for Different Complexity Levels**
-
-- **Story**: As a development team, we want to create sample CAD files representing different complexity levels for demonstration purposes.
-
-    - **Business Value**: Medium  
-      Sample files enable effective demonstrations and testing across different use cases.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Creating sample files requires CAD modeling, file preparation, and testing. It involves design work and file preparation.
+    - **Reasoning**: Creating comprehensive documentation involves understanding user workflows, creating clear instructions, including screenshots and examples, documenting usability testing results, creating installation procedures, and testing installation processes. It requires technical writing, user experience analysis, and documentation work, justifying **3 story points**.
 
 ---
 
-**User Story 70: Practice Demonstration Workflow and Timing**
+**User Story 31: Prepare Final Demonstration and Complete Project Delivery**
 
-- **Story**: As a development team, we want to practice the demonstration workflow to ensure smooth execution and proper timing.
-
-    - **Business Value**: Medium  
-      Practice ensures professional demonstration delivery and validates system reliability.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Practice involves rehearsal, timing optimization, and issue identification. It's primarily preparation and coordination work.
-
----
-
-**User Story 71: Prepare Presentation Materials and Technical Documentation**
-
-- **Story**: As a development team, we want to prepare comprehensive presentation materials and technical documentation for stakeholders.
+- **Story**: As a supervisor, I want the development team to prepare final demonstrations, conduct system validation, complete all project documentation, and prepare EXPO materials so that we can showcase the complete system capabilities and properly conclude the project.
 
     - **Business Value**: High  
-      Professional presentation materials effectively communicate project results and technical achievements.
+      Final demonstration preparation, system validation, complete documentation, and EXPO preparation ensure successful project delivery, stakeholder confidence, and proper project closure.
 
-    - **Estimate**: **2 story points**
+    - **Estimate**: **11 story points**
 
-    - **Detailed Account**: Preparing materials requires content creation, visual design, and technical documentation. It involves presentation design and technical writing.
-
----
-
-**User Story 72: Set Up Demonstration Environment and Backup Systems**
-
-- **Story**: As a development team, we want to set up a reliable demonstration environment with backup systems to ensure successful presentations.
-
-    - **Business Value**: High  
-      Reliable demonstration setup ensures professional presentation delivery and minimizes technical risks.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Setting up the environment requires system configuration, backup preparation, and testing. It's primarily technical setup work.
+    - **Reasoning**: This comprehensive final delivery task involves preparing demonstration scenarios, creating sample files, practicing demonstrations, preparing presentation materials, setting up demonstration environments, conducting final system validation, addressing bugs, completing all project documentation, preparing handover materials, creating EXPO presentations, and conducting project closure activities. It requires significant coordination, testing, documentation work, presentation design, and project analysis, justifying **11 story points**.
 
 ---
 
-**User Story 73: Conduct Final System Validation and Bug Fixes**
-
-- **Story**: As a development team, we want to conduct final system validation and address any remaining bugs or issues.
-
-    - **Business Value**: High  
-      Final validation ensures system quality and reliability for production use.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Final validation requires comprehensive testing, issue identification, and bug resolution. It involves testing and development work.
-
----
-
-**User Story 74: Prepare Q&A Materials for Stakeholder Questions**
-
-- **Story**: As a development team, we want to prepare comprehensive Q&A materials to address potential stakeholder questions.
-
-    - **Business Value**: Medium  
-      Q&A preparation ensures professional stakeholder interaction and demonstrates project thoroughness.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Preparing Q&A materials requires anticipating questions, researching answers, and creating reference materials. It's primarily preparation work.
-
----
-
-**User Story 75: Document Demonstration Results and Feedback**
-
-- **Story**: As a development team, we want to document demonstration results and stakeholder feedback for project records.
-
-    - **Business Value**: Medium  
-      Documentation of results and feedback provides valuable insights for future projects and improvements.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Documenting results requires feedback collection, analysis, and report creation. It's primarily documentation work.
-
----
-
-**User Story 76: Create Video Recording of Demonstration for Future Reference**
-
-- **Story**: As a development team, we want to create video recordings of demonstrations for future reference and documentation.
-
-    - **Business Value**: Low  
-      Video recordings provide historical documentation and reference materials for future use.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Creating video recordings requires recording setup, editing, and archival. It's primarily documentation work.
-
----
-
-**User Story 77: Update All Documentation Based on Final Implementation**
-
-- **Story**: As a development team, we want to update all project documentation to reflect the final implementation and any changes made during development.
-
-    - **Business Value**: High  
-      Updated documentation ensures accuracy and provides reliable reference materials for future maintenance.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Updating documentation requires reviewing all documents, identifying changes, and updating content. It involves comprehensive documentation work.
-
----
-
-**User Story 78: Create Final SRS Revision Incorporating All Changes**
-
-- **Story**: As a development team, we want to create the final SRS revision that accurately reflects the implemented system.
-
-    - **Business Value**: High  
-      The final SRS provides accurate system specification for future reference and maintenance.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Creating the final SRS requires comprehensive review, change incorporation, and quality assurance. It involves significant documentation work.
-
----
-
-**User Story 79: Complete Design Document with Final Architecture Details**
-
-- **Story**: As a development team, we want to complete the design document with final architecture details and implementation specifics.
-
-    - **Business Value**: High  
-      Complete design documentation provides essential reference for future maintenance and enhancements.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Completing the design document requires architecture review, implementation details, and technical documentation. It involves technical writing and analysis.
-
----
-
-**User Story 80: Finalize User Manual with Complete Feature Set**
-
-- **Story**: As a development team, we want to finalize the user manual to include all implemented features and functionality.
-
-    - **Business Value**: High  
-      A complete user manual is essential for user adoption and effective system utilization.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Finalizing the manual requires feature review, instruction updates, and comprehensive testing. It involves technical writing and user experience validation.
-
----
-
-**User Story 81: Prepare EXPO Presentation Materials and Booth Setup**
-
-- **Story**: As a development team, we want to prepare materials and setup for the capstone EXPO presentation.
-
-    - **Business Value**: Medium  
-      EXPO preparation showcases the project to a broader audience and demonstrates project success.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: EXPO preparation requires presentation design, booth planning, and material creation. It involves presentation design and coordination work.
-
----
-
-**User Story 82: Create Project Summary and Impact Statement**
-
-- **Story**: As a development team, we want to create a comprehensive project summary and impact statement highlighting project achievements.
-
-    - **Business Value**: High  
-      Project summary and impact statement demonstrate project value and achievements to stakeholders.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Creating summary materials requires project analysis, impact assessment, and report writing. It's primarily analysis and documentation work.
-
----
-
-**User Story 83: Document Lessons Learned and Future Enhancement Opportunities**
-
-- **Story**: As a development team, we want to document lessons learned and identify opportunities for future enhancements.
-
-    - **Business Value**: Medium  
-      Lessons learned documentation provides valuable insights for future projects and continuous improvement.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Documenting lessons learned requires project reflection, analysis, and synthesis. It's primarily analysis and documentation work.
-
----
-
-**User Story 84: Archive Project Artifacts and Code Repository**
-
-- **Story**: As a development team, we want to properly archive all project artifacts and code repository for future reference.
-
-    - **Business Value**: Medium  
-      Proper archiving ensures project artifacts are preserved and accessible for future reference.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Archiving requires organizing artifacts, creating archives, and establishing access procedures. It's primarily organizational work.
-
----
-
-**User Story 85: Prepare Handover Documentation for Future Maintenance**
-
-- **Story**: As a development team, we want to prepare comprehensive handover documentation to facilitate future maintenance and support.
-
-    - **Business Value**: High  
-      Handover documentation ensures smooth transition and enables effective future maintenance.
-
-    - **Estimate**: **2 story points**
-
-    - **Detailed Account**: Preparing handover documentation requires system analysis, maintenance planning, and comprehensive documentation. It involves technical analysis and documentation work.
-
----
-
-**User Story 86: Conduct Final Team Retrospective and Project Closure**
-
-- **Story**: As a development team, we want to conduct a final team retrospective and properly close the project.
-
-    - **Business Value**: Medium  
-      Team retrospective provides valuable insights for future projects and ensures proper project closure.
-
-    - **Estimate**: **1 story point**
-
-    - **Detailed Account**: Conducting retrospective requires team reflection, analysis, and documentation. It's primarily team coordination and analysis work.
-
----
-
-**Total Estimated Story Points for Sprint 4**: **48 story points**
+**Total Estimated Story Points for Sprint 4**: **26 story points**
 
 ---
 
 **Overall Project Summary**
 
-**Total Estimated Story Points Across All Sprints**: **175 story points**
+**Total Estimated Story Points Across All Sprints**: **101 story points**
 
 - **Sprint 1**: 35 story points (Documentation and Requirements Foundation)
-- **Sprint 2**: 42 story points (Design and Proof of Concept)
-- **Sprint 3**: 50 story points (Core Implementation and Testing)
-- **Sprint 4**: 48 story points (Validation and Final Delivery)
+- **Sprint 2**: 16 story points (Design and Proof of Concept)
+- **Sprint 3**: 24 story points (Core Implementation and Testing)
+- **Sprint 4**: 26 story points (Validation and Final Delivery)
 
-The comprehensive user story breakdown provides detailed planning for the entire Five-of-a-Kind voxel magnetization system development project, ensuring thorough coverage of all requirements, clear task definitions, and realistic effort estimation for successful project delivery.
+The comprehensive user story breakdown provides detailed planning for the entire Five-of-a-Kind voxel magnetization system development project. Each story is written from the stakeholder's perspective (researchers, lab operators, and supervisors) and focuses on user value rather than technical implementation details. Technical tasks have been consolidated into meaningful user-facing features, ensuring thorough coverage of all requirements while eliminating implementation-specific details like "plan Three.js integration" or "design React component hierarchy." This approach provides clear task definitions and realistic effort estimation for successful project delivery.
 
 ---
