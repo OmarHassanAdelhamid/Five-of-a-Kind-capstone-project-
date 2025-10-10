@@ -326,16 +326,17 @@ rationale design process how and why to fake it.)}
 
 In this section, we will state which safety requirements will be implemented as part of the capstone timeline, and which requirements will be implemented in the future.
 
-Requirements that will be implemented as part of the capstone timeline:
+Requirements that will be implemented as part of the capstone timeline, as they are considered to be high priority, and will be implemented first:
 \begin{itemize}
     \item SCR 1
     \item SCR 2
     \item SCR 3
     \item SCR 4
-\end{itemize}
-Requirements that will be implemented in the future:
-\begin{itemize}
     \item SCR 5
+\end{itemize}
+
+Requirements that will be implemented in the future, this also contains requirements that are considered to be high priority, and will only be implemented if time permits:
+\begin{itemize}
     \item SCR 6
     \item SCR 7
     \item SCR 8
@@ -383,16 +384,26 @@ did you resolve them?}
 \textbf{Olivia: }
 \newline
 \newline
-\textbf{Khalid: }
+\textbf{Khalid: } I was primarly responsible on the Failure Mode and Effects Analysis (FMEA) for this deliverable. This involved identify any potentail failure modes with the system that we have not thought about during the requirements gathering process. This included analyzing their causes and effects, and assessing their severity and likelihood. The challenge that I had during this process was identifying any safety requirements or hazards. This is because our system is a software tool that doesn't deal with any physical harm to a user, so we had to think more abstractly about the hazards. The hazards that I came up where more directly towards user productivity, data corruption, loss of work, or connectivity issues with the external systems.
 
 \subsection*{3. Which of your listed risks had your team thought of before this
 deliverable, and which did you think of while doing this deliverable? For
 the latter ones (ones you thought of while doing the Hazard Analysis), how
 did they come about?}
-The two major risks already identified were:
+The major risks already identified were (which were refined in this analysis):
 \begin{enumerate}
-    \item System not processing the file correctly. This was thought of during work on the development plan as a major concern due to lack of group knowledge.
-    \item System fails to render image. ALso conceived during the development plan in a more general form of the image either not being rendered correctly or too slowly. Assuming group experience increases over time, this risk was refined in this analysis.
+    \item System not processing the file correctly. This was considered during work on the development plan, as it is the starting point of the workflow.
+    \item Performance degradation from selecting too many voxels simultaneously. This risk was identified during the development plan as a potential risk, and was refined in this analysis.
+    \item System not providing an undo/redo functionality to combat the risk of unintended edits being made to the model. This is a risk that we identified after meeting with the supervisor and discussing the system's requirements.
+    \item System not saving user progress. This is a risk that was thought of during the development plan, as we discussed how the system should handle user progress by autosaving.
+    \item System validating the material and magnetization properties before exporting the file. This is a risk that was thought of during the development plan, when we discussed the requirements for the system with the supervisor.
+\end{enumerate}
+The risks that were thought of while doing this deliverable:
+\begin{enumerate}
+    \item The device does not have enough memory or GPU capabilities to render 3D models and voxel grids. We came up with this risk after researching how much 3D imaging requires memory and how the GPU driver can affect the rendering process.
+    \item The system is not maintaining real-time synchronization between the UI and backend data model. We came up with this risk after noticing how this could lead to unintended edits being made to the model and cause the backend data to potentially become corrupted.
+    \item Long-running operations causing user frustration due to lack of progress feedback. We came up with risk after learning about feedback in the SFRWENG 4HC3 course, where we learned how the Norman Principle of Feedback is important for user experience.
+    \item System not exporting the file in the correct format. We came up with this risk after exploring how the Java program that reads the metadata file can crash if the file is not in the correct format.
 \end{enumerate}
 
 \subsection*{4. Other than the risk of physical harm (some projects may not have any
