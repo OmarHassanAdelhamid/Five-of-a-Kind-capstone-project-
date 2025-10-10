@@ -20,6 +20,38 @@ _Khalid_
 
 *4. Which of the courses you have taken, or are currently taken, will help your team to be successful with your capstone project?*
 
+_Omar_
+
+_Daniel_
+
+_Andrew_
+
+_Olivia_
+
+_Khalid_
+
 *5. What knowledge and skills will the team collectively need to acquire to succesfully complete this capstone project? Examples of possible knowledge to acquire include domain specific knowledge from the domain of your application, or software engineering knowledge, mechatronics knowledge, or computer science knowledge. Skills may be related to technology, or writing, or presentation, or team management, etc. You should look to identify at least one item for each team member.*
 
+There are five major knowledges/skills our group will need:
+
+* _Knowledge of 3D rendering technologies,_ notably how to ensure performance is acceptable. This will be intrinsically linked to which library is utilised.
+
+* _Knowledge of STL file specifications._ This arises specifically from the constraint on input files to the system; knowledge of their format, how to validate and modify them will be essential.
+
+* _Knowledge of the custom 3D printer software._ While we will not be working with it directly, knowledge of how it expects to take input and how it can fail will be extremely useful assets when developing the export modules.
+
+* _Developing intuitive user interfaces._ Despite there being many examples of good interfaces we can use as reference or inspiration, this skill will still be necessary both when creating the more custom parts of the interface, and when discussing with stakeholders what would work best for them (e.g. drawing out tacit knowledge).
+
+* _Conflict resolution._ Over the coming seven months, it is highly unlikely no conflicts between team members will arise, even minor ones. Being able to facilitate tough conversations and the ability to reduce tension and/or the stakes of a situation is important to maintaining group morale during stressful times.
+
 *6. For each of the knowledge areas and skills identified in the previous question, what are at least two approaches to acquiring the knowledge or mastering the skill? Of the identified approaches, which will each team member pursue, and why did they make this choice?*
+
+_Omar_
+
+_Daniel_
+
+_Andrew_
+
+_Olivia_
+
+_Khalid_
