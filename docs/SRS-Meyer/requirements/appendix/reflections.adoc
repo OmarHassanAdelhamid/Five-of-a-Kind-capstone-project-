@@ -16,7 +16,8 @@ An issue I personally encountered was challenges with ensuring document consiste
 
 _Andrew_
 
-_Olivia_
+_Olivia_ +
+Prior to creating the requirements section of the document, we did have meetings with stakeholders so they could share their experience and the challenges they currently face. However, I still struggled with creating requirements that would sufficiently cover user needs that were not explicitly stated but would be essential. I found that without first-hand experience, intuitive understanding of the unspoken user needs was limited. To address this issue, I made a first draft of requirements that incorporated assumed user needs. During a subsequent meeting with Dr. Onaizah, I was able to get feedback based on her first-hand experience in direct relation to the scope of each requirement. This provided insight on the value and impact of each requirement, which helped guide future revisions. It definitely strengthened my confidence that the final requirements list is comprehensive and reflective of what the system requires.
 
 _Khalid_: 
 
@@ -44,6 +45,13 @@ _Andrew_
 
 _Olivia_
 
+I’ve listed a few of the courses I believe will be helpful, in both previous and future milestones, along with an accompanying explanation.
+
+*SFWRENG 3RA3 (Software Requirements and Security Considerations):* This course provided foundational knowledge and theoretical practice in developing an SRS document. That experience served as a significant guide, majorly influencing the development of our current SRS document. +
+*SFWRENG 3DB3 (Databases):* Due to the large amounts of expected data, the significant time complexity of data manipulation exceeds the capabilities of most data structures. Therefore, we will likely have to integrate a database to support any operation that accesses a specific voxel and its related metadata. The teachings from this course allow us to understand how databases work to effectively use them within our system. +
+*SFWRENG 3BB4 (Concurrent System Design) & SFWRENG 3SH3 (Operating Systems):* The teachings from these two courses may help optimize implementation methods during import and export processes. Between both courses, I feel that I have built a fairly comprehensive understanding of threads, concurrency, synchronization and resource handling. I believe that this information could be used to improve the performance of our import and export process by effectively leveraging the capabilities of parallel computation. +
+*SFWRENG 3S03 (Software Testing):* It is essential that the system we are building is robust and well-tested, as it is being developed for actual implementation and usage after the Capstone is complete. The teachings from this course will help guide the development of a comprehensive testing plan that can build confidence in the reliability of our system when we are no longer around to help fix any bugs.
+
 _Khalid_
 
 * *SFWRENG 3A04* - This is a large system design course, that helped a lot when working on the overall system architecture and ensuring the project's maintainability.
@@ -67,6 +75,15 @@ There are five major knowledges/skills our group will need:
 * _Conflict resolution._ Over the coming seven months, it is highly unlikely no conflicts between team members will arise, even minor ones. Being able to facilitate tough conversations and the ability to reduce tension and/or the stakes of a situation is important to maintaining group morale during stressful times.
 
 *6. For each of the knowledge areas and skills identified in the previous question, what are at least two approaches to acquiring the knowledge or mastering the skill? Of the identified approaches, which will each team member pursue, and why did they make this choice?*
+
+_Conflict resolution approaches._
+
+*Active-listening–based problem solving:* This approaches conflict resolution with a focus on effective, open communication. It gives each person a chance to explain their perspective while all remaining parties give their full, undivided attention. While listening to someone else’s perspective, the goal is to understand where the other person is coming from, even if you still disagree. This approach can help foster trust and strengthen group dynamics by ensuring all group members feel valued and heard when determining a solution to the conflict.
+
+
+*Integrated mediation:* This approach integrates a neutral party to help facilitate effective conversation between the two parties that disagree. It is still the responsibility of the two parties to come together with a final decision they both agree on. The mediator is not responsible for making a final decision that ends the disagreement. Rather, the mediator can help defuse tension and keep the conversation productive, ensuring both parties are able to interact with each other in an equitable and respectful manner. By introducing a mediator, this helps prevent misunderstandings or an imbalance in power.
+
+
 
 _Omar_
 
