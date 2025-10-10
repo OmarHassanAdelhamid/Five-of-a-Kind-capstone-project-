@@ -1,3 +1,25 @@
 [#rf,reftext=RF]
 
 === (RF) Reflections
+
+*1. What went well while writing this deliverable?*
+
+*2. What pain points did you experience during this deliverable, and how did you resolve them?*
+
+_Omar_
+
+_Daniel_
+
+_Andrew_
+
+_Olivia_
+
+_Khalid_
+
+*3. How many of your requirements were inspired by speaking to your client(s) or their proxies (e.g. your peers, stakeholders, potential users)?*
+
+*4. Which of the courses you have taken, or are currently taken, will help your team to be successful with your capstone project?*
+
+*5. What knowledge and skills will the team collectively need to acquire to succesfully complete this capstone project? Examples of possible knowledge to acquire include domain specific knowledge from the domain of your application, or software engineering knowledge, mechatronics knowledge, or computer science knowledge. Skills may be related to technology, or writing, or presentation, or team management, etc. You should look to identify at least one item for each team member.*
+
+*6. For each of the knowledge areas and skills identified in the previous question, what are at least two approaches to acquiring the knowledge or mastering the skill? Of the identified approaches, which will each team member pursue, and why did they make this choice?*
