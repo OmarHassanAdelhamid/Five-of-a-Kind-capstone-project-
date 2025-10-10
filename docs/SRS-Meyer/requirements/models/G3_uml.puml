@@ -1,0 +1,117 @@
+@startuml
+' ===== Layout & style to mimic ACME 01 =====
+left to right direction
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam packageBorderStyle dashed
+skinparam packageBackgroundColor white
+skinparam cloud {
+  RoundCorner 20
+}
+skinparam rectangle {
+  RoundCorner 8
+}
+
+' ===== Stakeholder clusters (dashed circles) =====
+package "Researchers & Graduate Students" as STU {
+  cloud "Edit voxels\nquickly" as G_edit
+  cloud "Avoid full\nrebuilds" as G_avoid
+  cloud "See material &\nmagnetization clearly" as G_viz_need
+}
+
+package "Research Assistants & Undergraduates" as RA {
+  cloud "Prepare files\nreliably" as G_prepare
+  cloud "Verify directions\nbefore print" as G_verify
+}
+
+package "Supervisors & Research Leads" as SUP {
+  cloud "Handle larger\nCAD models" as G_large
+  cloud "Increase research\nthroughput" as G_through
+}
+
+package "3D-Printer Technicians / Operators" as TECH {
+  cloud "Receive printer-ready\nexports" as G_ready
+}
+
+package "University IT / Admin" as IT {
+  cloud "Install/maintain with\nminimal overhead" as G_it
+}
+
+' ===== Central benefits (like ACME’s middle clouds) =====
+cloud "Faster iteration" as B_iter
+cloud "Flexible re-magnetization" as B_flex
+cloud "CAD → voxel grid conversion" as B_conv
+cloud "User-friendly tool" as B_ux
+cloud "Higher research productivity" as B_prod
+
+' Group the main benefits visually
+rectangle "Expected Benefits" as EB {
+}
+
+' Position benefits roughly (helps layout)
+B_iter -[hidden]-> B_flex
+B_flex -[hidden]-> B_conv
+B_conv -[hidden]-> B_ux
+B_ux   -[hidden]-> B_prod
+
+' ===== Means / system contributions (rectangles) =====
+package "System contributions (means)" as MEANS {
+  rectangle "Import CAD models" as M_import
+  rectangle "Auto-voxelize by\nprinter settings" as M_vox
+  rectangle "Per-layer magnetization\nvector editing" as M_layer
+  rectangle "Batch edit voxel groups\n& directions" as M_batch
+  rectangle "Visualize material &\nmagnetization maps" as M_viz
+  rectangle "Export printer-ready files\n(with property metadata)" as M_export
+}
+
+' ===== Stakeholder goals → central benefits =====
+G_edit  --> B_iter
+G_avoid --> B_iter
+G_viz_need --> B_ux
+
+G_prepare --> B_conv
+G_verify  --> B_flex
+
+G_large  --> B_conv
+G_through --> B_prod
+
+G_ready --> B_conv
+G_it    --> B_ux
+
+' ===== Benefits → Means (means–end links) =====
+B_iter --> M_import
+B_iter --> M_vox
+B_iter --> M_batch
+B_iter --> M_layer
+
+B_flex --> M_layer
+B_flex --> M_batch
+B_flex --> M_viz
+
+B_conv --> M_import
+B_conv --> M_vox
+B_conv --> M_export
+B_conv --> M_viz
+
+B_ux   --> M_viz
+B_ux   --> M_batch
+
+B_prod --> M_export
+
+' Optional: tie some means together for flow hint
+M_import -[hidden]-> M_vox
+M_vox    -[hidden]-> M_layer
+M_layer  -[hidden]-> M_batch
+M_batch  -[hidden]-> M_viz
+M_viz    -[hidden]-> M_export
+
+' ===== Legend (like ACME) =====
+legend right
+== Notation ==
+• Dashed circles: Stakeholders
+• Clouds: Goals / Expected benefits
+• Rectangles: System contributions (means)
+• Arrows: Contribution links
+endlegend
+@enduml
