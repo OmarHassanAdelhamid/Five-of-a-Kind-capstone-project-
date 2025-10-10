@@ -3,7 +3,7 @@
 
 **Sprint 1 Backlog**
 
-The following user stories comprise the backlog for the first sprint, focusing on delivering the core documentation and requirements foundation for the Five-of-a-Kind voxel magnetization system. Each story is written from the stakeholder's perspective and includes an assessment of its business value and a technical estimate in story points. The story points are assigned based on complexity and effort, following the scale:
+The following user stories comprise the backlog for the first sprint, focusing on delivering the core documentation and requirements foundation for AutoVox. Each story is written from the stakeholder's perspective and includes an assessment of its business value and a technical estimate in story points. The story points are assigned based on complexity and effort, following the scale:
 
 - **1 point**: Simple task using existing tools and templates.
 - **2 points**: Task requiring research, analysis, and documentation.
@@ -13,14 +13,14 @@ The following user stories comprise the backlog for the first sprint, focusing o
 
 **User Story 1: Understand Current Workflow Pain Points**
 
-- **Story**: As a researcher, I want the development team to understand my current CAD workflow bottlenecks so that they can design a solution that addresses my real pain points with voxel-by-voxel magnetization.
+- **Story**: As a researcher, I want the development team to understand my current CAD workflow bottlenecks so that they can design a solution that addresses my real pain points with voxel-by-voxel property assignment.
 
     - **Business Value**: High  
       Understanding current workflow bottlenecks is fundamental to defining the problem and ensuring our solution provides genuine value to researchers and lab operators.
 
     - **Estimate**: **2 story points**
 
-    - **Reasoning**: This task involves conducting research on current CAD workflows, interviewing stakeholders, and documenting the specific bottlenecks in voxel-by-voxel magnetization processes. It requires analysis of existing tools like COMSOL and understanding the manual rebuilding process. The research component and stakeholder interaction justify **2 story points**.
+    - **Reasoning**: This task involves conducting research on current CAD workflows, interviewing stakeholders, and documenting the specific bottlenecks in voxel-by-voxel property assignment processes. It requires analysis of existing tools like COMSOL and understanding the manual rebuilding process. The research component and stakeholder interaction justify **2 story points**.
 
 ---
 
@@ -288,7 +288,7 @@ The following user stories comprise the backlog for the first sprint, focusing o
 
 **Professional Summary**
 
-The sprint backlog for Sprint 1 is strategically designed to establish a solid foundation for the Five-of-a-Kind voxel magnetization system by focusing on comprehensive requirements analysis and system design. We prioritize tasks that deliver the most business value while efficiently utilizing resources through established methodologies and tools.
+The sprint backlog for Sprint 1 is strategically designed to establish a solid foundation for AutoVox by focusing on comprehensive requirements analysis and system design. We prioritize tasks that deliver the most business value while efficiently utilizing resources through established methodologies and tools.
 
 Simple tasks, assigned **1 story point**, are quick wins that utilize existing templates and procedures, allowing for rapid progress in documentation and planning activities. Tasks with **2 story points** involve research, stakeholder interaction, and technical analysis, requiring moderate effort and coordination. The **5 story point** task represents substantial work in defining functional requirements, which is essential for system success but involves complex technical analysis and coordination.
 
@@ -307,13 +307,13 @@ By the end of Sprint 1, we aim to have a comprehensive understanding of the prob
 
 **Sprint 2 Backlog**
 
-The following user stories comprise the backlog for Sprint 2, focusing on system design and proof of concept development for the Five-of-a-Kind voxel magnetization system. This sprint transitions from requirements analysis to technical design and validation of core functionality.
+The following user stories comprise the backlog for Sprint 2, focusing on system design and proof of concept development for AutoVox. This sprint transitions from requirements analysis to technical design and validation of core functionality.
 
 ---
 
 **User Story 21: Design Complete System Architecture and User Interface**
 
-- **Story**: As a lab operator, I want the development team to design the complete system architecture and user interface so that the system will efficiently handle my voxel data, magnetization workflows, and provide an intuitive interface for interacting with my models.
+- **Story**: As a lab operator, I want the development team to design the complete system architecture and user interface so that the system will efficiently handle my voxel data, property assignment workflows, and provide an intuitive interface for interacting with my models.
 
     - **Business Value**: High  
       A well-designed system architecture and user interface are essential for storing and retrieving voxel data efficiently while providing the 3D visualization capabilities that are central to the system's functionality.
@@ -333,20 +333,20 @@ The following user stories comprise the backlog for Sprint 2, focusing on system
 
     - **Estimate**: **3 story points**
 
-    - **Reasoning**: This task involves designing file import capabilities for STL/OBJ files, comprehensive error handling and validation strategies, and edit history/undo-redo functionality. It requires understanding file formats, error handling, validation strategies, and user interaction patterns, justifying **3 story points**.
+    - **Reasoning**: This task involves designing file import capabilities for STL files, comprehensive error handling and validation strategies, and edit history/undo-redo functionality. It requires understanding file formats, error handling, validation strategies, and user interaction patterns, justifying **3 story points**.
 
 ---
 
 **User Story 23: Implement Core CAD Processing and Export Functionality**
 
-- **Story**: As a researcher, I want the development team to implement the ability to import my STL and OBJ CAD files, convert them to voxel grids, and export them to printer-compatible files so that I can complete the full workflow from CAD import to printer-ready output.
+- **Story**: As a researcher, I want the development team to implement the ability to import my STL files, convert them to voxel grids, and export them to printer-compatible files so that I can complete the full workflow from CAD import to printer-ready output.
 
     - **Business Value**: High  
       Core CAD processing and export functionality is fundamental to the system's ability to process user CAD files, convert them to the required format, and integrate with the existing 3D printer workflow.
 
     - **Estimate**: **8 story points**
 
-    - **Reasoning**: This comprehensive implementation involves creating file parsers for STL/OBJ formats, implementing voxelization algorithms, creating efficient voxel data structures, implementing export functionality for printer integration, and creating a command-line interface for testing. It requires understanding file format specifications, 3D geometry algorithms, performance optimization, and integration testing. The significant development effort and technical complexity justify **8 story points**.
+    - **Reasoning**: This comprehensive implementation involves creating the file parser for STL, implementing voxelization algorithms, creating efficient voxel data structures, implementing export functionality for printer integration, and creating a command-line interface for testing. It requires understanding file format specifications, 3D geometry algorithms, performance optimization, and integration testing. The significant development effort and technical complexity justify **8 story points**.
 
 ---
 
@@ -369,7 +369,7 @@ The following user stories comprise the backlog for Sprint 2, focusing on system
 
 **Sprint 3 Backlog**
 
-The following user stories comprise the backlog for Sprint 3, focusing on core implementation and testing of the Five-of-a-Kind voxel magnetization system. This sprint delivers the working system with core functionality.
+The following user stories comprise the backlog for Sprint 3, focusing on core implementation and testing of AutoVox. This sprint delivers the working system with core functionality.
 
 ---
 
@@ -386,12 +386,12 @@ The following user stories comprise the backlog for Sprint 3, focusing on core i
 
 ---
 
-**User Story 26: Implement Complete Voxel Magnetization System**
+**User Story 26: Implement Complete Voxel Property Assignment System**
 
-- **Story**: As a researcher, I want the development team to implement the complete voxel magnetization system so that I can import my CAD files, view them in 3D, navigate through layers, select individual voxels, assign magnetization directions, and export the results to printer-compatible files.
+- **Story**: As a researcher, I want the development team to implement the complete voxel property assignment system so that I can import my CAD files, view them in 3D, navigate through layers, select individual voxels, assign magnetization vectors and material IDs, and export the results to printer-compatible files.
 
     - **Business Value**: High  
-      The complete voxel magnetization system provides all core functionality including CAD import, 3D visualization, voxel manipulation, magnetization assignment, and printer integration - the primary purpose of the entire system.
+      The complete voxel magnetization system provides all core functionality including CAD import, 3D visualization, magnetization assignment, material assignment, and printer integration - the primary purpose of the entire system.
 
     - **Estimate**: **13 story points**
 
@@ -418,7 +418,7 @@ The following user stories comprise the backlog for Sprint 3, focusing on core i
 
 **Sprint 4 Backlog**
 
-The following user stories comprise the backlog for Sprint 4, focusing on validation, final delivery, and project completion for the Five-of-a-Kind voxel magnetization system.
+The following user stories comprise the backlog for Sprint 4, focusing on validation, final delivery, and project completion for AutoVox.
 
 ---
 
@@ -437,14 +437,14 @@ The following user stories comprise the backlog for Sprint 4, focusing on valida
 
 **User Story 29: Validate System Performance and Conduct User Testing**
 
-- **Story**: As a researcher, I want the development team to validate that the system can handle large models with up to 10,000 voxels and conduct user acceptance testing so that I can work with complex models and the system meets real user needs.
+- **Story**: As a researcher, I want the development team to validate that the system can handle large models with up to MAX_VOXELS and conduct user acceptance testing so that I can work with complex models and the system meets real user needs.
 
     - **Business Value**: High  
       Performance validation ensures the system meets scalability requirements, while user acceptance testing validates the system meets real user needs and works effectively in actual workflows.
 
     - **Estimate**: **8 story points**
 
-    - **Reasoning**: This comprehensive task involves validating 10,000 voxel support, testing latency requirements, validating export performance, conducting user acceptance testing with stakeholders, and system integration testing with external printer software. It requires creating large test datasets, measuring performance metrics, optimizing bottlenecks, test planning, stakeholder coordination, and technical testing, justifying **8 story points**.
+    - **Reasoning**: This comprehensive task involves validating MAX_VOXEL support, testing latency requirements, validating export performance, conducting user acceptance testing with stakeholders, and system integration testing with external printer software. It requires creating large test datasets, measuring performance metrics, optimizing bottlenecks, test planning, stakeholder coordination, and technical testing, justifying **8 story points**.
 
 ---
 
