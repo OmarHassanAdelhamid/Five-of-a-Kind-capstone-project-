@@ -10,7 +10,7 @@ Interview Type: Structured Interviews
 
 Justification: As the primary users who will directly interact with the voxel magnetization system, researchers and graduate students possess the most valuable insights into current workflow challenges and desired system functionality. Structured interviews allow us to systematically gather information about their specific needs, pain points, and expectations.
 
-Most Important Question: "What are the most time-consuming aspects of your current voxel magnetization workflow, and how would an automated system need to function to significantly improve your productivity?"
+Most Important Question: "What are the most time-consuming aspects of your current voxel property assignment workflow, and how would an automated system need to function to significantly improve your productivity?"
 
 Relevance: Identifies core functional requirements and performance criteria that will drive system design and development priorities.
 
@@ -19,7 +19,7 @@ Interview Type: Focus Groups and Observation Sessions
 
 Justification: Research assistants and undergraduate users often have different interaction patterns and technical comfort levels compared to graduate researchers. Focus groups allow us to understand how less experienced users would approach the system, while observation sessions reveal usability challenges that might not be expressed in interviews.
 
-Most Important Question: "How would you prefer to learn and use a new voxel magnetization tool, and what interface elements would make the system most intuitive for you?"
+Most Important Question: "How would you prefer to learn and use a new voxel property assignment tool, and what interface elements would make the system most intuitive for you?"
 
 Relevance: Informs usability requirements and interface design decisions to ensure the system is accessible to users with varying technical expertise.
 
@@ -28,7 +28,7 @@ Interview Type: Stakeholder Consultation Meetings
 
 Justification: Supervisors and research leads provide strategic perspective on how the system should integrate with broader research goals and laboratory workflows. Their input is crucial for ensuring the system delivers value at the organizational level and aligns with long-term research objectives.
 
-Most Important Question: "How should the voxel magnetization system integrate with existing laboratory workflows to maximize research productivity and minimize disruption?"
+Most Important Question: "How should the voxel property assignment system integrate with existing laboratory workflows to maximize research productivity and minimize disruption?"
 
 Relevance: Ensures the system meets organizational needs and integrates effectively with existing research infrastructure and processes.
 
@@ -37,6 +37,6 @@ Interview Type: Technical Interviews
 
 Justification: Printer technicians and operators have direct experience with the existing 3D printing workflow and understand the technical constraints and requirements for successful integration. Their input is essential for defining the export format and integration specifications.
 
-Most Important Question: "What specific data format and workflow requirements must the voxel magnetization system meet to integrate seamlessly with your existing 3D printer operations?"
+Most Important Question: "What specific data format and workflow requirements must the voxel property assignment system meet to integrate seamlessly with your existing 3D printer operations?"
 
 Relevance: Defines technical constraints and integration requirements that are essential for system success and user adoption.
