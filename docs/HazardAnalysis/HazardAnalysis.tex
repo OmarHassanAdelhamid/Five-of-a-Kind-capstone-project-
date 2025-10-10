@@ -166,10 +166,27 @@ the library files needed to interact with necessary files.
 
 \section{Critical Assumptions}
 
-\wss{These assumptions that are made about the software or system.  You should
-minimize the number of assumptions that remove potential hazards.  For instance,
-you could assume a part will never fail, but it is generally better to include
-this potential failure mode.}
+The following critical assumptions are made about the software system and its operating environment. These assumptions are fundamental to the hazard analysis and safety requirements. Rather than assuming these conditions will never fail, the system has been designed with appropriate safety requirements to handle potential failures of these assumptions.
+
+\begin{enumerate}
+    \item \textbf{Hardware and Operating System Stability}: The system assumes that the underlying hardware (CPU, memory, storage) and operating system remain stable during normal operation. However, the system includes auto-save functionality (SCR6) and timeout handling (SCR9) to mitigate the effects of hardware failures or system crashes.
+
+    \item \textbf{Input File Integrity}: The system assumes that users will provide valid, non-malicious CAD files in supported formats (STL, OBJ). The system validates file format and structure (SCR1) to detect corrupted or invalid files before processing.
+
+    \item \textbf{User Intent and Expertise}: The system assumes that users have basic familiarity with CAD software and understand the implications of magnetization and material property assignments. The system provides undo/redo functionality (SCR7) and selection limits (SCR8) to help users correct mistakes and prevent unintended actions.
+
+    \item \textbf{External System Compatibility}: The system assumes that the custom 3D printer software will continue to use the same Java-readable export format and metadata structure. The system validates export format (SCR5) and property completeness (SCR4) to ensure compatibility.
+
+    \item \textbf{Resource Availability}: The system assumes that sufficient computational resources (memory, GPU) are available for 3D visualization. The system checks hardware capabilities (SCR2) and provides appropriate error handling when resources are insufficient.
+
+    \item \textbf{Network and Connectivity}: The system assumes local operation without network dependencies, eliminating risks associated with network failures or connectivity issues. All processing and data storage occurs locally on the user's machine.
+
+    \item \textbf{Software Library Reliability}: The system assumes that third-party libraries for CAD file processing and 3D visualization remain stable and compatible. The system includes comprehensive file validation (SCR1) and format checking (SCR5) to detect library-related issues.
+
+    \item \textbf{User Environment Safety}: The system assumes that users operate in a safe physical environment when using the software, as the software itself does not directly control physical 3D printer hardware. The system focuses on data integrity and user productivity rather than physical safety hazards.
+\end{enumerate}
+
+These assumptions are explicitly addressed through corresponding safety requirements (SCR1-SCR9) that provide mitigation strategies for potential failures of these assumptions. This approach ensures that the system remains robust even when underlying assumptions may not hold true.
 
 
 \iffalse
@@ -378,7 +395,7 @@ did you resolve them?}
 \textbf{Daniel: } Responsible for writing the System Boundaries, my main concern was finding a succinct way of explaining each component without simply restating what was already discussed in the SRS. Providing the necessary detail for the HA whilst also summarizing was an interesting balance to strike. Ultimately I settled on leaving out items not discussed within the analysis itself. In addition, when brainstorming possible hazards, tracing back possible causes when the system obviously isn't developed was a challenge. In the end, we realised that discussing causes more generally was sufficient in indicating a possible cause.
 \newline
 \newline
-\textbf{Andrew: }
+\textbf{Andrew: } I was responsible for writing the Critical Assumptions section. The main challenge I faced was ensuring that the assumptions didn't simply dismiss potential hazards by assuming failures would never occur. The template guidance emphasized that assumptions should not be used to remove hazards from consideration, so I needed to frame each assumption alongside its corresponding mitigation strategy through safety requirements. 
 \newline
 \newline
 \textbf{Olivia: }
