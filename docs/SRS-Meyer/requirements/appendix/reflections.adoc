@@ -4,11 +4,15 @@
 
 *1. What went well while writing this deliverable?*
 
+Overall, the deliverable progressed smoothly after the development of the problem statement and goals. The peer feedback we received kept us on our toes, ensuring we remained focused on delivering a document that not only followed the rubric but captured our client's needs succintly. Our plan was straightforward; create an initial draft of the SRS, verify any assumptions made during a client meeting, verify our writing style with the TA, and make necessary corrections. This plan was executed successfully, with the client meeting being extremely useful and resulting in numerous changes to project scope (the most prominent addition being material assignments to voxels). Despite the tense deadlines, the group succeeded in completing their pieces with time for review.
+
 *2. What pain points did you experience during this deliverable, and how did you resolve them?*
 
 _Omar_
 
 _Daniel_
+
+An issue I personally encountered was challenges with ensuring document consistency in naming, numbering, style, and how concepts are explained. In order to balance our individual workloads and work on the document, we split up work and went our own ways. This was fine; however it led to inevitable inconsistencies between sections. As the primary reviewer of all sections, I was in charge of catching these. Deciding upon standards was tricky at times, especially when one section references another (e.g. a scenario implying the existence of functional requirements we didn't have). Client meetings were able to clear up most serious disagreements, leaving primarily naming and numbering errors, which were easier to deal with.
 
 _Andrew_
 
@@ -18,11 +22,21 @@ _Khalid_
 
 *3. How many of your requirements were inspired by speaking to your client(s) or their proxies (e.g. your peers, stakeholders, potential users)?*
 
+A large majority of requirements were directly from our talks with Dr. Onaizah, with additional requirements from our own ideas of what may facilitate their work or standard editing software. For instance, the ability to edit each layer individually became viewing it separately; editing voxel properties individually became the panels to edit these properties of selected voxels. Standard editing requirements included undo/redo functionality (not explicitly stated by stakeholders, but a reasonable assumption), the ability to save as/autosave, etc. Usability requirements surfaced from both difficulties discussed about their current solution, as well as our own preferences when editing files (another reasonable set of preferences, given we have all done similar technical work). Ultimately, when requirements came from our conceptions of what the product should be like, cross-checking with our client was top priority; we still retain plans to verify the finer details of this document with Dr. Onaizah as part of our verification plan.
+
 *4. Which of the courses you have taken, or are currently taken, will help your team to be successful with your capstone project?*
 
 _Omar_
 
 _Daniel_
+
+* *SFWRENG 3A04* - Large scale system design knowledge will come in handy when developing the overall structure for both the POC and revisions. Code maintainability will be absolutely essential both while working on the project ourselves, and if the project is to be maintained/expanded upon in the future by other people.
+
+* *SFWRENG 3DB3* - Skills in SQL, as well as database management, will be useful when developing the user edit history module.
+
+* *SFWRENG 4X03* - When working on the 3D rendering modules, knowledge of scientific computation (both how to accomplish things efficiently and avoiding error) will be useful, given the large amount of computation required.
+
+* *SFWRENG 2AA4* - Code design on smaller scales will further ensure code written is maintainable and logical to future people who may work on the project.
 
 _Andrew_
 
@@ -49,6 +63,14 @@ There are five major knowledges/skills our group will need:
 _Omar_
 
 _Daniel_
+
+Regarding the fourth skill, there are two main avenues ahead of me to mastering the skill:
+
+* *Online research on best style/practices.* There is endless information available online related to developing intuitive, human-centered designs. This type of learning is something I am intimately familiar with from work on both personal projects and to catch up when a course is lacking.
+
+* I (along with other team members) are currently enrolled in a *course focused on human-centered design,* which includes a full project meant to develop this skill. This provides a more structured learning approach, also including collaboration.
+
+I likely will pursue a mix of these approaches given what the project ends up warranting. Online research will supplement any knowledge the course does not provide (e.g. specific guidelines). The timeline of course completion aligns perfectly with when UI will likely be developed, so a majority of skill development will lean on the course.
 
 _Andrew_
 

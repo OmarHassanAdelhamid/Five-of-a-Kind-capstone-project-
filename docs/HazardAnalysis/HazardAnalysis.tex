@@ -351,22 +351,59 @@ Which requirements will be implemented in the future?}
 
 \section*{Appendix --- Reflection}
 
+\iffalse
 \wss{Not required for CAS 741}
+\fi
 
 \input{../Reflection.tex}
 
+\subsection*{1. What went well while writing this deliverable?} 
+Collaboration was the key word with this deliverable. With how this document was intrinsically tied 
+to pieces of the SRS (e.g. components, functional requirements), we each had to ensure our parts not only 
+remained consistent across both documents, but who finished what when was also a concern. Thankfully, 
+this was able to be sorted out. To ensure all members were on the same page about what was to be discussed, 
+initial brainstorms from one member were received and implemented by another, whose work was finally 
+judged by the first member. Suggestions of possible hazards were also taken not just from the group, but 
+from discussions with the client, who verified our concerns. Despite our project not exhibiting traditional 
+safety concerns (beyond the remote possibility of printer damage), possible hazards were nevertheless 
+identified as they relate to user productivity, an essential facet of project success.
+
+\subsection*{2. What pain points did you experience during this deliverable, and how
+did you resolve them?}
+\bigskip
+\textbf{Omar: }
+\newline
+\newline
+\textbf{Daniel: } Responsible for writing the System Boundaries, my main concern was finding a succinct way of explaining each component without simply restating what was already discussed in the SRS. Providing the necessary detail for the HA whilst also summarizing was an interesting balance to strike. Ultimately I settled on leaving out items not discussed within the analysis itself. In addition, when brainstorming possible hazards, tracing back possible causes when the system obviously isn't developed was a challenge. In the end, we realised that discussing causes more generally was sufficient in indicating a possible cause.
+\newline
+\newline
+\textbf{Andrew: }
+\newline
+\newline
+\textbf{Olivia: }
+\newline
+\newline
+\textbf{Khalid: }
+
+\subsection*{3. Which of your listed risks had your team thought of before this
+deliverable, and which did you think of while doing this deliverable? For
+the latter ones (ones you thought of while doing the Hazard Analysis), how
+did they come about?}
+The two major risks already identified were:
 \begin{enumerate}
-    \item What went well while writing this deliverable? 
-    \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
-    \item Which of your listed risks had your team thought of before this
-    deliverable, and which did you think of while doing this deliverable? For
-    the latter ones (ones you thought of while doing the Hazard Analysis), how
-    did they come about?
-    \item Other than the risk of physical harm (some projects may not have any
-    appreciable risks of this form), list at least 2 other types of risk in
-    software products. Why are they important to consider?
+    \item System not processing the file correctly. This was thought of during work on the development plan as a major concern due to lack of group knowledge.
+    \item System fails to render image. ALso conceived during the development plan in a more general form of the image either not being rendered correctly or too slowly. Assuming group experience increases over time, this risk was refined in this analysis.
 \end{enumerate}
+
+\subsection*{4. Other than the risk of physical harm (some projects may not have any
+appreciable risks of this form), list at least 2 other types of risk in
+software products. Why are they important to consider?}
+The terms listed here are general suggestions as areas of risk in software products.
+\begin{enumerate}
+    \item "Usability harm." This includes any hazard that might harm the user's experience, satisfaction, or productivity when using the product, and can arise from faulty user interfaces or common errors that the user must find workarounds for. This is important to consider as if the product's usability is a substantial decrease versus another solution, users will be encouraged to find alternate products that accomplish their goals without these pain points. In the context of our project, many of the risks identified relate to this concept (e.g. progress loss).
+    \item "Virtual harm." Whereas physical harm relates to humans being harmed, virtual harm involves harm to files, programs, and posssibly hardware. This is important to consider as files can be just as precious as human safety, especially in the case where no backups exist. This can also factor into usability harm; if these errors are common, users can completely lose trust in the product. In our project, this manifests as both incorrect edits being made to user files, as well as complete progress loss.
+\end{enumerate}
+
 
 \section*{References}
 
