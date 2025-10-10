@@ -18,7 +18,9 @@ _Andrew_
 
 _Olivia_
 
-_Khalid_
+_Khalid_: 
+
+The challenge that I faced when working with this deliverable is keeping the consistency between the requirements and the detailed usage scenarios. This was particularly difficult because the requirements were frequently evolving, which meant I had to constantly update the usage scenarios to reflect the latest changes. Another challenge was the misunderstanding between the group and the supervisor, as we missed an important requirement of adding and removing voxels, which was cleared up during the meetings.
 
 *3. How many of your requirements were inspired by speaking to your client(s) or their proxies (e.g. your peers, stakeholders, potential users)?*
 
@@ -43,6 +45,12 @@ _Andrew_
 _Olivia_
 
 _Khalid_
+
+* *SFWRENG 3A04* - This is a large system design course, that helped a lot when working on the overall system architecture and ensuring the project's maintainability.
+
+* *SFWRENG 3RA3* - This is a software requirements and safety considerations course, this helped me a lot when I was creating the detailed usage scenarios, as it provided a structured approach to defining user needs and system behaviors.
+
+* *SFWRENG 4HC3* - This is a human computer interfaces course, this helped a lot when thinking about how the system interface would look like, what kind of considerations that need to be taken like Feedback, Mappings, and Constraints, which are essential for an intuitive user experience.
 
 *5. What knowledge and skills will the team collectively need to acquire to succesfully complete this capstone project? Examples of possible knowledge to acquire include domain specific knowledge from the domain of your application, or software engineering knowledge, mechatronics knowledge, or computer science knowledge. Skills may be related to technology, or writing, or presentation, or team management, etc. You should look to identify at least one item for each team member.*
 
@@ -77,3 +85,12 @@ _Andrew_
 _Olivia_
 
 _Khalid_
+
+For the second skill, *Knowledge of STL file specifications*, these are the ways that will help me in mastering the skill:
+
+* *Online research and documentation review.* The STL file format is well-documented, there are numerous of online resources and tutorials that details the structure of the file. Most famously *Adobe*, has a well documented page explaining STL file format and how to create one. This approach allows me to understand the STL file specifications theoretically.
+
+* *Practical implementation through parsing and validation.* Working with existing libraries to write a basic parser for STL files will provide me hands-on experience, this will help me understand the structure even more and how I can deal with it practically. This will involve reading, interpreting, and validating the data within STL files.
+
+I will primarily use the practical implementation approach. While theoretical knowledge is important, the system's requirement of validating and modifying STL files is a necessity, and any practical understanding can only be gained from hands-on experience working with the STL files. However, I will use online research and documentation when needed as a reference for specific details and edge cases encountered during implementation.
+
