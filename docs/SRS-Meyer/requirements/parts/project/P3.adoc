@@ -30,7 +30,7 @@ The development of the Five-of-a-Kind voxel magnetization system is planned over
 **Sprint 3: Core Implementation and Testing (January - February 2026)**
 
 - **Epic 6: Final System Design Integration** (January 19, 2026)
-  Complete final system design incorporating lessons learned from proof of concept demonstration and any requirement refinements. This includes detailed specifications for the layered UI that allows browsing from bottom to top, voxel selection capabilities, and property assignment with undo/redo functionality. The design will implement the system as a locally deployed desktop application with wireframe mockups showing the main interface for 3D model interaction, layer navigation, and property assignment controls. Priority implementation will focus on must-have requirements: CAD file import (F213), 3D image generation (F221), layer viewing (F231), magnetization assignment (F231), and export functionality (F242).
+  Complete final system design incorporating lessons learned from proof of concept demonstration and any requirement refinements. This includes detailed specifications for the layered UI that allows browsing from bottom to top, voxel selection capabilities, and property assignment with undo/redo functionality. The design will implement the system as a locally deployed desktop application with wireframe mockups showing the main interface for 3D model interaction, layer navigation, and property assignment controls. Priority implementation will focus on must-have requirements: CAD file import (F211), 3D image generation (F221), layer viewing (F224), magnetization assignment (F231), material assignment (F233), and export functionality (F242).
   
 
 - **Epic 7: Revision 0 System Demonstration** (February 2-11, 2026)
