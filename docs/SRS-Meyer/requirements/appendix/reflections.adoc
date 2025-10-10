@@ -64,30 +64,48 @@ _Khalid_
 
 There are five major knowledges/skills our group will need:
 
-* _Knowledge of 3D rendering technologies,_ notably how to ensure performance is acceptable. This will be intrinsically linked to which library is utilised.
+* _Knowledge of 3D rendering technologies_ notably how to ensure performance is acceptable. This will be intrinsically linked to which library is utilised.
 
-* _Knowledge of STL file specifications._ This arises specifically from the constraint on input files to the system; knowledge of their format, how to validate and modify them will be essential.
+* _Knowledge of STL file specifications_ This arises specifically from the constraint on input files to the system; knowledge of their format, how to validate and modify them will be essential.
 
-* _Knowledge of the custom 3D printer software._ While we will not be working with it directly, knowledge of how it expects to take input and how it can fail will be extremely useful assets when developing the export modules.
+* _Knowledge of the custom 3D printer software_ While we will not be working with it directly, knowledge of how it expects to take input and how it can fail will be extremely useful assets when developing the export modules.
 
-* _Developing intuitive user interfaces._ Despite there being many examples of good interfaces we can use as reference or inspiration, this skill will still be necessary both when creating the more custom parts of the interface, and when discussing with stakeholders what would work best for them (e.g. drawing out tacit knowledge).
+* _Developing intuitive user interfaces_ Despite there being many examples of good interfaces we can use as reference or inspiration, this skill will still be necessary both when creating the more custom parts of the interface, and when discussing with stakeholders what would work best for them (e.g. drawing out tacit knowledge).
 
-* _Conflict resolution._ Over the coming seven months, it is highly unlikely no conflicts between team members will arise, even minor ones. Being able to facilitate tough conversations and the ability to reduce tension and/or the stakes of a situation is important to maintaining group morale during stressful times.
+* _Conflict resolution_ Over the coming seven months, it is highly unlikely no conflicts between team members will arise, even minor ones. Being able to facilitate tough conversations and the ability to reduce tension and/or the stakes of a situation is important to maintaining group morale during stressful times.
 
 *6. For each of the knowledge areas and skills identified in the previous question, what are at least two approaches to acquiring the knowledge or mastering the skill? Of the identified approaches, which will each team member pursue, and why did they make this choice?*
 
-_Conflict resolution approaches._
+_Knowledge of 3D rendering technologies approaches_
 
-*Active-listening–based problem solving:* This approaches conflict resolution with a focus on effective, open communication. It gives each person a chance to explain their perspective while all remaining parties give their full, undivided attention. While listening to someone else’s perspective, the goal is to understand where the other person is coming from, even if you still disagree. This approach can help foster trust and strengthen group dynamics by ensuring all group members feel valued and heard when determining a solution to the conflict.
+*   *Online tutorials and documentation for specific libraries/frameworks* This includes looking at the official documentation of the popular 3D rendering libraries, and understanding how they work (Three.js). This also includes using online tutorials to better understand how the libraries are used in a real-world example. The goal is to understand how these libraries deal with 3D images and how they can be used in this system.
+*   *Experimentation with existing 3D modeling software* By creating a simple 3D project, the team can gain hands-on experience with how 3D models are created, manipulated, and rendered. This provides practical insight into both the user-facing aspects and the underlying principles of 3D graphics.
+
+_Knowledge of the custom 3D printer software approaches_
+
+*   *Reviewing existing documentation* Obtaining and reviewing any documentation provided by the supervisor for their custom 3D printer is crucial to our system. This will offer a great idea on how our system will interact with the Java program to print the model, and it will help us better understand what our system's output should be.
+*   *Interviews with the supervisor* Due to it being a custom 3D printer, a way to understand the it is having scheduled meetings with the supervisor to better know the software's operational details, including its input requirements, common failure modes, and any specific data formats it utilizes.
+
+_Developing intuitive user interface approaches_
+
+*   *Utilizing Human Computer Interfaces principles* Our team is actively enrolled in a dedicated course on human-centered design, which provides a structured and collaborative environment for developing this crucial skill through a comprehensive project. The course will give us a better understanding on what a good design looks like and how we can implement it in our system.
+
+*   *Online research on best style/practices* There is endless information available online related to developing intuitive, human-centered designs. This type of learning is something we are intimately familiar with from work on both personal projects and to catch up when a course is lacking.
 
 
-*Integrated mediation:* This approach integrates a neutral party to help facilitate effective conversation between the two parties that disagree. It is still the responsibility of the two parties to come together with a final decision they both agree on. The mediator is not responsible for making a final decision that ends the disagreement. Rather, the mediator can help defuse tension and keep the conversation productive, ensuring both parties are able to interact with each other in an equitable and respectful manner. By introducing a mediator, this helps prevent misunderstandings or an imbalance in power.
+_Conflict resolution approaches_
 
-_Knowledge of STL file specifications._
+*   *Active-listening–based problem solving:* This approaches conflict resolution with a focus on effective, open communication. It gives each person a chance to explain their perspective while all remaining parties give their full, undivided attention. While listening to someone else’s perspective, the goal is to understand where the other person is coming from, even if you still disagree. This approach can help foster trust and strengthen group dynamics by ensuring all group members feel valued and heard when determining a solution to the conflict.
 
-*Online research and documentation review.* The STL file format is well-documented, there are numerous of online resources and tutorials that details the structure of the file. Most famously *Adobe*, has a well documented page explaining STL file format and how to create one. This approach allows us to understand the STL file specifications theoretically.
+*   *Integrated mediation:* This approach integrates a neutral party to help facilitate effective conversation between the two parties that disagree. It is still the responsibility of the two parties to come together with a final decision they both agree on. The mediator is not responsible for making a final decision that ends the disagreement. Rather, the mediator can help defuse tension and keep the conversation productive, ensuring both parties are able to interact with each other in an equitable and respectful manner. By introducing a mediator, this helps prevent misunderstandings or an imbalance in power.
 
-*Practical implementation through parsing and validation.* Working with existing libraries to write a basic parser for STL files will provide us with hands-on experience, this will help us understand the structure even more and how we can deal with it practically. This will involve reading, interpreting, and validating the data within STL files.
+_Knowledge of STL file specifications_
+
+*   *Online research and documentation review.* The STL file format is well-documented, there are numerous of online resources and tutorials that details the structure of the file. Most famously *Adobe*, has a well documented page explaining STL file format and how to create one. This approach allows us to understand the STL file specifications theoretically.
+
+*   *Practical implementation through parsing and validation.* Working with existing libraries to write a basic parser for STL files will provide us with hands-on experience, this will help us understand the structure even more and how we can deal with it practically. This will involve reading, interpreting, and validating the data within STL files.
+
+From the identified approaches, these are which each team member will pursue and why they made their choices:
 
 _Omar_
 
@@ -106,5 +124,16 @@ _Andrew_
 _Olivia_
 
 _Khalid_
+
+_Knowledge of 3D rendering technologies_: For this skill, I will use the online tutorials and documentation for specific libraries/frameworks because it allows me to follow a structured and self-paced learning experience while also focusing on the fundamental concepts of rendering 3D visualizations.
+For the skill *Knowledge of 3D rendering technologies*, I will pursue *Online tutorials and documentation for specific libraries/frameworks*. By diving into documentation for libraries like Three.js, I can gain a solid theoretical foundation on how it can be implemented for our system.
+
+_Knowledge of the custom 3D printer software_: For this skill, I will take advantage of the interviews with the supervisor because they know best of the custom 3D printer software. This will give me the most up to date and specific information regarding the functionalities of the software. Also, it gives me someone that I can always ask questions to get clarifications from.
+
+_Developing intuitive user interfaces_: For this skill, I will utilize the information and knowledge that I earn from our 4HC3 course. This is because so far the course structure and layout has been very clear and I have been learning a lot, there is also lectures that I can look back on in case I missed anything that can be used when designing this system.
+
+_Conflict resolution_: For this skill, I will pursue the active listening based problem solving because it fouceses on empowering team members to resolve conflicts directly and constructively. By practicing active listening, I can ensure that all team members feel heard and understand and that is a critical first step in de-escalating tension and finding common ground. 
+
+_Knowledge of STL file specifications_:I will primarily use the practical implementation approach. While theoretical knowledge is important, the system's requirement of validating and modifying STL files is a necessity, and any practical understanding can only be gained from hands-on experience working with the STL files. However, I will use online research and documentation when needed as a reference for specific details and edge cases encountered during implementation.
 
 
