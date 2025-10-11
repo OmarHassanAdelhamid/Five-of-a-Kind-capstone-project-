@@ -164,10 +164,23 @@ the library files needed to interact with necessary files.
 
 \section{Critical Assumptions}
 
-\wss{These assumptions that are made about the software or system.  You should
-minimize the number of assumptions that remove potential hazards.  For instance,
-you could assume a part will never fail, but it is generally better to include
-this potential failure mode.}
+The following critical assumptions define the scope of the hazard analysis by identifying conditions that are assumed to hold true. These assumptions eliminate certain classes of hazards from consideration in the FMEA.
+
+\begin{itemize}
+    \item \textbf{No Direct Hardware Control}: The system will never directly control physical 3D printer hardware. Physical safety hazards related to direct hardware manipulation (printer collision, overheating, mechanical failures) are out of scope for the current version.
+
+    \item \textbf{Local Operation Only}: The system operates in a completely local environment without network dependencies. Network-related hazards (data breaches, denial of service attacks, connectivity issues) are out of scope for the current version.
+
+    \item \textbf{Non-Malicious User Intent}: Users act in good faith and use the system as intended. Potential hazards from malicious misuse (intentional data corruption, system exploitation) are out of scope for the current version but may be addressed later.
+
+    \item \textbf{Controlled Laboratory Environment}: The system operates within a controlled laboratory or research environment with appropriate workspace and environmental conditions. Hazards related to extreme operating conditions (temperature extremes, electromagnetic interference) are out of scope for the current version.
+
+    \item \textbf{Single-User Operation}: The system assumes single-user operation at any given time. Concurrency hazards, access control conflicts, and collaborative editing synchronization issues are out of scope for the current version.
+
+    \item \textbf{Experienced User Base}: Users are experienced researchers and lab operators with knowledge of CAD software and voxel magnetization workflows. Basic usability and learning curve hazards are out of scope for the current version.
+
+    \item \textbf{Standard Hardware Requirements}: The system operates on commodity hardware meeting minimum specifications for 3D visualization. Hardware-specific performance degradation and compatibility issues are out of scope for the current version.
+\end{itemize}
 
 
 \iffalse
@@ -376,7 +389,7 @@ did you resolve them?}
 \textbf{Daniel: } Responsible for writing the System Boundaries, my main concern was finding a succinct way of explaining each component without simply restating what was already discussed in the SRS. Providing the necessary detail for the HA whilst also summarizing was an interesting balance to strike. Ultimately I settled on leaving out items not discussed within the analysis itself. In addition, when brainstorming possible hazards, tracing back possible causes when the system obviously isn't developed was a challenge. In the end, we realised that discussing causes more generally was sufficient in indicating a possible cause.
 \newline
 \newline
-\textbf{Andrew: }
+\textbf{Andrew: } I was responsible for writing the Critical Assumptions section. The main challenge I faced was ensuring that the assumptions didn't simply dismiss potential hazards by assuming failures would never occur. The template guidance emphasized that assumptions should not be used to remove hazards from consideration, so I needed to frame each assumption alongside its corresponding mitigation strategy through safety requirements. 
 \newline
 \newline
 \textbf{Olivia: } I took on a larger section of the SRS document, so within the hazard analysis I only did the introduction. Consequently, my pain points weren’t as significant within this part of the deliverable. I would say that a very minor pain point would be having to introduce hazards in a way that reframes the concept beyond the typical, inherently physical perspective. Even as a software engineer, my first instinctual thought when I hear the word 'hazard' is to think of things that can cause observable, physical harm. I think it's human nature to have greater fear of harm when a hazard is more tangible and apparent in nature because it feels more immediate and concrete. To address this issue, I made sure that the hazard introduction effectively introduced software hazards by including examples that shift the tone and direction towards recognizing damaging, non-physical hazards that are inherent to software systems.
