@@ -5,4 +5,14 @@ ifdef::env-draft[]
 TIP: _External systems, hardware and software, expected to be necessary for building the system. It lists external technology elements, such as program libraries and hardware devices, that the project is expected to require. Although the actual use of such products belongs to design and implementation rather than requirements, it is part of the requirements task to identify elements whose availability is critical to the success of the project — an important element of risk analysis (<<p6>>)._  <<BM22>>
 endif::[]
 
-{emptysec}
+* CAD File Processing Capabilities
+	- The system requires the ability to read and process mesh CAD files in the STL format, as discussed within <<E.3, E3>>. This capability is critical for the voxelization process that converts 3D models into voxel grids. The availability and reliability of CAD file processing directly impacts the system's ability to import designs from common CAD tools like AutoCAD and SolidWorks. Without this capability, the core functionality of the system cannot be implemented.
+
+* 3D Visualization and Interaction Capabilities
+	- The system requires interactive 3D visualization capabilities for layer-by-layer voxel viewing and selection. These capabilities must support efficient rendering of large voxel grids and provide user interaction for voxel selection. The performance and capabilities directly affect the user experience and system responsiveness, particularly when handling complex 3D models with many voxels.
+
+* Data Persistence and Storage Capabilities
+	- The system requires structured storage capabilities for voxel geometries, materials, metadata, user configurations, and project files. The storage system must provide reliable data persistence, efficient querying capabilities, and data integrity features. The availability and performance of storage capabilities is critical for maintaining system state and ensuring data consistency across user sessions.
+
+* Development and Deployment Environment Requirements
+	- The system requires commodity hardware (laptop/desktop) sufficient for interactive layer viewing and voxel selection. The development environment must support both Windows and Linux platforms. The availability of appropriate development hardware is essential for system development and testing.

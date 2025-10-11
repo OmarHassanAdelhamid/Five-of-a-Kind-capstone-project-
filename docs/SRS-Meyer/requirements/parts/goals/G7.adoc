@@ -5,4 +5,39 @@ ifdef::env-draft[]
 TIP: _Groups of people who can affect the project or be affected by it, and other places to consider for information about the project and system. It lists stakeholders and other requirements sources. It should define stakeholders as categories of people, not individuals, even if such individuals are known at the time of writing. The main goal of chapter <<g7>> is to avoid forgetting any category of people whose input is relevant to the project. It also lists documents and other information that the project, aside from soliciting input from stakeholders, can consult for requirements information._  <<BM22>>
 endif::[]
 
-{emptysec}
+This section identifies the groups of people who can affect or be affected by the voxel-based design platform, along with the main documents and sources that informed its requirements.
+
+*Direct stakeholders*
+
+• *Researchers and Graduate Students*  
+Researchers are the primary users of the system. They design voxel-based geometries, assign material and magnetization properties, and export models for 3D printing.
+
+_Alex (Graduate Researcher)_ – Alex is a Master’s student working on magnetically responsive soft robots. They spend long hours editing COMSOL files voxel by voxel and often need to redo entire models after small mistakes. They want a faster, more flexible way to edit and re-magnetize voxels.
+
+• *Research Assistants and Undergraduate Users*  
+Research assistants and undergraduate students support active projects by preparing CAD models and testing the voxel design workflow. They rely on the tool to visualize and verify structures before printing.
+
+_Jordan (Research Assistant)_ – Jordan assists in multiple robotics experiments and often handles file preparation for printing. They need an intuitive interface that allows them to quickly confirm magnetization directions and export models accurately.
+
+• *Supervisors and Research Leads*  
+Supervisors oversee the progress of research projects and ensure that new tools contribute to the lab’s long-term goals of faster prototyping and higher-quality results.
+
+_The Supervisor_ – The research supervisor manages several students and prototypes simultaneously. They value a system that reduces design time, prevents repetitive work, and scales efficiently for larger CAD models.
+
+*Indirect stakeholders*
+
+• *University IT and Technical Support* – Responsible for installing and maintaining the software on lab systems, ensuring compatibility with institutional infrastructure, and troubleshooting technical issues as needed.
+
+• *3D Printer Technicians and Operators* – Use the exported voxel models during fabrication. While they do not interact with the system directly, their feedback informs file format standards and ensures successful printing.
+
+• *Future Developers and Maintainers* – Extend and update the voxel design platform to support new research needs. They rely on clear documentation, modular architecture, and consistent version-control practices.
+
+• *University Administration and Research Management* – Ensure that the software complies with institutional policies regarding data management, security, and accessibility. They indirectly influence system requirements through governance and approval processes.
+
+*Requirements sources*
+
+• Official project brief and supervision notes from McMaster University’s Engineering Research Department.  
+• Observations and feedback from researchers and assistants using CAD and COMSOL in robotics and soft robotics labs.  
+• Technical documentation for CAD file formats (e.g., STL, STEP) and 3D-printer integration standards.  
+• Institutional policies on software deployment, accessibility, and research data management.  
+• Informal discussions and requirement clarification meetings with lab members and the supervising research team.

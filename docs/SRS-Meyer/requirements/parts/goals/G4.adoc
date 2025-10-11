@@ -5,5 +5,25 @@ ifdef::env-draft[]
 TIP: _Overview of the functions (behavior) of the system. Principal properties only (details are in the System book). It is a short overview of the functions of the future system, a kind of capsule version of book S, skipping details but enabling readers to get a quick grasp of what the system will do._  <<BM22>>
 endif::[]
 
-{emptysec}
+The high-level functional requirements for the voxel-based design platform based on client input can be defined as follows, in no particular order:
+
+• *CAD-to-voxel conversion.* The system shall allow importing standard CAD models and automatically voxelizing them into a structured grid for further editing.
+
+• *Voxel editing and re-magnetization.* The system shall enable assigning and re-assigning material and magnetization properties at the voxel level, allowing modifications after the initial design without rebuilding the entire model.
+
+• *Batch voxel operations.* The system shall support batch editing and magnetization of groups of voxels in specified directions, reducing repetitive manual work.
+
+• *Visualization tools.* The system shall provide visualization of material distribution and magnetization vectors across the voxel grid, assisting researchers in verification before fabrication.
+
+• *Export compatibility.* The system shall export voxelized designs into formats compatible with multi-material 3D printers, embedding metadata about material properties and magnetization.
+
+Of the functional requirements listed above, the two most critical are *CAD-to-voxel conversion* and *voxel editing and re-magnetization*, as these form the foundation of the system’s usability and research value.
+
+Some high-level non-functional requirements for the platform can be defined as follows, in no particular order:
+
+• *Usability.* The platform should have an intuitive interface suitable for both researchers and students, minimizing training overhead.
+
+• *Performance.* The system should handle CAD-to-voxel conversion and property assignment in a reasonable time, even for large and complex models.
+
+• *Compatibility.* The platform should support common CAD file formats and integrate smoothly with existing 3D printing workflows.
 
