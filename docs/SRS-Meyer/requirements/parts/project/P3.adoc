@@ -1,7 +1,7 @@
 [#p3,reftext=P.3]
 === (P.3) Schedule and Milestones
 
-The development of the Five-of-a-Kind voxel magnetization system is planned over multiple sprints, beginning with comprehensive documentation and requirements analysis before transitioning to implementation. Our development strategy focuses on thorough planning and risk mitigation through proof of concept demonstrations, ensuring the system meets the specific needs of researchers working with magnetized 3D printed objects. The system addresses the critical bottleneck in current CAD workflows where researchers must manually rebuild objects voxel-by-voxel to assign magnetization directions, consuming hours per part and making iteration fragile.
+The development of AutoVox is planned over multiple sprints, beginning with comprehensive documentation and requirements analysis before transitioning to implementation. Our development strategy focuses on thorough planning and risk mitigation through proof of concept demonstrations, ensuring the system meets the specific needs of researchers working with magnetized 3D printed objects. The system addresses the critical bottleneck in current CAD workflows where researchers must manually rebuild objects voxel-by-voxel to assign magnetization directions, consuming hours per part and making iteration fragile.
 
 **Sprint 1: Documentation and Requirements Foundation (September - October 2025)**
 
