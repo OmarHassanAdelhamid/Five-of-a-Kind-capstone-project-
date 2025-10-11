@@ -485,6 +485,6 @@ The following user stories comprise the backlog for Sprint 4, focusing on valida
 - **Sprint 3**: 24 story points (Core Implementation and Testing)
 - **Sprint 4**: 26 story points (Validation and Final Delivery)
 
-The comprehensive user story breakdown provides detailed planning for the entire Five-of-a-Kind voxel magnetization system development project. Each story is written from the stakeholder's perspective (researchers, lab operators, and supervisors) and focuses on user value rather than technical implementation details. Technical tasks have been consolidated into meaningful user-facing features, ensuring thorough coverage of all requirements while eliminating implementation-specific details like "plan Three.js integration" or "design React component hierarchy." This approach provides clear task definitions and realistic effort estimation for successful project delivery.
+The comprehensive user story breakdown provides detailed planning for the entirety of AutoVox. Each story is written from the stakeholder's perspective (researchers, lab operators, and supervisors) and focuses on user value rather than technical implementation details. Technical tasks have been consolidated into meaningful user-facing features, ensuring thorough coverage of all requirements while eliminating implementation-specific details like "plan Three.js integration" or "design React component hierarchy." This approach provides clear task definitions and realistic effort estimation for successful project delivery.
 
 ---
