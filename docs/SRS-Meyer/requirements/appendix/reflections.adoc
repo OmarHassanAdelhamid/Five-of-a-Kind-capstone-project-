@@ -10,6 +10,8 @@ Overall, the deliverable progressed smoothly after the development of the proble
 
 _Omar_
 
+ While working on this deliverable, one of the main challenges I faced was ensuring consistency and logical flow across the G sections—especially between the \textit{Expected Benefits}, \textit{Functionality Overview}, and \textit{Stakeholders} sections. Because multiple sections were written in parallel, some phrasing and terminology drifted apart, which created minor inconsistencies in how goals and benefits were described. I also found the \textit{goal model diagram} difficult to create, as it required translating abstract project goals into a clear and meaningful visual representation that aligned with the written content. Balancing clarity with technical accuracy took several iterations. To resolve these issues, I revisited earlier drafts, created a mapping between benefits and system functions, and worked closely with teammates to refine both the textual content and the diagram so that they complemented each other effectively.
+
 _Daniel_
 
 An issue I personally encountered was challenges with ensuring document consistency in naming, numbering, style, and how concepts are explained. In order to balance our individual workloads and work on the document, we split up work and went our own ways. This was fine; however it led to inevitable inconsistencies between sections. As the primary reviewer of all sections, I was in charge of catching these. Deciding upon standards was tricky at times, especially when one section references another (e.g. a scenario implying the existence of functional requirements we didn't have). Client meetings were able to clear up most serious disagreements, leaving primarily naming and numbering errors, which were easier to deal with.
@@ -30,6 +32,14 @@ A large majority of requirements were directly from our talks with Dr. Onaizah, 
 *4. Which of the courses you have taken, or are currently taken, will help your team to be successful with your capstone project?*
 
 _Omar_
+
+* *SFWRENG 3RA3* - This course directly supported the creation of the Goals and System sections by providing structured methods for eliciting, documenting, and validating requirements. The traceability and goal modelling concepts from this course were especially useful when linking stakeholder needs to system functions.
+
+* *SFWRENG 4HC3* - The principles of human-computer interaction helped me think critically about usability and stakeholder experience while defining expected benefits and system objectives.
+
+* *SFWRENG 3A04* - Concepts of large-scale software design aided in structuring our system architecture and ensuring maintainability between interconnected components.
+
+* *SFWRENG 3S03* - Knowledge from this course guided our approach to defining verification and validation criteria, ensuring that the requirements could be practically tested later in development.
 
 _Daniel_
 
@@ -109,6 +119,7 @@ From the identified approaches, these are which each team member will pursue and
 
 _Omar_
 
+For this project, I want to strengthen both my technical and collaborative skills to better support the team’s progress. My main goal is to build a stronger understanding of 3D rendering by exploring online tutorials and experimenting with libraries like *Three.js* to see how voxel visualization can be done efficiently. I also plan to learn more about the custom 3D printer software by reviewing its documentation and speaking directly with our supervisor to ensure our export formats align with their workflow. In parallel, I’ll continue improving my approach to designing intuitive interfaces by applying concepts from our *4HC3* course and studying how other 3D tools handle complex visual data. On the teamwork side, I’ll focus on practicing active listening to keep communication open and resolve conflicts early. Lastly, I’ll deepen my understanding of STL file specifications by reading technical references and working hands-on with sample files to better connect our theoretical design with its practical implementation.
 _Daniel_
 
 Regarding the fourth skill, there are two main avenues ahead of me to mastering the skill:
