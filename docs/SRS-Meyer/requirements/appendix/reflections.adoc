@@ -16,6 +16,8 @@ An issue I personally encountered was challenges with ensuring document consiste
 
 _Andrew_
 
+I encountered challenges with maintaining consistency across different document sections, particularly when working on the stakeholder groups and requirements prioritization. As sections evolved and requirements were refined, I found myself having to repeatedly update cross-references and ensure that component descriptions remained aligned with the functional requirements. The most significant challenge was balancing the level of technical detail in the system architecture section - too much detail would exceed the requirements scope, while too little would make it difficult for stakeholders to understand the system structure. I resolved this by focusing on component responsibilities and interfaces rather than implementation details, and by establishing clear naming conventions that were consistently applied across all sections. Regular team reviews and feedback sessions helped identify and correct inconsistencies early in the process.
+
 _Olivia_
 
 Prior to creating the requirements section of the document, we did have meetings with stakeholders so they could share their experience and the challenges they currently face. However, I still struggled with creating requirements that would sufficiently cover user needs that were not explicitly stated but would be essential. I found that without first-hand experience, intuitive understanding of the unspoken user needs was limited. To address this issue, I made a first draft of requirements that incorporated assumed user needs. During a subsequent meeting with Dr. Onaizah, I was able to get feedback based on her first-hand experience in direct relation to the scope of each requirement. This provided insight on the value and impact of each requirement, which helped guide future revisions. It definitely strengthened my confidence that the final requirements list is comprehensive and reflective of what the system requires.
@@ -43,6 +45,12 @@ _Daniel_
 * *SFWRENG 2AA4* - Code design on smaller scales will further ensure code written is maintainable and logical to future people who may work on the project.
 
 _Andrew_
+
+* *SFWRENG 3RA3* - This course provided the foundational knowledge for requirements engineering and system specification, which directly informed my work on the system architecture and component definitions. Understanding how to properly structure requirements and trace them to system components was crucial for maintaining consistency across the document.
+
+* *SFWRENG 3A04* - Large-scale system design principles from this course helped me understand how to properly decompose the voxel magnetization system into manageable components and define clear interfaces between them. This knowledge was essential for creating a maintainable architecture.
+
+* *SFWRENG 4HC3* - Human-computer interaction principles from this course informed my understanding of how to design intuitive user interfaces for 3D model manipulation. Concepts like feedback, constraints, and mappings will be crucial for creating an effective voxel selection and property assignment interface.
 
 _Olivia_
 
@@ -125,6 +133,16 @@ _Conflict resolution:_ I find myself gravitating towards the first approach, fam
 _Knowledge of STL file specifications:_ I plan to pursue mostly the second approach, consulting documentation when issues are encountered. With STL files being perceived as a much smaller scale knowledge base versus 3D rendering, creating a basic parser is much more manageable.
 
 *Andrew*
+
+_Knowledge of 3D rendering technologies:_ I will pursue the documentation and framework approach first, as understanding the theoretical foundations and API capabilities of 3D rendering libraries will be crucial for making informed architectural decisions. Given the complexity of 3D visualization, I want to ensure I have a solid understanding of performance considerations and rendering pipelines before attempting hands-on experimentation.
+
+_Knowledge of custom 3D printer software:_ I will focus on interviews with Dr. Onaizah, as this custom software has limited documentation and the supervisor's first-hand experience will provide the most accurate and up-to-date information about input requirements, failure modes, and integration considerations. This approach will also allow for immediate clarification of any technical questions that arise during development.
+
+_Developing intuitive user interfaces:_ I will leverage the 4HC3 course material as my primary learning source, as it provides structured, evidence-based principles for interface design. The course's focus on user-centered design aligns well with our stakeholder-driven approach, and the theoretical foundation will inform practical design decisions throughout the project.
+
+_Conflict resolution:_ I will pursue active problem solving in real settings, as it aligns with my natural communication style and promotes collaborative decision-making. This approach ensures all team members feel heard and valued, which is essential for maintaining team cohesion during challenging periods of the project.
+
+_Knowledge of STL file specifications:_ I will start with online research and documentation review to build theoretical understanding, then move to practical implementation through parsing and validation. This two-stage approach ensures I understand both the file format specifications and the practical challenges of working with STL data in our system context.
 
 *Olivia*
 
