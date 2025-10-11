@@ -1,5 +1,10 @@
 [#g7,reftext=G.7]
 === (G.7) Stakeholders and requirements sources
+
+ifdef::env-draft[]
+TIP: _Groups of people who can affect the project or be affected by it, and other places to consider for information about the project and system. It lists stakeholders and other requirements sources. It should define stakeholders as categories of people, not individuals, even if such individuals are known at the time of writing. The main goal of chapter <<g7>> is to avoid forgetting any category of people whose input is relevant to the project. It also lists documents and other information that the project, aside from soliciting input from stakeholders, can consult for requirements information._  <<BM22>>
+endif::[]
+
 This section identifies the groups of people who can affect or be affected by the voxel-based design platform, along with the main documents and sources that informed its requirements.
 
 *Direct stakeholders*
@@ -36,8 +41,3 @@ _The Supervisor_ – The research supervisor manages several students and protot
 • Technical documentation for CAD file formats (e.g., STL, STEP) and 3D-printer integration standards.  
 • Institutional policies on software deployment, accessibility, and research data management.  
 • Informal discussions and requirement clarification meetings with lab members and the supervising research team.
-ifdef::env-draft[]
-TIP: _Groups of people who can affect the project or be affected by it, and other places to consider for information about the project and system. It lists stakeholders and other requirements sources. It should define stakeholders as categories of people, not individuals, even if such individuals are known at the time of writing. The main goal of chapter <<g7>> is to avoid forgetting any category of people whose input is relevant to the project. It also lists documents and other information that the project, aside from soliciting input from stakeholders, can consult for requirements information._  <<BM22>>
-endif::[]
-
-{emptysec}

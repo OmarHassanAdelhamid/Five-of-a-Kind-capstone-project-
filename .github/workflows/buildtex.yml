@@ -45,6 +45,13 @@ jobs:
               dir=$(dirname "$file" | cut -d'/' -f2-)
               make -B "$dir/$(basename "$file" .tex).pdf" 
             done
+      - name: Handle existing PDF changes
+        run: |
+          # Stash any existing uncommitted changes to PDF files
+          git stash push -m "Temporary stash of existing PDF changes" docs/*.pdf || true
+          # Switch to main branch and pull latest changes
+          git checkout main
+          git pull origin main
       - name: Commit and push PDFs
         uses: stefanzweifel/git-auto-commit-action@v4
         with:

@@ -1,5 +1,10 @@
 [#g4,reftext=G.4]
 === (G.4) Functionality overview
+
+ifdef::env-draft[]
+TIP: _Overview of the functions (behavior) of the system. Principal properties only (details are in the System book). It is a short overview of the functions of the future system, a kind of capsule version of book S, skipping details but enabling readers to get a quick grasp of what the system will do._  <<BM22>>
+endif::[]
+
 The high-level functional requirements for the voxel-based design platform based on client input can be defined as follows, in no particular order:
 
 • *CAD-to-voxel conversion.* The system shall allow importing standard CAD models and automatically voxelizing them into a structured grid for further editing.
@@ -21,9 +26,4 @@ Some high-level non-functional requirements for the platform can be defined as f
 • *Performance.* The system should handle CAD-to-voxel conversion and property assignment in a reasonable time, even for large and complex models.
 
 • *Compatibility.* The platform should support common CAD file formats and integrate smoothly with existing 3D printing workflows.
-ifdef::env-draft[]
-TIP: _Overview of the functions (behavior) of the system. Principal properties only (details are in the System book). It is a short overview of the functions of the future system, a kind of capsule version of book S, skipping details but enabling readers to get a quick grasp of what the system will do._  <<BM22>>
-endif::[]
-
-{emptysec}
 

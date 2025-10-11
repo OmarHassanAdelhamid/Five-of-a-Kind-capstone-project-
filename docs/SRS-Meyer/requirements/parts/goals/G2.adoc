@@ -1,8 +1,8 @@
 [#g2,reftext=G.2]
 === (G.2) Current situation
-Current workflows for voxel-based 3D printing rely heavily on traditional CAD tools or multiphysics simulators such as COMSOL. While these platforms are powerful, they are not tailored for voxel-level manipulation and are often prohibitively expensive. Designing geometries voxel by voxel can take tens of hours or even days, and once material properties are assigned, they cannot easily be reverted or adjusted. Researchers and students have described frustration with the inflexibility of these tools, as small changes frequently require rebuilding large portions of a model from scratch. This has left many experiments inefficient, time-consuming, and limited in their ability to explore complex material-property distributions.
+
 ifdef::env-draft[]
 TIP: _Current state of processes to be addressed by the project and the resulting system. It describes the current situation, upon which the system is expected to improve_  <<BM22>>
 endif::[]
 
-{emptysec}
+Current workflows for voxel-based 3D printing rely heavily on traditional CAD tools or multiphysics simulators such as COMSOL. While these platforms are powerful, they are not tailored for voxel-level manipulation and are often prohibitively expensive. Designing geometries voxel by voxel can take tens of hours or even days, and once material properties are assigned, they cannot easily be reverted or adjusted. Researchers and students have described frustration with the inflexibility of these tools, as small changes frequently require rebuilding large portions of a model from scratch. This has left many experiments inefficient, time-consuming, and limited in their ability to explore complex material-property distributions.
