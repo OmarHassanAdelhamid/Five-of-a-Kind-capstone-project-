@@ -5,6 +5,8 @@ ifdef::env-draft[]
 TIP: _Initially, description of what the requirements process will be; later, report on its steps. It starts out as a plan for conducting the requirements elicitation process, but is meant to be updated as part of that process so that it includes the key lessons of elicitation._  <<BM22>>
 endif::[]
 
+The following subsections describe the key stakeholders involved in the project, the planned methods for eliciting their requirements, and the rationale behind these choices.
+
 **Researchers and Graduate Students (Primary Users)**:
 Interview Type: Structured Interviews
 

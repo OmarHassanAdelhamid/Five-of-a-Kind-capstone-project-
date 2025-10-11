@@ -5,6 +5,8 @@ ifdef::env-draft[]
 TIP: _Main responsibilities in the project; required project staff and their needed qualifications. It defines the roles (as a human responsibility) involved in the project._  <<BM22>>
 endif::[]
 
+This section defines the roles and personnel that are involved in this project:
+
 * Researchers
 - Researchers are the primary users of the voxel magnetization system and key collaborators in the development process. They inform the development team about functional requirements, provide feedback on system usability and workflow efficiency, and validate that the system meets experimental needs. They are responsible for designing and creating 3D CAD models for magnetized objects, using the system to assign magnetization directions to voxels, and validating that magnetization assignments meet experimental requirements.
 
