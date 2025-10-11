@@ -3,8 +3,9 @@
 # /!\ Run make check_env to check that your setup is correct
 
 .DEFAULT_GOAL := pdf
-INDEX   = index.adoc          # Root file for the requirement plan
-THEME   = _style/mcmaster.yml # Location of the PDF stylesheet
+INDEX       = index.adoc          # Root file for the requirement plan
+THEME       = _style/mcmaster.yml # Location of the PDF stylesheet
+PDF_OUTPUT  = SRS.pdf             # Name of the PDF output file
 
 ####
 # Building PlantUML models
@@ -34,14 +35,14 @@ html: $(INDEX) $(SVGs)
 ####
 
 pdf: $(INDEX) $(SVGs)
-	asciidoctor-pdf --theme $(THEME) $(INDEX)
+	asciidoctor-pdf --theme $(THEME) -o $(PDF_OUTPUT) $(INDEX)
 
 ####
 # Cleaning (and clobbering) 
 ####
 
 clean:
-	rm -rf index.html index.pdf 
+	rm -rf index.html $(PDF_OUTPUT)
 
 clobber: clean
 	rm -rf $(SVGs)
@@ -56,6 +57,3 @@ check_env:
 	@which plantuml
 	@which dot
 	@plantuml -testdot
-
-
-
