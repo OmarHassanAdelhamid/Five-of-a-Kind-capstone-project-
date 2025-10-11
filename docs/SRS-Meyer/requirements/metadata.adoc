@@ -4,4 +4,4 @@ Omar Abdelhamid <abdelo8@mcmaster.ca>; Daniel Maurer <maured2@mcmaster.ca>; Andr
 :course-term: Fall/Winter
 :revnumber: 1
 :milestone: 4
-:env-draft: // Comment this variable to disable draft mode
+//:env-draft: // Comment this variable to disable draft mode
