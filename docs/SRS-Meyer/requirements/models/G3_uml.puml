@@ -13,7 +13,7 @@ skinparam rectangle {
   RoundCorner 8
 }
 
-' ===== Stakeholder clusters (dashed circles) =====
+' ===== Stakeholder clusters  =====
 package "Researchers & Graduate Students" as STU {
   cloud "Edit voxels\nquickly" as G_edit
   cloud "Avoid full\nrebuilds" as G_avoid
@@ -38,7 +38,7 @@ package "University IT / Admin" as IT {
   cloud "Install/maintain with\nminimal overhead" as G_it
 }
 
-' ===== Central benefits (like ACME’s middle clouds) =====
+' ===== Central benefits  =====
 cloud "Faster iteration" as B_iter
 cloud "Flexible re-magnetization" as B_flex
 cloud "CAD → voxel grid conversion" as B_conv
@@ -106,7 +106,7 @@ M_layer  -[hidden]-> M_batch
 M_batch  -[hidden]-> M_viz
 M_viz    -[hidden]-> M_export
 
-' ===== Legend (like ACME) =====
+
 legend right
 == Notation ==
 • Dashed circles: Stakeholders
