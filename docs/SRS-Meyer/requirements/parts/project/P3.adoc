@@ -1,8 +1,62 @@
 [#p3,reftext=P.3]
-=== (P.3) Schedule and milestones
+=== (P.3) Schedule and Milestones
 
-ifdef::env-draft[]
-TIP: _List of tasks to be carried out and their scheduling. It defines the project's key dates._  <<BM22>>
-endif::[]
+The development of the Five-of-a-Kind voxel magnetization system is planned over multiple sprints, beginning with comprehensive documentation and requirements analysis before transitioning to implementation. Our development strategy focuses on thorough planning and risk mitigation through proof of concept demonstrations, ensuring the system meets the specific needs of researchers working with magnetized 3D printed objects. The system addresses the critical bottleneck in current CAD workflows where researchers must manually rebuild objects voxel-by-voxel to assign magnetization directions, consuming hours per part and making iteration fragile.
 
-{emptysec}
+**Sprint 1: Documentation and Requirements Foundation (September - October 2025)**
+
+- **Epic 1: Problem Statement, Proof of Concept, and Development Plan** (September 22, 2025)
+  Complete initial project documentation including problem analysis, stakeholder identification, and development methodology. This establishes the foundation for all subsequent work and ensures team alignment on project scope and approach. The problem statement defines the core challenge: enabling per-layer voxel viewing, selection (single or multiple voxels), and assignment of magnetization vectors and materials on top of an imported CAD design, eliminating the need to rebuild objects manually in COMSOL.
+  
+
+- **Epic 2: SRS and Hazard Analysis Development** (October 6, 2025)
+  Develop comprehensive software requirements specification and conduct hazard analysis to identify potential risks and safety considerations in the voxel property assignment workflow. This phase ensures all functional and non-functional requirements are properly documented and validated, including the system's ability to handle STL mesh files, maintain configurable voxel dimensions, and export Java-readable files for the custom printer pipeline. This epic includes the completion of system architecture documentation (S1-S5) defining the four core components: Import Manager, Visualization Manager, Editing Manager, and Export Manager, along with their functional requirements, interfaces, and prioritization framework.
+  
+
+- **Epic 3: Verification and Validation Planning** (October 27, 2025)
+  Create detailed verification and validation plan to ensure the system will meet all specified requirements. This includes defining test strategies, acceptance criteria, and validation methods for the voxel magnetization system, particularly focusing on the accuracy of voxelization, magnetization assignment, and export format compatibility with the existing 3D printer workflow.
+  
+
+**Sprint 2: Design and Proof of Concept (November 2025)**
+
+- **Epic 4: System Architecture and Design Specification** (November 10, 2025)
+  Develop initial system architecture and detailed design specifications for the voxel magnetization system, including web-based frontend UI design, local server backend architecture, and database schema. The design will incorporate frontend technologies for 3D visualization, backend services, and local data storage to maintain edit history and enable undo/redo functionality. This epic will detail the four core components: Import Manager (CAD file import and voxelization), Visualization Manager (3D visualization with responsive update latency), Editing Manager (layer-based voxel selection and property assignment), and Export Manager (Java-readable file export at minimum required rate).
+  
+
+- **Epic 5: Proof of Concept Demonstration** (November 17-26, 2025)
+  Demonstrate core functionality including CAD file import, voxelization, and basic layer viewing capabilities. This milestone validates the technical feasibility of the approach and identifies any major technical risks that need to be addressed. The PoC will show the process of importing a CAD file, converting it to voxels with configurable dimensions, and exporting the altered file to the existing 3D printing software. UI is not needed for the PoC, only a capable product that can create a standard print within defined limits.
+  
+
+**Sprint 3: Core Implementation and Testing (January - February 2026)**
+
+- **Epic 6: Final System Design Integration** (January 19, 2026)
+  Complete final system design incorporating lessons learned from proof of concept demonstration and any requirement refinements. This includes detailed specifications for the layered UI that allows browsing from bottom to top, voxel selection capabilities, and property assignment with undo/redo functionality. The design will implement the system as a locally deployed desktop application with wireframe mockups showing the main interface for 3D model interaction, layer navigation, and property assignment controls. Priority implementation will focus on must-have requirements: CAD file import (F211), 3D image generation (F221), layer viewing (F224), magnetization assignment (F231), material assignment (F233), and export functionality (F242).
+  
+
+- **Epic 7: Revision 0 System Demonstration** (February 2-11, 2026)
+  Demonstrate working system with core functionality including voxel selection, property assignment, and export capabilities. This milestone shows a functional system that meets the primary requirements: importing mesh CAD files, providing layered UI for voxel selection, enabling magnetization and material assignment, and generating Java-readable exports for the custom printer. The demonstration will showcase the complete workflow from CAD import through the Import Manager, 3D visualization via the Visualization Manager, property assignment through the Editing Manager, and final export via the Export Manager, validating the component architecture and interface design.
+  
+
+**Sprint 4: Validation and Final Delivery (March - April 2026)**
+
+- **Epic 8: Verification, Validation, and Extras** (March 9, 2026)
+  Complete verification and validation activities, documenting test results and system performance. Deliver user manual and usability report as specified in the problem statement. The user manual will provide comprehensive guidance on using the software's key features that differentiate it from normal CAD software, while the usability report will document findings from testing with researchers and lab operators. Validation will ensure all must-have requirements are met: system supports up to MAX_VOXELS (NF211, NF222), maintains MAX_VIEW_LATENCY image update latency (NF221), provides MAX_EDIT_LATENCY metadata updates (NF232), and achieves MIN_RATE export performance (NF212, NF242).
+  
+
+- **Epic 9: Final System Demonstration** (March 23-26, 2026)
+  Present completed system with all features implemented, tested, and validated. Demonstrate full workflow from CAD import to printer-ready export, showing how the system eliminates the manual voxel-by-voxel rebuilding process and enables efficient iteration on property assignment designs.
+  
+
+- **Epic 10: Final Documentation and EXPO** (April 6, 2026 & TBD)
+  Deliver final documentation package including updated SRS, design documents, user manual, and all supporting materials. Present project at capstone expo, showcasing the voxel magnetization system to broader academic and industry audience, highlighting its potential impact on research workflows involving magnetized 3D printed objects.
+  
+
+---
+
+**Justification for Proof of Concept Focus**
+
+The proof of concept demonstration is strategically positioned to address the two primary risks identified in the development plan: unfamiliarity with dependencies for file conversion and ensuring the automated process is more efficient than manual rebuilding. By demonstrating successful CAD file import, voxelization with configurable dimensions, and export to the existing Java-based printer program, we validate the core technical approach before investing in full UI development.
+
+This approach allows us to identify and address any major technical challenges early in the development process, particularly around file format handling, voxelization algorithms, and integration with the existing printer workflow. The PoC will use command-line interfaces to focus on the core functionality, ensuring that the fundamental technical approach is sound before building the user interface layer.
+
+The sprint-based approach also aligns with the team's development methodology, which emphasizes thorough planning, risk mitigation, and iterative validation. By completing comprehensive documentation and requirements analysis first, we ensure that the implementation phase is well-informed and addresses the specific needs of researchers working with magnetized 3D printed objects.
