@@ -12,4 +12,5 @@ For researchers and students, the tool will streamline workflows by allowing fas
 For supervisors and the university, the system offers a more user-friendly and productive platform, allowing larger CAD models to be automatically voxelized and then edited efficiently. This makes complex designs more manageable and accelerates experimental research.
 
 The following goal model diagram illustrates how these benefits map to the project’s stakeholders.
-image::models/G3_uml.svg[scale=70%,align="center"]
+image::models/G3_goal_model.svg[scale=70%,align="center"]
+
