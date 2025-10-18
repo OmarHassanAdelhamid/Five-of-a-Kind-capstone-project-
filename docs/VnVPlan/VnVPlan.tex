@@ -323,74 +323,107 @@ be involved? Be specific.}
 \item{test-US-1 Design Acceptance \& Intuitivity Survey\\}
 
 Type: Non-Functional, Dynamic, Manual, Survey-based
+
+Covers: G4-HNF-1
 					
-Initial State: 
+Initial State: Application open
 					
-Input/Condition: 
+Input/Condition: User interacts with the application
 					
-Output/Result: 
+Output/Result: Recorded observations, feedback, and survey response that indicates whether the design works for the user.
 					
-How test will be performed: 
-					
+How test will be performed: Users will be exposed to the application with minimal direction and asked to perform 
+some basic tasks. Observations such as where users get confused, when they need to consult the manual, and any comments
+made during use will be recorded. Afterwards, users will fill out a survey relating to their satisfaction with the interface, 
+as well as how they would rank how intuitive functionalities are on a 5-point scale. Observations and survey responses will then be analysed, with
+changes implemented where necessary to improve UI design in the case that expectations are not reached.
+
+Quantifiable Metric: 90\% of survey responses must rank 4 or above for intuitiveness of each feature.
+
 \item{test-US-2 Accessible Colours Check\\}
 
 Type: Static, Manual
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
 
-\item{test-US-3 Design Ease of Use Test and Survey\\}
+Covers: NF223, \[***\] %Need to add a general requirement to SRS about entire system colours.
+					
+Initial State: Default colours for materials and application chosen
+					
+Input/Condition: Constrast analyser run on colours
+					
+Output/Result: Compliance level meets WCAG standards
+					
+How test will be performed: A web-based contrast checking tool such as WebAIM will be utilised with both the set of colours chosen 
+for material IDs, as well as colours used in the UI (e.g. text, buttons, sidebars).
+
+Acceptance Criteria: All ratios must meet 3:1 contrast ratio for WCAG 2.0 compliance.
+
+\item{test-US-3 Design Ease of Use Test\\}
 
 Type: Non-Functional, Dynamic, Manual, Survey-based
+
+Covers: NF231, \[***\] %need reqs for rest of app about max-interactions
 					
-Initial State: 
+Initial State: Application open
 					
-Input: 
+Input: User completes core tasks (import file, material/magnetization assignment, export file)
 					
-Output: 
+Output: 90\% of users tested complete tasks in less than MAX\_INTERACTIONS.
 					
-How test will be performed: 
+How test will be performed: After a short explanation of core tasks, users will be asked to perform core tasks. Clicks per task
+are recorded and later analysed to verify that expectations are satisfied.
 
 \item{test-US-4 View Model and Layer Focus within application\\}
 
 Type: Non-Functional, Dynamic, Manual
+
+Covers: S3 %Need a better way of citing this?
 					
-Initial State: 
+Initial State: Application open with an example project file pre-loaded
 					
-Input/Condition: 
+Input/Condition: Developer attempts to view an individual layer of the model
 					
-Output/Result: 
+Output/Result: Application displays layer and full model separately, alongside interface to edit the layer.
 					
-How test will be performed:
+How test will be performed: Tester will select a layer and attempt to view the layer separately, as well as the model as a whole, 
+as if they intend to edit voxels within the layer. This confirms that the primary design notion of being able to focus on a specific
+layer when editing voxels is satisfied.
 
 \item{test-US-5 Clear and Interpretable Warnings and Errors\\}
 
 Type: Survey-based
+
+Covers: S4.1-7 %better way of citing this as well?
 					
-Initial State: 
+Initial State: Application open
 					
-Input: 
+Input/Condition: User performs interactions that are known to result in error
 					
-Output: 
+Output/Result: 90\% of respondents agree that errors are informative
 					
-How test will be performed: 
+How test will be performed: The user will be given direction in how to trigger different errors, and be exposed to
+all warning and error messages the system can generate. Users will explain whether they find it easy to understand
+or not (e.g. pass/fail). Investigation in how to reword prompts will take place for messages that under 90\% of users
+do not understand.
+
+Quantifiable Metric: For all messages, 90\% of users 'pass'.
 
 \item{test-US-6 Concise and Interpretable User Manual\\}
 
 Type: Survey-based
+
+Covers: \[***\] %need to add a general requirement about availability/readability of user manual.
 					
-Initial State: 
+Initial State: Manual is completed
 					
-Input: 
+Input/Condition: User reads the full user manual
 					
-Output: 
+Output/Result: User agrees the manual is helpful with installation, general usage, and interpretation of common errors.
 					
-How test will be performed: 
+How test will be performed: User accesses the manual and reviews it. Afterwards, they give feedback on each section of 
+the manual, pointing out areas of confusion or notes that should be added. Feedback is then incorporated upon revision
+of the manual.
+
+Quantifiable Metric: Considered an initial success if areas of confusion for each section is less than one.
 
 \end{enumerate}
 
@@ -401,38 +434,57 @@ How test will be performed:
 \item{test-PS-1 Scalability Validation for Import and Visualization\\}
 
 Type: Non-Functional, Dynamic, Automated
+
+Covers: NF211, NF222, implicitly tests NF212
 					
-Initial State: 
+Initial State: Application is open with a set of CAD files of varying sizes prepared.
 					
-Input/Condition: 
+Input/Condition: Sequentially, each CAD file is imported and the resulting voxel model is viewed within the application. 
 					
-Output/Result: 
+Output/Result: Application completed import within expected times given MIN\_RATE and the estimated number of voxels in the resulting project
+file from each input. Resulting voxel models render correctly within the application
 					
-How test will be performed: 
+How test will be performed: Import will be initiated on each CAD file (five files will be prepared, ranging from small (estimated 
+100 voxels) to very large (1.5 * MAX\_VOXELS)). Timing will be started upon import, and stopped when the program reports the file was 
+successfully imported and opens the project file. It will also be recorded whether the resulting project file renders without error.
+If recorded times are not what is expected given MIN\_RATE and the size of the
+resulting model, the import module will be investigated for possible sources of optimization. If the resulting file is not openable or does
+not render, error messages will be investigated for possible sources of refactoring. %check this with HA times
 					
 \item{test-PS-2 Performance Validation for Import, Visualization, Editing, and Export\\}
 
 Type: Non-Functional, Dynamic, Automated
+
+Covers: NF212, NF221, NF232, NF242
 					
-Initial State: 
+Initial State: Application open with a set of CAD files of average sizes prepared.
 					
-Input: 
+Input/Condition: Sequentially, each file is imported, core operations completed, and exported
 					
-Output: 
+Output/Result: Latencies for import/view change/edit/export matches those defined in the above non-functional requirements.
 					
-How test will be performed:
+How test will be performed: Import will be initiated on each CAD file (three files will be prepared, ranging from small (estimated 100 voxels)
+to semi-large (100,000 voxels)). Timing and latency will be recorded for importing the CAD file, changing the orientation of the 
+project file, opening layer focus, editing properties of voxel selections of varying sizes (1 voxel, 100, and a full layer), and exporting
+the completed project file. These times will then be compared against the defined minimum latencies and expected times given minimum processing
+rates. Should performance fall short of these expectations, specific sections that fail will have their code reviewed to identify areas 
+that can be optimized. %check this with HA times (in/export)
 
 \item{test-PS-3 Resource Usage Validation Test\\}
 
 Type: Non-Functional, Dynamic, Automated
+
+Covers: E3.4 %check citing this form.
 					
-Initial State: 
+Initial State: Application open, with a CAD file of average size prepared.
 					
-Input/Condition: 
+Input/Condition: File is imported, core operations completed, and exported
 					
-Output/Result: 
+Output/Result: Recorded CPU and GPU usage over the course of the test does not exceed thresholds. %define these somewhere.
 					
-How test will be performed:
+How test will be performed: Import will be initiated on the CAD file, and core operations will be performed (see test-PS-2's description). 
+Throughout the test, CPU and GPU usage of the application on the host computer will be recorded. Should usage exceed defined thresholds, the operation
+that lead to increased usage will be investigated for precisely what part of the operation triggered it, with refactoring of the unsatisfactory module.
 
 \end{enumerate}
 
