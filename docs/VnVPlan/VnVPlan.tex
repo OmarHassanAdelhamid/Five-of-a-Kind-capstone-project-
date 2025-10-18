@@ -294,7 +294,7 @@ How test will be performed:
 ...
 
 \subsection{Tests for Nonfunctional Requirements}
-
+\iffalse
 \wss{The nonfunctional requirements for accuracy will likely just reference the
   appropriate functional tests from above.  The test cases should mention
   reporting the relative error for these tests.  Not all projects will
@@ -315,16 +315,14 @@ format for the tests given below.}
 \wss{If you introduce static tests in your plan, you need to provide details.
 How will they be done?  In cases like code (or document) walkthroughs, who will
 be involved? Be specific.}
-
-\subsubsection{Area of Testing1}
-		
-\paragraph{Title for Test}
+\fi
+\subsubsection{Usability and Look \& Feel}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{test-US-1 Design Acceptance \& Intuitivity Survey\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
+Type: Non-Functional, Dynamic, Manual, Survey-based
 					
 Initial State: 
 					
@@ -334,9 +332,57 @@ Output/Result:
 					
 How test will be performed: 
 					
-\item{test-id2\\}
+\item{test-US-2 Accessible Colours Check\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
+Type: Static, Manual
+					
+Initial State: 
+					
+Input: 
+					
+Output: 
+					
+How test will be performed: 
+
+\item{test-US-3 Design Ease of Use Test and Survey\\}
+
+Type: Non-Functional, Dynamic, Manual, Survey-based
+					
+Initial State: 
+					
+Input: 
+					
+Output: 
+					
+How test will be performed: 
+
+\item{test-US-4 View Model and Layer Focus within application\\}
+
+Type: Non-Functional, Dynamic, Manual
+					
+Initial State: 
+					
+Input/Condition: 
+					
+Output/Result: 
+					
+How test will be performed:
+
+\item{test-US-5 Clear and Interpretable Warnings and Errors\\}
+
+Type: Survey-based
+					
+Initial State: 
+					
+Input: 
+					
+Output: 
+					
+How test will be performed: 
+
+\item{test-US-6 Concise and Interpretable User Manual\\}
+
+Type: Survey-based
 					
 Initial State: 
 					
@@ -348,9 +394,120 @@ How test will be performed:
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Performance \& Scalability}
 
-...
+\begin{enumerate}
+
+\item{test-PS-1 Scalability Validation for Import and Visualization\\}
+
+Type: Non-Functional, Dynamic, Automated
+					
+Initial State: 
+					
+Input/Condition: 
+					
+Output/Result: 
+					
+How test will be performed: 
+					
+\item{test-PS-2 Performance Validation for Import, Visualization, Editing, and Export\\}
+
+Type: Non-Functional, Dynamic, Automated
+					
+Initial State: 
+					
+Input: 
+					
+Output: 
+					
+How test will be performed:
+
+\item{test-PS-3 Resource Usage Validation Test\\}
+
+Type: Non-Functional, Dynamic, Automated
+					
+Initial State: 
+					
+Input/Condition: 
+					
+Output/Result: 
+					
+How test will be performed:
+
+\end{enumerate}
+
+\subsubsection{Compliance}
+
+\begin{enumerate}
+
+\item{test-CO-1 Windows and Linux Compatibility Test\\}
+
+Type: Non-Functional, Dynamic, Manual
+					
+Initial State: 
+					
+Input/Condition: 
+					
+Output/Result: 
+					
+How test will be performed: 
+					
+\item{test-CO-2 Import and Export Compatibility Test\\}
+
+Type: Non-Functional, Dynamic, Manual
+					
+Initial State: 
+					
+Input: 
+					
+Output: 
+					
+How test will be performed: 
+
+\item{test-CO-3 Project File Fail-safe\\}
+
+Type: Non-Functional, Dynamic, Manual
+					
+Initial State: 
+					
+Input/Condition: 
+					
+Output/Result: 
+					
+How test will be performed:
+
+\item{test-CO-4 PEP8 Standard Compliance\\}
+
+Type: Static Analysis
+					
+Initial State: 
+					
+Input/Condition: 
+					
+Output/Result: 
+					
+How test will be performed:
+
+\end{enumerate}
+
+\subsubsection{Maintainability}
+
+\begin{enumerate}
+
+\item{test-MA-1 Maintainable Codebase\\}
+
+Type: Functional, Dynamic, Manual, Static etc.
+					
+Initial State: 
+					
+Input/Condition: 
+					
+Output/Result: 
+					
+How test will be performed: 
+
+\end{enumerate}
+
 
 \subsection{Traceability Between Test Cases and Requirements}
 
