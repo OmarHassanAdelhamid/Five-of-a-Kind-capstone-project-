@@ -495,28 +495,36 @@ that lead to increased usage will be investigated for precisely what part of the
 \item{test-CO-1 Windows and Linux Compatibility Test\\}
 
 Type: Non-Functional, Dynamic, Manual
+
+Covers: E3.1
 					
-Initial State: 
+Initial State: Logged in to Windows and Linux and application is not installed
 					
-Input/Condition: 
+Input/Condition: User installs the application on both Windows and Linux
 					
-Output/Result: 
+Output/Result: Application is successfully installed and functions as intended.
 					
-How test will be performed: 
+How test will be performed: The user will download the installer on each operating system, run it, and attempt to open the
+application. If the application opens successfully on each OS and can perform basic functionalities, the test is ruled a success.
 					
 \item{test-CO-2 Import and Export Compatibility Test\\}
 
 Type: Non-Functional, Dynamic, Manual
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
 
-\item{test-CO-3 Project File Fail-safe\\}
+Covers: E3.2, E3.3
+					
+Initial State: Application open, with a CAD file of average size prepared.
+					
+Input/Condition: File is imported, core operations completed, and exported
+					
+Output/Result: Application converts input file correctly, exported file is correctly formatted
+					
+How test will be performed: The tester selects the CAD file to be imported, and verifies that the resulting project file 
+is correctly generated (e.g. resulting voxel model is an accurate approximation of the original model). The tester then assigns 
+dummy data to each layer and exports the project file to the 3D-printer ready format. The resulting file is then checked for
+completeness and correct formatting. 
+
+\item{test-CO-3 Project File Fail-safe\\} %CHECK THIS TEST if it makes sense.
 
 Type: Non-Functional, Dynamic, Manual
 					
@@ -531,14 +539,17 @@ How test will be performed:
 \item{test-CO-4 PEP8 Standard Compliance\\}
 
 Type: Static Analysis
+
+Covers: %cite dev plan here somehow; also add any other standards from other language we are aligning with.
 					
-Initial State: 
+Initial State: Application is fully implemented
 					
-Input/Condition: 
+Input/Condition: Codebase is scanned with a linter (e.g. Pylint) %check this against dev plan
 					
-Output/Result: 
+Output/Result: Code complies with PEP8 Standard
 					
-How test will be performed:
+How test will be performed: Developer inputs the entirety of the application's code into a linting program and takes note of all
+warnings. All areas of note are then addressed, with possible refactorings or small fixes resulting.
 
 \end{enumerate}
 
@@ -548,15 +559,21 @@ How test will be performed:
 
 \item{test-MA-1 Maintainable Codebase\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
+Type: Static Analysis
+
+Covers: % this req needs to be added to the SRS
 					
-Initial State: 
+Initial State: Application is fully implemented, and related documentation is complete
 					
-Input/Condition: 
+Input/Condition: Developers review all code and documentation
 					
-Output/Result: 
+Output/Result: Code is sufficiently modular, and fully commented; associated documentation is easy to understand
 					
-How test will be performed: 
+How test will be performed: Reviewers inspect all code, evaluating based on modularity (functionality is sufficiently separated,
+archicture supports editing one section not mandating updates throughout entire codebase), comments (both function/class headers and notes 
+within functions, explaining complex or unclear code), and naming conventions (names of functions, classes, variables are consistent
+and clear). Associated documentation is reviewed separately, evaluating based on completeness (all modules are detailed) and readability
+(jargon is clearly defined; non-team members can understand the content).
 
 \end{enumerate}
 
