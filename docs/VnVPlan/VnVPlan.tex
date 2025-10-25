@@ -234,64 +234,375 @@ as a Rev 0 demo for the supervisor.}
 
 \section{System Tests}
 
-\wss{There should be text between all headings, even if it is just a roadmap of
-the contents of the subsections.}
+This section outlines the tests for verifying both functional and nonfunctional requirements
+of the software, ensuring it meets user expectations and performs reliably. This includes
+tests for code quality, usability, performance, security, and traceability, covering essential
+aspects of the software's operation and compliance.
 
 \subsection{Tests for Functional Requirements}
 
-\wss{Subsets of the tests may be in related, so this section is divided into
-  different areas.  If there are no identifiable subsets for the tests, this
-  level of document structure can be removed.}
+The subsections below outline tests corresponding to functional requirements in the SRS \citep{SRS}.
+Each test is associated with a unique functional area, helping to confirm that the tool meets
+the specified requirements. Each functional area has its own subsection for clarity.
 
-\wss{Include a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.}
+The system tests are organized by the major components identified in the SRS: Import Manager
+and Visualization Manager. These components handle the core functionality of CAD file processing,
+voxel slicing, 3D model visualization, and user interaction. The tests ensure that all functional
+requirements (F211-F216 for Import Manager and F221-F227 for Visualization Manager) are properly
+validated through both automated and manual testing approaches.
 
-\subsubsection{Area of Testing1}
+\subsubsection{Import Manager Tests}
 
-\wss{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.  If a section
-  covers tests for input constraints, you should reference the data constraints
-  table in the SRS.}
-		
-\paragraph{Title for Test}
+This section covers tests for the Import Manager component, which handles CAD file interpretation,
+voxel slicing, and model manipulation. These tests verify the functional requirements F211-F216
+from the SRS, ensuring proper file handling, model processing, and user configuration capabilities.
+The tests validate both automated processing and user interaction scenarios.
+
+\paragraph{CAD File Import and Project Management Tests}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{test-FR-IM-1 Valid CAD File Import for New Project\\}
 
-Control: Manual versus Automatic
+Control: Automated
 					
-Initial State: 
+Initial State: System is idle, no active project loaded
 					
-Input: 
+Input: A valid CAD file (e.g., .stl, .obj, .ply format) containing a 3D mesh model
 					
-Output: \wss{The expected result for the given inputs.  Output is not how you
-are going to return the results of the test.  The output is the expected
-result.}
+Output: The system successfully creates a new project, imports the CAD file, and initiates
+the voxel slicing process. The imported model is ready for visualization.
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+Test Case Derivation: Confirms that the system correctly processes valid CAD files and creates
+new projects as specified in F211. This validates the core functionality of starting new projects
+with imported CAD files.
 					
-How test will be performed: 
-					
-\item{test-id2\\}
+How test will be performed: Provide a valid CAD file through the import interface and verify
+that a new project is created, the file is processed without errors, and the model data is
+available for subsequent operations.
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+\item{test-FR-IM-2 Past Project File Import\\}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+Control: Automated
+					
+Initial State: System is idle, no active project loaded
+					
+Input: A previously saved project file containing magnetization and material properties
+					
+Output: The system successfully loads the project with all magnetization and material
+properties preserved, and the model is ready for further editing.
 
-How test will be performed: 
+Test Case Derivation: Ensures that past projects can be reopened with complete data integrity,
+satisfying F212. This prevents users from losing work and enables iterative design processes.
+					
+How test will be performed: Load a previously saved project file and verify that all voxel
+properties, magnetization vectors, and material assignments are correctly restored.
+
+\item{test-FR-IM-3 Invalid File Format Handling\\}
+
+Control: Automated
+					
+Initial State: System is idle, no active project loaded
+					
+Input: A file with unsupported format (e.g., .txt, .jpg, .pdf)
+					
+Output: The system rejects the file and displays an appropriate error message indicating
+unsupported file format, without creating a project or crashing.
+
+Test Case Derivation: Validates robust error handling for invalid inputs, ensuring system
+stability when users attempt to import incompatible files.
+					
+How test will be performed: Attempt to import various unsupported file formats and verify
+that the system gracefully handles the error without system failure.
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\paragraph{Model Configuration and Slicing Tests}
 
-...
+\begin{enumerate}
+
+\item{test-FR-IM-4 Voxel Size Configuration\\}
+
+Control: Manual
+					
+Initial State: A valid CAD model has been imported and is ready for slicing
+					
+Input: User specifies custom voxel dimensions (e.g., 0.1mm x 0.1mm x 0.1mm)
+					
+Output: The system applies the specified voxel dimensions and successfully slices the
+model into voxels of the requested size.
+
+Test Case Derivation: Confirms that users can configure voxel dimensions as required by F213,
+enabling customization of model resolution for different printing requirements.
+					
+How test will be performed: Import a CAD model, configure custom voxel dimensions through
+the user interface, and verify that the resulting voxel grid matches the specified dimensions.
+
+\item{test-FR-IM-5 Model Scaling Functionality\\}
+
+Control: Manual
+					
+Initial State: A valid CAD model has been imported
+					
+Input: User modifies model dimensions (e.g., scale to 50\% of original size)
+					
+Output: The model is successfully scaled to the specified dimensions while maintaining
+geometric integrity and proportions.
+
+Test Case Derivation: Validates F214 by ensuring users can modify model dimensions before
+slicing, enabling proper scaling for different printing requirements.
+					
+How test will be performed: Import a CAD model, use the scaling interface to modify dimensions,
+and verify that the scaled model maintains proper proportions and geometric accuracy.
+
+\item{test-FR-IM-6 Partial Voxel Resolution\\}
+
+Control: Automated
+					
+Initial State: A CAD model with complex geometry has been imported
+					
+Input: A model containing surfaces that intersect voxel boundaries (creating partial voxels)
+					
+Output: The system correctly resolves partial voxels using appropriate algorithms (e.g.,
+majority rule, surface area weighting) and preserves model integrity and accuracy.
+
+Test Case Derivation: Ensures F215 is satisfied by validating that partial voxels are handled
+correctly, maintaining model accuracy during the slicing process.
+					
+How test will be performed: Import a CAD model with complex geometry that creates partial
+voxels, and verify that the resolution algorithm produces accurate results that preserve
+the original model's shape and volume.
+
+\item{test-FR-IM-7 Model Division for Display\\}
+
+Control: Automated
+					
+Initial State: A large CAD model has been imported and sliced into voxels
+					
+Input: A model containing more than MAX\_DISPLAY voxels
+					
+Output: The system automatically partitions the model into manageable display sections
+that do not exceed the MAX\_DISPLAY threshold, enabling smooth visualization.
+
+Test Case Derivation: Confirms F216 by ensuring large models are properly divided into
+manageable sections for optimal display performance and user interaction.
+					
+How test will be performed: Import a large CAD model that exceeds MAX\_DISPLAY voxels,
+and verify that the system creates appropriate partitions that maintain model coherence
+while staying within display limits.
+
+\end{enumerate}
+
+\subsubsection{Visualization Manager Tests}
+
+This section covers tests for the Visualization Manager component, which handles 3D model
+rendering, user interaction, and visual feedback. These tests verify the functional requirements
+F221-F227 from the SRS, ensuring proper 3D visualization, navigation, and user interface
+functionality. The tests validate both rendering capabilities and interactive features.
+
+\paragraph{3D Model Rendering and Display Tests}
+
+\begin{enumerate}
+
+\item{test-FR-VM-1 3D Model Rendition with Clear Voxel Visualization\\}
+
+Control: Manual
+					
+Initial State: A CAD model has been imported and sliced into voxels by the Import Manager
+					
+Input: Sliced voxel data from Import Manager
+					
+Output: The system successfully renders a 3D model with clear visualization of individual
+voxels, maintaining geometric accuracy and providing distinct voxel boundaries.
+
+Test Case Derivation: Confirms F221 by ensuring the Visualization Manager can recreate
+3D models with clear voxel visualization, which is essential for property assignment
+and user understanding of the model structure.
+					
+How test will be performed: Import and slice a CAD model, then verify that the 3D
+rendition clearly displays individual voxels with proper boundaries and geometric accuracy.
+
+\item{test-FR-VM-2 Partition Navigation Functionality\\}
+
+Control: Manual
+					
+Initial State: A large model has been divided into multiple display partitions
+					
+Input: User navigation commands to switch between model partitions
+					
+Output: The system provides smooth navigation between partitions, allowing users to
+access all model sections without performance degradation.
+
+Test Case Derivation: Validates F222 by ensuring users can navigate across all model
+partitions, supporting the Import Manager's model division functionality.
+					
+How test will be performed: Load a large model with multiple partitions and verify
+that navigation controls allow seamless movement between all sections of the model.
+
+\item{test-FR-VM-3 Multi-Perspective 3D Model Interaction\\}
+
+Control: Manual
+					
+Initial State: A 3D model is rendered and displayed
+					
+Input: User interaction commands (rotate, zoom, pan) to view the model from different perspectives
+					
+Output: The system provides intuitive interface controls that allow seamless navigation
+across multiple perspectives of the 3D model with responsive interaction.
+
+Test Case Derivation: Confirms F223 by ensuring users can interact with the 3D model
+from all perspectives, providing comprehensive visualization capabilities.
+					
+How test will be performed: Use the 3D interaction controls to rotate, zoom, and pan
+the model, verifying that all perspectives are accessible and the interface remains
+responsive and intuitive.
+
+\end{enumerate}
+
+\paragraph{Layer Focus and Voxel Selection Tests}
+
+\begin{enumerate}
+
+\item{test-FR-VM-4 Layer Isolation Functionality\\}
+
+Control: Manual
+					
+Initial State: A 3D model with multiple layers is displayed
+					
+Input: User selects a specific layer to focus on
+					
+Output: The system isolates the selected layer, rendering all other voxels irrelevant
+or transparent, facilitating property assignment on the focused layer.
+
+Test Case Derivation: Validates F224 by ensuring users can isolate specific layers
+for focused interaction, which is essential for efficient property assignment.
+					
+How test will be performed: Select different layers of a multi-layer model and verify
+that only the selected layer remains visible and interactive while other layers are
+appropriately dimmed or hidden.
+
+\item{test-FR-VM-5 Voxel Selection Highlighting\\}
+
+Control: Manual
+					
+Initial State: A specific layer is in focus and displayed
+					
+Input: User selects individual voxels or groups of voxels within the focused layer
+					
+Output: The system provides clear visual feedback showing which voxels are currently
+selected, using distinct highlighting or color changes.
+
+Test Case Derivation: Confirms F225 by ensuring users receive clear visual feedback
+about their current selections, improving usability and reducing errors.
+					
+How test will be performed: Select various voxels within a focused layer and verify
+that the selection is clearly highlighted with distinct visual indicators.
+
+\end{enumerate}
+
+\paragraph{Material and Magnetization Tracking Tests}
+
+\begin{enumerate}
+
+\item{test-FR-VM-6 Material Assignment Visual Tracking\\}
+
+Control: Manual
+					
+Initial State: A model with unassigned voxels is displayed
+					
+Input: User assigns material IDs to various voxels
+					
+Output: The system updates voxel colors to indicate material assignment completeness,
+providing clear visual feedback about assignment status.
+
+Test Case Derivation: Validates F226 by ensuring users can easily track which voxels
+have been assigned materials through visual color changes.
+					
+How test will be performed: Assign materials to various voxels and verify that the
+color changes provide clear indication of assignment status and remaining work.
+
+\item{test-FR-VM-7 Magnetization Assignment Visual Tracking\\}
+
+Control: Manual
+					
+Initial State: A model with some magnetized and some unmagnetized voxels
+					
+Input: User toggles the magnetization visualization display
+					
+Output: The system provides the option to toggle color display of all magnetized
+voxels, allowing users to easily identify magnetization status.
+
+Test Case Derivation: Confirms F227 by ensuring users can track magnetization
+assignments through visual toggles, improving workflow efficiency.
+					
+How test will be performed: Toggle the magnetization visualization and verify that
+magnetized voxels are clearly distinguished from unmagnetized ones through appropriate
+color coding.
+
+\end{enumerate}
+
+\subsubsection{Integration Tests Between Import and Visualization Managers}
+
+This section covers tests that validate the interaction and data flow between the Import Manager
+and Visualization Manager components. These tests ensure that the two managers work together
+seamlessly to provide a complete user experience from CAD file import to 3D visualization.
+
+\paragraph{Data Flow and Communication Tests}
+
+\begin{enumerate}
+
+\item{test-FR-INT-1 Import to Visualization Data Transfer\\}
+
+Control: Automated
+					
+Initial State: System is idle, no active project
+					
+Input: A valid CAD file is imported and processed by the Import Manager
+					
+Output: The Visualization Manager receives complete voxel data and successfully renders
+the 3D model without data loss or corruption.
+
+Test Case Derivation: Ensures proper data flow between managers, validating that
+voxel slicing results are correctly transmitted to the visualization system.
+					
+How test will be performed: Import a CAD file and verify that the resulting 3D
+visualization accurately represents the sliced voxel data from the Import Manager.
+
+\item{test-FR-INT-2 Model Division Integration\\}
+
+Control: Automated
+					
+Initial State: A large CAD model has been imported
+					
+Input: Import Manager divides the model into display partitions
+					
+Output: Visualization Manager correctly displays and allows navigation between all
+partitions created by the Import Manager.
+
+Test Case Derivation: Validates that model division from Import Manager is properly
+handled by Visualization Manager, ensuring seamless user experience with large models.
+					
+How test will be performed: Import a large model that requires division and verify
+that all partitions are accessible through the visualization interface.
+
+\item{test-FR-INT-3 Configuration Parameter Synchronization\\}
+
+Control: Manual
+					
+Initial State: A model is ready for slicing
+					
+Input: User configures voxel size and model scaling parameters
+					
+Output: Both Import Manager (for slicing) and Visualization Manager (for display)
+correctly apply the configuration parameters and maintain consistency.
+
+Test Case Derivation: Ensures that user configuration changes are properly synchronized
+between managers, maintaining data consistency throughout the system.
+					
+How test will be performed: Modify configuration parameters and verify that both
+slicing results and visualization accurately reflect the changes.
+
+\end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
 
