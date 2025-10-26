@@ -333,7 +333,7 @@ Output: The model is scaled to the desired printing size, maintaining its geomet
 
 Test Case Derivation: The test case is derived from the functional requirement F214, which states that the Import Manager should allow a user to scale the model to the desired printing size before being sliced into voxels.
 					
-How test will be performed: Modify the model dimensions to the desired printing size by entering the new dimensions into the system through the import interface by the user. Verify that the system correctly scales the model to the desired printing size. This will be tested manually by the developer of the system.
+How test will be performed: Modify the model dimensions to the desired printing size by entering the new dimensions into the system through the import interface by the user. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected scaling of the model to confirm that model integrity and accuracy are preserved as specified in F214
 
 \item{test-FR-IM-6 Partial Voxel Resolution\\}
 
@@ -343,13 +343,13 @@ Covers: F215
 					
 Initial State: A CAD model with complex geometry has been imported and the system is ready to resolve the partial voxels.
 					
-Input: A model containing surfaces that intersect voxel boundaries is provided to the system through the import interface by the user.
+Input: A model containing surfaces that intersect voxel boundaries is imported by the user through the import interface.
 					
 Output: The system correctly resolves partial voxels and preserves model integrity and accuracy.
 
 Test Case Derivation: The test case is derived from the functional requirement F215, which states that the Import Manager shall resolve partial voxels and interpret them in the best way that preserves the integrity and accuracy of the provided model.
 					
-How test will be performed: Provide a model containing surfaces that intersect voxel boundaries to the system through the import interface by the user. Verify that the system correctly resolves the partial voxels and preserves the model integrity and accuracy. This will be tested manually by the developer of the system.
+How test will be performed: Import a model containing surfaces that intersect voxel boundaries. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected resolution of partial voxels to confirm that model integrity and accuracy are preserved as specified in F215
 
 \item{test-FR-IM-7 Model Division for Display\\}
 
@@ -359,13 +359,13 @@ Covers: F216
 					
 Initial State: A large CAD model has been imported and the system is ready to divide the model into manageable display sections.
 					
-Input: A model containing more than 103,680,000 voxels is provided to the system through the import interface by the user.
+Input: A model containing more than MAX\_DISPLAY voxels is imported by the user through the import interface.
 					
-Output: The system automatically partitions the model into manageable display sections that do not exceed the 103,680,000 voxels threshold, enabling smooth visualization.
+Output: The system automatically partitions the model into manageable display sections that do not exceed the MAX\_DISPLAY threshold, enabling smooth visualization.
 
-Test Case Derivation: The test case is derived from the functional requirement F216, which states that the Import Manager shall partition the model into user-manageable display sections that do not surpass the 103,680,000 voxels threshold.
+Test Case Derivation: The test case is derived from the functional requirement F216, which states that the Import Manager shall partition the model into user-manageable display sections that do not surpass the MAX\_DISPLAY threshold.
 					
-How test will be performed: Provide a model containing more than 103,680,000 voxels to the system through the import interface by the user. Verify that the system correctly partitions the model into manageable display sections that do not exceed the 103,680,000 voxels threshold. This will be tested manually by the developer of the system.
+How test will be performed: Import a model containing more than MAX\_DISPLAY voxels. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected partitioning of the model to confirm that model integrity and accuracy are preserved as specified in F216
 
 \end{enumerate}
 
