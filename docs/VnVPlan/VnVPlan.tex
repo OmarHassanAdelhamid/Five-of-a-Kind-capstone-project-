@@ -336,7 +336,8 @@ How test will be performed: Users will be exposed to the application with minima
 some basic tasks. Observations such as where users get confused, when they need to consult the manual, and any comments
 made during use will be recorded. Afterwards, users will fill out a survey relating to their satisfaction with the interface, 
 as well as how they would rank how intuitive functionalities are on a 5-point scale. Observations and survey responses will then be analysed, with
-changes implemented where necessary to improve UI design in the case that expectations are not reached.
+changes implemented where necessary to improve UI design in the case that expectations are not reached. A draft of the survey
+is included in the appendix of this document.
 
 Quantifiable Metric: 90\% of survey responses must rank 4 or above for intuitiveness of each feature.
 
@@ -344,7 +345,7 @@ Quantifiable Metric: 90\% of survey responses must rank 4 or above for intuitive
 
 Type: Static, Manual
 
-Covers: NF223, \[***\] %Need to add a general requirement to SRS about entire system colours.
+Covers: NF223, GEN1 %Need to add a general requirement to SRS about entire system colours.
 					
 Initial State: Default colours for materials and application chosen
 					
@@ -361,7 +362,7 @@ Acceptance Criteria: All ratios must meet 3:1 contrast ratio for WCAG 2.0 compli
 
 Type: Non-Functional, Dynamic, Manual, Survey-based
 
-Covers: NF231, \[***\] %need reqs for rest of app about max-interactions
+Covers: NF231, GEN2 %need reqs for rest of app about max-interactions
 					
 Initial State: Application open
 					
@@ -411,7 +412,7 @@ Quantifiable Metric: For all messages, 90\% of users 'pass'.
 
 Type: Survey-based
 
-Covers: \[***\] %need to add a general requirement about availability/readability of user manual.
+Covers: GEN3 %need to add a general requirement about availability/readability of user manual.
 					
 Initial State: Manual is completed
 					
@@ -524,23 +525,27 @@ is correctly generated (e.g. resulting voxel model is an accurate approximation 
 dummy data to each layer and exports the project file to the 3D-printer ready format. The resulting file is then checked for
 completeness and correct formatting. 
 
-\item{test-CO-3 Project File Fail-safe\\} %CHECK THIS TEST if it makes sense.
+\item{test-CO-3 Project File Fail-safe\\} 
 
 Type: Non-Functional, Dynamic, Manual
+
+Covers: NF241
 					
-Initial State: 
+Initial State: Application open, with a completed project file prepared.
 					
-Input/Condition: 
+Input/Condition: File is open, export is initiated and interrupted
 					
-Output/Result: 
+Output/Result: Project file remains unaltered
 					
-How test will be performed:
+How test will be performed: The tester begins the export process on the loaded project file, before intentionally ending the program
+in the middle of the export. The project file is then checked against a copy of itself made before the test to see if there are any differences;
+if there are no differences, the test is considered a success. 
 
 \item{test-CO-4 PEP8 Standard Compliance\\}
 
 Type: Static Analysis
 
-Covers: %cite dev plan here somehow; also add any other standards from other language we are aligning with.
+Covers: DP.10
 					
 Initial State: Application is fully implemented
 					
@@ -548,7 +553,7 @@ Input/Condition: Codebase is scanned with a linter (e.g. Pylint) %check this aga
 					
 Output/Result: Code complies with PEP8 Standard
 					
-How test will be performed: Developer inputs the entirety of the application's code into a linting program and takes note of all
+How test will be performed: Developer inputs the entirety of the application's backend code into a linting program and takes note of all
 warnings. All areas of note are then addressed, with possible refactorings or small fixes resulting.
 
 \end{enumerate}
@@ -561,7 +566,7 @@ warnings. All areas of note are then addressed, with possible refactorings or sm
 
 Type: Static Analysis
 
-Covers: % this req needs to be added to the SRS
+Covers: DP.10, GEN4 % this req needs to be added to the SRS
 					
 Initial State: Application is fully implemented, and related documentation is complete
 					
@@ -580,8 +585,33 @@ and clear). Associated documentation is reviewed separately, evaluating based on
 
 \subsection{Traceability Between Test Cases and Requirements}
 
+\iffalse
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
+\fi
+
+\begin{table}[h!]
+  \centering
+  \caption{Non-Functional Tests and Corresponding Requirements}
+  \begin{tabular}{c c}
+    \hline
+    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
+    US-1 & G4-HNF-1\\
+    US-2 & NF223, GEN1\\
+    US-3 & NF231, GEN2\\
+    US-4 & S3\\
+    US-5 & S4.1-7\\
+    US-6 & GEN3\\
+    PS-1 & NF211, NF222, NF212\\
+    PS-2 & NF212, NF221, NF232, NF242\\
+    PS-3 & E3.4\\
+    CO-1 & E3.1\\
+    CO-2 & E3.2, E3.3\\
+    CO-3 & NF241\\
+    CO-4 & DP.10\\
+    MA-1 & DP.10, GEN4\\
+  \end{tabular}
+\end{table}
 
 \section{Unit Test Description}
 
@@ -725,7 +755,25 @@ Their values are defined in this section for easy maintenance.
 
 \subsection{Usability Survey Questions?}
 
+\iffalse
 \wss{This is a section that would be appropriate for some projects.}
+\fi
+
+Each of the following questions is to be answered via a 5-point scale, with 1 being the least and 5 being 
+the most except where otherwise listed.
+This list may change or be updated as functionalities are added or removed.
+
+\begin{enumerate}
+  \item How difficult was it for you to navigate the overall interface? (5 - very easily, 1 - with difficulty)
+  \item Do you consider the current method of moving the model to inspect it intuitive?
+  \item How natural do you find the layer select functionality?
+  \item How intuitive did you find the method of selecting voxels?
+  \item How easy was it for you to assign a magnetization vector to a set of voxels?
+  \item How easy was it for you to assign a material to a set of voxels?
+  \item Do you find the current signifiers for completed voxels helpful? (5 - very helpful, 1 - not very helpful)
+  \item How intuitive did you find the file importing process?
+  \item How intuitive did you find the file exporting process?
+\end{enumerate}
 
 \newpage{}
 \section*{Appendix --- Reflection}
