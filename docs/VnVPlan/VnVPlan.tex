@@ -731,6 +731,40 @@ This is where you can place additional information.
 The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
 Their values are defined in this section for easy maintenance.
 
+\begin{itemize}
+  \item \textbf{OPTIMAL\_VOXEL\_SIZE} = 5.5nm
+  
+  This was derived using the optimal voxel size specified by the stakeholder.
+  
+  \item \textbf{MAX\_VOXELS} = 13,996,800,000 voxels
+  
+  This considers the maximum number of voxels contained within the entire model.
+  
+  \item \textbf{MAX\_LAYER\_DISPLAY} = 518,400 voxels
+  
+  This was derived assuming 960 voxels x 540 voxels per layer. It considers the maximum number of voxels contained within a single layer for a single display window.
+  
+  \item \textbf{MAX\_DISPLAY} = 103,680,000 voxels
+  
+  This was derived assuming 960 voxels x 540 voxels per layer. It considers the maximum number of voxels that will be displayed at a given time.
+  
+  \item \textbf{MIN\_RATE} = 500,000 voxels per second
+  
+  This considers how fast voxel data will be generated during file import and export.
+  
+  \item \textbf{MAX\_EDIT\_LATENCY} = 1 second
+  
+  This considers how quickly the system should respond to model modifications performed by the user.
+  
+  \item \textbf{MAX\_VIEW\_LATENCY} = 500 ms
+  
+  This considers how quickly the system should respond to changes in model view orientation by the user.
+  
+  \item \textbf{MAX\_INTERACTIONS} = 5
+  
+  This considers the maximum number of steps (e.g. clicks, enter details into a text box) a user should take to complete a part of a task.
+\end{itemize}
+
 \subsection{Usability Survey Questions?}
 
 \wss{This is a section that would be appropriate for some projects.}
