@@ -528,7 +528,7 @@ How test will be performed: Import a valid CAD file. Verify that the system corr
 \end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
-
+\iffalse
 \wss{The nonfunctional requirements for accuracy will likely just reference the
   appropriate functional tests from above.  The test cases should mention
   reporting the relative error for these tests.  Not all projects will
@@ -549,47 +549,321 @@ format for the tests given below.}
 \wss{If you introduce static tests in your plan, you need to provide details.
 How will they be done?  In cases like code (or document) walkthroughs, who will
 be involved? Be specific.}
-
-\subsubsection{Area of Testing1}
-		
-\paragraph{Title for Test}
+\fi
+\subsubsection{Usability and Look \& Feel}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{test-US-1 Design Acceptance \& Intuitivity Survey\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+Type: Non-Functional, Dynamic, Manual, Survey-based
 
-Type: Functional, Dynamic, Manual, Static etc.
+Covers: G4-HNF-1
 					
-Initial State: 
+Initial State: Application open
 					
-Input: 
+Input/Condition: User interacts with the application
 					
-Output: 
+Output/Result: Recorded observations, feedback, and survey response that indicates whether the design works for the user.
 					
-How test will be performed: 
+How test will be performed: Users will be exposed to the application with minimal direction and asked to perform 
+some basic tasks. Observations such as where users get confused, when they need to consult the manual, and any comments
+made during use will be recorded. Afterwards, users will fill out a survey relating to their satisfaction with the interface, 
+as well as how they would rank how intuitive functionalities are on a 5-point scale. Observations and survey responses will then be analysed, with
+changes implemented where necessary to improve UI design in the case that expectations are not reached. A draft of the survey
+is included in the appendix of this document.
+
+Quantifiable Metric: 90\% of survey responses must rank 4 or above for intuitiveness of each feature.
+
+\item{test-US-2 Accessible Colours Check\\}
+
+Type: Static, Manual
+
+Covers: NF223, GEN1 %Need to add a general requirement to SRS about entire system colours.
+					
+Initial State: Default colours for materials and application chosen
+					
+Input/Condition: Constrast analyser run on colours
+					
+Output/Result: Compliance level meets WCAG standards
+					
+How test will be performed: A web-based contrast checking tool such as WebAIM will be utilised with both the set of colours chosen 
+for material IDs, as well as colours used in the UI (e.g. text, buttons, sidebars).
+
+Acceptance Criteria: All ratios must meet 3:1 contrast ratio for WCAG 2.0 compliance.
+
+\item{test-US-3 Design Ease of Use Test\\}
+
+Type: Non-Functional, Dynamic, Manual, Survey-based
+
+Covers: NF231, GEN2 %need reqs for rest of app about max-interactions
+					
+Initial State: Application open
+					
+Input: User completes core tasks (import file, material/magnetization assignment, export file)
+					
+Output: 90\% of users tested complete tasks in less than MAX\_INTERACTIONS.
+					
+How test will be performed: After a short explanation of core tasks, users will be asked to perform core tasks. Clicks per task
+are recorded and later analysed to verify that expectations are satisfied.
+
+\item{test-US-4 View Model and Layer Focus within application\\}
+
+Type: Non-Functional, Dynamic, Manual
+
+Covers: S3 %Need a better way of citing this?
+					
+Initial State: Application open with an example project file pre-loaded
+					
+Input/Condition: Developer attempts to view an individual layer of the model
+					
+Output/Result: Application displays layer and full model separately, alongside interface to edit the layer.
+					
+How test will be performed: Tester will select a layer and attempt to view the layer separately, as well as the model as a whole, 
+as if they intend to edit voxels within the layer. This confirms that the primary design notion of being able to focus on a specific
+layer when editing voxels is satisfied.
+
+\item{test-US-5 Clear and Interpretable Warnings and Errors\\}
+
+Type: Survey-based
+
+Covers: S4.1-7 %better way of citing this as well?
+					
+Initial State: Application open
+					
+Input/Condition: User performs interactions that are known to result in error
+					
+Output/Result: 90\% of respondents agree that errors are informative
+					
+How test will be performed: The user will be given direction in how to trigger different errors, and be exposed to
+all warning and error messages the system can generate. Users will explain whether they find it easy to understand
+or not (e.g. pass/fail). Investigation in how to reword prompts will take place for messages that under 90\% of users
+do not understand.
+
+Quantifiable Metric: For all messages, 90\% of users 'pass'.
+
+\item{test-US-6 Concise and Interpretable User Manual\\}
+
+Type: Survey-based
+
+Covers: GEN3 %need to add a general requirement about availability/readability of user manual.
+					
+Initial State: Manual is completed
+					
+Input/Condition: User reads the full user manual
+					
+Output/Result: User agrees the manual is helpful with installation, general usage, and interpretation of common errors.
+					
+How test will be performed: User accesses the manual and reviews it. Afterwards, they give feedback on each section of 
+the manual, pointing out areas of confusion or notes that should be added. Feedback is then incorporated upon revision
+of the manual.
+
+Quantifiable Metric: Considered an initial success if areas of confusion for each section is less than one.
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Performance \& Scalability}
 
-...
+\begin{enumerate}
+
+\item{test-PS-1 Scalability Validation for Import and Visualization\\}
+
+Type: Non-Functional, Dynamic, Automated
+
+Covers: NF211, NF222, implicitly tests NF212
+					
+Initial State: Application is open with a set of CAD files of varying sizes prepared.
+					
+Input/Condition: Sequentially, each CAD file is imported and the resulting voxel model is viewed within the application. 
+					
+Output/Result: Application completed import within expected times given MIN\_RATE and the estimated number of voxels in the resulting project
+file from each input. Resulting voxel models render correctly within the application
+					
+How test will be performed: Import will be initiated on each CAD file (five files will be prepared, ranging from small (estimated 
+100 voxels) to very large (1.5 * MAX\_VOXELS)). Timing will be started upon import, and stopped when the program reports the file was 
+successfully imported and opens the project file. It will also be recorded whether the resulting project file renders without error.
+If recorded times are not what is expected given MIN\_RATE and the size of the
+resulting model, the import module will be investigated for possible sources of optimization. If the resulting file is not openable or does
+not render, error messages will be investigated for possible sources of refactoring. %check this with HA times
+					
+\item{test-PS-2 Performance Validation for Import, Visualization, Editing, and Export\\}
+
+Type: Non-Functional, Dynamic, Automated
+
+Covers: NF212, NF221, NF232, NF242
+					
+Initial State: Application open with a set of CAD files of average sizes prepared.
+					
+Input/Condition: Sequentially, each file is imported, core operations completed, and exported
+					
+Output/Result: Latencies for import/view change/edit/export matches those defined in the above non-functional requirements.
+					
+How test will be performed: Import will be initiated on each CAD file (three files will be prepared, ranging from small (estimated 100 voxels)
+to semi-large (100,000 voxels)). Timing and latency will be recorded for importing the CAD file, changing the orientation of the 
+project file, opening layer focus, editing properties of voxel selections of varying sizes (1 voxel, 100, and a full layer), and exporting
+the completed project file. These times will then be compared against the defined minimum latencies and expected times given minimum processing
+rates. Should performance fall short of these expectations, specific sections that fail will have their code reviewed to identify areas 
+that can be optimized. %check this with HA times (in/export)
+
+\item{test-PS-3 Resource Usage Validation Test\\}
+
+Type: Non-Functional, Dynamic, Automated
+
+Covers: E3.4 %check citing this form.
+					
+Initial State: Application open, with a CAD file of average size prepared.
+					
+Input/Condition: File is imported, core operations completed, and exported
+					
+Output/Result: Recorded CPU and GPU usage over the course of the test does not exceed thresholds. %define these somewhere.
+					
+How test will be performed: Import will be initiated on the CAD file, and core operations will be performed (see test-PS-2's description). 
+Throughout the test, CPU and GPU usage of the application on the host computer will be recorded. Should usage exceed defined thresholds, the operation
+that lead to increased usage will be investigated for precisely what part of the operation triggered it, with refactoring of the unsatisfactory module.
+
+\end{enumerate}
+
+\subsubsection{Compliance}
+
+\begin{enumerate}
+
+\item{test-CO-1 Windows and Linux Compatibility Test\\}
+
+Type: Non-Functional, Dynamic, Manual
+
+Covers: E3.1
+					
+Initial State: Logged in to Windows and Linux and application is not installed
+					
+Input/Condition: User installs the application on both Windows and Linux
+					
+Output/Result: Application is successfully installed and functions as intended.
+					
+How test will be performed: The user will download the installer on each operating system, run it, and attempt to open the
+application. If the application opens successfully on each OS and can perform basic functionalities, the test is ruled a success.
+					
+\item{test-CO-2 Import and Export Compatibility Test\\}
+
+Type: Non-Functional, Dynamic, Manual
+
+Covers: E3.2, E3.3
+					
+Initial State: Application open, with a CAD file of average size prepared.
+					
+Input/Condition: File is imported, core operations completed, and exported
+					
+Output/Result: Application converts input file correctly, exported file is correctly formatted
+					
+How test will be performed: The tester selects the CAD file to be imported, and verifies that the resulting project file 
+is correctly generated (e.g. resulting voxel model is an accurate approximation of the original model). The tester then assigns 
+dummy data to each layer and exports the project file to the 3D-printer ready format. The resulting file is then checked for
+completeness and correct formatting. 
+
+\item{test-CO-3 Project File Fail-safe\\} 
+
+Type: Non-Functional, Dynamic, Manual
+
+Covers: NF241
+					
+Initial State: Application open, with a completed project file prepared.
+					
+Input/Condition: File is open, export is initiated and interrupted
+					
+Output/Result: Project file remains unaltered
+					
+How test will be performed: The tester begins the export process on the loaded project file, before intentionally ending the program
+in the middle of the export. The project file is then checked against a copy of itself made before the test to see if there are any differences;
+if there are no differences, the test is considered a success. 
+
+\item{test-CO-4 PEP8 Standard Compliance\\}
+
+Type: Static Analysis
+
+Covers: DP.10
+					
+Initial State: Application is fully implemented
+					
+Input/Condition: Codebase is scanned with a linter (e.g. Pylint) %check this against dev plan
+					
+Output/Result: Code complies with PEP8 Standard
+					
+How test will be performed: Developer inputs the entirety of the application's backend code into a linting program and takes note of all
+warnings. All areas of note are then addressed, with possible refactorings or small fixes resulting.
+
+\end{enumerate}
+
+\subsubsection{Maintainability}
+
+\begin{enumerate}
+
+\item{test-MA-1 Maintainable Codebase\\}
+
+Type: Static Analysis
+
+Covers: DP.10, GEN4 % this req needs to be added to the SRS
+					
+Initial State: Application is fully implemented, and related documentation is complete
+					
+Input/Condition: Developers review all code and documentation
+					
+Output/Result: Code is sufficiently modular, and fully commented; associated documentation is easy to understand
+					
+How test will be performed: Reviewers inspect all code, evaluating based on modularity (functionality is sufficiently separated,
+archicture supports editing one section not mandating updates throughout entire codebase), comments (both function/class headers and notes 
+within functions, explaining complex or unclear code), and naming conventions (names of functions, classes, variables are consistent
+and clear). Associated documentation is reviewed separately, evaluating based on completeness (all modules are detailed) and readability
+(jargon is clearly defined; non-team members can understand the content).
+
+\end{enumerate}
+
+\subsubsection{Security}
+
+Regarding the requirements listed in the Hazard Analysis document, they will not be explicitly tested for; examining each, we see that they
+are implicitly tested for by the following system tests and/or unit tests.
+
+\begin{itemize}
+  \item SCR1: Implicitly tested for by test-FR-IM-3.
+  \item SCR2: Infeasible to test at runtime as this would require access to hardware we have assumed we will not be working with within the SRS.
+  Will be verified by unit tests that simulate a system with less memory.
+  \item SCR3: Will be verified by unit tests related to the Editing manager that verify latency.
+  \item SCR4: Implicitly tested for by test-FR-XM-1 and test-FR-XM-2.
+  \item SCR5: Implicitly tested for by test FR-XM-3.
+  \item SCR6: Implicitly tested for by test-FR-EM-6.
+  \item SCR7: Implicitly tested for by test-FR-EM-7.
+  \item SCR8: Will be verified by unit tests related to both the Visualization and Editing managers that verify limits of voxel selection.
+  \item SCR9: Implicitly tested for by test-FR-XM-5.
+\end{itemize}
+
 
 \subsection{Traceability Between Test Cases and Requirements}
 
+\iffalse
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
+\fi
+
+\begin{table}[h!]
+  \centering
+  \caption{Non-Functional Tests and Corresponding Requirements}
+  \begin{tabular}{c c}
+    \hline
+    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
+    US-1 & G4-HNF-1\\
+    US-2 & NF223, GEN1\\
+    US-3 & NF231, GEN2\\
+    US-4 & S3\\
+    US-5 & S4.1-7\\
+    US-6 & GEN3\\
+    PS-1 & NF211, NF222, NF212\\
+    PS-2 & NF212, NF221, NF232, NF242\\
+    PS-3 & E3.4\\
+    CO-1 & E3.1\\
+    CO-2 & E3.2, E3.3\\
+    CO-3 & NF241\\
+    CO-4 & DP.10\\
+    MA-1 & DP.10, GEN4\\
+  \end{tabular}
+\end{table}
 
 \section{Unit Test Description}
 
@@ -767,7 +1041,25 @@ Their values are defined in this section for easy maintenance.
 
 \subsection{Usability Survey Questions?}
 
+\iffalse
 \wss{This is a section that would be appropriate for some projects.}
+\fi
+
+Each of the following questions is to be answered via a 5-point scale, with 1 being the least and 5 being 
+the most except where otherwise listed.
+This list may change or be updated as functionalities are added or removed.
+
+\begin{enumerate}
+  \item How difficult was it for you to navigate the overall interface? (5 - very easily, 1 - with difficulty)
+  \item Do you consider the current method of moving the model to inspect it intuitive?
+  \item How natural do you find the layer select functionality?
+  \item How intuitive did you find the method of selecting voxels?
+  \item How easy was it for you to assign a magnetization vector to a set of voxels?
+  \item How easy was it for you to assign a material to a set of voxels?
+  \item Do you find the current signifiers for completed voxels helpful? (5 - very helpful, 1 - not very helpful)
+  \item How intuitive did you find the file importing process?
+  \item How intuitive did you find the file exporting process?
+\end{enumerate}
 
 \newpage{}
 \section*{Appendix --- Reflection}
