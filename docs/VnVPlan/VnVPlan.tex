@@ -1,4 +1,5 @@
 \documentclass[12pt, titlepage]{article}
+\usepackage{float}
 
 \usepackage{booktabs}
 \usepackage{tabularx}
@@ -167,70 +168,176 @@ issue tracker?}
 
 \subsection{Design Verification}
 
-\wss{Plans for design verification}
+The design verification will primarily focus on the system framework and integrated architecture that details the system implementation. Verification will take place through structured classmate and supervisor reviews. Reviews conducted by classmates will be designed to emphasize the interface design that permits usage of external libraries, internal refactoring and the primary database structure that encapsulates all voxel metadata. Feedback will be created into GitHub issues and discussed amongst the group in order to determine the best course of action to effectively integrate the feedback in subsequent development cycles.\\
 
-\wss{The review will include reviews by your classmates}
+\noindent Reviews conducted with our supervisor, Dr. Onaizah, will primarily verify tolerance parameters within the output framework during integration with specialized 3D printing software. Diagrams may be developed to provide visual aids to help facilitate the technical conversations and enhance understanding. These diagrams will default to standard UML diagrams, unless a more simplified diagram is required due to disparity in technical proficiency.\\
 
-\wss{Create a checklists?}
+\noindent A checklist evaluation has been provided below for reference:\\
+
+\begin{table}[H]
+\centering
+\caption{Design Verification Checklist}
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
+\hline
+\textbf{Focus Area} & \textbf{Verification Tasks} \\ \hline
+Core Architecture &
+\begin{itemize}
+\item Defined system modularity.
+\item Compliance with standard coding conventions and language-specific best practices.
+\item Software architecture patterns verified.
+\end{itemize} \\ \hline
+IDE Integration &
+\begin{itemize}
+\item External library integration for voxel slicing validated.
+\item UI/UX patterns verified.
+\end{itemize} \\ \hline
+Database Integrity &
+\begin{itemize}
+\item Database structure confirmed.
+\item Voxel data management operations verified for accuracy.
+\end{itemize} \\ \hline
+External Data Integrity &
+\begin{itemize}
+\item Structure of data files confirmed.
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
+
 
 \subsection{Verification and Validation Plan Verification}
 
-\wss{The verification and validation plan is an artifact that should also be
-verified.  Techniques for this include review and mutation testing.}
+The verification & validation testing plan will also incorporate peer reviews and certain testing methodologies. It will be evaluated on the following 4 key metric categories: coverage, test effectiveness, testing methodology, and traceability. Peer reviews will be centered around structured checklists that guide meaningful assessment on the scope and completeness of the verification & validation plan. Completeness within the scope of the plan should effectively address system scalability in regard to the software’s ability to manage growth in project size, complexity, and anticipated functional demands. There will be emphasis placed on ensuring effective coverage of user interactions with 3D renditions and all voxel data management operations. Feedback will be created into GitHub issues and discussed amongst the group in order to determine the best course of action to effectively integrate the feedback in subsequent development cycles.\\
 
-\wss{The review will include reviews by your classmates}
+\noindent Feedback will be integrated with an interactive development approach. Established functionality within the system will not be considered complete until complete testing in accordance with the verification & validation plan has been completed. During weekly group meetings, updates related to a specific feature will require a corresponding update regarding related test cases that will be established. Tests must also be documented as GitHub issues. Upon closing a test case, the results must be documented within the issue. Results will be evaluated against a pre-defined baseline success metrics. \\
 
-\wss{Create a checklists?}
+\noindent Within test validation, mutation testing will be integrated to assess the effectiveness of the system. This will include the assertion of defective input files, faulty voxel metadata updates, and unsupported display commands. Our goal with mutation testing is to generate quantifiable observations regarding our system’s capabilities of detecting undesirable anomalies.\\
+
+\noindent A checklist evaluation has been provided below for reference:\\
+
+\begin{table}[H]
+\centering
+\caption{V\&V Plan Verification Checklist}
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
+\hline
+\textbf{Criteria} & \textbf{Verification Tasks} \\ \hline
+Coverage &
+\begin{itemize}
+\item Quantitative evaluation metrics defined.
+\item Established configuration of testing domains.
+\item Established coverage cases.
+\item Quantitative coverage summaries.
+\end{itemize} \\ \hline
+Testing Methodology &
+\begin{itemize}
+\item Established baseline success metrics.
+\item Testing classification completed.
+\end{itemize} \\ \hline
+Traceability &
+\begin{itemize}
+\item Test tracking integrated within GitHub issues.
+\item Formalized feedback process.
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
+
 
 \subsection{Implementation Verification}
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
+Implementation verification will ensure that all segments of code strictly adhere to the requirements and constraints outlined in the SRS document as well as ensure adherence to the mandatory programming language’s conventions. Unit tests will be used in order to validate the core functionalities with the system. Pytest will likely be the primary testing framework for unit tests relating to the system components' development in Python. In a similar manner, Jest will be used to facilitate unit testing with the UI/UX of our system. Test cases will primarily focus on testing the functionality related to voxel modification requirements identified in F1-F4.\\
 
-\wss{In this section you would also give any details of any plans for static
-  verification of the implementation.  Potential techniques include code
-  walkthroughs, code inspection, static analyzers, etc.}
+\noindent Static analysis will be conducted to ensure accordance with PEP 8, which is the official style guide for writing Python code. There will also be code inspections to verify secure and consistent file handling across all interconnected systems prior to running the code.  This is in accordance with SCR1, SCR4, and SCR5.\\
 
-\wss{The final class presentation in CAS 741 could be used as a code
-walkthrough.  There is also a possibility of using the final presentation (in
-CAS741) for a partial usability survey.}
+\noindent To ensure high implementation quality throughout all development cycles, code reviews will be on a minimum weekly basis (granted the code was modified throughout that period). These code reviews will incorporate the following:
+\begin{itemize}
+\item effective usage of external Python libraries in accordance with their usage guidelines
+\item optimized voxel modification processes (F231, F233, F235, F239)
+\item precise 3D rendition (F221, F222)
+\item verification of future scalability (NF211)
+\end{itemize} \\
+
+\noindent Testing will also be done to evaluate the performance of implementation. In accordance with thresholds as defined in associated requirements, it will be evaluated as follows:
+\begin{itemize}
+\item data processing across file input and output workflows (NF212, NF242)
+\item optimized interface responsiveness (F223)
+\item large database interaction (NF232, SCR3)
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Implementation Verification Checklist}
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
+\hline
+\textbf{Category} & \textbf{Verification Tasks} \\ \hline
+Functionality &
+\begin{itemize}
+\item Defined test case sets for component requirements (SRS, S.2).
+\item Visual rendering validation.
+\item Voxel modification validation.
+\end{itemize} \\ \hline
+Quality &
+\begin{itemize}
+\item Structured code walkthrough completed.
+\item Static analysis in accordance with the development environment.
+\item Weekly code reviews conducted.
+\end{itemize} \\ \hline
+Performance &
+\begin{itemize}
+\item File handling benchmarks.
+\item User interaction processing time benchmarks.
+\item Database interaction benchmarks.
+\end{itemize} \\ \hline
+Traceability &
+\begin{itemize}
+\item Test tracking integrated within GitHub issues.
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
+
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+\textbf{Unit Testing Framework (backend):} Since the backend of our system will be coded in Python, the primary testing framework used will be PyTest. This framework was chosen due to its flexible testing framework that can be scaled to support complex function testing. \\
 
-\wss{If you have already done this in the development plan, you can point to
-that document.}
+\noindent\textbf{Code coverage tools  in PyTest:} PyTest offers a variety of tools, including the usage of the coverage.py library (pytest-cov), which allows extensive code coverage. It is able to monitor the program during execution and report what parts of the code have been executed. The plugin pytest-mock also provides a convenient way to mock objects and functions, including those in external libraries. This will be useful for testing an external voxel slicing library.\\
 
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+\noindent\textbf{Unit Testing Framework (frontend):} Currently, the primary testing framework that will be used for the front end is Jest, as we will be using the JavaScript library, Three.js, to generate the 3D image.\\
+
+\noindent\textbf{Code coverage tools in Jest:} Jest offers several specialized libraries and techniques that can create image analysis tools for 3D image data evaluation. This includes tools such as snapshot test (jest-image-snapshot), which allows visual comparison. It also offers a mocking tool, which allows testing of specific property image components.\\
+
+\noindent Ideally, the goal is to achieve 50\% coverage across both the frontend and backend of the codebases by the end of Rev 0. It is expected the PoC demo product will have significantly reduced coverage. However, coverage will be integrated through an interactive approach. Weekly reports will be generated from all coverage tools to track testing through the project. This will allow us to gain insight into overall test progress, understand general trends within code coverage, and provide clarity on what areas still require additional validation.\\
 
 \subsection{Software Validation}
 
-\wss{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
+\textit{User Test Group}\\
+\noindent To validate the usability of the system, a specialized test group will be selected based on the current typical users of the 3D printer. Testing will take the form of exploratory and acceptance testing. Users will be provided a list of tasks that they will attempt to navigate through with no prior instruction. The goal is to assess the system on the following aspects: usability, accessibility, discoverability, natural flow of interaction and system behaviour.\\
 
-\wss{You might want to use review sessions with the stakeholder to check that
-the requirements document captures the right requirements.  Maybe task based
-inspection?}
+\noindent The list of tasks will closely relate to essential requirements. The list of tasks will depend on the current status of the project. However, tasks may include:
+\begin{itemize}
+\item create a new project with a given CAS file (F221)
+\item generate a 3D image with a given voxel size (F213)
+\item access the bottom face of the object (F223)
+\item given desired voxel properties of 3 layers, replicate structure on software (F224 - F227, F231, F2313)
+\begin{itemize}
+\item all 3 layers will have the same voxel properties to see if the user experiments with property replication (F235)
+\end{itemize}
+\item erase all properties from the third layer
+\item assign properties to the remaining voxels and export the project
+\end{itemize}
 
-\wss{For those capstone teams with an external supervisor, the Rev 0 demo should 
-be used as an opportunity to validate the requirements.  You should plan on 
-demonstrating your project to your supervisor shortly after the scheduled Rev 0 demo.  
-The feedback from your supervisor will be very useful for improving your project.}
+\noindent \textit{Rev 0}\\
+\noindent This will include a meeting with Dr. Onaizah to validate the following:
+\begin{itemize}
+\item implementation of SRS requirements
+\item desired modifications to requirements or changes in user needs
+\item how the system behaviour compares to specifications
+\end{itemize}
 
-\wss{For teams without an external supervisor, user testing can serve the same purpose 
-as a Rev 0 demo for the supervisor.}
-
-\wss{This section might reference back to the SRS verification section.}
 
 \section{System Tests}
 
