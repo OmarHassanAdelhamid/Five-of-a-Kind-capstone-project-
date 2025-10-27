@@ -31,12 +31,12 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+October 27, 2025 & 1.0 & Initial draft by All\\
 \bottomrule
 \end{tabularx}
 
 ~\\
+\iffalse
 \wss{The intention of the VnV plan is to increase confidence in the software.
 However, this does not mean listing every verification and validation technique
 that has ever been devised.  The VnV plan should also be a \textbf{feasible}
@@ -50,34 +50,15 @@ the design stage.  This means that the sections related to unit testing cannot
 initially be completed.  The sections will be filled in after the design stage
 is complete.  the final version of the VnV plan should have all sections filled
 in.}
+\fi
 
 \newpage
 
 \tableofcontents
 
-\listoftables
-\wss{Remove this section if it isn't needed}
-
-\listoffigures
-\wss{Remove this section if it isn't needed}
-
 \newpage
 
-\section{Symbols, Abbreviations, and Acronyms}
-
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
-  \textbf{symbol} & \textbf{description}\\
-  \midrule 
-  T & Test\\
-  \bottomrule
-\end{tabular}\\
-
-\wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
-  \citep{SRS} tables, if appropriate}
-
-\wss{Remove this section if it isn't needed}
+\listoftables
 
 \newpage
 
@@ -208,9 +189,9 @@ External Data Integrity &
 
 \subsection{Verification and Validation Plan Verification}
 
-The verification & validation testing plan will also incorporate peer reviews and certain testing methodologies. It will be evaluated on the following 4 key metric categories: coverage, test effectiveness, testing methodology, and traceability. Peer reviews will be centered around structured checklists that guide meaningful assessment on the scope and completeness of the verification & validation plan. Completeness within the scope of the plan should effectively address system scalability in regard to the software’s ability to manage growth in project size, complexity, and anticipated functional demands. There will be emphasis placed on ensuring effective coverage of user interactions with 3D renditions and all voxel data management operations. Feedback will be created into GitHub issues and discussed amongst the group in order to determine the best course of action to effectively integrate the feedback in subsequent development cycles.\\
+The verification \& validation testing plan will also incorporate peer reviews and certain testing methodologies. It will be evaluated on the following 4 key metric categories: coverage, test effectiveness, testing methodology, and traceability. Peer reviews will be centered around structured checklists that guide meaningful assessment on the scope and completeness of the verification \& validation plan. Completeness within the scope of the plan should effectively address system scalability in regard to the software’s ability to manage growth in project size, complexity, and anticipated functional demands. There will be emphasis placed on ensuring effective coverage of user interactions with 3D renditions and all voxel data management operations. Feedback will be created into GitHub issues and discussed amongst the group in order to determine the best course of action to effectively integrate the feedback in subsequent development cycles.\\
 
-\noindent Feedback will be integrated with an interactive development approach. Established functionality within the system will not be considered complete until complete testing in accordance with the verification & validation plan has been completed. During weekly group meetings, updates related to a specific feature will require a corresponding update regarding related test cases that will be established. Tests must also be documented as GitHub issues. Upon closing a test case, the results must be documented within the issue. Results will be evaluated against a pre-defined baseline success metrics. \\
+\noindent Feedback will be integrated with an interactive development approach. Established functionality within the system will not be considered complete until complete testing in accordance with the verification \& validation plan has been completed. During weekly group meetings, updates related to a specific feature will require a corresponding update regarding related test cases that will be established. Tests must also be documented as GitHub issues. Upon closing a test case, the results must be documented within the issue. Results will be evaluated against a pre-defined baseline success metrics. \\
 
 \noindent Within test validation, mutation testing will be integrated to assess the effectiveness of the system. This will include the assertion of defective input files, faulty voxel metadata updates, and unsupported display commands. Our goal with mutation testing is to generate quantifiable observations regarding our system’s capabilities of detecting undesirable anomalies.\\
 
@@ -257,7 +238,7 @@ Implementation verification will ensure that all segments of code strictly adher
 \item optimized voxel modification processes (F231, F233, F235, F239)
 \item precise 3D rendition (F221, F222)
 \item verification of future scalability (NF211)
-\end{itemize} \\
+\end{itemize}
 
 \noindent Testing will also be done to evaluate the performance of implementation. In accordance with thresholds as defined in associated requirements, it will be evaluated as follows:
 \begin{itemize}
@@ -941,6 +922,7 @@ are implicitly tested for by the following system tests and/or unit tests.
   \item SCR9: Implicitly tested for by test-FR-XM-5.
 \end{itemize}
 
+\newpage
 
 \subsection{Traceability Between Test Cases and Requirements}
 
@@ -1005,7 +987,8 @@ are implicitly tested for by the following system tests and/or unit tests.
   \end{tabular}
 \end{table}
 
-\iffalse
+\newpage
+
 \section{Unit Test Description}
 
 \wss{This section should not be filled in until after the MIS (detailed design
@@ -1044,9 +1027,6 @@ needs to be well-documented, with meaningful names for all of the tests.}
   perspective and from a white box perspective.  Explain to the reader how the
   tests were selected.}
 
-\fi
-
-\iffalse
 \begin{enumerate}
 
 \item{test-id1\\}
@@ -1136,7 +1116,6 @@ How test will be performed:
 
 \wss{Provide evidence that all of the modules have been considered.}
 
-\fi
 				
 \bibliographystyle{plainnat}
 
