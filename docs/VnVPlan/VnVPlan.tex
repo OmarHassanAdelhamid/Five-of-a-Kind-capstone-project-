@@ -844,6 +844,39 @@ are implicitly tested for by the following system tests and/or unit tests.
 
 \begin{table}[h!]
   \centering
+  \caption{Import Manager Tests and Corresponding Requirements}
+  \begin{tabular}{c c}
+    \hline
+    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
+    FR-IM-1 & F211\\
+    FR-IM-2 & F212\\
+    FR-IM-3 & F211\\
+    FR-IM-4 & F213\\
+    FR-IM-5 & F214\\
+    FR-IM-6 & F215\\
+    FR-IM-7 & F216\\
+  \end{tabular}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{Visualization Manager Tests and Corresponding Requirements}
+  \begin{tabular}{c c}
+    \hline
+    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
+    FR-VM-1 & F221\\
+    FR-VM-2 & F222\\
+    FR-VM-3 & F223\\
+    FR-VM-4 & F224\\
+    FR-VM-5 & F225\\
+    FR-VM-6 & F226\\
+    FR-VM-7 & F227\\
+    FR-INT-1 & F211, F221\\
+  \end{tabular}
+\end{table}
+
+\begin{table}[h!]
+  \centering
   \caption{Non-Functional Tests and Corresponding Requirements}
   \begin{tabular}{c c}
     \hline
@@ -865,6 +898,7 @@ are implicitly tested for by the following system tests and/or unit tests.
   \end{tabular}
 \end{table}
 
+\iffalse
 \section{Unit Test Description}
 
 \wss{This section should not be filled in until after the MIS (detailed design
@@ -880,6 +914,7 @@ approach could be test cases for each access program, including one test for nor
 and as many tests as needed for edge cases.  Rather than create the details of the input 
 and output here, you could point to the unit testing code.  For this to work, you code 
 needs to be well-documented, with meaningful names for all of the tests.}
+
 
 \subsection{Unit Testing Scope}
 
@@ -902,6 +937,9 @@ needs to be well-documented, with meaningful names for all of the tests.}
   perspective and from a white box perspective.  Explain to the reader how the
   tests were selected.}
 
+\fi
+
+\iffalse
 \begin{enumerate}
 
 \item{test-id1\\}
@@ -939,6 +977,7 @@ How test will be performed:
 \end{enumerate}
 
 \subsubsection{Module 2}
+\
 
 ...
 
@@ -989,6 +1028,8 @@ How test will be performed:
 \subsection{Traceability Between Test Cases and Modules}
 
 \wss{Provide evidence that all of the modules have been considered.}
+
+\fi
 				
 \bibliographystyle{plainnat}
 
@@ -1064,7 +1105,9 @@ This list may change or be updated as functionalities are added or removed.
 \newpage{}
 \section*{Appendix --- Reflection}
 
+\iffalse
 \wss{This section is not required for CAS 741}
+\fi
 
 The information in this section will be used to evaluate the team members on the
 graduate attribute of Lifelong Learning.
@@ -1073,8 +1116,26 @@ graduate attribute of Lifelong Learning.
 
 \begin{enumerate}
   \item What went well while writing this deliverable? 
+
+  Overall this deliverable went well. We were able to write up all the parts of minimal issues. The peer feedback we received during the TA review session was also helpful in ensuring that we were on the right track. One problem that we had was the time constraints, since all the members were busy with other assignments and midterms, so we had to work on this deliverable in a timely manner. Another thing that went well was our ability to communicate with each other, and ensuring that everyone was on the same page.
+
   \item What pain points did you experience during this deliverable, and how
     did you resolve them?
+  
+
+\textbf{Omar: }
+\newline
+\textbf{Daniel: } 
+\newline
+\newline
+\textbf{Andrew: } 
+\newline
+\newline
+\textbf{Olivia: } 
+\newline
+\newline
+\textbf{Khalid: }I was primarily responsible for writing the system tests for the Import and Visualization Managers. The main challenges that I had when writing up this section was ensuring that the tests were comprehensive and covered all the functional requirements that were listed for both manaers on the SRS. Additionally, I had to ensure that the tests were easy to understand and follow, and that they were able to catch all the potential errors and edge cases.
+
   \item What knowledge and skills will the team collectively need to acquire to
   successfully complete the verification and validation of your project?
   Examples of possible knowledge and skills include dynamic testing knowledge,
@@ -1116,6 +1177,25 @@ graduate attribute of Lifelong Learning.
     a helpful resource; ideas could be adapted to this project and provide a standard to consult. Another option involves running code reviews in other 
     projects team members are involved in throughout term to gain experience, which would benefit both this project and those involved.
   \end{itemize}
+
+  \textbf{Omar: }
+  \newline
+  \textbf{Daniel: }
+  \newline
+  \textbf{Andrew: }
+  \newline
+  \textbf{Olivia: }
+  \newline
+  \textbf{Khalid:}
+  \textit{Knowledge of PyTest:} I will use the online tutorials and documentation to help me gain a broading understanding of the testing framework. I think this will be a good starting point, as it will help me understand the framework theoretically, and then I can apply it to the project to gain practical experience.
+  
+  \textit{Knowledge of Jest:} Similar to the above, I will also use the online tutorials and documentation to help me gain a broading understanding of the testing framework. I will also experiment with the tool with a toy example program to gain practical experience.
+  
+  \textit{Usability tests:} For this skill, I will look over my notes from the 4HC3 (Human-Computer Interfaces) course, which covers how to observe users and derive feedback from both their responses. This was I can recall the content and apply it to the project.
+  
+  \textit{Mutation testing:} Similar to the above, I will look over my notes from the Software Testing course that covers not just test case development but also mutation testing strategies and how to develop varying mutants. I will also experiement with a simple program to gain practical experience.
+  
+  \textit{Code reviews:} I will look over my notes from the Software Testing course that covers how to conduct a code review. I will also experiment using some old code from other projects just to get a feel for the process.
   
 \end{enumerate}
 
