@@ -3,6 +3,8 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{float}
+
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -82,88 +84,160 @@ in.}
 
 \pagenumbering{arabic}
 
-This document ... \wss{provide an introductory blurb and roadmap of the
-  Verification and Validation plan}
+This document outlines the Verification and Validation (V\&V) Plan for \textbf{VoxelMag Designer}, developed by Team 10 --- \textit{Five of a Kind}. It describes how the system will be tested to ensure that all functional, non-functional, and safety requirements defined in the Software Requirements Specification (SRS) are satisfied. The plan establishes the strategies, team roles, and procedures that will be used to verify correctness, performance, and usability of the software.
+
+The document is organized into two main sections. The first section, \textbf{General Information}, provides background context including a summary of the system, testing objectives, project challenge level, and relevant supporting documents. The second section, \textbf{Plan}, outlines the structure of the V\&V process, identifies team responsibilities, and describes the approach for verifying the SRS through structured reviews, stakeholder feedback, and continuous validation throughout development.
 
 \section{General Information}
 
 \subsection{Summary}
 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The software system being tested is called \textbf{VoxelMag Designer}, developed by Team 10 --- \textit{Five of a Kind}. VoxelMag Designer is a desktop-based CAD enhancement tool that allows researchers and engineers to assign magnetic properties to individual voxels within a 3D model. It is designed to streamline the process of magnetization planning for multi-material 3D printing workflows within a research laboratory environment.
+
+Currently, magnetized objects are modeled voxel-by-voxel in COMSOL, requiring researchers to manually assign magnetization directions for each voxel and rebuild the model from scratch if an error occurs. VoxelMag Designer removes this bottleneck by enabling users to import pre-built CAD models (e.g., from AutoCAD), automatically slice them into voxel layers, and interactively select single or multiple voxels to assign or modify magnetization directions. The software also provides per-layer visualization, undo/redo functionality, and validation mechanisms to ensure complete and accurate voxel data before export.
+
+The final output is a \textbf{Java-readable metadata file} that contains per-voxel magnetization information, which integrates directly with the custom 3D printer pipeline used in the lab. By automating voxel processing and enabling efficient magnetization editing, VoxelMag Designer dramatically reduces the time and effort required to prepare print-ready models, ensuring a faster, more reliable, and user-friendly workflow for advanced magnetized 3D printing research.
 
 \subsection{Objectives}
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+The primary objective of the verification and validation (V\&V) process for \textbf{VoxelMag Designer} is to ensure that the system functions correctly, reliably, and efficiently according to the requirements defined in the Software Requirements Specification (SRS). The V\&V activities will confirm that each system component performs as intended, meets stakeholder expectations, and aligns with the project’s functional and non-functional goals.
 
-\wss{You should also list the objectives that are out of scope.  You don't have 
-the resources to do everything, so what will you be leaving out.  For instance, 
-if you are not going to verify the quality of usability, state this.  It is also 
-worthwhile to justify why the objectives are left out.}
+Specifically, the objectives of V\&V are to:
 
-\wss{The objectives are important because they highlight that you are aware of 
-limitations in your resources for verification and validation.  You can't do everything, 
-so what are you going to prioritize?  As an example, if your system depends on an 
-external library, you can explicitly state that you will assume that external library 
-has already been verified by its implementation team.}
+\begin{itemize}
+  \item \textbf{Correctness:} Verify that all functional requirements are implemented as specified, including accurate import, voxelization, visualization, editing, and export of CAD models.
+  \item \textbf{Reliability:} Ensure the system maintains consistent behaviour under normal and high-load conditions, preventing crashes, data corruption, or voxel property loss.
+  \item \textbf{Usability:} Validate that the interface allows users to intuitively view, select, and edit voxels across layers, and that feedback mechanisms (such as undo/redo, autosave, and validation prompts) function as expected.
+  \item \textbf{Performance:} Confirm that voxel rendering, editing, and export operations meet timing thresholds and remain responsive on standard laboratory hardware.
+  \item \textbf{Safety and Security:} Validate that safeguards identified in the Hazard Analysis (e.g., input file validation, export completeness, autosave recovery) are correctly implemented and meet the defined safety requirements.
+  \item \textbf{Traceability:} Demonstrate that all SRS requirements are testable, measurable, and traceable through verification procedures and testing artifacts.
+\end{itemize}
+
+Overall, the V\&V process aims to provide stakeholders with confidence that \textbf{VoxelMag Designer} achieves its intended purpose as a robust, user-friendly, and trustworthy software solution for voxel-based magnetization design.
 
 \subsection{Challenge Level and Extras}
 
-\wss{State the challenge level (advanced, general, basic) for your project.
-Your challenge level should exactly match what is included in your problem
-statement.  This should be the challenge level agreed on between you and the
-course instructor.  You can use a pull request to update your challenge level
-(in TeamComposition.csv or Repos.csv) if your plan changes as a result of the
-VnV planning exercise.}
+The challenge level for \textbf{VoxelMag Designer} is classified as \textbf{advanced}. The system integrates multiple complex subsystems, including 3D model import and voxelization, real-time voxel visualization and editing, magnetization assignment, and structured export to a custom printer pipeline. Each subsystem involves substantial technical and architectural considerations, such as handling large voxel datasets, maintaining UI synchronization, and ensuring data integrity across modules. These factors collectively establish the project as an advanced-level software system.
 
-\wss{Summarize the extras (if any) that were tackled by this project.  Extras
-can include usability testing, code walkthroughs, user documentation, formal
-proof, GenderMag personas, Design Thinking, etc.  Extras should have already
-been approved by the course instructor as included in your problem statement.
-You can use a pull request to update your extras (in TeamComposition.csv or
-Repos.csv) if your plan changes as a result of the VnV planning exercise.}
+The extras included in this project are:
+
+\begin{itemize}
+  \item \textbf{User Manual:} A comprehensive guide explaining how to operate the software, including detailed instructions, annotated screenshots, and workflow examples. The manual emphasizes ease of use and clarity to enable independent operation by research personnel.
+  \item \textbf{Usability Report:} A formal documentation of the usability testing process, summarizing user feedback, identified issues, and recommendations for improving interface design and user experience. The report also outlines the methodology used during testing, including participant demographics and task-based evaluations.
+\end{itemize}
+
+These extras complement the technical objectives of the project by ensuring that the final product is not only functionally correct but also accessible, intuitive, and well-documented for its target users.
 
 \subsection{Relevant Documentation}
 
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.  You can create BibTeX entries for your
-  documents and within those entries include a hyperlink to the documents.}
+
 
 \citet{SRS}
 
-\wss{Don't just list the other documents.  You should explain why they are relevant and 
-how they relate to your VnV efforts.}
+The documentation that supports the verification and validation (V\&V) process for \textbf{VoxelMag Designer} includes the Software Requirements Specification (SRS), Hazard Analysis (HA), Development Plan (DP), and Problem Statement and Goals. Each document serves a distinct purpose in guiding and supporting the testing strategy.
 
+The \textbf{Software Requirements Specification (SRS)} defines all functional and non-functional requirements for the system. It provides the foundation for test case design, ensuring that every requirement can be verified through measurable criteria and traced throughout the V\&V process.
+
+The \textbf{Hazard Analysis (HA)} identifies potential system hazards, their causes, and mitigation strategies. It establishes the safety requirements (SCRs) that must be verified to ensure the system operates safely and consistently under expected laboratory conditions.
+
+The \textbf{Development Plan (DP)} outlines the project’s workflow, coding standards, continuous integration setup, and proof-of-concept demonstration plan. It informs the structure and scheduling of testing activities by defining the methods and tools used during development.
+
+The \textbf{Problem Statement and Goals} document provides the original motivation, scope, and intended outcomes of the project. It ensures that the V\&V process remains aligned with the project’s high-level objectives and stakeholder expectations.
+
+Finally, the project’s \textbf{GitHub Repository} serves as the central hub for all implementation artifacts, testing scripts, and documentation updates.\\
+\url{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project}
+
+Together, these documents ensure that all verification and validation activities are traceable, comprehensive, and consistent with the system’s intended functionality and safety goals.
 \section{Plan}
 
-\wss{Introduce this section.  You can provide a roadmap of the sections to
-  come.}
+The \textbf{Plan} section outlines the structure and approach of the verification and validation (V\&V) process for \textbf{VoxelMag Designer}. It describes the composition of the V\&V team, their assigned roles, and responsibilities across different testing domains, ensuring that all system components are thoroughly verified and validated. This section also details the planned approach for verifying the Software Requirements Specification (SRS), including the review strategy, feedback mechanisms, and formal verification methods that will be employed to confirm that all requirements are correct, testable, and traceable throughout development.
 
-\subsection{Verification and Validation Team}
+The verification and validation (V\&V) efforts for \textbf{VoxelMag Designer} will be conducted by \textbf{Team 10 --- \textit{Five of a Kind}}. Each member plays a specific role to ensure that all functional, non-functional, and safety requirements are properly verified and validated. The distribution of responsibilities ensures comprehensive coverage of testing, documentation, and review activities across all project domains.
 
-\wss{Your teammates.  Maybe your supervisor.
-  You should do more than list names.  You should say what each person's role is
-  for the project's verification.  A table is a good way to summarize this information.}
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3.5cm}|p{4cm}|p{7cm}|}
+\hline
+\textbf{Name} & \textbf{Role} & \textbf{Responsibilities} \\
+\hline
+\textbf{Omar Abdelhamid} & Lead Tester / Integration Coordinator & Oversees the overall testing strategy and ensures all verification activities align with the SRS. Manages issue tracking for validation tasks, coordinates integration testing, and co-leads structured review meetings with the supervisor. \\
+\hline
+\textbf{Daniel Maurer} & Functional Requirements Tester / Supervisor Liaison & Focuses on verifying functional aspects such as import, voxelization, and export. Coordinates communication with the supervisor, organizes feedback sessions, and ensures review comments are integrated into revisions. \\
+\hline
+\textbf{Andrew Bovbel} & Non-Functional Requirements Tester & Responsible for evaluating system performance, responsiveness, and reliability. Conducts stress and performance tests to ensure compliance with non-functional requirements (e.g., rendering latency, autosave frequency). \\
+\hline
+\textbf{Olivia Reich} & Usability and Documentation Tester & Leads usability testing, gathers user feedback, and evaluates interface intuitiveness. Reviews and refines the User Manual to ensure clarity and alignment with system behavior. \\
+\hline
+\textbf{Khalid Farag} & Safety and Validation Tester & Validates safety and security requirements derived from the Hazard Analysis. Maintains traceability between identified hazards, safety requirements (SCRs), and corresponding test cases. \\
+\hline
+\end{tabular}
+\caption{Team roles and responsibilities for verification and validation.}
+\end{table}
 
+This structure ensures that all verification and validation efforts—ranging from requirement coverage and performance testing to usability evaluation and safety assurance—are systematically planned, executed, and reviewed in collaboration with the supervisor.
 \subsection{SRS Verification}
 
-\wss{List any approaches you intend to use for SRS verification.  This may
-  include ad hoc feedback from reviewers, like your classmates (like your
-  primary reviewer), or you may plan for something more rigorous/systematic.}
+Verification of the Software Requirements Specification (SRS) for \textbf{VoxelMag Designer} will follow a structured, multi-stage process to ensure that all requirements are correct, complete, testable, and traceable. This process includes internal reviews, supervisor meetings, peer review feedback, and continuous verification. Each activity is designed to improve requirement quality and maintain traceability between the SRS and subsequent project deliverables.
 
-\wss{If you have a supervisor for the project, you shouldn't just say they will
-read over the SRS.  You should explain your structured approach to the review.
-Will you have a meeting?  What will you present?  What questions will you ask?
-Will you give them instructions for a task-based inspection?  Will you use your
-issue tracker?}
+\subsubsection{Internal Review and Checklist Verification}
 
-\wss{Maybe create an SRS checklist?}
+The first stage of SRS verification will involve a detailed internal review conducted by all team members. Each member will focus on a particular category of requirements:
+
+\begin{itemize}
+  \item \textbf{Omar Abdelhamid} and \textbf{Daniel Maurer} will verify that all functional requirements are clear, consistent, and feasible to implement.
+  \item \textbf{Andrew Bovbel} will confirm that non-functional requirements, such as performance and reliability metrics, are measurable and verifiable.
+  \item \textbf{Khalid Farag} will validate that safety and security requirements (SCRs) properly trace to hazards identified in the Hazard Analysis.
+  \item \textbf{Olivia Reich} will review documentation-related and usability-focused requirements for clarity and completeness.
+\end{itemize}
+
+A collaborative \textbf{SRS Verification Checklist} will guide the review. The checklist will include the following key items:
+
+\begin{enumerate}
+  \item Each requirement is uniquely identified and unambiguous.
+  \item Functional requirements are measurable and testable.
+  \item Non-functional requirements specify clear performance criteria.
+  \item Safety and security requirements trace back to identified hazards.
+  \item Each requirement includes a defined verification or validation method.
+  \item Requirements are free of contradictions or redundancies.
+\end{enumerate}
+
+All findings and issues identified during the review will be documented as GitHub issues and assigned to the appropriate team member for correction prior to the next SRS revision.
+
+\subsubsection{Supervisor Review}
+
+Following internal review, the team will conduct a structured SRS review meeting with the project supervisor. \textbf{Omar Abdelhamid} and \textbf{Daniel Maurer} will organize and co-lead the meeting, preparing a summary document highlighting high-risk and complex requirements that need confirmation (e.g., voxel visualization performance, data export structure, and UI synchronization accuracy).
+
+The review meeting will include:
+
+\begin{itemize}
+  \item A walkthrough of the SRS to verify alignment between requirements and project scope.
+  \item Discussion of any ambiguous, conflicting, or technically challenging requirements.
+  \item Presentation of requirements identified as high-risk and their proposed validation methods.
+  \item A feedback session for the supervisor to provide clarifications or suggest modifications.
+\end{itemize}
+
+Supervisor feedback will be recorded within the GitHub issue tracker. Each comment will be linked to the corresponding requirement ID and tracked until resolution. Follow-up actions will be reviewed in subsequent supervisor meetings.
+
+\subsubsection{Peer Review and Class Feedback}
+
+In addition to the supervisor review, the SRS will undergo peer evaluation during the class-wide review process. The primary reviewer team will assess the document’s clarity, consistency, and completeness. Their feedback will be formally logged and categorized according to:
+
+\begin{itemize}
+  \item Readability and clarity of requirement descriptions.
+  \item Consistency of terminology and format across sections.
+  \item Logical organization of requirements by subsystem or feature.
+  \item Appropriateness of fit criteria and testability.
+\end{itemize}
+
+All peer feedback will be integrated systematically into the SRS through a traceability matrix, ensuring that each comment maps to a specific requirement and its revision status.
+
+\subsubsection{Continuous Verification and Traceability Maintenance}
+
+Throughout development, the team will maintain continuous verification of the SRS using GitHub issues, milestones, and project boards. Each requirement will be linked to corresponding design elements, test cases, and validation results. Regular bi-weekly internal reviews will verify that any new or modified requirements remain traceable and verifiable.
+
+This iterative approach ensures that the SRS remains accurate, actionable, and aligned with the evolving implementation. Any changes introduced after supervisor or peer feedback will trigger updates to both the traceability matrix and the V\&V Plan to maintain consistency across documents.
+
+\textbf{Summary:} This structured, multi-level verification process guarantees that the SRS for \textbf{VoxelMag Designer} is validated both internally and externally. Through continuous review, stakeholder feedback, and traceability enforcement, the team ensures that all requirements are precise, measurable, and fully verifiable before system testing begins.
 
 \subsection{Design Verification}
 
