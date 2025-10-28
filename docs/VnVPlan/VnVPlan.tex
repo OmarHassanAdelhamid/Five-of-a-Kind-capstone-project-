@@ -413,51 +413,51 @@ the specified requirements.
 
 \item{test-FR-IM-1 Valid CAD File Import for New Project\\}
 
-Type: Functional, Dynamic, Manual
+\textbf{Type:} Functional, Dynamic, Manual
 
-Covers: F211
+\textbf{Covers:} F211
 					
-Initial State: No active project is loaded in the system, and the system is ready to create a new project.
+\textbf{Initial State:} No active project is loaded in the system, and the system is ready to create a new project.
 					
-Input: A CAD file (STL file) is provided to the system through the import interface by the user.
+\textbf{Input:} A CAD file (STL file) is provided to the system through the import interface by the user.
 					
-Output: The system creates the new project with the imported CAD file, initiates the voxel slicing process, and the imported model is ready for visualization.
+\textbf{Output:} The system creates the new project with the imported CAD file, initiates the voxel slicing process, and the imported model is ready for visualization.
 
-Test Case Derivation: The test case is derived from the functional requirement F211, which states that the Import Manager should allow a user to start a new project with the option to import an initial CAD file from their personal device that will be sliced.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F211, which states that the Import Manager should allow a user to start a new project with the option to import an initial CAD file from their personal device that will be sliced.
 					
-How test will be performed: Create a new project on the system and import a CAD file into the new project to verify that the system will correctly process the file and create a new project. The system should be able to handle the CAD file and initiate the voxel slicing process. This will be tested manually by the developer of the system.
+\textbf{How test will be performed:} Create a new project on the system and import a CAD file into the new project to verify that the system will correctly process the file and create a new project. The system should be able to handle the CAD file and initiate the voxel slicing process. This will be tested manually by the developer of the system.
 
 \item{test-FR-IM-2 Past Project File Import\\}
 
-Type: Functional, Dynamic, Manual
+\textbf{Type:} Functional, Dynamic, Manual
 
-Covers: F212
+\textbf{Covers:} F212
 					
-Initial State: No active project is loaded in the system, and the system is ready to open a past project.
+\textbf{Initial State:} No active project is loaded in the system, and the system is ready to open a past project.
 					
-Input: A previously saved project file containing magnetization and material properties is provided to the system through the import interface by the user.
+\textbf{Input:} A previously saved project file containing magnetization and material properties is provided to the system through the import interface by the user.
 					
-Output: The system loads the project containing all of the magnetization and material properties preserved. The model is ready for further editing and visualization.
+\textbf{Output:} The system loads the project containing all of the magnetization and material properties preserved. The model is ready for further editing and visualization.
 
-Test Case Derivation: The test case is derived from the functional requirement F212, which states that the Import Manager should allow a user to import a past project file in order to reopen a project with all magnetization and material properties preserved.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F212, which states that the Import Manager should allow a user to import a past project file in order to reopen a project with all magnetization and material properties preserved.
 					
-How test will be performed: Open a previously saved project containing magnetization and material properties on the system. Verify that the system correctly loads the project and all of the magnetization and material properties are preserved. The model should be ready for further editing and visualization. This will be tested manually by the developer of the system.
+\textbf{How test will be performed:} Open a previously saved project containing magnetization and material properties on the system. Verify that the system correctly loads the project and all of the magnetization and material properties are preserved. The model should be ready for further editing and visualization. This will be tested manually by the developer of the system.
 
 \item{test-FR-IM-3 Invalid File Format Handling\\}
 
-Type: Functional, Dynamic, Manual
+\textbf{Type:} Functional, Dynamic, Manual
 
-Covers: F211
+\textbf{Covers:} F211
 					
-Initial State: No active project is loaded in the system, and the system is ready to import a file.
+\textbf{Initial State:} No active project is loaded in the system, and the system is ready to import a file.
 					
-Input: A file with unsupported format (e.g. .txt, .jpg, .pdf) is provided to the system through the import interface by the user.
+\textbf{Input:} A file with unsupported format (e.g. .txt, .jpg, .pdf) is provided to the system through the import interface by the user.
 					
-Output: The system rejects the file and displays an appropriate error message indicating the file format is unsupported, without creating a project or crashing.
+\textbf{Output:} The system rejects the file and displays an appropriate error message indicating the file format is unsupported, without creating a project or crashing.
 
-Test Case Derivation: The test case is derived from the functional requirement F211, which states that the Import Manager should allow a user to start a new project with the option to import an initial CAD file from their personal device that will be sliced. 
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F211, which states that the Import Manager should allow a user to start a new project with the option to import an initial CAD file from their personal device that will be sliced. 
 					
-How test will be performed: Try to import a file with an unsupported format (e.g. .txt, .jpg, .pdf) into the system. Verify that the system correctly rejects the file and displays an appropriate error message indicating the file format is unsupported. This will be tested manually by the developer of the system.
+\textbf{How test will be performed:} Try to import a file with an unsupported format (e.g. .txt, .jpg, .pdf) into the system. Verify that the system correctly rejects the file and displays an appropriate error message indicating the file format is unsupported. This will be tested manually by the developer of the system.
 
 \end{enumerate}
 
@@ -467,67 +467,67 @@ How test will be performed: Try to import a file with an unsupported format (e.g
 
 \item{test-FR-IM-4 Voxel Size Configuration\\}
 
-Type: Functional, Dynamic, Automated
+\textbf{Type:} Functional, Dynamic, Automated
 
-Covers: F213
+\textbf{Covers:} F213
 					
-Initial State: A valid CAD model has been imported and the system is ready to configure the voxel dimensions.
+\textbf{Initial State:} A valid CAD model has been imported and the system is ready to configure the voxel dimensions.
 					
-Input: User specifies custom voxel dimensions (e.g. 0.1mm x 0.1mm x 0.1mm) by entering the dimensions into the system through the import interface by the user.
+\textbf{Input:} User specifies custom voxel dimensions (e.g. 0.1mm x 0.1mm x 0.1mm) by entering the dimensions into the system through the import interface by the user.
 					
-Output: The system applies the specified voxel dimensions and successfully slices the model into voxels of the requested dimensions.
+\textbf{Output:} The system applies the specified voxel dimensions and successfully slices the model into voxels of the requested dimensions.
 
-Test Case Derivation: The test case is derived from the functional requirement F213, which states that the Import Manager should allow a user to configure the voxel dimensions into which the model will be sliced.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F213, which states that the Import Manager should allow a user to configure the voxel dimensions into which the model will be sliced.
 					
-How test will be performed: Configure the voxel dimensions for the imported model by entering the dimensions into the system through the import interface by the user. Verify that the system correctly applies the specified voxel dimensions and successfully slices the model into voxels of the requested dimensions. This will be tested automatically by the developer of the system by running a script that configures the voxel dimensions and verifies that the system correctly slices the model into voxels of the requested dimensions.
+\textbf{How test will be performed:} Configure the voxel dimensions for the imported model by entering the dimensions into the system through the import interface by the user. Verify that the system correctly applies the specified voxel dimensions and successfully slices the model into voxels of the requested dimensions. This will be tested automatically by the developer of the system by running a script that configures the voxel dimensions and verifies that the system correctly slices the model into voxels of the requested dimensions.
 
 \item{test-FR-IM-5 Model Scaling Functionality\\}
 
-Type: Functional, Dynamic, Manual
+\textbf{Type:} Functional, Dynamic, Manual
 
-Covers: F214
+\textbf{Covers:} F214
 					
-Initial State: A valid CAD model has been imported and the system is ready to scale the model.
+\textbf{Initial State:} A valid CAD model has been imported and the system is ready to scale the model.
 					
-Input: User modifies the model dimensions to the desired printing size by entering the new dimensions into the system through the import interface by the user.
+\textbf{Input:} User modifies the model dimensions to the desired printing size by entering the new dimensions into the system through the import interface by the user.
 					
-Output: The model is scaled to the desired printing size, maintaining its geometric integrity and proportions.
+\textbf{Output:} The model is scaled to the desired printing size, maintaining its geometric integrity and proportions.
 
-Test Case Derivation: The test case is derived from the functional requirement F214, which states that the Import Manager should allow a user to scale the model to the desired printing size before being sliced into voxels.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F214, which states that the Import Manager should allow a user to scale the model to the desired printing size before being sliced into voxels.
 					
-How test will be performed: Modify the model dimensions to the desired printing size by entering the new dimensions into the system through the import interface by the user. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected scaling of the model to confirm that model integrity and accuracy are preserved as specified in F214
+\textbf{How test will be performed:} Modify the model dimensions to the desired printing size by entering the new dimensions into the system through the import interface by the user. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected scaling of the model to confirm that model integrity and accuracy are preserved as specified in F214
 
 \item{test-FR-IM-6 Partial Voxel Resolution\\}
 
-Type: Functional, Dynamic, Manual
+\textbf{Type:} Functional, Dynamic, Manual
 
-Covers: F215
+\textbf{Covers:} F215
 					
-Initial State: A CAD model with complex geometry has been imported and the system is ready to resolve the partial voxels.
+\textbf{Initial State:} A CAD model with complex geometry has been imported and the system is ready to resolve the partial voxels.
 					
-Input: A model containing surfaces that intersect voxel boundaries is imported by the user through the import interface.
+\textbf{Input:} A model containing surfaces that intersect voxel boundaries is imported by the user through the import interface.
 					
-Output: The system correctly resolves partial voxels and preserves model integrity and accuracy.
+\textbf{Output:} The system correctly resolves partial voxels and preserves model integrity and accuracy.
 
-Test Case Derivation: The test case is derived from the functional requirement F215, which states that the Import Manager shall resolve partial voxels and interpret them in the best way that preserves the integrity and accuracy of the provided model.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F215, which states that the Import Manager shall resolve partial voxels and interpret them in the best way that preserves the integrity and accuracy of the provided model.
 					
-How test will be performed: Import a model containing surfaces that intersect voxel boundaries. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected resolution of partial voxels to confirm that model integrity and accuracy are preserved as specified in F215
+\textbf{How test will be performed:} Import a model containing surfaces that intersect voxel boundaries. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected resolution of partial voxels to confirm that model integrity and accuracy are preserved as specified in F215
 
 \item{test-FR-IM-7 Model Division for Display\\}
 
-Type: Functional, Dynamic, Manual
+\textbf{Type:} Functional, Dynamic, Manual
 
-Covers: F216
+\textbf{Covers:} F216
 					
-Initial State: A large CAD model has been imported and the system is ready to divide the model into manageable display sections.
+\textbf{Initial State:} A large CAD model has been imported and the system is ready to divide the model into manageable display sections.
 					
-Input: A model containing more than MAX\_DISPLAY voxels is imported by the user through the import interface.
+\textbf{Input:} A model containing more than MAX\_DISPLAY voxels is imported by the user through the import interface.
 					
-Output: The system automatically partitions the model into manageable display sections that do not exceed the MAX\_DISPLAY threshold, enabling smooth visualization.
+\textbf{Output:} The system automatically partitions the model into manageable display sections that do not exceed the MAX\_DISPLAY threshold, enabling smooth visualization.
 
-Test Case Derivation: The test case is derived from the functional requirement F216, which states that the Import Manager shall partition the model into user-manageable display sections that do not surpass the MAX\_DISPLAY threshold.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F216, which states that the Import Manager shall partition the model into user-manageable display sections that do not surpass the MAX\_DISPLAY threshold.
 					
-How test will be performed: Import a model containing more than MAX\_DISPLAY voxels. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected partitioning of the model to confirm that model integrity and accuracy are preserved as specified in F216
+\textbf{How test will be performed:} Import a model containing more than MAX\_DISPLAY voxels. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected partitioning of the model to confirm that model integrity and accuracy are preserved as specified in F216
 
 \end{enumerate}
 
@@ -539,51 +539,51 @@ How test will be performed: Import a model containing more than MAX\_DISPLAY vox
 
 \item{test-FR-VM-1 3D Model Rendition with Clear Voxel Visualization\\}
 
-Type: Functional, Dynamic, Manual
+\textbf{Type:} Functional, Dynamic, Manual
 
-Covers: F221
+\textbf{Covers:} F221
 					
-Initial State: A CAD model has been imported and sliced into voxels by the Import Manager and the system is ready to render the model.
+\textbf{Initial State:} A CAD model has been imported and sliced into voxels by the Import Manager and the system is ready to render the model.
 					
-Input: Sliced voxel data from Import Manager is provided to the Visualization Manager.
+\textbf{Input:} Sliced voxel data from Import Manager is provided to the Visualization Manager.
 					
-Output: The system renders a 3D model with clear visualization of individual voxels, maintaining geometric accuracy and providing distinct voxel boundaries.
+\textbf{Output:} The system renders a 3D model with clear visualization of individual voxels, maintaining geometric accuracy and providing distinct voxel boundaries.
 
-Test Case Derivation: The test case is derived from the functional requirement F221, which states that the Visualization Manager shall recreate a 3D model with clear visualization of sliced voxels.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F221, which states that the Visualization Manager shall recreate a 3D model with clear visualization of sliced voxels.
 					
-How test will be performed: Render a 3D model with clear visualization of sliced voxels by providing the Visualization Manager with sliced voxel data from the Import Manager. Verify that the system correctly renders the model and displays the individual voxels with proper boundaries and geometric accuracy. This will be tested manually by the developer of the system by providing the system with a CAD model and verifying that the system correctly renders the model and displays the individual voxels with proper boundaries and geometric accuracy. 
+\textbf{How test will be performed:} Render a 3D model with clear visualization of sliced voxels by providing the Visualization Manager with sliced voxel data from the Import Manager. Verify that the system correctly renders the model and displays the individual voxels with proper boundaries and geometric accuracy. This will be tested manually by the developer of the system by providing the system with a CAD model and verifying that the system correctly renders the model and displays the individual voxels with proper boundaries and geometric accuracy. 
 
 \item{test-FR-VM-2 Partition Navigation Functionality\\}
 
 Type: Functional, Dynamic, Manual
 
-Covers: F222
+\textbf{Covers:} F222
 					
-Initial State: A large model has been divided into multiple display partitions and the system is ready to navigate between the partitions.
+\textbf{Initial State:} A large model has been divided into multiple display partitions and the system is ready to navigate between the partitions.
 					
-Input: User navigates between model partitions by clicking on the different display sections of the model.
+\textbf{Input:} User navigates between model partitions by clicking on the different display sections of the model.
 					
-Output: The system provides smooth navigation between partitions, allowing users to access all model sections without performance degradation.
+\textbf{Output:} The system provides smooth navigation between partitions, allowing users to access all model sections without performance degradation.
 
-Test Case Derivation: The test case is derived from the functional requirement F222, which states that the Visualization Manager shall provide users with simplistic navigation across user-manageable display sections to ensure access to all model partitions.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F222, which states that the Visualization Manager shall provide users with simplistic navigation across user-manageable display sections to ensure access to all model partitions.
 					
-How test will be performed: Navigate between model partitions by clicking on the different display sections of the model. Verify that the system correctly provides smooth navigation between partitions, allowing users to access all model sections without performance degradation. This will be tested manually by the developer of the system.
+\textbf{How test will be performed:} Navigate between model partitions by clicking on the different display sections of the model. Verify that the system correctly provides smooth navigation between partitions, allowing users to access all model sections without performance degradation. This will be tested manually by the developer of the system.
 
 \item{test-FR-VM-3 Multi-Perspective 3D Model Interaction\\}
 
-Type: Functional, Dynamic, Manual
+\textbf{Type:} Functional, Dynamic, Manual
 
-Covers: F223
+\textbf{Covers:} F223
 					
-Initial State: A 3D model is rendered and displayed and the system is ready to interact with the model from different perspectives.
+\textbf{Initial State:} A 3D model is rendered and displayed and the system is ready to interact with the model from different perspectives.
 					
-Input: User rotates and zooms the model to view it from different perspectives using intuitive interface controls.
+\textbf{Input:} User rotates and zooms the model to view it from different perspectives using intuitive interface controls.
 					
-Output: The system correctly provides intuitive interface controls that allow seamless navigation across multiple perspectives of the 3D model with responsive interaction.
+\textbf{Output:} The system correctly provides intuitive interface controls that allow seamless navigation across multiple perspectives of the 3D model with responsive interaction.
 
-Test Case Derivation: The test case is derived from the functional requirement F223, which states that the Visualization Manager shall provide users with an intuitive interface that permits seamless navigation across multiple perspectives of the 3D model.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F223, which states that the Visualization Manager shall provide users with an intuitive interface that permits seamless navigation across multiple perspectives of the 3D model.
 					
-How test will be performed: Rotate and zoom the model to view it from different perspectives using intuitive interface controls. Verify that the system correctly provides intuitive interface controls that allow seamless navigation across multiple perspectives of the 3D model with responsive interaction. This will be tested manually by the developer of the system.
+\textbf{How test will be performed:} Rotate and zoom the model to view it from different perspectives using intuitive interface controls. Verify that the system correctly provides intuitive interface controls that allow seamless navigation across multiple perspectives of the 3D model with responsive interaction. This will be tested manually by the developer of the system.
 
 \end{enumerate}
 
@@ -595,33 +595,33 @@ How test will be performed: Rotate and zoom the model to view it from different 
 
 Type: Functional, Dynamic, Manual
 
-Covers: F224
+\textbf{Covers:} F224
 					
-Initial State: A 3D model with multiple layers is displayed and the system is ready to isolate a specific layer.
+\textbf{Initial State:} A 3D model with multiple layers is displayed and the system is ready to isolate a specific layer.
 					
-Input: User selects a specific layer to focus on by clicking on the layer in the display.
+\textbf{Input:} User selects a specific layer to focus on by clicking on the layer in the display.
 					
-Output: The system isolates the selected layer, rendering all other voxels irrelevant or transparent, facilitating property assignment on the focused layer.
+\textbf{Output:} The system isolates the selected layer, rendering all other voxels irrelevant or transparent, facilitating property assignment on the focused layer.
 
-Test Case Derivation: The test case is derived from the functional requirement F224, which states that the Visualization Manager shall allow users to isolate a specific layer to facilitate property assignments, rendering all other voxels irrelevant while that layer is in focus.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F224, which states that the Visualization Manager shall allow users to isolate a specific layer to facilitate property assignments, rendering all other voxels irrelevant while that layer is in focus.
 					
-How test will be performed: Select a specific layer to focus on by clicking on the layer in the display. Verify that the system correctly isolates the selected layer and renders all other voxels irrelevant while that layer is in focus. This will be tested manually by the developer of the system.
+\textbf{How test will be performed:} Select a specific layer to focus on by clicking on the layer in the display. Verify that the system correctly isolates the selected layer and renders all other voxels irrelevant while that layer is in focus. This will be tested manually by the developer of the system.
 
 \item{test-FR-VM-5 Voxel Selection Highlighting\\}
 
-Type: Functional, Dynamic, Manual
+\textbf{Type:} Functional, Dynamic, Manual
 
-Covers: F225
+\textbf{Covers:} F225
 					
-Initial State: A specific layer is in focus and displayed and the system is ready to highlight the selected voxels.
+\textbf{Initial State:} A specific layer is in focus and displayed and the system is ready to highlight the selected voxels.
 					
-Input: User selects individual voxels or groups of voxels within the focused layer by clicking on the voxels in the display.
+\textbf{Input:} User selects individual voxels or groups of voxels within the focused layer by clicking on the voxels in the display.
 					
-Output: The system correctly provides clear visual feedback showing which voxels are currently selected using distinct highlighting.
+\textbf{Output:} The system correctly provides clear visual feedback showing which voxels are currently selected using distinct highlighting.
 
-Test Case Derivation: The test case is derived from the functional requirement F225, which states that the Visualization Manager shall provide users with visualization that showcases which voxels are currently selected within a specific layer.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F225, which states that the Visualization Manager shall provide users with visualization that showcases which voxels are currently selected within a specific layer.
 					
-How test will be performed: Select individual voxels or groups of voxels within the focused layer by clicking on the voxels in the display. Verify that the system correctly provides clear visual feedback showing which voxels are currently selected using distinct highlighting. This will be tested manually by the developer of the system.
+\textbf{How test will be performed:} Select individual voxels or groups of voxels within the focused layer by clicking on the voxels in the display. Verify that the system correctly provides clear visual feedback showing which voxels are currently selected using distinct highlighting. This will be tested manually by the developer of the system.
 
 \end{enumerate}
 
@@ -633,33 +633,33 @@ How test will be performed: Select individual voxels or groups of voxels within 
 
 Type: Functional, Dynamic, Manual
 
-Covers: F226
+\textbf{Covers:} F226
 					
-Initial State: A model with unassigned materials is displayed and the system is ready to track the material assignment.
+\textbf{Initial State:} A model with unassigned materials is displayed and the system is ready to track the material assignment.
 					
-Input: User assigns material IDs to various voxels by clicking on the voxels in the display and assigning the material IDs.
+\textbf{Input:} User assigns material IDs to various voxels by clicking on the voxels in the display and assigning the material IDs.
 					
-Output: The system updates the voxel colors to indicate material assignment completeness, providing clear visual feedback about the assignment status.
+\textbf{Output:} The system updates the voxel colors to indicate material assignment completeness, providing clear visual feedback about the assignment status.
 
-Test Case Derivation: The test case is derived from the functional requirement F226, which states that the Visualization Manager shall integrate easy tracking of voxels that have been assigned material IDs by adjusting the colour of the voxel to indicate assignment completeness.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F226, which states that the Visualization Manager shall integrate easy tracking of voxels that have been assigned material IDs by adjusting the colour of the voxel to indicate assignment completeness.
 					
-How test will be performed: Assign material IDs to various voxels by clicking on the voxels in the display and assigning the material IDs. Verify that the system correctly updates the voxel colors to indicate material assignment completeness, providing clear visual feedback about assignment status. This will be tested manually by the developer of the system.
+\textbf{How test will be performed:} Assign material IDs to various voxels by clicking on the voxels in the display and assigning the material IDs. Verify that the system correctly updates the voxel colors to indicate material assignment completeness, providing clear visual feedback about assignment status. This will be tested manually by the developer of the system.
 
 \item{test-FR-VM-7 Magnetization Assignment Visual Tracking\\}
 
-Type: Functional, Dynamic, Manual
+\textbf{Type:} Functional, Dynamic, Manual
 
-Covers: F227
+\textbf{Covers:} F227
 					
-Initial State: A model with unassigned magnetization vectors is displayed and the system is ready to track the magnetization assignment.
+\textbf{Initial State:} A model with unassigned magnetization vectors is displayed and the system is ready to track the magnetization assignment.
 					
-Input: User assigns magnetization vectors to various voxels by clicking on the voxels in the display and assigning the magnetization vectors.
+\textbf{Input:} User assigns magnetization vectors to various voxels by clicking on the voxels in the display and assigning the magnetization vectors.
 					
-Output: The system updates the voxel colors to indicate magnetization assignment completeness, providing clear visual feedback about the assignment status.
+\textbf{Output:} The system updates the voxel colors to indicate magnetization assignment completeness, providing clear visual feedback about the assignment status.
 
-Test Case Derivation: The test case is derived from the functional requirement F227, which states that the Visualization Manager shall integrate easy tracking of voxels that have been assigned magnetization vectors by adjusting the colour of the voxel to indicate assignment completeness.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F227, which states that the Visualization Manager shall integrate easy tracking of voxels that have been assigned magnetization vectors by adjusting the colour of the voxel to indicate assignment completeness.
 					
-How test will be performed: Assign magnetization vectors to various voxels by clicking on the voxels in the display and assigning the magnetization vectors. Verify that the system correctly updates the voxel colors to indicate magnetization assignment completeness, providing clear visual feedback about the assignment status. This will be tested manually by the developer of the system.
+\textbf{How test will be performed:} Assign magnetization vectors to various voxels by clicking on the voxels in the display and assigning the magnetization vectors. Verify that the system correctly updates the voxel colors to indicate magnetization assignment completeness, providing clear visual feedback about the assignment status. This will be tested manually by the developer of the system.
 
 \end{enumerate}
 
@@ -672,229 +672,395 @@ How test will be performed: Assign magnetization vectors to various voxels by cl
 
 \item{test-FR-INT-1 Import to Visualization Data Transfer\\}
 
-Type: Functional, Dynamic, Automated
+\textbf{Type:} Functional, Dynamic, Automated
 
-Covers: F211, F221
+\textbf{Covers:} F211, F221
 					
-Initial State: No active project is loaded in the system, and the system is ready to import a file.
+\textbf{Initial State:} No active project is loaded in the system, and the system is ready to import a file.
 					
-Input: A valid CAD file is imported by the user through the import interface.
+\textbf{Input:} A valid CAD file is imported by the user through the import interface.
 					
-Output: The Visualization Manager receives complete voxel data and successfully renders the 3D model without data loss or corruption.
+\textbf{Output:} The Visualization Manager receives complete voxel data and successfully renders the 3D model without data loss or corruption.
 
-Test Case Derivation: The test case is derived from the functional requirement F211 and F221, which states that the Import Manager should allow a user to import a CAD file from their personal device that will be sliced and the Visualization Manager should successfully render the 3D model without data loss or corruption.
+\textbf{Test Case Derivation:} The test case is derived from the functional requirement F211 and F221, which states that the Import Manager should allow a user to import a CAD file from their personal device that will be sliced and the Visualization Manager should successfully render the 3D model without data loss or corruption.
 					
-How test will be performed: Import a valid CAD file. Verify that the system correctly imports the CAD file and the Visualization Manager successfully renders the 3D model without data loss or corruption. This will be tested automatically by the developer of the system by running a script that imports a CAD file and verifies that the system correctly imports the CAD file and the Visualization Manager successfully renders the 3D model without data loss or corruption.
+\textbf{How test will be performed:} Import a valid CAD file. Verify that the system correctly imports the CAD file and the Visualization Manager successfully renders the 3D model without data loss or corruption. This will be tested automatically by the developer of the system by running a script that imports a CAD file and verifies that the system correctly imports the CAD file and the Visualization Manager successfully renders the 3D model without data loss or corruption.
 
 
 \end{enumerate}
 
 \subsubsection{Editing Manager Tests}
-\rule{\textwidth}{0.5pt}
-
-\medskip
-
-\noindent
 This section covers the tests for ensuring the Editing Manager correctly
 handles magnetization and material assignment operations, property management,
-and user interface interactions as specified in requirements \textbf{F231} through \textbf{F2310}.
+and user interface interactions as specified in requirements F231 through F2310.
 
 \begin{enumerate}
-  \item \textbf{test-FR-EM-1 Individual Voxel Magnetization Assignment} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} 3D model loaded with voxels visible, Editing Manager active. \\ 
-    \textbf{Input:} User selects a single voxel and assigns a magnetization vector (x=1.0, y=0.0, z=0.0). \\ 
-    \textbf{Output:} The selected voxel displays the assigned magnetization vector and updates its visual representation. \\[2mm]
-    \textbf{Test Case Derivation:} Confirming that the system correctly processes individual voxel magnetization assignment, as specified in \textbf{F231}. \\[2mm]
-    \textbf{How test will be performed:} Load a 3D model, select a voxel using the interface, input magnetization values, and verify the assignment is recorded and visually displayed.
 
-  \item \textbf{test-FR-EM-2 Group Voxel Magnetization Assignment} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} 3D model loaded with multiple voxels visible. \\ 
-    \textbf{Input:} User selects multiple voxels and assigns the same magnetization vector to all selected voxels. \\ 
-    \textbf{Output:} All selected voxels display the assigned magnetization vector and update their visual representation. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures the system can handle bulk magnetization assignment operations, satisfying \textbf{F231}. \\[2mm]
-    \textbf{How test will be performed:} Select multiple voxels using the interface, assign magnetization values, and verify all selected voxels receive the assignment.
+\item{test-FR-EM-1 Individual Voxel Magnetization Assignment\\}
 
-  \item \textbf{test-FR-EM-3 Favourite Magnetization Vector Management} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} Editing Manager with favourite bar accessible. \\ 
-    \textbf{Input:} User creates a favourite magnetization vector (x=0.5, y=0.5, z=0.0) and saves it to the favourite bar. \\ 
-    \textbf{Output:} The magnetization vector is added to the favourite bar and can be selected for future use. \\[2mm]
-    \textbf{Test Case Derivation:} Validates that users can maintain and reuse frequently used magnetization vectors, per \textbf{F232}. \\[2mm]
-    \textbf{How test will be performed:} Create a favourite magnetization vector, save it to the favourite bar, and verify it can be selected and applied to voxels.
+\textbf{Type:} Functional, Dynamic, Manual
 
-  \item \textbf{test-FR-EM-4 Individual Voxel Material Assignment} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} 3D model loaded with voxels visible. \\ 
-    \textbf{Input:} User selects a single voxel and assigns material ID 2. \\ 
-    \textbf{Output:} The selected voxel displays the assigned material and updates its visual representation. \\[2mm]
-    \textbf{Test Case Derivation:} Confirming that the system correctly processes individual voxel material assignment, as specified in \textbf{F233}. \\[2mm]
-    \textbf{How test will be performed:} Select a voxel, assign a material ID, and verify the assignment is recorded and visually displayed.
+\textbf{Covers:} F231
+					
+\textbf{Initial State:} 3D model loaded with voxels visible, Editing Manager active.
+					
+\textbf{Input:} User selects a single voxel and assigns a magnetization vector (x=1.0, y=0.0, z=0.0).
+					
+\textbf{Output:} The selected voxel displays the assigned magnetization vector and updates its visual representation.
 
-  \item \textbf{test-FR-EM-5 Group Voxel Material Assignment} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} 3D model loaded with multiple voxels visible. \\ 
-    \textbf{Input:} User selects multiple voxels and assigns material ID 3 to all selected voxels. \\ 
-    \textbf{Output:} All selected voxels display the assigned material and update their visual representation. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures the system can handle bulk material assignment operations, satisfying \textbf{F233}. \\[2mm]
-    \textbf{How test will be performed:} Select multiple voxels, assign a material ID, and verify all selected voxels receive the assignment.
+\textbf{Test Case Derivation:} Confirming that the system correctly processes individual voxel magnetization assignment, as specified in F231.
+					
+\textbf{How test will be performed:} Load a 3D model, select a voxel using the interface, input magnetization values, and verify the assignment is recorded and visually displayed.
 
-  \item \textbf{test-FR-EM-6 Material Label Assignment} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} Material assignment interface accessible. \\ 
-    \textbf{Input:} User assigns label "Steel" to material ID 1. \\ 
-    \textbf{Output:} Material ID 1 is now associated with the label "Steel" in the interface. \\[2mm]
-    \textbf{Test Case Derivation:} Validates that users can assign meaningful labels to material IDs for better organization, per \textbf{F234}. \\[2mm]
-    \textbf{How test will be performed:} Access material management interface, assign a label to a material ID, and verify the label is displayed and associated correctly.
+\item{test-FR-EM-2 Group Voxel Magnetization Assignment\\}
 
-  \item \textbf{test-FR-EM-7 Property Replication Across Layers} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} 3D model with multiple layers loaded. \\ 
-    \textbf{Input:} User selects voxels in one layer with assigned properties and replicates them to another layer. \\ 
-    \textbf{Output:} The target layer voxels receive the same material and magnetization properties as the source voxels. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures efficient workflow by allowing property replication across layers, as specified in \textbf{F235}. \\[2mm]
-    \textbf{How test will be performed:} Select voxels with assigned properties in one layer, use the replication function to copy properties to another layer, and verify the properties are correctly applied.
+\textbf{Type:} Functional, Dynamic, Manual
 
-  \item \textbf{test-FR-EM-8 Auto Save Functionality} \\[2mm]
-    \textbf{Control:} Automated \\ 
-    \textbf{Initial State:} Model with unsaved changes. \\ 
-    \textbf{Input:} System automatically saves changes after a property assignment. \\ 
-    \textbf{Output:} Changes are saved without user intervention and confirmation is displayed. \\[2mm]
-    \textbf{Test Case Derivation:} Validates that the system automatically preserves user work without manual intervention, per \textbf{F236}. \\[2mm]
-    \textbf{How test will be performed:} Make property assignments, verify auto-save triggers, and confirm changes are preserved in the project file.
+\textbf{Covers:} F231
+					
+\textbf{Initial State:} 3D model loaded with multiple voxels visible.
+					
+\textbf{Input:} User selects multiple voxels and assigns the same magnetization vector to all selected voxels.
+					
+\textbf{Output:} All selected voxels display the assigned magnetization vector and update their visual representation.
 
-  \item \textbf{test-FR-EM-9 Edit History Access and Revert} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} Model with multiple edit operations completed. \\ 
-    \textbf{Input:} User accesses edit history and reverts to a previous version. \\ 
-    \textbf{Output:} Model returns to the selected previous state with all subsequent changes undone. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures users can recover from mistakes by accessing edit history, as specified in \textbf{F237}. \\[2mm]
-    \textbf{How test will be performed:} Perform multiple edits, access edit history, select a previous version, and verify the model reverts correctly.
+\textbf{Test Case Derivation:} Ensures the system can handle bulk magnetization assignment operations, satisfying F231.
+					
+\textbf{How test will be performed:} Select multiple voxels using the interface, assign magnetization values, and verify all selected voxels receive the assignment.
 
-  \item \textbf{test-FR-EM-10 Entire Layer Selection and Assignment} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} 3D model with multiple layers loaded. \\ 
-    \textbf{Input:} User selects an entire layer and assigns common material and magnetization properties. \\ 
-    \textbf{Output:} All voxels in the selected layer receive the assigned properties. \\[2mm]
-    \textbf{Test Case Derivation:} Validates efficient bulk operations by allowing entire layer selection, per \textbf{F238}. \\[2mm]
-    \textbf{How test will be performed:} Select an entire layer, assign material and magnetization properties, and verify all voxels in the layer receive the assignments.
+\item{test-FR-EM-3 Favourite Magnetization Vector Management\\}
 
-  \item \textbf{test-FR-EM-11 Manual Voxel Addition} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} 3D model loaded with defined voxel dimensions. \\ 
-    \textbf{Input:} User adds a new voxel with the same dimensions as existing voxels. \\ 
-    \textbf{Output:} New voxel is added to the model with unassigned properties. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures users can manually add voxels for model adjustments, as specified in \textbf{F239}. \\[2mm]
-    \textbf{How test will be performed:} Use the voxel addition tool to add a new voxel, verify it has correct dimensions, and confirm it starts with unassigned properties.
+\textbf{Type:} Functional, Dynamic, Manual
 
-  \item \textbf{test-FR-EM-12 Manual Voxel Deletion} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} 3D model with multiple voxels. \\ 
-    \textbf{Input:} User selects and deletes a voxel. \\ 
-    \textbf{Output:} Selected voxel is removed from the model. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures users can manually remove voxels for model adjustments, as specified in \textbf{F239}. \\[2mm]
-    \textbf{How test will be performed:} Select a voxel, use the deletion tool, and verify the voxel is removed from the model.
+\textbf{Covers:} F232
+					
+\textbf{Initial State:} Editing Manager with favourite bar accessible.
+					
+\textbf{Input:} User creates a favourite magnetization vector (x=0.5, y=0.5, z=0.0) and saves it to the favourite bar.
+					
+\textbf{Output:} The magnetization vector is added to the favourite bar and can be selected for future use.
 
-  \item \textbf{test-FR-EM-13 Individual Voxel Property Reset} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} Voxel with assigned material and magnetization properties. \\ 
-    \textbf{Input:} User selects the voxel and resets its properties. \\ 
-    \textbf{Output:} Voxel returns to unassigned state for both material and magnetization. \\[2mm]
-    \textbf{Test Case Derivation:} Validates that users can reset individual voxel properties, per \textbf{F2310}. \\[2mm]
-    \textbf{How test will be performed:} Select a voxel with assigned properties, use the reset function, and verify the voxel returns to unassigned state.
+\textbf{Test Case Derivation:} Validates that users can maintain and reuse frequently used magnetization vectors, per F232.
+					
+\textbf{How test will be performed:} Create a favourite magnetization vector, save it to the favourite bar, and verify it can be selected and applied to voxels.
 
-  \item \textbf{test-FR-EM-14 Group Voxel Property Reset} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} Multiple voxels with assigned properties. \\ 
-    \textbf{Input:} User selects multiple voxels and resets their properties. \\ 
-    \textbf{Output:} All selected voxels return to unassigned state. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures users can reset multiple voxel properties simultaneously, per \textbf{F2310}. \\[2mm]
-    \textbf{How test will be performed:} Select multiple voxels with assigned properties, use the reset function, and verify all selected voxels return to unassigned state.
+\item{test-FR-EM-4 Individual Voxel Material Assignment\\}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F233
+					
+\textbf{Initial State:} 3D model loaded with voxels visible.
+					
+\textbf{Input:} User selects a single voxel and assigns material ID 2.
+					
+\textbf{Output:} The selected voxel displays the assigned material and updates its visual representation.
+
+\textbf{Test Case Derivation:} Confirming that the system correctly processes individual voxel material assignment, as specified in F233.
+					
+\textbf{How test will be performed:} Select a voxel, assign a material ID, and verify the assignment is recorded and visually displayed.
+
+\item{test-FR-EM-5 Group Voxel Material Assignment\\}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F233
+					
+\textbf{Initial State:} 3D model loaded with multiple voxels visible.
+					
+\textbf{Input:} User selects multiple voxels and assigns material ID 3 to all selected voxels.
+					
+\textbf{Output:} All selected voxels display the assigned material and update their visual representation.
+
+\textbf{Test Case Derivation:} Ensures the system can handle bulk material assignment operations, satisfying F233.
+					
+\textbf{How test will be performed:} Select multiple voxels, assign a material ID, and verify all selected voxels receive the assignment.
+
+\item{test-FR-EM-6 Material Label Assignment\\}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F234
+					
+\textbf{Initial State:} Material assignment interface accessible.
+					
+\textbf{Input:} User assigns label "Steel" to material ID 1.
+					
+\textbf{Output:} Material ID 1 is now associated with the label "Steel" in the interface.
+
+\textbf{Test Case Derivation:} Validates that users can assign meaningful labels to material IDs for better organization, per F234.
+					
+\textbf{How test will be performed:} Access material management interface, assign a label to a material ID, and verify the label is displayed and associated correctly.
+
+\item{test-FR-EM-7 Property Replication Across Layers\\}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F235
+					
+\textbf{Initial State:} 3D model with multiple layers loaded.
+					
+\textbf{Input:} User selects voxels in one layer with assigned properties and replicates them to another layer.
+					
+\textbf{Output:} The target layer voxels receive the same material and magnetization properties as the source voxels.
+
+\textbf{Test Case Derivation:} Ensures efficient workflow by allowing property replication across layers, as specified in F235.
+					
+\textbf{How test will be performed:} Select voxels with assigned properties in one layer, use the replication function to copy properties to another layer, and verify the properties are correctly applied.
+
+\item{test-FR-EM-8 Auto Save Functionality\\}
+
+\textbf{Type:} Functional, Dynamic, Automated
+
+\textbf{Covers:} F236
+					
+\textbf{Initial State:} Model with unsaved changes.
+					
+\textbf{Input:} System automatically saves changes after a property assignment.
+					
+\textbf{Output:} Changes are saved without user intervention and confirmation is displayed.
+
+\textbf{Test Case Derivation:} Validates that the system automatically preserves user work without manual intervention, per F236.
+					
+\textbf{How test will be performed:} Make property assignments, verify auto-save triggers, and confirm changes are preserved in the project file.
+
+\item{test-FR-EM-9 Edit History Access and Revert\\}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F237
+					
+\textbf{Initial State:} Model with multiple edit operations completed.
+					
+\textbf{Input:} User accesses edit history and reverts to a previous version.
+					
+\textbf{Output:} Model returns to the selected previous state with all subsequent changes undone.
+
+\textbf{Test Case Derivation:} Ensures users can recover from mistakes by accessing edit history, as specified in F237.
+					
+\textbf{How test will be performed:} Perform multiple edits, access edit history, select a previous version, and verify the model reverts correctly.
+
+\item{test-FR-EM-10 Entire Layer Selection and Assignment\\}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F238
+					
+\textbf{Initial State:} 3D model with multiple layers loaded.
+					
+\textbf{Input:} User selects an entire layer and assigns common material and magnetization properties.
+					
+\textbf{Output:} All voxels in the selected layer receive the assigned properties.
+
+\textbf{Test Case Derivation:} Validates efficient bulk operations by allowing entire layer selection, per F238.
+					
+\textbf{How test will be performed:} Select an entire layer, assign material and magnetization properties, and verify all voxels in the layer receive the assignments.
+
+\item{test-FR-EM-11 Manual Voxel Addition\\}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F239
+					
+\textbf{Initial State:} 3D model loaded with defined voxel dimensions.
+					
+\textbf{Input:} User adds a new voxel with the same dimensions as existing voxels.
+					
+\textbf{Output:} New voxel is added to the model with unassigned properties.
+
+\textbf{Test Case Derivation:} Ensures users can manually add voxels for model adjustments, as specified in F239.
+					
+\textbf{How test will be performed:} Use the voxel addition tool to add a new voxel, verify it has correct dimensions, and confirm it starts with unassigned properties.
+
+\item{test-FR-EM-12 Manual Voxel Deletion\\}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F239
+					
+\textbf{Initial State:} 3D model with multiple voxels.
+					
+\textbf{Input:} User selects and deletes a voxel.
+					
+\textbf{Output:} Selected voxel is removed from the model.
+
+\textbf{Test Case Derivation:} Ensures users can manually remove voxels for model adjustments, as specified in F239.
+					
+\textbf{How test will be performed:} Select a voxel, use the deletion tool, and verify the voxel is removed from the model.
+
+\item{test-FR-EM-13 Individual Voxel Property Reset\\}
+
+Type: Functional, Dynamic, Manual
+
+\textbf{Covers:} F2310
+					
+\textbf{Initial State:} Voxel with assigned material and magnetization properties.
+					
+\textbf{Input:} User selects the voxel and resets its properties.
+					
+\textbf{Output:} Voxel returns to unassigned state for both material and magnetization.
+
+\textbf{Test Case Derivation:} Validates that users can reset individual voxel properties, per F2310.
+					
+\textbf{How test will be performed:} Select a voxel with assigned properties, use the reset function, and verify the voxel returns to unassigned state.
+
+\item{test-FR-EM-14 Group Voxel Property Reset\\}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F2310
+					
+\textbf{Initial State:} Multiple voxels with assigned properties.
+					
+\textbf{Input:} User selects multiple voxels and resets their properties.
+					
+\textbf{Output:} All selected voxels return to unassigned state.
+
+\textbf{Test Case Derivation:} Ensures users can reset multiple voxel properties simultaneously, per F2310.
+					
+\textbf{How test will be performed:} Select multiple voxels with assigned properties, use the reset function, and verify all selected voxels return to unassigned state.
 
 
 \end{enumerate}
 
-\noindent\rule{\textwidth}{0.5pt}
 
 \subsubsection{Export Manager Tests}
-\rule{\textwidth}{0.5pt}
 
-\medskip
-
-\noindent
 This section covers the tests for ensuring the Export Manager correctly
 handles file export operations, property validation, and data integrity
-as specified in requirements \textbf{F241} through \textbf{F245}.
+as specified in requirements F241 through F245.
 
 \begin{enumerate}
-  \item \textbf{test-FR-XM-1 Property Validation for Complete Magnetization} \\[2mm]
-    \textbf{Control:} Automated \\ 
-    \textbf{Initial State:} Model with all voxels having assigned magnetization values. \\ 
-    \textbf{Input:} User requests export for printing. \\ 
-    \textbf{Output:} System validates all voxels have magnetization assignments and proceeds with export. \\[2mm]
-    \textbf{Test Case Derivation:} Confirming that the system validates complete magnetization before export, as specified in \textbf{F241}. \\[2mm]
-    \textbf{How test will be performed:} Load a model with complete magnetization assignments, request export, and verify validation passes and export proceeds.
 
-  \item \textbf{test-FR-XM-2 Property Validation for Incomplete Magnetization} \\[2mm]
-    \textbf{Control:} Automated \\ 
-    \textbf{Initial State:} Model with some voxels missing magnetization assignments. \\ 
-    \textbf{Input:} User requests export for printing. \\ 
-    \textbf{Output:} System identifies unassigned voxels and prompts user to complete assignments or assign null values. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures the system prevents export of incomplete models, per \textbf{F241}. \\[2mm]
-    \textbf{How test will be performed:} Load a model with incomplete magnetization, request export, and verify the system identifies missing assignments and provides appropriate feedback.
+\item{test-FR-XM-1 Property Validation for Complete Magnetization\\}
 
-  \item \textbf{test-FR-XM-3 Standalone File Export} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} Model with complete property assignments ready for export. \\ 
-    \textbf{Input:} User exports model with custom filename "test\_model.vox". \\ 
-    \textbf{Output:} Standalone file containing all voxel metadata is created and saved locally. \\[2mm]
-    \textbf{Test Case Derivation:} Validates that the system can produce complete export files, as specified in \textbf{F242}. \\[2mm]
-    \textbf{How test will be performed:} Export a model with a custom filename, verify the file is created with all metadata, and confirm it can be accessed outside the software.
+\textbf{Type:} Functional, Dynamic, Automated
 
-  \item \textbf{test-FR-XM-4 Project Export in Native Format} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} Project with model and all associated data. \\ 
-    \textbf{Input:} User exports project with custom filename "backup\_project.fok". \\ 
-    \textbf{Output:} Native format project file is created and saved locally with all project data preserved. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures users can create project backups and iterations, per \textbf{F243}. \\[2mm]
-    \textbf{How test will be performed:} Export a project in native format, verify the file contains all project data, and confirm it can be imported back into the software.
+\textbf{Covers:} F241
+					
+\textbf{Initial State:} Model with all voxels having assigned magnetization values.
+					
+\textbf{Input:} User requests export for printing.
+					
+\textbf{Output:} System validates all voxels have magnetization assignments and proceeds with export.
 
-  \item \textbf{test-FR-XM-5 Export Progress Tracking} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} Large model ready for export. \\ 
-    \textbf{Input:} User initiates export operation. \\ 
-    \textbf{Output:} Progress bar displays export progress with visual indicators. \\[2mm]
-    \textbf{Test Case Derivation:} Validates that users receive feedback during export operations, as specified in \textbf{F244}. \\[2mm]
-    \textbf{How test will be performed:} Export a large model, observe the progress bar updates, and verify the progress indicators accurately reflect export status.
+\textbf{Test Case Derivation:} Confirming that the system validates complete magnetization before export, as specified in F241.
+					
+\textbf{How test will be performed:} Load a model with complete magnetization assignments, request export, and verify validation passes and export proceeds.
 
-  \item \textbf{test-FR-XM-6 Model Summary Export} \\[2mm]
-    \textbf{Control:} Manual \\ 
-    \textbf{Initial State:} Model with complete property assignments. \\ 
-    \textbf{Input:} User exports model with summary option enabled. \\ 
-    \textbf{Output:} Model file and summary file are created with statistics about the model. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures users can access model statistics for analysis, per \textbf{F245}. \\[2mm]
-    \textbf{How test will be performed:} Export a model with summary enabled, verify both files are created, and confirm the summary contains relevant model statistics.
+\item{test-FR-XM-2 Property Validation for Incomplete Magnetization\\}
 
-  \item \textbf{test-FR-XM-7 Export Failure Recovery} \\[2mm]
-    \textbf{Control:} Automated \\ 
-    \textbf{Initial State:} Model ready for export. \\ 
-    \textbf{Input:} Export operation is interrupted (simulated system failure). \\ 
-    \textbf{Output:} Original project data remains intact and unaltered. \\[2mm]
-    \textbf{Test Case Derivation:} Validates that export failures do not corrupt project data, per \textbf{F241}. \\[2mm]
-    \textbf{How test will be performed:} Initiate export, simulate failure during the process, and verify the original project file remains unchanged and accessible.
+\textbf{Type:} Functional, Dynamic, Automated
 
-  \item \textbf{test-FR-XM-8 Export Performance Validation} \\[2mm]
-    \textbf{Control:} Automated \\ 
-    \textbf{Initial State:} Model with MAX\_VOXELS voxels ready for export. \\ 
-    \textbf{Input:} User initiates export operation. \\ 
-    \textbf{Output:} Export completes at minimum rate of MIN\_RATE (500,000 voxels per second). \\[2mm]
-    \textbf{Test Case Derivation:} Ensures export performance meets specified thresholds, per \textbf{F241}. \\[2mm]
-    \textbf{How test will be performed:} Export a large model, measure the export rate, and verify it meets or exceeds the MIN\_RATE threshold.
+\textbf{Covers:} F241
+					
+\textbf{Initial State:} Model with some voxels missing magnetization assignments.
+					
+\textbf{Input:} User requests export for printing.
+					
+\textbf{Output:} System identifies unassigned voxels and prompts user to complete assignments or assign null values.
+
+\textbf{Test Case Derivation:} Ensures the system prevents export of incomplete models, per F241.
+					
+\textbf{How test will be performed:} Load a model with incomplete magnetization, request export, and verify the system identifies missing assignments and provides appropriate feedback.
+
+\item{test-FR-XM-3 Standalone File Export\\}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F242
+					
+\textbf{Initial State:} Model with complete property assignments ready for export.
+					
+\textbf{Input:} User exports model with custom filename "test\_model.vox".
+					
+\textbf{Output:} Standalone file containing all voxel metadata is created and saved locally.
+
+\textbf{Test Case Derivation:} Validates that the system can produce complete export files, as specified in F242.
+					
+\textbf{How test will be performed:} Export a model with a custom filename, verify the file is created with all metadata, and confirm it can be accessed outside the software.
+
+\item{test-FR-XM-4 Project Export in Native Format\\}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F243
+					
+\textbf{Initial State:} Project with model and all associated data.
+					
+\textbf{Input:} User exports project with custom filename "backup\_project.fok".
+					
+\textbf{Output:} Native format project file is created and saved locally with all project data preserved.
+
+\textbf{Test Case Derivation:} Ensures users can create project backups and iterations, per F243.
+					
+\textbf{How test will be performed:} Export a project in native format, verify the file contains all project data, and confirm it can be imported back into the software.
+
+\item{test-FR-XM-5 Export Progress Tracking\\}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F244
+					
+\textbf{Initial State:} Large model ready for export.
+					
+\textbf{Input:} User initiates export operation.
+					
+\textbf{Output:} Progress bar displays export progress with visual indicators.
+
+\textbf{Test Case Derivation:} Validates that users receive feedback during export operations, as specified in F244.
+					
+\textbf{How test will be performed:} Export a large model, observe the progress bar updates, and verify the progress indicators accurately reflect export status.
+
+\item{test-FR-XM-6 Model Summary Export\\}
+
+Type: Functional, Dynamic, Manual
+
+\textbf{Covers:} F245
+					
+\textbf{Initial State:} Model with complete property assignments.
+					
+\textbf{Input:} User exports model with summary option enabled.
+					
+\textbf{Output:} Model file and summary file are created with statistics about the model.
+
+\textbf{Test Case Derivation:} Ensures users can access model statistics for analysis, per F245.
+					
+\textbf{How test will be performed:} Export a model with summary enabled, verify both files are created, and confirm the summary contains relevant model statistics.
+
+\item{test-FR-XM-7 Export Failure Recovery\\}
+
+\textbf{Type:} Functional, Dynamic, Automated
+
+\textbf{Covers:} F241
+					
+\textbf{Initial State:} Model ready for export.
+					
+\textbf{Input:} Export operation is interrupted (simulated system failure).
+					
+\textbf{Output:} Original project data remains intact and unaltered.
+
+\textbf{Test Case Derivation:} Validates that export failures do not corrupt project data, per F241.
+					
+\textbf{How test will be performed:} Initiate export, simulate failure during the process, and verify the original project file remains unchanged and accessible.
+
+\item{test-FR-XM-8 Export Performance Validation\\}
+
+\textbf{Type:} Functional, Dynamic, Automated
+
+\textbf{Covers:} F241
+					
+\textbf{Initial State:} Model with MAX\_VOXELS voxels ready for export.
+					
+\textbf{Input:} User initiates export operation.
+					
+\textbf{Output:} Export completes at minimum rate of MIN\_RATE (500,000 voxels per second).
+
+\textbf{Test Case Derivation:} Ensures export performance meets specified thresholds, per F241.
+					
+\textbf{How test will be performed:} Export a large model, measure the export rate, and verify it meets or exceeds the MIN\_RATE threshold.
 
 \end{enumerate}
-
-\noindent\rule{\textwidth}{0.5pt}
 
 \subsection{Tests for Nonfunctional Requirements}
 \iffalse
@@ -922,17 +1088,17 @@ be involved? Be specific.}
 
 \item{test-US-1 Design Acceptance \& Intuitivity Survey\\}
 
-Type: Non-Functional, Dynamic, Manual, Survey-based
+\textbf{Type:} Non-Functional, Dynamic, Manual, Survey-based
 
-Covers: G4-HNF-1
+\textbf{Covers:} G4-HNF-1
 					
-Initial State: Application open
+\textbf{Initial State:} Application open
 					
 Input/Condition: User interacts with the application
 					
 Output/Result: Recorded observations, feedback, and survey response that indicates whether the design works for the user.
 					
-How test will be performed: Users will be exposed to the application with minimal direction and asked to perform 
+\textbf{How test will be performed:} Users will be exposed to the application with minimal direction and asked to perform 
 some basic tasks. Observations such as where users get confused, when they need to consult the manual, and any comments
 made during use will be recorded. Afterwards, users will fill out a survey relating to their satisfaction with the interface, 
 as well as how they would rank how intuitive functionalities are on a 5-point scale. Observations and survey responses will then be analysed, with
@@ -943,65 +1109,65 @@ Quantifiable Metric: 90\% of survey responses must rank 4 or above for intuitive
 
 \item{test-US-2 Accessible Colours Check\\}
 
-Type: Static, Manual
+\textbf{Type:} Static, Manual
 
-Covers: NF223, GEN1 %Need to add a general requirement to SRS about entire system colours.
+\textbf{Covers:} NF223, GEN1 %Need to add a general requirement to SRS about entire system colours.
 					
-Initial State: Default colours for materials and application chosen
+\textbf{Initial State:} Default colours for materials and application chosen
 					
 Input/Condition: Constrast analyser run on colours
 					
 Output/Result: Compliance level meets WCAG standards
 					
-How test will be performed: A web-based contrast checking tool such as WebAIM will be utilised with both the set of colours chosen 
+\textbf{How test will be performed:} A web-based contrast checking tool such as WebAIM will be utilised with both the set of colours chosen 
 for material IDs, as well as colours used in the UI (e.g. text, buttons, sidebars).
 
 Acceptance Criteria: All ratios must meet 3:1 contrast ratio for WCAG 2.0 compliance.
 
 \item{test-US-3 Design Ease of Use Test\\}
 
-Type: Non-Functional, Dynamic, Manual, Survey-based
+\textbf{Type:} Non-Functional, Dynamic, Manual, Survey-based
 
-Covers: NF231, GEN2 %need reqs for rest of app about max-interactions
+\textbf{Covers:} NF231, GEN2 %need reqs for rest of app about max-interactions
 					
-Initial State: Application open
+\textbf{Initial State:} Application open
 					
-Input: User completes core tasks (import file, material/magnetization assignment, export file)
+\textbf{Input:} User completes core tasks (import file, material/magnetization assignment, export file)
 					
-Output: 90\% of users tested complete tasks in less than MAX\_INTERACTIONS.
+\textbf{Output:} 90\% of users tested complete tasks in less than MAX\_INTERACTIONS.
 					
-How test will be performed: After a short explanation of core tasks, users will be asked to perform core tasks. Clicks per task
+\textbf{How test will be performed:} After a short explanation of core tasks, users will be asked to perform core tasks. Clicks per task
 are recorded and later analysed to verify that expectations are satisfied.
 
 \item{test-US-4 View Model and Layer Focus within application\\}
 
-Type: Non-Functional, Dynamic, Manual
+\textbf{Type:} Non-Functional, Dynamic, Manual
 
-Covers: S3 %Need a better way of citing this?
+\textbf{Covers:} S3 %Need a better way of citing this?
 					
-Initial State: Application open with an example project file pre-loaded
+\textbf{Initial State:} Application open with an example project file pre-loaded
 					
 Input/Condition: Developer attempts to view an individual layer of the model
 					
 Output/Result: Application displays layer and full model separately, alongside interface to edit the layer.
 					
-How test will be performed: Tester will select a layer and attempt to view the layer separately, as well as the model as a whole, 
+\textbf{How test will be performed:} Tester will select a layer and attempt to view the layer separately, as well as the model as a whole, 
 as if they intend to edit voxels within the layer. This confirms that the primary design notion of being able to focus on a specific
 layer when editing voxels is satisfied.
 
 \item{test-US-5 Clear and Interpretable Warnings and Errors\\}
 
-Type: Survey-based
+\textbf{Type:} Survey-based
 
-Covers: S4.1-7 %better way of citing this as well?
+\textbf{Covers:} S4.1-7 %better way of citing this as well?
 					
-Initial State: Application open
+\textbf{Initial State:} Application open
 					
 Input/Condition: User performs interactions that are known to result in error
 					
 Output/Result: 90\% of respondents agree that errors are informative
 					
-How test will be performed: The user will be given direction in how to trigger different errors, and be exposed to
+\textbf{How test will be performed:} The user will be given direction in how to trigger different errors, and be exposed to
 all warning and error messages the system can generate. Users will explain whether they find it easy to understand
 or not (e.g. pass/fail). Investigation in how to reword prompts will take place for messages that under 90\% of users
 do not understand.
@@ -1010,17 +1176,17 @@ Quantifiable Metric: For all messages, 90\% of users 'pass'.
 
 \item{test-US-6 Concise and Interpretable User Manual\\}
 
-Type: Survey-based
+\textbf{Type:} Survey-based
 
-Covers: GEN3 %need to add a general requirement about availability/readability of user manual.
+\textbf{Covers:} GEN3 %need to add a general requirement about availability/readability of user manual.
 					
-Initial State: Manual is completed
+\textbf{Initial State:} Manual is completed
 					
 Input/Condition: User reads the full user manual
 					
 Output/Result: User agrees the manual is helpful with installation, general usage, and interpretation of common errors.
 					
-How test will be performed: User accesses the manual and reviews it. Afterwards, they give feedback on each section of 
+\textbf{How test will be performed:} User accesses the manual and reviews it. Afterwards, they give feedback on each section of 
 the manual, pointing out areas of confusion or notes that should be added. Feedback is then incorporated upon revision
 of the manual.
 
@@ -1034,18 +1200,18 @@ Quantifiable Metric: Considered an initial success if areas of confusion for eac
 
 \item{test-PS-1 Scalability Validation for Import and Visualization\\}
 
-Type: Non-Functional, Dynamic, Automated
+\textbf{Type:} Non-Functional, Dynamic, Automated
 
-Covers: NF211, NF222, implicitly tests NF212
+\textbf{Covers:} NF211, NF222, implicitly tests NF212
 					
-Initial State: Application is open with a set of CAD files of varying sizes prepared.
+\textbf{Initial State:} Application is open with a set of CAD files of varying sizes prepared.
 					
 Input/Condition: Sequentially, each CAD file is imported and the resulting voxel model is viewed within the application. 
 					
 Output/Result: Application completed import within expected times given MIN\_RATE and the estimated number of voxels in the resulting project
 file from each input. Resulting voxel models render correctly within the application
 					
-How test will be performed: Import will be initiated on each CAD file (five files will be prepared, ranging from small (estimated 
+\textbf{How test will be performed:} Import will be initiated on each CAD file (five files will be prepared, ranging from small (estimated 
 100 voxels) to very large (1.5 * MAX\_VOXELS)). Timing will be started upon import, and stopped when the program reports the file was 
 successfully imported and opens the project file. It will also be recorded whether the resulting project file renders without error.
 If recorded times are not what is expected given MIN\_RATE and the size of the
@@ -1054,17 +1220,17 @@ not render, error messages will be investigated for possible sources of refactor
 					
 \item{test-PS-2 Performance Validation for Import, Visualization, Editing, and Export\\}
 
-Type: Non-Functional, Dynamic, Automated
+\textbf{Type:} Non-Functional, Dynamic, Automated
 
-Covers: NF212, NF221, NF232, NF242
+\textbf{Covers:} NF212, NF221, NF232, NF242
 					
-Initial State: Application open with a set of CAD files of average sizes prepared.
+\textbf{Initial State:} Application open with a set of CAD files of average sizes prepared.
 					
 Input/Condition: Sequentially, each file is imported, core operations completed, and exported
 					
 Output/Result: Latencies for import/view change/edit/export matches those defined in the above non-functional requirements.
 					
-How test will be performed: Import will be initiated on each CAD file (three files will be prepared, ranging from small (estimated 100 voxels)
+\textbf{How test will be performed:} Import will be initiated on each CAD file (three files will be prepared, ranging from small (estimated 100 voxels)
 to semi-large (100,000 voxels)). Timing and latency will be recorded for importing the CAD file, changing the orientation of the 
 project file, opening layer focus, editing properties of voxel selections of varying sizes (1 voxel, 100, and a full layer), and exporting
 the completed project file. These times will then be compared against the defined minimum latencies and expected times given minimum processing
@@ -1073,17 +1239,17 @@ that can be optimized. %check this with HA times (in/export)
 
 \item{test-PS-3 Resource Usage Validation Test\\}
 
-Type: Non-Functional, Dynamic, Automated
+\textbf{Type:} Non-Functional, Dynamic, Automated
 
-Covers: E3.4 %check citing this form.
+\textbf{Covers:} E3.4 %check citing this form.
 					
-Initial State: Application open, with a CAD file of average size prepared.
+\textbf{Initial State:} Application open, with a CAD file of average size prepared.
 					
 Input/Condition: File is imported, core operations completed, and exported
 					
 Output/Result: Recorded CPU and GPU usage over the course of the test does not exceed thresholds. %define these somewhere.
 					
-How test will be performed: Import will be initiated on the CAD file, and core operations will be performed (see test-PS-2's description). 
+\textbf{How test will be performed:} Import will be initiated on the CAD file, and core operations will be performed (see test-PS-2's description). 
 Throughout the test, CPU and GPU usage of the application on the host computer will be recorded. Should usage exceed defined thresholds, the operation
 that lead to increased usage will be investigated for precisely what part of the operation triggered it, with refactoring of the unsatisfactory module.
 
@@ -1095,65 +1261,65 @@ that lead to increased usage will be investigated for precisely what part of the
 
 \item{test-CO-1 Windows and Linux Compatibility Test\\}
 
-Type: Non-Functional, Dynamic, Manual
+\textbf{Type:} Non-Functional, Dynamic, Manual
 
-Covers: E3.1
+\textbf{Covers:} E3.1
 					
-Initial State: Logged in to Windows and Linux and application is not installed
+\textbf{Initial State:} Logged in to Windows and Linux and application is not installed
 					
 Input/Condition: User installs the application on both Windows and Linux
 					
 Output/Result: Application is successfully installed and functions as intended.
 					
-How test will be performed: The user will download the installer on each operating system, run it, and attempt to open the
+\textbf{How test will be performed:} The user will download the installer on each operating system, run it, and attempt to open the
 application. If the application opens successfully on each OS and can perform basic functionalities, the test is ruled a success.
 					
 \item{test-CO-2 Import and Export Compatibility Test\\}
 
-Type: Non-Functional, Dynamic, Manual
+\textbf{Type:} Non-Functional, Dynamic, Manual
 
-Covers: E3.2, E3.3
+\textbf{Covers:} E3.2, E3.3
 					
-Initial State: Application open, with a CAD file of average size prepared.
+\textbf{Initial State:} Application open, with a CAD file of average size prepared.
 					
 Input/Condition: File is imported, core operations completed, and exported
 					
 Output/Result: Application converts input file correctly, exported file is correctly formatted
 					
-How test will be performed: The tester selects the CAD file to be imported, and verifies that the resulting project file 
+\textbf{How test will be performed:} The tester selects the CAD file to be imported, and verifies that the resulting project file 
 is correctly generated (e.g. resulting voxel model is an accurate approximation of the original model). The tester then assigns 
 dummy data to each layer and exports the project file to the 3D-printer ready format. The resulting file is then checked for
 completeness and correct formatting. 
 
 \item{test-CO-3 Project File Fail-safe\\} 
 
-Type: Non-Functional, Dynamic, Manual
+\textbf{Type:} Non-Functional, Dynamic, Manual
 
-Covers: NF241
+\textbf{Covers:} NF241
 					
-Initial State: Application open, with a completed project file prepared.
+\textbf{Initial State:} Application open, with a completed project file prepared.
 					
 Input/Condition: File is open, export is initiated and interrupted
 					
 Output/Result: Project file remains unaltered
 					
-How test will be performed: The tester begins the export process on the loaded project file, before intentionally ending the program
+\textbf{How test will be performed:} The tester begins the export process on the loaded project file, before intentionally ending the program
 in the middle of the export. The project file is then checked against a copy of itself made before the test to see if there are any differences;
 if there are no differences, the test is considered a success. 
 
 \item{test-CO-4 PEP8 Standard Compliance\\}
 
-Type: Static Analysis
+\textbf{Type:} Static Analysis
 
-Covers: DP.10
+\textbf{Covers:} DP.10
 					
-Initial State: Application is fully implemented
+\textbf{Initial State:} Application is fully implemented
 					
 Input/Condition: Codebase is scanned with a linter (e.g. Pylint) %check this against dev plan
 					
 Output/Result: Code complies with PEP8 Standard
 					
-How test will be performed: Developer inputs the entirety of the application's backend code into a linting program and takes note of all
+\textbf{How test will be performed:} Developer inputs the entirety of the application's backend code into a linting program and takes note of all
 warnings. All areas of note are then addressed, with possible refactorings or small fixes resulting.
 
 \end{enumerate}
@@ -1164,17 +1330,17 @@ warnings. All areas of note are then addressed, with possible refactorings or sm
 
 \item{test-MA-1 Maintainable Codebase\\}
 
-Type: Static Analysis
+\textbf{Type:} Static Analysis
 
-Covers: DP.10, GEN4 % this req needs to be added to the SRS
+\textbf{Covers:} DP.10, GEN4 % this req needs to be added to the SRS
 					
-Initial State: Application is fully implemented, and related documentation is complete
+\textbf{Initial State:} Application is fully implemented, and related documentation is complete
 					
 Input/Condition: Developers review all code and documentation
 					
 Output/Result: Code is sufficiently modular, and fully commented; associated documentation is easy to understand
 					
-How test will be performed: Reviewers inspect all code, evaluating based on modularity (functionality is sufficiently separated,
+\textbf{How test will be performed:} Reviewers inspect all code, evaluating based on modularity (functionality is sufficiently separated,
 archicture supports editing one section not mandating updates throughout entire codebase), comments (both function/class headers and notes 
 within functions, explaining complex or unclear code), and naming conventions (names of functions, classes, variables are consistent
 and clear). Associated documentation is reviewed separately, evaluating based on completeness (all modules are detailed) and readability
@@ -1309,96 +1475,14 @@ The following tables show the traceability between test cases and their correspo
 
 \newpage
 
-\section{Unit Test Description}
-
-\wss{This section should not be filled in until after the MIS (detailed design
-  document) has been completed.}
-
-\wss{Reference your MIS (detailed design document) and explain your overall
-philosophy for test case selection.}  
-
-\wss{To save space and time, it may be an option to provide less detail in this section.  
-For the unit tests you can potentially layout your testing strategy here.  That is, you 
-can explain how tests will be selected for each module.  For instance, your test building 
-approach could be test cases for each access program, including one test for normal behaviour 
-and as many tests as needed for edge cases.  Rather than create the details of the input 
-and output here, you could point to the unit testing code.  For this to work, you code 
-needs to be well-documented, with meaningful names for all of the tests.}
-
-
-\subsection{Unit Testing Scope}
-
-\wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
-  have a lower priority for verification than others.  If this is the case,
-  explain your rationale for the ranking of module importance.}
-
-\subsection{Tests for Functional Requirements}
-
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
-
-\subsubsection{Module 1}
-
-\wss{Include a blurb here to explain why the subsections below cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
-  tests were selected.}
-
-\begin{enumerate}
-
-\item{test-id1\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
-
-\item{...\\}
-    
-\end{enumerate}
-
-\subsubsection{Module 2}
-\
-
-...
-
-
-\subsection{Traceability Between Test Cases and Modules}
-
-\wss{Provide evidence that all of the modules have been considered.}
+\clearpage
 
 				
 \bibliographystyle{plainnat}
 
 \bibliography{../../refs/References}
 
-\newpage
+\clearpage
 
 \section{Appendix}
 
@@ -1408,6 +1492,7 @@ This is where you can place additional information.
 
 The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
 Their values are defined in this section for easy maintenance.
+
 
 \begin{itemize}
   \item \textbf{OPTIMAL\_VOXEL\_SIZE} = 5.5nm
@@ -1486,7 +1571,7 @@ graduate attribute of Lifelong Learning.
     did you resolve them?
   
 
-\textbf{Omar: }
+\textbf{Omar: } The pain points that I experienced was trying to free up time to work on this deliverable, as all the members were busy with other assignments and midterms. I worked on the general information section of this deliverable, and the challenges I faced was keeping the information concise and to the point, while still being able to cover all the functional requirements that were listed for both managers on the SRS.
 \newline
 \newline
 \textbf{Daniel: }Responsible for the non-functional system tests, one pain point I dealt with was finding general system requirements that were missing from the SRS as I thought of possible tests for the areas of non-functional testing. Our group chose the Meyer template for the SRS, which I still believe to be the right choice for the project; however, with how the template divides up requirements between components, it becomes possible to miss requirements that the system should have as a whole. For example, not just one feature should have accessible colours, the entire application should. In addition, the SRS makes no mention of the manual, which of course needs to be accessible and user-friendly. As I developed tests that our system needed to satisfy, there were a handful of times I found the SRS did not have these types of general requirements, which will need to be added in a future iteration. 
@@ -1543,7 +1628,12 @@ graduate attribute of Lifelong Learning.
   \end{itemize}
 
   \textbf{Omar: }
-  \newline
+  \textbf{Knowledge of PyTest:} Since I already have some experience with PyTest, I will just focus on reviewing the documentation and the framework to ensure I have a solid understanding of it. Then I will practice with the tool by creating some test cases for the project.
+  \textbf{Knowledge of Jest:} As this is a new framework for me, I will use the online tutorials and documentation to help me understand how the framework works. Then I will try testing it out some of the components of this project to gain practical experience.
+  \textbf{Usability tests:} For this skill, I think the best way to learn is it to go through the 4HC3 course material, which covers many of the usability testing concepts and how to conduct them. This way I can better understand the process and align it with the project.
+  \textbf{Mutation testing:} For this skill, I can go through my last year's notes from the Software Testing course that covers the many type of testing including mutatation testing. This way I can recall the concept and apply it to the project.
+  \textbf{Code reviews:} For this skill, I can practice by doing code reviews on the other projects I am involved in. Currently I am working on a project for 4HC3 and 4AL3. This will help me gain experience and also help me understand the process of code reviews.
+
   \textbf{Daniel: }
   \textit{Knowledge of PyTest:} To become familiar, I will plan to rely on documentation as I feel I am familiar with unit testing frameworks and feel a majority of experience will likely carry over, with differences mainly centered around syntax.
 
@@ -1565,15 +1655,18 @@ graduate attribute of Lifelong Learning.
   \textit{Mutation testing:} I'll revisit my Software Testing course materials on mutation testing strategies and techniques. I'll also experiment with mutation testing tools on sample code to understand how to create effective mutants and interpret results.
   
   \textit{Code Reviews:} I'll review the formal code review processes covered in Software Testing and adapt them for our project. 
-  \newline
+
   \textbf{Olivia: }\\
   \textit{Knowledge of PyTest:} Given that I have minimal experience working with PyTest, I will likely integrate a mixture of the two approaches. To ensure I have a solid foundation of knowledge regarding the framework, I’ll start with reviewing online documents. However, once I have that foundational knowledge, I feel that I will learn much more through engaging with the tool.\\
+
   \textit{Knowledge of Jest:} Similar to my answer above, I will probably combine the approaches. Since I expect the testing of 3D rendition to be much more complex, I feel like I will have to spend more time reviewing the documentation to adequately understand the testing information. However, once I have a good idea of the basics of Jest testing, I feel that active engagement with the tool is better for me, as I tend to have a higher retention rate for what I learn.\\
+
   \textit{Usability tests:} Due to the fact that this system will only be used by a fairly small user group on a regular basis, I feel that it is more beneficial to focus my learning on how to conduct real user testing trial runs. While generalized fundamentals are important in creating a usable design, it might better suit the scope of the project to focus on usability in specific regards to the select group of current users.\\
+
   \textit{Mutation testing:} I believe that I will use a combination of the two approaches. When looking to recall general mutation testing information at the beginning stages, reviewing course material will be helpful due to the familiarity with the content structure. However, when deriving the specific mutations for these test cases, I think that engaging with papers and online resources will allow me to better tailor mutation cases to the specific scope of this project.\\
+
   \textit{Code reviews:} I personally would like to focus on doing code reviews with other team members, as I find the fresh perspective can be helpful. When I spend several hours on a project, I find that it is easy for me to grow complacent during review due to loss of motivation. Therefore, I believe code reviews would be beneficial to actively re-engage myself with the project and take the opportunity to learn from others.
 
-\newline
   \textbf{Khalid:}\\
   \textit{Knowledge of PyTest:} I will use the online tutorials and documentation to help me gain a broading understanding of the testing framework. I think this will be a good starting point, as it will help me understand the framework theoretically, and then I can apply it to the project to gain practical experience.
   
