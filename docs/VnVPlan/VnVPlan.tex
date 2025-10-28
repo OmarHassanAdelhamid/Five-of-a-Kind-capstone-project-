@@ -615,6 +615,213 @@ How test will be performed: Import a valid CAD file. Verify that the system corr
 
 \end{enumerate}
 
+\subsubsection{Editing Manager Tests}
+\rule{\textwidth}{0.5pt}
+
+\medskip
+
+\noindent
+This section covers the tests for ensuring the Editing Manager correctly
+handles magnetization and material assignment operations, property management,
+and user interface interactions as specified in requirements \textbf{F231} through \textbf{F2310}.
+
+\begin{enumerate}
+  \item \textbf{test-FR-EM-1 Individual Voxel Magnetization Assignment} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} 3D model loaded with voxels visible, Editing Manager active. \\ 
+    \textbf{Input:} User selects a single voxel and assigns a magnetization vector (x=1.0, y=0.0, z=0.0). \\ 
+    \textbf{Output:} The selected voxel displays the assigned magnetization vector and updates its visual representation. \\[2mm]
+    \textbf{Test Case Derivation:} Confirming that the system correctly processes individual voxel magnetization assignment, as specified in \textbf{F231}. \\[2mm]
+    \textbf{How test will be performed:} Load a 3D model, select a voxel using the interface, input magnetization values, and verify the assignment is recorded and visually displayed.
+
+  \item \textbf{test-FR-EM-2 Group Voxel Magnetization Assignment} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} 3D model loaded with multiple voxels visible. \\ 
+    \textbf{Input:} User selects multiple voxels and assigns the same magnetization vector to all selected voxels. \\ 
+    \textbf{Output:} All selected voxels display the assigned magnetization vector and update their visual representation. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures the system can handle bulk magnetization assignment operations, satisfying \textbf{F231}. \\[2mm]
+    \textbf{How test will be performed:} Select multiple voxels using the interface, assign magnetization values, and verify all selected voxels receive the assignment.
+
+  \item \textbf{test-FR-EM-3 Favourite Magnetization Vector Management} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Editing Manager with favourite bar accessible. \\ 
+    \textbf{Input:} User creates a favourite magnetization vector (x=0.5, y=0.5, z=0.0) and saves it to the favourite bar. \\ 
+    \textbf{Output:} The magnetization vector is added to the favourite bar and can be selected for future use. \\[2mm]
+    \textbf{Test Case Derivation:} Validates that users can maintain and reuse frequently used magnetization vectors, per \textbf{F232}. \\[2mm]
+    \textbf{How test will be performed:} Create a favourite magnetization vector, save it to the favourite bar, and verify it can be selected and applied to voxels.
+
+  \item \textbf{test-FR-EM-4 Individual Voxel Material Assignment} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} 3D model loaded with voxels visible. \\ 
+    \textbf{Input:} User selects a single voxel and assigns material ID 2. \\ 
+    \textbf{Output:} The selected voxel displays the assigned material and updates its visual representation. \\[2mm]
+    \textbf{Test Case Derivation:} Confirming that the system correctly processes individual voxel material assignment, as specified in \textbf{F233}. \\[2mm]
+    \textbf{How test will be performed:} Select a voxel, assign a material ID, and verify the assignment is recorded and visually displayed.
+
+  \item \textbf{test-FR-EM-5 Group Voxel Material Assignment} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} 3D model loaded with multiple voxels visible. \\ 
+    \textbf{Input:} User selects multiple voxels and assigns material ID 3 to all selected voxels. \\ 
+    \textbf{Output:} All selected voxels display the assigned material and update their visual representation. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures the system can handle bulk material assignment operations, satisfying \textbf{F233}. \\[2mm]
+    \textbf{How test will be performed:} Select multiple voxels, assign a material ID, and verify all selected voxels receive the assignment.
+
+  \item \textbf{test-FR-EM-6 Material Label Assignment} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Material assignment interface accessible. \\ 
+    \textbf{Input:} User assigns label "Steel" to material ID 1. \\ 
+    \textbf{Output:} Material ID 1 is now associated with the label "Steel" in the interface. \\[2mm]
+    \textbf{Test Case Derivation:} Validates that users can assign meaningful labels to material IDs for better organization, per \textbf{F234}. \\[2mm]
+    \textbf{How test will be performed:} Access material management interface, assign a label to a material ID, and verify the label is displayed and associated correctly.
+
+  \item \textbf{test-FR-EM-7 Property Replication Across Layers} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} 3D model with multiple layers loaded. \\ 
+    \textbf{Input:} User selects voxels in one layer with assigned properties and replicates them to another layer. \\ 
+    \textbf{Output:} The target layer voxels receive the same material and magnetization properties as the source voxels. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures efficient workflow by allowing property replication across layers, as specified in \textbf{F235}. \\[2mm]
+    \textbf{How test will be performed:} Select voxels with assigned properties in one layer, use the replication function to copy properties to another layer, and verify the properties are correctly applied.
+
+  \item \textbf{test-FR-EM-8 Auto Save Functionality} \\[2mm]
+    \textbf{Control:} Automated \\ 
+    \textbf{Initial State:} Model with unsaved changes. \\ 
+    \textbf{Input:} System automatically saves changes after a property assignment. \\ 
+    \textbf{Output:} Changes are saved without user intervention and confirmation is displayed. \\[2mm]
+    \textbf{Test Case Derivation:} Validates that the system automatically preserves user work without manual intervention, per \textbf{F236}. \\[2mm]
+    \textbf{How test will be performed:} Make property assignments, verify auto-save triggers, and confirm changes are preserved in the project file.
+
+  \item \textbf{test-FR-EM-9 Edit History Access and Revert} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Model with multiple edit operations completed. \\ 
+    \textbf{Input:} User accesses edit history and reverts to a previous version. \\ 
+    \textbf{Output:} Model returns to the selected previous state with all subsequent changes undone. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures users can recover from mistakes by accessing edit history, as specified in \textbf{F237}. \\[2mm]
+    \textbf{How test will be performed:} Perform multiple edits, access edit history, select a previous version, and verify the model reverts correctly.
+
+  \item \textbf{test-FR-EM-10 Entire Layer Selection and Assignment} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} 3D model with multiple layers loaded. \\ 
+    \textbf{Input:} User selects an entire layer and assigns common material and magnetization properties. \\ 
+    \textbf{Output:} All voxels in the selected layer receive the assigned properties. \\[2mm]
+    \textbf{Test Case Derivation:} Validates efficient bulk operations by allowing entire layer selection, per \textbf{F238}. \\[2mm]
+    \textbf{How test will be performed:} Select an entire layer, assign material and magnetization properties, and verify all voxels in the layer receive the assignments.
+
+  \item \textbf{test-FR-EM-11 Manual Voxel Addition} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} 3D model loaded with defined voxel dimensions. \\ 
+    \textbf{Input:} User adds a new voxel with the same dimensions as existing voxels. \\ 
+    \textbf{Output:} New voxel is added to the model with unassigned properties. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures users can manually add voxels for model adjustments, as specified in \textbf{F239}. \\[2mm]
+    \textbf{How test will be performed:} Use the voxel addition tool to add a new voxel, verify it has correct dimensions, and confirm it starts with unassigned properties.
+
+  \item \textbf{test-FR-EM-12 Manual Voxel Deletion} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} 3D model with multiple voxels. \\ 
+    \textbf{Input:} User selects and deletes a voxel. \\ 
+    \textbf{Output:} Selected voxel is removed from the model. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures users can manually remove voxels for model adjustments, as specified in \textbf{F239}. \\[2mm]
+    \textbf{How test will be performed:} Select a voxel, use the deletion tool, and verify the voxel is removed from the model.
+
+  \item \textbf{test-FR-EM-13 Individual Voxel Property Reset} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Voxel with assigned material and magnetization properties. \\ 
+    \textbf{Input:} User selects the voxel and resets its properties. \\ 
+    \textbf{Output:} Voxel returns to unassigned state for both material and magnetization. \\[2mm]
+    \textbf{Test Case Derivation:} Validates that users can reset individual voxel properties, per \textbf{F2310}. \\[2mm]
+    \textbf{How test will be performed:} Select a voxel with assigned properties, use the reset function, and verify the voxel returns to unassigned state.
+
+  \item \textbf{test-FR-EM-14 Group Voxel Property Reset} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Multiple voxels with assigned properties. \\ 
+    \textbf{Input:} User selects multiple voxels and resets their properties. \\ 
+    \textbf{Output:} All selected voxels return to unassigned state. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures users can reset multiple voxel properties simultaneously, per \textbf{F2310}. \\[2mm]
+    \textbf{How test will be performed:} Select multiple voxels with assigned properties, use the reset function, and verify all selected voxels return to unassigned state.
+
+
+\end{enumerate}
+
+\noindent\rule{\textwidth}{0.5pt}
+
+\subsubsection{Export Manager Tests}
+\rule{\textwidth}{0.5pt}
+
+\medskip
+
+\noindent
+This section covers the tests for ensuring the Export Manager correctly
+handles file export operations, property validation, and data integrity
+as specified in requirements \textbf{F241} through \textbf{F245}.
+
+\begin{enumerate}
+  \item \textbf{test-FR-XM-1 Property Validation for Complete Magnetization} \\[2mm]
+    \textbf{Control:} Automated \\ 
+    \textbf{Initial State:} Model with all voxels having assigned magnetization values. \\ 
+    \textbf{Input:} User requests export for printing. \\ 
+    \textbf{Output:} System validates all voxels have magnetization assignments and proceeds with export. \\[2mm]
+    \textbf{Test Case Derivation:} Confirming that the system validates complete magnetization before export, as specified in \textbf{F241}. \\[2mm]
+    \textbf{How test will be performed:} Load a model with complete magnetization assignments, request export, and verify validation passes and export proceeds.
+
+  \item \textbf{test-FR-XM-2 Property Validation for Incomplete Magnetization} \\[2mm]
+    \textbf{Control:} Automated \\ 
+    \textbf{Initial State:} Model with some voxels missing magnetization assignments. \\ 
+    \textbf{Input:} User requests export for printing. \\ 
+    \textbf{Output:} System identifies unassigned voxels and prompts user to complete assignments or assign null values. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures the system prevents export of incomplete models, per \textbf{F241}. \\[2mm]
+    \textbf{How test will be performed:} Load a model with incomplete magnetization, request export, and verify the system identifies missing assignments and provides appropriate feedback.
+
+  \item \textbf{test-FR-XM-3 Standalone File Export} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Model with complete property assignments ready for export. \\ 
+    \textbf{Input:} User exports model with custom filename "test\_model.vox". \\ 
+    \textbf{Output:} Standalone file containing all voxel metadata is created and saved locally. \\[2mm]
+    \textbf{Test Case Derivation:} Validates that the system can produce complete export files, as specified in \textbf{F242}. \\[2mm]
+    \textbf{How test will be performed:} Export a model with a custom filename, verify the file is created with all metadata, and confirm it can be accessed outside the software.
+
+  \item \textbf{test-FR-XM-4 Project Export in Native Format} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Project with model and all associated data. \\ 
+    \textbf{Input:} User exports project with custom filename "backup\_project.fok". \\ 
+    \textbf{Output:} Native format project file is created and saved locally with all project data preserved. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures users can create project backups and iterations, per \textbf{F243}. \\[2mm]
+    \textbf{How test will be performed:} Export a project in native format, verify the file contains all project data, and confirm it can be imported back into the software.
+
+  \item \textbf{test-FR-XM-5 Export Progress Tracking} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Large model ready for export. \\ 
+    \textbf{Input:} User initiates export operation. \\ 
+    \textbf{Output:} Progress bar displays export progress with visual indicators. \\[2mm]
+    \textbf{Test Case Derivation:} Validates that users receive feedback during export operations, as specified in \textbf{F244}. \\[2mm]
+    \textbf{How test will be performed:} Export a large model, observe the progress bar updates, and verify the progress indicators accurately reflect export status.
+
+  \item \textbf{test-FR-XM-6 Model Summary Export} \\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Model with complete property assignments. \\ 
+    \textbf{Input:} User exports model with summary option enabled. \\ 
+    \textbf{Output:} Model file and summary file are created with statistics about the model. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures users can access model statistics for analysis, per \textbf{F245}. \\[2mm]
+    \textbf{How test will be performed:} Export a model with summary enabled, verify both files are created, and confirm the summary contains relevant model statistics.
+
+  \item \textbf{test-FR-XM-7 Export Failure Recovery} \\[2mm]
+    \textbf{Control:} Automated \\ 
+    \textbf{Initial State:} Model ready for export. \\ 
+    \textbf{Input:} Export operation is interrupted (simulated system failure). \\ 
+    \textbf{Output:} Original project data remains intact and unaltered. \\[2mm]
+    \textbf{Test Case Derivation:} Validates that export failures do not corrupt project data, per \textbf{F241}. \\[2mm]
+    \textbf{How test will be performed:} Initiate export, simulate failure during the process, and verify the original project file remains unchanged and accessible.
+
+  \item \textbf{test-FR-XM-8 Export Performance Validation} \\[2mm]
+    \textbf{Control:} Automated \\ 
+    \textbf{Initial State:} Model with MAX\_VOXELS voxels ready for export. \\ 
+    \textbf{Input:} User initiates export operation. \\ 
+    \textbf{Output:} Export completes at minimum rate of MIN\_RATE (500,000 voxels per second). \\[2mm]
+    \textbf{Test Case Derivation:} Ensures export performance meets specified thresholds, per \textbf{F241}. \\[2mm]
+    \textbf{How test will be performed:} Export a large model, measure the export rate, and verify it meets or exceeds the MIN\_RATE threshold.
+
+\end{enumerate}
+
+\noindent\rule{\textwidth}{0.5pt}
+
 \subsection{Tests for Nonfunctional Requirements}
 \iffalse
 \wss{The nonfunctional requirements for accuracy will likely just reference the
@@ -630,9 +837,6 @@ table or graph.}
 
 \wss{Tests related to usability could include conducting a usability test and
   survey.  The survey will be in the Appendix.}
-
-\wss{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
 
 \wss{If you introduce static tests in your plan, you need to provide details.
 How will they be done?  In cases like code (or document) walkthroughs, who will
@@ -926,6 +1130,8 @@ are implicitly tested for by the following system tests and/or unit tests.
 
 \subsection{Traceability Between Test Cases and Requirements}
 
+The following tables show the traceability between test cases and their corresponding functional requirements.
+
 \iffalse
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
@@ -961,6 +1167,46 @@ are implicitly tested for by the following system tests and/or unit tests.
     FR-VM-6 & F226\\
     FR-VM-7 & F227\\
     FR-INT-1 & F211, F221\\
+  \end{tabular}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{Editing Manager Tests and Corresponding Requirements}
+  \begin{tabular}{c c}
+    \hline
+    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
+    FR-EM-1 & F231\\
+    FR-EM-2 & F231\\
+    FR-EM-3 & F232\\
+    FR-EM-4 & F233\\
+    FR-EM-5 & F233\\
+    FR-EM-6 & F234\\
+    FR-EM-7 & F235\\
+    FR-EM-8 & F236\\
+    FR-EM-9 & F237\\
+    FR-EM-10 & F238\\
+    FR-EM-11 & F239\\
+    FR-EM-12 & F239\\
+    FR-EM-13 & F2310\\
+    FR-EM-14 & F2310\\
+  \end{tabular}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{Export Manager Tests and Corresponding Requirements}
+  \begin{tabular}{c c}
+    \hline
+    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
+    FR-XM-1 & F241\\
+    FR-XM-2 & F241\\
+    FR-XM-3 & F242\\
+    FR-XM-4 & F243\\
+    FR-XM-5 & F244\\
+    FR-XM-6 & F245\\
+    FR-XM-7 & F241\\
+    FR-XM-8 & F241\\
   \end{tabular}
 \end{table}
 
@@ -1068,49 +1314,6 @@ How test will be performed:
 
 ...
 
-\subsection{Tests for Nonfunctional Requirements}
-
-\wss{If there is a module that needs to be independently assessed for
-  performance, those test cases can go here.  In some projects, planning for
-  nonfunctional tests of units will not be that relevant.}
-
-\wss{These tests may involve collecting performance data from previously
-  mentioned functional tests.}
-
-\subsubsection{Module ?}
-		
-\begin{enumerate}
-
-\item{test-id1\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
-
-\end{enumerate}
-
-\subsubsection{Module ?}
-
-...
 
 \subsection{Traceability Between Test Cases and Modules}
 
@@ -1290,5 +1493,6 @@ graduate attribute of Lifelong Learning.
   \textit{Code reviews:} I will look over my notes from the Software Testing course that covers how to conduct a code review. I will also experiment using some old code from other projects just to get a feel for the process.
   
 \end{enumerate}
+
 
 \end{document}
