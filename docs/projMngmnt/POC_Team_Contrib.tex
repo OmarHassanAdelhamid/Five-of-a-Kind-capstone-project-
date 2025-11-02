@@ -23,12 +23,19 @@ Demo.  The time period of interest is the time between the beginning of the term
 and the POC demo.
 
 \section{Demo Plans}
-\iffalse
-\wss{What will you be demonstrating}
-\fi
 
-%this WON'T follow what is currently in the dev plan doc. needs to include our plan to 
-%show actual 3d rendering in the browser with three.js.
+For our proof of concept demonstration, we will showcase the core functionality of our 
+voxel magnetization system for 3D printing. The demonstration will focus on the following key aspects:
+
+\begin{enumerate}
+    \item \textbf{Import and Voxelization:} We will demonstrate how our system imports CAD 
+    files (STL/OBJ format) and converts them into a voxel grid with fixed dimensions, showing the file parsing and voxelization of a simple model.
+    
+    \item \textbf{3D Rendering:} We will demonstrate the 3D rendering of the voxelized model using Three.js, showing how users can view the model from different angles.
+    
+    \item \textbf{Export Functionality:} We will demosntrate how our system exports the voxel data (magnetization, material ID, location) to a CSV file format, demonstrating the file export capability for a simple model. Dummy data will be used for the export.
+    
+\end{enumerate}
 
 \section{Team Meeting Attendance}
 \iffalse
@@ -198,20 +205,46 @@ the work divisions.
 
 \section{CICD}
 
-\wss{Say how CICD will be used in your project}
-%THIS SHOULD BE LARGELY A SUMMARY OF THE DEV PLAN CORRESPONDING SECTION
+This section explains the Continuous Integration and Continuous Deployment (CI/CD) plan for our project. The plan will help ensure consistent code quality, testing, and deployment processes.
+
+\subsection{Source Control and Branching Strategy}
+
+\begin{itemize}
+    \item \textbf{Repository Setup}: Our team will use GitHub for version control and collaboration.
+    
+    \item \textbf{Branching Strategy}:
+    \begin{itemize}
+        \item \texttt{main}: The main branch will be used to store the production-ready code.
+        \item \texttt{<name of team member>-<issue name>}: The temporary branches will be created for each team member to work on their assigned issues. These branches will be merged into the main branch after the task is completed.
+    \end{itemize}
+    
+    \item \textbf{Merging Policy}: All pull requests should have at least two reviews before merging, as outlined in the Development Plan. This will help ensure that the code is of high quality and meets the requirements of the project.
+\end{itemize}
+
+\subsection{Testing and Code Analysis Pipeline}
+
+Our team will use GitHub Actions for CI/CD to automate testing and code analysis on pull requests. They will include the following:
+
+\begin{itemize}
+    
+    \item \textbf{Static Code Analysis \& Linting}
+    \begin{itemize}
+        \item \textbf{Frontend}: \texttt{ESLint} will be used to enforce React coding standards and identify potential issues.
+        \item \textbf{Backend}: \texttt{PyLint} will be used to handle both code smells for static analysis and enforce the coding standards for the backend.
+    \end{itemize}
+    
+    \item \textbf{Testing}
+    \begin{itemize}
+        \item \textbf{Frontend Unit Tests}: Unit tests will be written using \texttt{Jest} for React components and utility functions, the GitHub Actions will run the tests using the command `npm test`.
+        \item \textbf{Backend Unit Tests}: Unit tests will be written using \texttt{pytest} for API endpoints and core functionality, the GitHub Actions will run the tests using the command `pytest`.
+    \end{itemize}
+    
+    \item \textbf{Documentation}: LaTeX documentation files will be automatically compiled to PDF on commits to the \texttt{main} branch. The GitHub Actions will run the compilation using the command `make all`.
+\end{itemize}
 
 \section{Team Charter Trigger Items}
 
-\wss{Provide a summary of the quantified triggers identified in the team's
-charter.}
-
-\wss{Provide a list of any violations of the triggers.  If the team wishes, the
-violations can be summarized on aggregate, instead of naming specific team
-members.}
-
-\wss{Provide a plan to address the violations.  This could include revising the
-triggers, if they are found to be too weak, strong or ambiguous.}
+Our team has experienced no violations of the triggers in the team charter.
 
 %SAME HERE
 
