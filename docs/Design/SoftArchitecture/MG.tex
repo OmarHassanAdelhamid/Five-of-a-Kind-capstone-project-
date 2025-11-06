@@ -67,6 +67,7 @@ This section records information for easy reference.
   \midrule 
   AC & Anticipated Change\\
   CAD & Computer-Aided Design\\
+  CSV & Comma Separated Values\\
   DAG & Directed Acyclic Graph \\
   JSON & JavaScript Object Notation\\
   M & Module \\
@@ -78,9 +79,9 @@ This section records information for easy reference.
   SRS & Software Requirements Specification\\
   STL & Stereolithography file format\\
   UI & User Interface\\
-  WSL & Windows Subsystem for Linux\\
   \progname & Explanation of program name\\
   UC & Unlikely Change \\
+  XML & Extensible Markup Language\\
   \bottomrule
 \end{tabular}\\
 
@@ -164,7 +165,7 @@ change.
 
 \begin{description}
 
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the initial input file (CAD file formats). Initially, the system will support STL and OBJ files, but anticipated changes could require supporting additional CAD formats used in the industry. The change in input format affects the parsing logic, error handling, and inetgration with visualization manager. Changes will require updates to file importers and related data validation processes.
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the initial input file (CAD file formats). Initially, the system will support STL files, but anticipated changes could require supporting additional CAD formats used in the industry. The change in input format affects the parsing logic, error handling, and inetgration with visualization manager. Changes will require updates to file importers and related data validation processes.
 
 \item[\refstepcounter{acnum} \actheacnum \label{acInputConstraints}:] The constraints on the input parameters such as the maximum number of voxels and the maximum number of layers that can be displayed. These limits are currently fixed at 13,996,800,000 voxels and 518,400 voxels, but may need to be configurable in the future. Changes to these constraints will require updates to the input validation and parsing logic.
 
@@ -319,8 +320,8 @@ to be implemented.
 \subsubsection{Export Validation Module (\mref{m12})}
 
 \begin{description}
-\item[Secrets:] How to validate whether a project metadata file is suitable for export. How to check Java-readable file format requirements, verify that all voxels have required material and magnetization properties, and ensure data integrity constraints are satisfied. How to determine export readiness based on validation rules.
-\item[Services:] Validates export readiness by checking Java-readable file format requirements, verifying completeness of voxel properties (material and magnetization), and ensuring all export constraints are met. Provides validation results and error reporting for export issues.
+\item[Secrets:] How to validate whether a project metadata file is suitable for export. How to check export file format requirements, verify that all voxels have required material and magnetization properties, and ensure data integrity constraints are satisfied. How to determine export readiness based on validation rules.
+\item[Services:] Validates export readiness by checking export file format requirements, verifying completeness of voxel properties (material and magnetization), and ensuring all export constraints are met. Provides validation results and error reporting for export issues.
 \item[Implemented By:] \teamname{}
 \item[Type of Module:] Library: A reusable component providing validation functionality for export operations.
 \end{description} 
