@@ -31,6 +31,8 @@
 \newcommand{\mthemnum}{M\themnum}
 \newcommand{\mref}[1]{M\ref{#1}}
 
+\newcommand{\projectname}{AutoVox}
+
 \begin{document}
 
 \title{Module Guide for \progname{}} 
@@ -74,7 +76,9 @@ This section records information for easy reference.
   SRS & Software Requirements Specification\\
   \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  UI & User Interface \\
+  3D & Three Dimensional \\
+  API & Application Programming Interface \\
   \bottomrule
 \end{tabular}\\
 
@@ -191,8 +195,29 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+% Behaviour Hiding Modules
+\item [\refstepcounter{mnum} \mthemnum \label{m1}:] STL Interpreter Module
+\item [\refstepcounter{mnum} \mthemnum \label{m2}:] Voxel Slicing Module
+\item [\refstepcounter{mnum} \mthemnum \label{m3}:] Display Partitioning Module
+\item [\refstepcounter{mnum} \mthemnum \label{m4}:] Project Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m5}:] Serialization Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m6}:] Backend Communication Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m7}:] Interaction Controller Module
+\item [\refstepcounter{mnum} \mthemnum \label{m8}:] Visualization State Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m9}:] Model Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m10}:] History Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m11}:] Autosave Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m12}:] Voxel Tracking Module
+\item [\refstepcounter{mnum} \mthemnum \label{m13}:] Highlight Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m14}:] Export Validation Module
+\item [\refstepcounter{mnum} \mthemnum \label{m15}:] Export Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m16}:] Error Diagnostic Handler Module
+
+% Software Decision Modules
+\item [\refstepcounter{mnum} \mthemnum \label{m17}:] Model Structure Module
+\item [\refstepcounter{mnum} \mthemnum \label{m18}:] Graphics Adapter Module
+\item [\refstepcounter{mnum} \mthemnum \label{m19}:] Database Handler Module
+\item [\refstepcounter{mnum} \mthemnum \label{m20}:] Export Structure Module
 \end{description}
 
 
@@ -203,22 +228,31 @@ actually be implemented.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+{Hardware-Hiding Module} & None \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & STL Interpreter Module\\
+& Voxel Slicing Module\\
+& Display Partitioning Module\\
+& Project Manager Module\\
+& Serialization Manager Module\\
+& Backend Communication Manager Module\\
+& Interaction Controller Module\\
+& Visualization State Manager Module\\
+& Model Manager Module\\
+& History Manager Module\\
+& Autosave Manager Module\\
+& Voxel Tracking Module\\
+& Highlight Manager Module\\
+& Export Validation Module\\
+& Export Manager Module\\
+& Error Diagnostic Handler Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
-& ?\\
+\multirow{3}{0.3\textwidth}{Software Decision Module} & Model Structure Module\\
+& Graphics Adapter Module\\
+& Database Handler Module\\
+& Export Structure Module\\
 \bottomrule
 
 \end{tabular}
@@ -257,55 +291,207 @@ to be implemented.
 
 \subsection{Hardware Hiding Modules (\mref{mHH})}
 
-\begin{description}
-\item[Secrets:]The data structure and algorithm used to implement the virtual
-  hardware.
-\item[Services:]Serves as a virtual hardware used by the rest of the
-  system. This module provides the interface between the hardware and the
-  software. So, the system can use it to display outputs or to accept inputs.
-\item[Implemented By:] OS
-\end{description}
+This system has no hardware components.
 
 \subsection{Behaviour-Hiding Module}
 
-\begin{description}
-\item[Secrets:]The contents of the required behaviours.
-\item[Services:]Includes programs that provide externally visible behaviour of
-  the system as specified in the software requirements specification (SRS)
-  documents. This module serves as a communication layer between the
-  hardware-hiding module and the software decision module. The programs in this
-  module will need to change if there are changes in the SRS.
-\item[Implemented By:] --
-\end{description}
-
-\subsubsection{Input Format Module (\mref{mInput})}
+\subsubsection{STL Interpreter Module (\mref{m1})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the input data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
   [Information to include for leaf modules in the decomposition by secrets tree.]
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Voxel Slicing Module (\mref{m2})}
+
+\begin{description}
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
+\end{description}
+
+\subsubsection{Display Partitioning Module (\mref{m3})}
+
+\begin{description}
+  \item[Secrets:] How to determine the boundaries that define model partitions. How to define the relationship
+  between display segments. How to represent partition boundaries. How to minimize the number of partitions created. How to ensure that display partitions maintain balanced spatial proportions. How to maintain partition stability during model modification. How to validate that a partition of voxels is viable to display within the UI.
+  \item[Services:] Provide functionality for partitioning the model into distinct display segments defined by specific voxel groupings. Manages the relationships and alignment between display segments.
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Project Manager Module (\mref{m4})}
+
+\begin{description}
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
+\end{description}
+
+\subsubsection{Serialization Manager Module (\mref{m5})}
+
+\begin{description}
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
+\end{description}
+
+\subsubsection{Backend Communication Manager Module (\mref{m6})}
+
+\begin{description}
+  \item[Secrets:] How the connection between the backend and frontend is established. How data is transformed, validated and transferred between the backend and frontend. How synchronization errors are detected during communication. How failed communication attempts are detected and handled.
+  \item[Services:] Handles communication between the backend server and the frontend UI. Ensures synchronization of model data throughout the system.
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Interaction Controller Module (\mref{m7})}
+
+\begin{description}
+  \item[Secrets:] How events are internally represented. How to differentiate between similar events. How to define the rules that associate high-level action with a raw event. How to handle raw events where user intent is inconclusive. How to determine when multiple events should be interpreted as a single user action. How to apply context from UI when interpreting events.
+  \item[Services:] Maps raw events from interaction with UI to high-level system actions that reflect user intent.
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Visualization State Manager Module (\mref{m8})}
+
+\begin{description}
+  \item[Secrets:] How changes are grouped and aggregated. How the unified state-change representation is structured. How a state change is validated as complete. How event propagation from multiple sources is tracked concurrently. How conditions that trigger a UI update are determined. How the order of UI updates is established. How conflicting state changes are resolved. How invalid or irrelevant data-change notifications are handled.
+  \item[Services:] Aggregates data-change notifications from event propagation into a unified state-change representation. Triggers UI update used the derived state differences.
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Model Manager Module (\mref{m9})}
+
+\begin{description}
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
+\end{description}
+
+\subsubsection{History Manager Module (\mref{m10})}
+
+\begin{description}
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
+\end{description}
+
+\subsubsection{Autosave Manager Module (\mref{m11})}
+
+\begin{description}
+  \item[Secrets:] How to collect and aggregate metrics to represent the current status of update operations. How to handle errors in metric collection. How multiple metrics are tracked concurrently. How the state of update execution is defined from collected metric data. How autosave execution is triggered. How autosave failures or interruptions are detected and handled.
+  \item[Services:] Maintains real-time autosave status. Tracks metrics that are used to determine the current state of update execution.
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Voxel Tracking Module (\mref{m12})}
+
+\begin{description}
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
+\end{description}
+
+\subsubsection{Highlight Manager Module (\mref{m13})}
+
+\begin{description}
+  \item[Secrets:] How to define the rules that associate voxel semantics with a highlight colour. How high colours are internally represented. How conflicts are resolved when a voxel qualifies for multiple highlight colours simultaneously. How colour palette, which encapsulates all highlight colours, is chosen. How accessibility requirements influence the selection of highlight colours.
+  \item[Services:] Maps relationship between highlight colour and semantic meaning of highlighted voxels.
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Export Validation Module (\mref{m14})}
+
+\begin{description}
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
+\end{description}
+
+\subsubsection{Export Manager Module (\mref{m15})}
+
+\begin{description}
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
+\end{description}
+
+\subsubsection{Error Diagnostic Handler Module (\mref{m16})}
+
+\begin{description}
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
+\end{description}
+
 
 
 \subsection{Software Decision Module}
 
+\subsubsection{Model Structure Module (\mref{m17})}
+
 \begin{description}
-\item[Secrets:] The design decision based on mathematical theorems, physical
-  facts, or programming considerations. The secrets of this module are
-  \emph{not} described in the SRS.
-\item[Services:] Includes data structure and algorithms used in the system that
-  do not provide direct interaction with the user. 
-  % Changes in these modules are more likely to be motivated by a desire to
-  % improve performance than by externally imposed changes.
-\item[Implemented By:] --
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Graphics Adapter Module (\mref{m18})}
+
+\begin{description}
+  \item[Secrets:] How the graphics API is initialized and configured for rendering. How input data and formats are configured to remain compliant with API requirements. How rendering parameters are derived from visualization state. How resources are allocated and managed during rendering. 
+  \item[Services:] Facilitates the use of the graphics API to render the  3D model and general UI in accordance with the state provided by the Visualization State Manager.  
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Database Handler Module (\mref{m19})}
+
+\begin{description}
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
+\end{description}
+
+\subsubsection{Export Structure Module (\mref{m20})}
+
+\begin{description}
+  \item[Secrets:]
+  \item[Services:]
+  \item[Implemented By:] \projectname{}
+  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
+\end{description}
 
 \section{Traceability Matrix} \label{SecTM}
 
