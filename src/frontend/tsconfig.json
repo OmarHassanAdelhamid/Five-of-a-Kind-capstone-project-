@@ -7,7 +7,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "three/examples/jsm/*": ["node_modules/@types/three/examples/jsm/*"]
     }
   }
 }
