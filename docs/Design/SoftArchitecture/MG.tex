@@ -7,6 +7,8 @@
 \usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -268,6 +270,278 @@ to be implemented.
 
 \subsection{Behaviour-Hiding Module}
 
+
+
+\subsubsection{Input Interpreter Module (\mref{m1})}
+
+\begin{description}
+\item[Secrets:] How data is extracted, parsed, and normalized from any compatible input file into the model’s internal format. This includes how the system identifies file type (STL, JSON, or binary), parses and interprets geometry or voxel-based structures, applies scaling and coordinate normalization, and handles malformed data or import errors. The internal logic for combining geometric mesh data with project metadata, and the reconstruction of previously exported project files, is hidden within this module.
+\item[Services:] Provides a unified import interface for all supported input formats. When the user selects a file to load, this module determines the file type and converts it into a consistent intermediate representation. For STL files, it extracts geometric mesh data (facets, vertices, normals) and scales it to the target voxel grid resolution. For past project files, it deserializes voxel data and associated metadata to rebuild the model state. It outputs a structured Intermediate Model object compatible with downstream modules such as Voxel Slicing (M2) and Serialization Manager (M5).
+\item[Implemented By:] \teamname{}
+\item[Type of Module:] Library: a reusable parsing and normalization component that handles all input data extraction for both new and existing projects.
+\end{description}
+
+\paragraph{Input Interpreter Formalization}
+
+
+
+
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Input File:} $F_{input} \in \{F_{STL}, F_{project}\}$ 
+\begin{itemize}
+\item $F_{STL} = (H, T)$ where $H$ is the header and $T = \{t_1, t_2, ..., t_n\}$ are triangular facets
+\item $F_{project} = (V, L, M)$ where $V$ is voxel grid, $L$ layer data, $M$ metadata
+\end{itemize}
+\item \textbf{Facet:} $t_i = (n_i, v_{i1}, v_{i2}, v_{i3})$, $n_i \in \mathbb{R}^3$, $v_{ij} \in \mathbb{R}^3$
+\item \textbf{Scaling Factor:} $s \in \mathbb{R}^+$
+\item \textbf{Intermediate Model:} $M_{intermediate} = (V, F, Meta)$
+\end{itemize}
+
+\item \textbf{Import Process}
+\begin{itemize}
+\item \textbf{File Type Detection:}
+$$Type(F_{input}) = 
+\begin{cases}
+STL & \text{if mesh identifier detected}\\
+Project & \text{if serialized metadata signature detected}
+\end{cases}$$
+\item \textbf{Parsing Logic:}
+$$M_{raw} =
+\begin{cases}
+ParseSTL(F_{STL}) & \text{if } Type = STL\\
+Deserialize(F_{project}) & \text{if } Type = Project
+\end{cases}$$
+\item \textbf{Scaling:} $v' = s \cdot v, \forall v \in M_{raw}$
+\item \textbf{Normalization:} $v'' = v' - \frac{(x_{min}+x_{max},y_{min}+y_{max},z_{min}+z_{max})}{2}$
+\end{itemize}
+
+\item \textbf{Error Handling}
+\begin{itemize}
+\item Degenerate facets $\rightarrow$ \texttt{InvalidFacetError}
+\item Missing metadata $\rightarrow$ \texttt{ImportFormatError}
+\item Unsupported extension $\rightarrow$ \texttt{UnsupportedFileTypeError}
+\end{itemize}
+
+\item \textbf{Output}
+\begin{itemize}
+\item $M_{intermediate} = (V', F', Meta)$
+\item Supplies structured geometry or voxel data to M2 and M5
+\end{itemize}
+\end{enumerate}
+
+
+
+\subsubsection{Voxel Slicing Module (\mref{m2})}
+
+\begin{description}
+\item[Secrets:] How the input geometry or intermediate model is converted into a 3D voxel grid representation. The algorithms for slicing along the Z-axis, detecting layer boundaries, mapping voxels to spatial coordinates, and optimizing voxelization resolution are hidden within this module.
+\item[Services:] Converts geometric mesh or input model into voxel representation. Generates discrete voxel layers by slicing through the 3D model at fixed Z intervals. Produces a voxel grid structure compatible with Model Structure (M16) and Model Manager (M8). Maintains layer order and voxel occupancy data for further processing.
+\item[Implemented By:] \teamname{}
+\item[Type of Module:] Abstract Object: a computational module responsible for transforming geometry into voxelized form.
+\end{description}
+
+\paragraph{Voxel Slicing Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Input Mesh:} $M_{intermediate} = (V, F)$
+\item \textbf{Voxel Grid:} $G = \{v_{xyz}\ |\ x,y,z \in \mathbb{N}\}$, discrete points in grid space
+\item \textbf{Voxel Resolution:} $(r_x, r_y, r_z) \in \mathbb{R}^3$
+\item \textbf{Layer:} $l_k = \{v_{xyz} \mid z = k \cdot r_z\}$
+\end{itemize}
+
+\item \textbf{Voxelization Algorithm}
+\begin{itemize}
+\item For each facet $t_i$ in $F$, determine all grid cells intersected by $t_i$
+\item Mark those grid cells as occupied voxels $v_{xyz}$
+\item Group occupied voxels into layers by $z$ coordinate
+\end{itemize}
+
+\item \textbf{Transformations}
+\[
+G = Voxelize(M_{intermediate}, r_x, r_y, r_z)
+\]
+\[
+L = \{l_1, l_2, ..., l_n\}
+\]
+
+\item \textbf{Output}
+\begin{itemize}
+\item Returns $(G, L)$ to Model Manager (M8)
+\item Provides geometric discretization data for magnetization and material assignment
+\end{itemize}
+\end{enumerate}
+
+
+
+\subsubsection{Serialization Manager Module (\mref{m5})}
+
+\begin{description}
+\item[Secrets:] How data structures representing the 3D model are serialized into and deserialized from persistent storage formats (JSON or binary). Includes compression, backward compatibility logic, and error recovery during serialization.
+\item[Services:] Converts model data between in-memory representation and serialized form. Encodes voxel grid, layer, and metadata into JSON/binary for saving and reconstructs them when loading. Used by Database Handler (M18) and Export Manager (M13) to ensure consistent data persistence.
+\item[Implemented By:] \teamname{}
+\item[Type of Module:] Library: a reusable component for encoding and decoding model data.
+\end{description}
+
+\paragraph{Serialization Manager Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Model Structure:} $M = (G, L, Meta)$
+\item \textbf{Serialized Form:} $S = Encode(M)$, where $S$ is a JSON/binary string
+\item \textbf{Deserialized Structure:} $M' = Decode(S)$
+\end{itemize}
+
+\item \textbf{Conversion Process}
+\begin{itemize}
+\item \textbf{Serialization:} $Encode(M) = JSON.stringify(M)$
+\item \textbf{Deserialization:} $Decode(S) = JSON.parse(S)$
+\item Maintain consistency: $Decode(Encode(M)) = M$
+\end{itemize}
+
+\item \textbf{Error Handling}
+\begin{itemize}
+\item If corrupted $S$: raise \texttt{DeserializationError}
+\item If missing fields: raise \texttt{SchemaMismatchError}
+\end{itemize}
+
+\item \textbf{Output}
+\begin{itemize}
+\item Returns $S$ for saving or $M'$ for reconstruction
+\end{itemize}
+\end{enumerate}
+
+
+
+\subsubsection{Model Manager Module (\mref{m8})}
+
+\begin{description}
+\item[Secrets:] How voxel updates, material and magnetization assignments, and auto-save processes are handled internally. How changes propagate through layers, how consistency is maintained across the model, and how synchronization with other modules occurs.
+\item[Services:] Provides editing functionality for voxel data. Allows adding, removing, or modifying voxels, and updating material or magnetization values. Coordinates auto-save and triggers History Manager (M9) updates. Interacts with Serialization Manager (M5) for persistent state.
+\item[Implemented By:] \teamname{}
+\item[Type of Module:] Abstract Object: a controller for maintaining and updating the voxel model state.
+\end{description}
+
+\paragraph{Model Manager Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Model:} $M = (G, L, Meta)$
+\item \textbf{Voxel:} $v = (p, m, mag)$
+\item \textbf{Modification:} $\Delta M = \{ \Delta v_1, \Delta v_2, ...\}$ set of voxel edits
+\end{itemize}
+
+\item \textbf{Update Process}
+\[
+M' = ApplyChanges(M, \Delta M)
+\]
+\[
+HistoryManager.Push(\Delta M)
+\]
+
+\item \textbf{Auto-save:}
+\[
+if\ elapsed\_time > t_{threshold} \Rightarrow SerializationManager.Save(M')
+\]
+
+\item \textbf{Constraints}
+\begin{itemize}
+\item Layer integrity preserved: $Order(L) = constant$
+\item Valid material assignment: $\forall v, m \in M_{types}$
+\item Valid magnetization vector: $\forall v, \|mag\| \leq 1$
+\end{itemize}
+\end{enumerate}
+
+
+
+\subsubsection{History Manager Module (\mref{m9})}
+
+\begin{description}
+\item[Secrets:] How model changes are tracked, stored, and reversed. Implementation of delta-based versioning, memory-efficient state saving, and undo/redo indexing.
+\item[Services:] Maintains chronological history of model changes. Enables undo/redo functionality by restoring previous states. Works closely with Model Manager (M8) to record modifications and Serialization Manager (M5) to store snapshots.
+\item[Implemented By:] \teamname{}
+\item[Type of Module:] Abstract Object: a component for model state tracking and version control.
+\end{description}
+
+\paragraph{History Manager Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{State Sequence:} $\Sigma = [M_0, M_1, ..., M_t]$
+\item \textbf{Current State Index:} $i \in [0,t]$
+\end{itemize}
+
+\item \textbf{Operations}
+\begin{itemize}
+\item \textbf{Record Change:} $Push(M_{i+1}) \Rightarrow \Sigma = \Sigma \cup M_{i+1}$
+\item \textbf{Undo:} $i' = i - 1$, restore $M_{i'}$
+\item \textbf{Redo:} $i' = i + 1$, restore $M_{i'}$
+\end{itemize}
+
+\item \textbf{Constraints}
+\begin{itemize}
+\item History length limited: $|\Sigma| \leq N_{max}$
+\item No forward redo after new change: $M_{i+1..t}$ discarded on new edit
+\end{itemize}
+\end{enumerate}
+\subsubsection{Voxel Tracking Module (\mref{m10})}
+
+\begin{description}
+\item[Secrets:] How the system determines which voxels satisfy a given property such as material type, magnetization vector, or spatial location. The internal search algorithms, indexing structures, and filtering logic are hidden within this module. Optimizations for performance (e.g., spatial hashing or pre-computed lookup tables) are also concealed.
+\item[Services:] Provides query and filtering capabilities over the voxel grid. Given a property condition, it returns the set of voxels that match. Supplies data for Highlight Manager (M11) to visualize these voxels. Supports compound queries such as logical AND/OR between material, magnetization, and position constraints.
+\item[Implemented By:] \teamname{}
+\item[Type of Module:] Abstract Object: a computational component for property-based voxel identification and filtering.
+\end{description}
+
+\paragraph{Voxel Tracking Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Voxel:} $v = (p, m, mag)$ where $p=(x,y,z)\in\mathbb{Z}^3$, $m\in M_{types}$, $mag\in\mathbb{R}^3$
+\item \textbf{Voxel Grid:} $G=\{v_1,v_2,\ldots,v_n\}$
+\item \textbf{Property Predicate:} $\phi(v)$ — boolean condition evaluating a voxel’s property
+\item \textbf{Result Set:} $R=\{v\in G \mid \phi(v)=true\}$
+\end{itemize}
+
+\item \textbf{Tracking Process}
+\begin{itemize}
+\item Evaluate $\phi(v)$ for all $v\in G$
+\item Collect $R=\{v_i\ |\ \phi(v_i)\}$ for highlighting or further analysis
+\end{itemize}
+
+\item \textbf{Supported Predicates}
+\begin{itemize}
+\item Material match: $\phi_m(v)\equiv(v.m=m_{target})$
+\item Magnetization threshold: $\phi_{mag}(v)\equiv(\|v.mag - mag_{target}\|<\epsilon)$
+\item Spatial region: $\phi_{p}(v)\equiv(v.p\in region)$
+\end{itemize}
+
+\item \textbf{Composite Queries}
+\[
+\phi(v)=
+\begin{cases}
+\phi_m(v)\land\phi_{mag}(v) & \text{(AND)}\\
+\phi_m(v)\lor\phi_{p}(v) & \text{(OR)}
+\end{cases}
+\]
+
+\item \textbf{Output}
+\begin{itemize}
+\item Returns set $R$ to Highlight Manager (M11)
+\item Guarantees deterministic results for identical predicates
+\end{itemize}
+\end{enumerate}
+
+
+
 \begin{description}
 \item[Secrets:]The contents of the required behaviours.
 \item[Services:]Includes programs that provide externally visible behaviour of
@@ -294,6 +568,88 @@ to be implemented.
 
 \subsection{Software Decision Module}
 
+\subsubsection{Database Handler Module (\mref{m18})}
+
+\begin{description}
+\item[Secrets:] How persistent project and model data are stored, indexed, and accessed. The specific file-system or database technology (e.g., JSON files, SQLite, binary blobs) and its connection management are hidden. Includes caching and concurrency handling mechanisms.
+\item[Services:] Provides read and write access between the application and storage layer. Saves serialized models and retrieves them when requested. Ensures data integrity and version consistency using the Serialization Manager (M5). Supports CRUD operations for project entries and manages file metadata such as timestamps and file paths.
+\item[Implemented By:] \teamname{}
+\item[Type of Module:] Library: a persistence interface between the application logic and the underlying storage mechanism.
+\end{description}
+
+\paragraph{Database Handler Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Serialized Data:} $S=Encode(M)$ from Serialization Manager (M5)
+\item \textbf{Storage Mapping:} $\mu: ProjectID \rightarrow S$
+\item \textbf{Database:} $D=\{(id_i,S_i)\mid id_i\in ID\_{projects}\}$
+\end{itemize}
+
+\item \textbf{Operations}
+\begin{itemize}
+\item \textbf{Save:} $Store(D,id,S): D\leftarrow D\cup (id,S)$
+\item \textbf{Load:} $Retrieve(D,id)\rightarrow S$
+\item \textbf{Delete:} $Remove(D,id): D\leftarrow D\setminus (id,S)$
+\end{itemize}
+
+\item \textbf{Constraints}
+\begin{itemize}
+\item Unique project identifier: $\forall id_i,id_j, i\neq j \Rightarrow id_i\neq id_j$
+\item Integrity: $Decode(Retrieve(D,id))=M$
+\item Atomic write: partial failures do not corrupt $D$
+\end{itemize}
+
+\item \textbf{Output}
+\begin{itemize}
+\item Provides serialized model data to higher-level modules (M5, M4)
+\item Ensures persistent consistency across sessions
+\end{itemize}
+\end{enumerate}
+
+
+
+\subsubsection{Export Structure Module (\mref{m19})}
+
+\begin{description}
+\item[Secrets:] How exported files are structured internally, including field ordering, data types, and encoding format. The schema definition linking voxel properties, layers, and materials is hidden. Details of compatibility with printer software or external tools are encapsulated.
+\item[Services:] Defines the data schema used during export. Specifies how voxel data, layer information, and material/magnetization fields are organized. Provides structural templates used by Export Manager (M13) to generate valid output files. Ensures consistency between internal and external representations.
+\item[Implemented By:] \teamname{}
+\item[Type of Module:] Abstract Data Type: specifies and maintains the structure of exported model data.
+\end{description}
+
+\paragraph{Export Structure Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Export File:} $F_{export}=(Header,Body)$
+\item \textbf{Header:} metadata fields $\{version, date, projectID\}$
+\item \textbf{Body:} ordered list of voxel entries $E=\{e_1,e_2,\ldots,e_n\}$
+\item Each $e_i=(x_i,y_i,z_i,m_i,mag_i)$ with $m_i\in M_{types}$, $mag_i\in\mathbb{R}^3$
+\end{itemize}
+
+\item \textbf{Transformation Rule}
+\[
+F_{export}=Structure(M) =
+\{(Header(M), Body(M))\}
+\]
+where $Body(M)$ flattens voxel grid $G$ into ordered entries $E$.
+
+\item \textbf{Constraints}
+\begin{itemize}
+\item Field order preserved: $(x,y,z,m,mag)$
+\item All entries valid: $\forall e_i, m_i\neq\emptyset, \|mag_i\|\le1$
+\item Backward-compatible schema versioning maintained
+\end{itemize}
+
+\item \textbf{Output}
+\begin{itemize}
+\item Returns structural definition to Export Manager (M13)
+\item Guarantees consistency between internal model representation and exported file layout
+\end{itemize}
+\end{enumerate}
 \begin{description}
 \item[Secrets:] The design decision based on mathematical theorems, physical
   facts, or programming considerations. The secrets of this module are
