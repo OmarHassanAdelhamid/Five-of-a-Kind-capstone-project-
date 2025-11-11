@@ -291,8 +291,6 @@ None
 \begin{itemize}
 \item \texttt{count\_voxels(model: ModelStructure) -> $\mathbb{Z}$}: Counts the total number of voxels in the model
 \item \texttt{count\_layers(model: ModelStructure) -> $\mathbb{Z}$}: Counts the total number of layers in the model
-\item \texttt{has\_material(voxel: Voxel) -> bool}: Checks if a voxel has an assigned material property
-\item \texttt{has\_magnetization(voxel: Voxel) -> bool}: Checks if a voxel has an assigned magnetization vector
 \item \texttt{check\_printer\_specs(model: ModelStructure) -> bool}: Validates model against printer-specific constraints
 \end{itemize}
 
@@ -477,6 +475,9 @@ get\_layer & z: $\mathbb{Z}$ & Layer & IndexError \\
 add\_layer & layer: Layer & None & ValueError \\
 get\_metadata & - & dict & - \\
 set\_metadata & key: str, value: Any & None & - \\
+validate\_voxel & voxel: Voxel & bool & - \\
+has\_material & voxel: Voxel & bool & - \\
+has\_magnetization & voxel: Voxel & bool & - \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -509,7 +510,6 @@ None
 
 \begin{itemize}
 \item \texttt{validate\_position(position: tuple[$\mathbb{Z}$, $\mathbb{Z}$, $\mathbb{Z}$]) -> bool}: Checks if position is within grid boundaries
-\item \texttt{validate\_voxel(voxel: Voxel) -> bool}: Validates that voxel has required structure and valid property values
 \item \texttt{maintain\_layer\_ordering() -> None}: Ensures layers remain ordered by Z-coordinate
 \item \texttt{create\_layer\_from\_z(z: $\mathbb{Z}$) -> Layer}: Creates a new layer structure for a given Z-coordinate
 \item \texttt{validate\_property\_value(property\_name: str, value: Any) -> bool}: Validates that a property value conforms to expected type and constraints
