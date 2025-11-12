@@ -20,10 +20,12 @@ To ensure that the requirements are fulfilled to their intended functionality, s
     ** Covered requirements <<NF211>>, <<NF222>>
     - *Performance*: An important requirement that this system should meet is the performance which is required for the different components. The Import Manager should generate voxel files at a minimum rate of MIN_RATE, the Visualisation Manager should update perspectives in under MAX_VIEW_LATENCY, the Magnetization Manager must update metadata in under MAX_EDIT_LATENCY, and the Export Manager should generate voxel metadata files at a minimum rate of MIN_RATE. These performance requirements will be validated by setting benchmarks and running stress tests to confirm that each component consistently meets the thresholds.
     ** Covered requirements <<NF212>>, <<NF221>>, <<NF222>>, <<NF232>>, <<NF242>>
-    - *Ease of Use*: To ensure that the system is easy to use for the stakeholders, the interface and workflows will be tested for clairty, minimal steps to complete the core tasks, and accessibilituy of commonly used features. For example, the Property Manager should enable group edits in MAX_INTERACTIONS or fewer.
-    ** Covered requirement <<NF223>>, <<NF231>>
+    - *Ease of Use*: To ensure that the system is easy to use for the stakeholders, the interface and workflows will be tested for clarity, minimal steps to complete the core tasks, and accessibility of commonly used features. For example, the Property Manager should enable group edits in MAX_INTERACTIONS or fewer.
+    ** Covered requirement <<NF213>>, <<NF223>>, <<NF231>>, <<NF243>>, <<GEN1>>
     - *Compliance*: As this system will interact with other systems such as AutoCAD and the existing Java printing software, the system should be validated for compatibility with both input files it receives and output files it generates. This will be validated through integration testing with the receiving and target software.
     ** Covered requirement <<NF241>>
+    - *Maintainability*: To ensure that the resulting implementation is extensible in future revisions, the system will be inspected for modularity, presence of comments, and naming conventions. Associated documentation detailing the design will also be evaluated based on completeness and readability.
+    ** Covered requirement <<GEN2>>
 
 The most important scenario in S.4 is <<S.4.2>>: Assign Properties to Voxels within a Layer. This scenario is one of the primary reasons for this system to be created. Therefore, these are five tests that validate this scenario across multiple levels of testing include:
 
