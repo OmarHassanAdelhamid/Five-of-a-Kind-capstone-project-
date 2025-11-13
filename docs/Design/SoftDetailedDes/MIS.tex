@@ -165,105 +165,157 @@ The following table is taken directly from the Module Guide document for this pr
 \newpage
 ~\newpage
 
-\section{MIS of Input Interpreter} \label{Module1} \wss{Use labels for
-  cross-referencing}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+\section{MIS of Input Interpreter} \label{Module1}
 
 \subsection{Module}
-
-\wss{Short name for the module}
+InputInterpreter is responsible for importing and parsing model or project files (e.g., STL, JSON) and normalizing them into a consistent internal format that downstream modules can process.
 
 \subsection{Uses}
-
+\begin{itemize}
+  \item VoxelSlicing (M2) for voxel grid generation.
+  \item SerializationManager (M5) for project deserialization.
+  \item ModelStructure (M17) for organizing parsed geometry data.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
+\begin{itemize}
+  \item \texttt{SUPPORTED\_FORMATS}: list[string] — supported file types (STL, JSON, binary).
+  \item \texttt{DEFAULT\_SCALE}: float — default scaling applied to geometry.
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{3.5cm} p{4.5cm} p{3.5cm} p{3.5cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+\texttt{loadFile} & filePath: string & IntermediateModel & FileNotFoundError, UnsupportedFileTypeError \\
+\texttt{detectFormat} & filePath: string & string & None \\
+\texttt{parseSTL} & fileData: string & MeshModel & ParseError \\
+\texttt{deserializeProject} & fileData: string & ProjectModel & SchemaMismatchError \\
+\bottomrule
 \end{tabular}
 \end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+\begin{itemize}
+  \item \texttt{currentModel}: IntermediateModel — latest parsed internal representation.
+  \item \texttt{detectedFormat}: string — identifies file type.
+\end{itemize}
 
 \subsubsection{Environment Variables}
-
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+\begin{itemize}
+  \item \texttt{FILE\_PATH}: string — path to the input file on the filesystem.
+\end{itemize}
 
 \subsubsection{Assumptions}
+\begin{itemize}
+  \item The file path exists and is readable.
+  \item Data structure conforms to supported file format.
+  \item Deserialized data follows expected schema.
+\end{itemize}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+\subsubsection{Access Routine Semantics}
+\begin{itemize}
+  \item \texttt{loadFile(filePath)}: detects format and calls parsing logic.
+  \[
+  currentModel :=
+  \begin{cases}
+  parseSTL(fileData) & \text{if STL format}\\
+  deserializeProject(fileData) & \text{if Project format}
+  \end{cases}
+  \]
+  \item \texttt{detectFormat(filePath)}: returns file type by inspecting header or extension.
+  \item \texttt{parseSTL(fileData)}: converts triangular facets \(t_i=(n_i,v_{i1},v_{i2},v_{i3})\), where \(n_i,v_{ij}\in\mathbb{R}^3\), into internal mesh structure.
+  \item \texttt{deserializeProject(fileData)}: decodes serialized voxel data and metadata.
+\end{itemize}
 
-\newpage
+\subsubsection{Exceptions}
+\begin{itemize}
+  \item \texttt{FileNotFoundError} — invalid path or unreadable file.
+  \item \texttt{UnsupportedFileTypeError} — format not recognized.
+  \item \texttt{ParseError} — malformed geometry or facet data.
+  \item \texttt{SchemaMismatchError} — project schema invalid or outdated.
+\end{itemize}
 
-\section{MIS of Voxel Slicing} \label{Module2} \wss{Use labels for
-  cross-referencing}
 
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+\section{MIS of Voxel Slicing} \label{Module2}
 
 \subsection{Module}
-
-\wss{Short name for the module}
+VoxelSlicing is responsible for converting the geometric model into a structured voxel grid. It divides the 3D model along the Z-axis into discrete slices based on a specified resolution, mapping geometry into voxelized layers for simulation and visualization.
 
 \subsection{Uses}
-
+\begin{itemize}
+  \item InputInterpreter (M1) — provides intermediate geometric model data.
+  \item ModelManager (M9) — receives generated voxel grid for management and updates.
+  \item ModelStructure (M17) — defines the voxel and layer data structures.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
+\begin{itemize}
+  \item \texttt{DEFAULT\_RESOLUTION}: tuple(float, float, float) — default voxel size in x, y, and z directions.
+  \item \texttt{MAX\_LAYERS}: int — maximum number of layers allowed per model.
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{3.5cm} p{4.5cm} p{3.5cm} p{3.5cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+\texttt{voxelizeModel} & model: IntermediateModel, resolution: tuple & VoxelGrid & ResolutionError, GeometryError \\
+\texttt{generateLayers} & voxelGrid: VoxelGrid & list[Layer] & None \\
+\texttt{setResolution} & resolution: tuple & void & InvalidResolutionError \\
+\bottomrule
 \end{tabular}
 \end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+\begin{itemize}
+  \item \texttt{voxelGrid}: VoxelGrid — stores the resulting voxelized representation.
+  \item \texttt{layerList}: list[Layer] — ordered collection of Z-level layers.
+  \item \texttt{resolution}: tuple(float, float, float) — current voxel grid spacing.
+\end{itemize}
 
 \subsubsection{Environment Variables}
-
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+None
 
 \subsubsection{Assumptions}
+\begin{itemize}
+  \item Input model geometry is well-defined and watertight.
+  \item Resolution values are positive real numbers.
+  \item The number of layers does not exceed system memory capacity.
+\end{itemize}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+\subsubsection{Access Routine Semantics}
+\begin{itemize}
+  \item \texttt{voxelizeModel(model, resolution)}: Converts mesh geometry into voxel occupancy.
+  \[
+  G = \{v_{xyz} \mid x,y,z \in \mathbb{N},\ \text{facet intersects voxel}(x,y,z)\}
+  \]
+  \item \texttt{generateLayers(voxelGrid)}: Groups voxels into Z-level layers.
+  \[
+  L = \{l_k = \{v_{xyz} \mid z = k \cdot r_z\}\ |\ k \in [1,n]\}
+  \]
+  \item \texttt{setResolution(resolution)}: Updates internal resolution state.
+\end{itemize}
 
-\newpage
+\subsubsection{Exceptions}
+\begin{itemize}
+  \item \texttt{ResolutionError} — invalid resolution leading to empty grid.
+  \item \texttt{GeometryError} — malformed or non-manifold geometry detected.
+  \item \texttt{InvalidResolutionError} — one or more components of resolution $\le 0$.
+\end{itemize}
 
 \section{MIS of Display Partitioning} \label{Module3} 
 
@@ -332,55 +384,82 @@ None
   \end{itemize}
 \newpage
 
-\section{MIS of Serialization Manager} \label{Module5} \wss{Use labels for
-  cross-referencing}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+\section{MIS of Serialization Manager} \label{Module5}
 
 \subsection{Module}
-
-\wss{Short name for the module}
+SerializationManager handles conversion of all internal model data between in-memory and persistent storage forms (JSON or binary). It ensures data integrity, schema consistency, and supports both saving and restoring complete project states.
 
 \subsection{Uses}
-
+\begin{itemize}
+  \item ModelManager (M9) — supplies model state to be serialized.
+  \item DatabaseHandler (M19) — stores serialized data persistently.
+  \item ExportManager (M15) — exports encoded model structures to files.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
+\begin{itemize}
+  \item \texttt{SUPPORTED\_FORMATS}: list[string] — allowed serialization formats \{JSON, BIN\}.
+  \item \texttt{CURRENT\_SCHEMA\_VERSION}: string — defines latest project data schema.
+\end{itemize}
+
 
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4cm} p{4.5cm} p{3.5cm} p{3.5cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+\texttt{encodeModel} & model: ModelState & string & SerializationError \\
+\texttt{decodeModel} & data: string & ModelState & DeserializationError, SchemaMismatchError \\
+\texttt{verifySchema} & data: string & bool & SchemaMismatchError \\
+\bottomrule
 \end{tabular}
 \end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+\begin{itemize}
+  \item \texttt{serializedData}: string — current encoded representation.
+  \item \texttt{schemaVersion}: string — identifies schema used during last encode/decode.
+\end{itemize}
 
 \subsubsection{Environment Variables}
-
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+\begin{itemize}
+  \item \texttt{SAVE\_PATH}: string — default file path for serialized model data.
+\end{itemize}
 
 \subsubsection{Assumptions}
+\begin{itemize}
+  \item Input model follows internal data structure specification.
+  \item Decoded data matches the expected schema version.
+  \item File system paths used for storage are valid and writable.
+\end{itemize}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+\subsubsection{Access Routine Semantics}
+\begin{itemize}
+  \item \texttt{encodeModel(model)}: Converts in-memory state to JSON string.  
+  \[
+  S := \text{JSON.stringify}(model)
+  \]
+  Ensures \( Decode(S) = model \).
+  \item \texttt{decodeModel(data)}: Parses JSON/BIN data back to full ModelState.
+  \[
+  M' := \text{JSON.parse}(data)
+  \]
+  \item \texttt{verifySchema(data)}: Checks that schema version in data header matches \texttt{CURRENT\_SCHEMA\_VERSION}.
+\end{itemize}
 
-\newpage
+\subsubsection{Exceptions}
+\begin{itemize}
+  \item \texttt{SerializationError} — error while encoding data to string.
+  \item \texttt{DeserializationError} — input data corrupted or incomplete.
+  \item \texttt{SchemaMismatchError} — version mismatch detected in schema validation.
+\end{itemize}
+
 
 \section{MIS of Backend Communication Manager} \label{Module6} 
   
@@ -524,71 +603,45 @@ None
 
 \newpage
 
-\section{MIS of Visualization State Manager} \label{Module8} 
+\section{MIS of Visualization State Manager} \label{Module8}
 
 \subsection{Module}
 VisualizationManager oversees the creation of UI views while managing subsequent updates to the display state of the specified current UI views on a backend level.
 
 \subsection{Uses}
 \begin{itemize}
-  \item Display Partitioning for tracking different interface states across partitions.
-  \item Graphics Adapter for rendering updates visible to user.
-  \item Model Manager for managing model and metadata updates that affect state visualization.
-  \item Highlight Manager for managing change in voxels being highlighted.
-  \item ModelStructure for managing the specification of update bundles within the model.
+  \item Display Partitioning (M3) — tracks interface states across partitions.
+  \item Graphics Adapter (M18) — renders updates visible to the user.
+  \item Model Manager (M9) — manages model and metadata updates affecting visualization.
+  \item Highlight Manager (M13) — manages voxel highlight changes.
+  \item ModelStructure (M17) — defines specifications for update bundles within the model.
 \end{itemize}
 
 \subsection{Syntax}
 
-\noindent\textbf{Exported Constants}
-
+\subsubsection{Exported Constants}
 \begin{itemize}
   \item \texttt{DEFAULT\_VIEWS}: \textit{list[string]} — list of identifiers corresponding to the default views generated upon project initialization.
 \end{itemize}
 
-\noindent\textbf{Exported Access Programs}
-
+\subsubsection{Exported Access Programs}
 \begin{center}
 \renewcommand{\arraystretch}{1.55}
 \begin{tabular}{p{4cm} p{6cm} p{3cm} p{2.5cm}}
 \hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\ \hline
+\texttt{getCurrentView} & None & ViewState & None \\
+\texttt{setView} & state: \textit{ViewState} & void & None \\
+\texttt{getHighlightState} & None & HighlightState & None \\
+\texttt{updateModel} & voxelCoords: \textit{List[VoxelCoord]} \\ updateType: \textit{ModelUpdateType} & void & None \\
+\texttt{updateHighlight} & semanticKey: \textit{string} & void & None \\
 \hline
-
-\texttt{getCurrentView} &
-None &
-ViewState &
-None \\
-
-\texttt{setView} &
-state: \textit{ViewState} &
-void &
-None \\
-
-\texttt{getHighlightState} &
-None &
-HighlightState &
-None \\
-
-\texttt{updateModel} &
-voxelCoords: \textit{List[VoxelCoord]} \newline
-updateType: \textit{ModelUpdateType} &
-void &
-None \\
-
-\texttt{updateHighlight} &
-semanticKey: \textit{string} &
-void &
-None \\
-
 \end{tabular}
 \end{center}
-
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
 \begin{itemize}
   \item \texttt{currentView}: \textit{string} — identifies which UI view is currently shown to the user.
   \item \texttt{viewStatus}: \textit{dict[string] = ViewItem} — stores all data encapsulated within a UI view.
@@ -609,110 +662,171 @@ None
   \item \texttt{currentView}, \texttt{ViewState}, and \texttt{DEFAULT\_VIEWS} are elements of \texttt{supportedViews}.
 \end{itemize}
 
-\newpage
 
-
-\newpage
-
-\section{MIS of Model Manager} \label{Module9} \wss{Use labels for
-  cross-referencing}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+\section{MIS of Model Manager} \label{Module9}
 
 \subsection{Module}
-
-\wss{Short name for the module}
+ModelManager oversees the management and manipulation of the voxel-based 3D model. It provides APIs to add, remove, or modify voxels, update magnetization/material properties, and synchronize changes with autosave and history tracking modules.
 
 \subsection{Uses}
-
+\begin{itemize}
+  \item VoxelSlicing (M2) — supplies initial voxel grid data.
+  \item SerializationManager (M5) — encodes or decodes model states for storage.
+  \item HistoryManager (M10) — records changes for undo/redo.
+  \item VoxelTracking (M12) — queries voxel properties.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
+\begin{itemize}
+  \item \texttt{MAX\_VOXEL\_COUNT}: int — maximum allowed voxel entries per project.
+  \item \texttt{AUTOSAVE\_INTERVAL\_S}: float — time threshold (in seconds) before triggering autosave.
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4cm} p{4.5cm} p{3.5cm} p{3.5cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+\texttt{addVoxel} & coord: VoxelCoord, material: MaterialType, mag: Vector3 & void & InvalidInputError \\
+\texttt{removeVoxel} & coord: VoxelCoord & void & NotFoundError \\
+\texttt{modifyVoxel} & coord: VoxelCoord, newData: VoxelData & void & NotFoundError \\
+\texttt{saveModel} & None & bool & IOerror \\
+\texttt{loadModel} & filePath: string & bool & DeserializationError \\
+\bottomrule
 \end{tabular}
 \end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+\begin{itemize}
+  \item \texttt{voxelGrid}: VoxelGrid — stores all voxel elements and layer mapping.
+  \item \texttt{metadata}: dict — contains file name, author, timestamp, etc.
+  \item \texttt{autosaveTimer}: float — time since last autosave.
+  \item \texttt{unsavedChanges}: bool — true if edits have occurred since last save.
+\end{itemize}
 
 \subsubsection{Environment Variables}
-
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+\begin{itemize}
+  \item \texttt{SAVE\_PATH}: string — default save location for serialized project data.
+\end{itemize}
 
 \subsubsection{Assumptions}
+\begin{itemize}
+  \item Voxel coordinates fall within the defined model boundaries.
+  \item Data supplied for voxel modifications are valid according to schema.
+  \item Autosave operations will not interrupt ongoing edits.
+\end{itemize}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+\subsubsection{Access Routine Semantics}
+\begin{itemize}
+  \item \texttt{addVoxel(coord, material, mag)}: Adds new voxel entry at specified coordinate.
+  \[
+  G' = G \cup \{v = (coord, material, mag)\}
+  \]
+  Triggers \texttt{HistoryManager.push}($\Delta M$).
+  
+  \item \texttt{removeVoxel(coord)}: Deletes voxel from grid and logs change.
+  \[
+  G' = G \setminus \{v \mid v.coord = coord\}
+  \]
 
-\newpage
+  \item \texttt{modifyVoxel(coord, newData)}: Updates voxel’s attributes.
+  \[
+  v' = newData \text{ if } v.coord = coord
+  \]
 
-\section{MIS of History Manager} \label{Module10} \wss{Use labels for
-  cross-referencing}
+  \item \texttt{saveModel()}: Serializes model and writes to file via \texttt{SerializationManager}.
+  \item \texttt{loadModel(filePath)}: Deserializes project data from storage and rebuilds voxel grid.
+\end{itemize}
 
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+\subsubsection{Exceptions}
+\begin{itemize}
+  \item \texttt{InvalidInputError} — malformed coordinate or data type.
+  \item \texttt{NotFoundError} — voxel coordinate not present in grid.
+  \item \texttt{IOerror} — failure during save operation.
+  \item \texttt{DeserializationError} — corrupted or incompatible input file.
+\end{itemize}
 
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\section{MIS of History Manager} \label{Module10}
 
 \subsection{Module}
-
-\wss{Short name for the module}
+HistoryManager maintains the complete change history of the 3D voxel model.  
+It allows undoing and redoing edits by recording incremental changes (deltas) after every modification.
 
 \subsection{Uses}
-
+\begin{itemize}
+  \item ModelManager (M9) — provides the model changes to record.
+  \item SerializationManager (M5) — encodes snapshots for persistence.
+  \item AutosaveManager (M11) — references latest history state during periodic saves.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
+\begin{itemize}
+  \item \texttt{MAX\_HISTORY\_SIZE}: int — maximum number of undo states stored.
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4cm} p{4.5cm} p{3.5cm} p{3.5cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+\texttt{recordChange} & delta: ModelDelta & void & None \\
+\texttt{undo} & None & bool & EmptyHistoryError \\
+\texttt{redo} & None & bool & EmptyHistoryError \\
+\texttt{clearHistory} & None & void & None \\
+\bottomrule
 \end{tabular}
 \end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+\begin{itemize}
+  \item \texttt{historyStack}: list[ModelState] — sequence of previous model states.
+  \item \texttt{redoStack}: list[ModelState] — sequence of undone model states available for redo.
+  \item \texttt{currentIndex}: int — current pointer in the history sequence.
+\end{itemize}
 
 \subsubsection{Environment Variables}
-
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+None
 
 \subsubsection{Assumptions}
+\begin{itemize}
+  \item Changes are discrete and atomic.
+  \item No new change is made while undo or redo is in progress.
+  \item The number of stored states does not exceed \texttt{MAX\_HISTORY\_SIZE}.
+\end{itemize}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+\subsubsection{Access Routine Semantics}
+\begin{itemize}
+  \item \texttt{recordChange(delta)}:  
+  Pushes a new state to the \texttt{historyStack} and clears \texttt{redoStack}.  
+  \[
+  historyStack := historyStack \cup \{currentState + \Delta M\}
+  \]
+  \item \texttt{undo()}:  
+  Restores the last recorded state and moves it to \texttt{redoStack}.
+  \item \texttt{redo()}:  
+  Retrieves the latest undone state from \texttt{redoStack} and reapplies it.
+  \item \texttt{clearHistory()}:  
+  Resets both history and redo stacks.
+\end{itemize}
 
-\newpage
+\subsubsection{Exceptions}
+\begin{itemize}
+  \item \texttt{EmptyHistoryError} — when attempting undo or redo with no entries available.
+\end{itemize}
+
 
 \section{MIS of Autosave Manager} \label{Module11} 
 
@@ -1118,78 +1232,111 @@ None
 
 \newpage
 
-\section{MIS of Graphics Adapter} \label{Module18} 
+\section{MIS of Graphics Adapter} \label{Module18}
 
 \subsection{Module}
 GraphicsAdapter handles all communication with the graphics API to enable visual rendering and generate a model on the UI.
 
 \subsection{Uses}
 \begin{itemize}
-  \item VisualizationManager aggregates necessary backend data and relays updates to the rendered view.
+  \item VisualizationStateManager (M8) — provides rendering instructions.
+  \item ModelManager (M9) — supplies geometry data for visualization.
+  \item BackendCommunicationManager (M6) — manages render requests to backend APIs.
 \end{itemize}
 
 \subsection{Syntax}
 
-\noindent\textbf{Exported Constants}
-
+\subsubsection{Exported Constants}
 \begin{itemize}
   \item None
 \end{itemize}
 
-\noindent\textbf{Exported Access Programs}
-
+\subsubsection{Exported Access Programs}
 \begin{center}
 \renewcommand{\arraystretch}{1.55}
 \begin{tabular}{p{4cm} p{5cm} p{3cm} p{3cm}}
 \hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\ \hline
+\texttt{requestRender} & str: \textit{UpdateKey} \\ update: \textit{UpdateBundle} & void & NetworkError \\
+\texttt{getUpdateStatus} & str: \textit{UpdateKey} & boolean & None \\
+\texttt{checkServerStatus} & None & Promise\textless void\textgreater & NetworkError \\
 \hline
-
-\texttt{requestRender} &
-str: \textit{UpdateKey} \newline
-update: \textit{UpdateBundle} &
-void &
-Network Error \\
-
-\texttt{getUpdateStatus} &
-str: \textit{UpdateKey} &
-boolean &
-None \\
-
-\texttt{checkServerStatus} &
-None &
-Promise\textless void\textgreater &
-Network Error \\
-
 \end{tabular}
 \end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
 \begin{itemize}
   \item \texttt{updateStatus}: \textit{boolean} — tracks status of rendering completion.
 \end{itemize}
 
 \subsubsection{Environment Variables}
-
 \begin{itemize}
   \item \texttt{API\_BASE\_URL}: \textit{string} — external base URL for establishing environment configurations and enabling backend API requests.
 \end{itemize}
 
 \subsubsection{Assumptions}
-
 \begin{itemize}
   \item Backend service is reachable and operational.
   \item Connection is available for API.
   \item Valid configurations exist for necessary API operations.
 \end{itemize}
 
+
 \newpage
 
-\section{MIS of Database Handler} \label{Module19} \wss{Use labels for
-  cross-referencing}
+\section{MIS of Database Handler} \label{Module19}
+
+\subsection{Module}
+DatabaseHandler manages persistent storage for project and model data. It provides standardized interfaces for reading, writing, and deleting serialized model files, ensuring version integrity and consistent access to saved projects.
+
+\subsection{Uses}
+\begin{itemize}
+  \item SerializationManager (M5) — encodes and decodes model data before storage.
+  \item ModelManager (M9) — provides model structures to persist.
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+\begin{itemize}
+  \item \texttt{DEFAULT\_SAVE\_DIR}: string — default directory path for project files.
+  \item \texttt{DB\_FORMAT\_VERSION}: string — current format version for data compatibility.
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4cm} p{4.5cm} p{3.5cm} p{3.5cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\ \midrule
+\texttt{saveProject} & id: string, data: SerializedModel & bool & IOError \\
+\texttt{loadProject} & id: string & SerializedModel & FileNotFoundError \\
+\texttt{deleteProject} & id: string & bool & IOError \\
+\texttt{listProjects} & None & list[string] & None \\ \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+  \item \texttt{projectMap}: dict[string, SerializedModel] — mapping of project identifiers to serialized data.
+  \item \texttt{storagePath}: string — root directory for persistent project files.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+\begin{itemize}
+  \item \texttt{FILE\_SYSTEM}: OS-level file system used for reading/writing project data.
+\end{itemize}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item Project IDs are unique.
+  \item File I/O operations succeed given sufficient permissions.
+  \item SerializationManager ensures schema compatibility before writing data.
+\end{itemize}
 
 \wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
 
