@@ -389,9 +389,9 @@ BackendCommunicationManager manages the transfer and synchronization of data bet
 
 \subsection{Uses}
 \begin{itemize}
-  \item ModelManager for interpretation into backend-compatible commands.
-  \item SerializationManager for necessary JSON and binary transforms.
-  \item InteractionController for processing raw UI information.
+  \item \texttt{ModelManager} for interpretation into backend-compatible commands.
+  \item \texttt{SerializationManager} for necessary JSON and binary transforms.
+  \item \texttt{InteractionController} for processing raw UI information.
 \end{itemize}
 
 \subsection{Syntax}
@@ -531,11 +531,12 @@ VisualizationManager oversees the creation of UI views while managing subsequent
 
 \subsection{Uses}
 \begin{itemize}
-  \item Display Partitioning for tracking different interface states across partitions.
-  \item Graphics Adapter for rendering updates visible to user.
-  \item Model Manager for managing model and metadata updates that affect state visualization.
-  \item Highlight Manager for managing change in voxels being highlighted.
-  \item ModelStructure for managing the specification of update bundles within the model.
+  \item \texttt{DisplayPartitioning} for tracking different interface states across partitions.
+  \item \texttt{GraphicsAdapter} for rendering updates visible to user.
+  \item \texttt{ModelManager} for managing model and metadata updates that affect state visualization.
+  \item \texttt{VoxelTrackingManager} for specifying the set of voxels affected by a given update.
+  \item \texttt{HighlightManager} for managing change in voxels being highlighted.
+  \item \texttt{ModelStructure} for managing the specification of update bundles within the model.
 \end{itemize}
 
 \subsection{Syntax}
@@ -721,9 +722,9 @@ AutosaveManager prepares data to be saved, monitors when updates require saving,
 
 \subsection{Uses}
 \begin{itemize}
-  \item ModelManager for tracking changes that require savings.
-  \item SerializationManager for data preparation.
-  \item HistoryManager for logging recent changes.
+  \item \texttt{ModelManager} for tracking changes that require savings.
+  \item \texttt{SerializationManager} for data preparation.
+  \item \texttt{HistoryManager} for logging recent changes.
 \end{itemize}
 
 \subsection{Syntax}
@@ -1125,7 +1126,7 @@ GraphicsAdapter handles all communication with the graphics API to enable visual
 
 \subsection{Uses}
 \begin{itemize}
-  \item VisualizationManager aggregates necessary backend data and relays updates to the rendered view.
+  \item \texttt{VisualizationManager} aggregates necessary backend data and relays updates to the rendered view.
 \end{itemize}
 
 \subsection{Syntax}
