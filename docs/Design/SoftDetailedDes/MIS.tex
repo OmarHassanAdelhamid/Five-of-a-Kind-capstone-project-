@@ -1,7 +1,6 @@
 \documentclass[12pt, titlepage]{article}
 
 \usepackage{amsmath, mathtools}
-
 \usepackage[round]{natbib}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -21,12 +20,12 @@
 \usepackage{fullpage}
 
 \hypersetup{
-bookmarks=true,     % show bookmarks bar?
-colorlinks=true,       % false: boxed links; true: colored links
-linkcolor=red,          % color of internal links (change box color with linkbordercolor)
-citecolor=blue,      % color of links to bibliography
-filecolor=magenta,  % color of file links
-urlcolor=cyan          % color of external links
+bookmarks=true,
+colorlinks=true,
+linkcolor=red,
+citecolor=blue,
+filecolor=magenta,
+urlcolor=cyan
 }
 
 \usepackage{array}
@@ -39,9 +38,7 @@ urlcolor=cyan          % color of external links
 \begin{document}
 
 \title{Module Interface Specification for \progname{}}
-
 \author{\authname}
-
 \date{\today}
 
 \maketitle
@@ -49,222 +46,277 @@ urlcolor=cyan          % color of external links
 \pagenumbering{roman}
 
 \section{Revision History}
-
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+Nov 13, 2025 & 1.0 & Initial MIS including modules M1–M10, M18–M19\\
 \bottomrule
 \end{tabularx}
 
-~\newpage
-
+\newpage
 \section{Symbols, Abbreviations and Acronyms}
-
-See SRS Documentation at \wss{give url}
-
-\wss{Also add any additional symbols, abbreviations or acronyms}
+See SRS Documentation at \wss{project URL}
 
 \newpage
-
 \tableofcontents
-
 \newpage
-
 \pagenumbering{arabic}
 
 \section{Introduction}
-
-The following document details the Module Interface Specifications for
-\wss{Fill in your project name and description}
-
-Complementary documents include the System Requirement Specifications
-and Module Guide.  The full documentation and implementation can be
-found at \url{...}.  \wss{provide the url for your repo}
+This document specifies the module interfaces for \progname{}, covering all backend
+modules responsible for import, voxelization, serialization, model management, history,
+tracking, and export. It complements the SRS and Module Guide and maintains
+consistency with the decomposition hierarchy defined in the MG.
 
 \section{Notation}
-
-\wss{You should describe your notation.  You can use what is below as
-  a starting point.}
-
-The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
-with the addition that template modules have been adapted from
-\cite{GhezziEtAl2003}.  The mathematical notation comes from Chapter 3 of
-\citet{HoffmanAndStrooper1995}.  For instance, the symbol := is used for a
-multiple assignment statement and conditional rules follow the form $(c_1
-\Rightarrow r_1 | c_2 \Rightarrow r_2 | ... | c_n \Rightarrow r_n )$.
-
-The following table summarizes the primitive data types used by \progname. 
-
-\begin{center}
-\renewcommand{\arraystretch}{1.2}
-\noindent 
-\begin{tabular}{l l p{7.5cm}} 
-\toprule 
-\textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
-\midrule
-character & char & a single symbol or digit\\
-integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
-natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
-real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
-\bottomrule
-\end{tabular} 
-\end{center}
-
-\noindent
-The specification of \progname \ uses some derived data types: sequences, strings, and
-tuples. Sequences are lists filled with elements of the same data type. Strings
-are sequences of characters. Tuples contain a list of values, potentially of
-different types. In addition, \progname \ uses functions, which
-are defined by the data types of their inputs and outputs. Local functions are
-described by giving their type signature followed by their specification.
+Mathematical notation follows \citet{HoffmanAndStrooper1995}. Derived data types include
+sequences, strings, and tuples. Functions are described by input and output types.
 
 \section{Module Decomposition}
-
-The following table is taken directly from the Module Guide document for this project.
-
 \begin{table}[h!]
 \centering
 \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
 \toprule
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
-
-{Hardware-Hiding} & ~ \\
+Hardware-Hiding & ~\\
 \midrule
-
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Interpreter (M1)\\
+& Voxel Slicing (M2)\\
+& Serialization Manager (M5)\\
+& Model Manager (M8)\\
+& History Manager (M9)\\
+& Voxel Tracking (M10)\\
 \midrule
-
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
+\multirow{3}{0.3\textwidth}{Software Decision} & Database Handler (M18)\\
+& Export Structure (M19)\\
 \bottomrule
-
 \end{tabular}
 \caption{Module Hierarchy}
-\label{TblMH}
 \end{table}
 
 \newpage
-~\newpage
-
-\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
-  cross-referencing}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
-
+%=========================================================
+\section{MIS of Input Interpreter Module (M1)} \label{M1}
 \subsection{Module}
-
-\wss{Short name for the module}
-
+Parses and interprets input files (STL or project data) and converts them into
+a unified internal representation.
 \subsection{Uses}
-
-
+Voxel Slicing (M2), Serialization Manager (M5), Error Handler (M14)
 \subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\begin{tabular}{p{3cm}p{4cm}p{4cm}p{2cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\midrule
+parseFile & filePath: string & IntermediateModel & ImportFormatError\\
+\bottomrule
 \end{tabular}
 \end{center}
-
 \subsection{Semantics}
-
-\subsubsection{State Variables}
-
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
-
-\subsubsection{Environment Variables}
-
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
-
-\subsubsection{Assumptions}
-
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
-
+\subsubsection{State Variables} None
+\subsubsection{Environment Variables} Accesses local file system
+\subsubsection{Assumptions} File path is valid and supported
 \subsubsection{Access Routine Semantics}
-
-\noindent \wss{accessProg}():
+\noindent parseFile(filePath):
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item transition: Reads and parses file, constructing internal structure.
+\item output: Returns IntermediateModel with geometry/metadata.
+\item exception: Raises ImportFormatError for corrupted or unsupported files.
+\end{itemize}
+\subsubsection{Local Functions}
+detectFileType(), parseSTL(), loadProject(), normalizeModel()
+
+%=========================================================
+\newpage
+\section{MIS of Voxel Slicing Module (M2)} \label{M2}
+\subsection{Module}
+Converts 3D geometric or mesh data into a layered voxel grid representation.
+\subsection{Uses}
+Input Interpreter (M1), Model Manager (M8)
+\subsection{Syntax}
+\begin{center}
+\begin{tabular}{p{3cm}p{4cm}p{4cm}p{2cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\midrule
+sliceModel & IntermediateModel & VoxelGrid & SliceError\\
+\bottomrule
+\end{tabular}
+\end{center}
+\subsection{Semantics}
+\subsubsection{State Variables} None
+\subsubsection{Environment Variables} None
+\subsubsection{Access Routine Semantics}
+sliceModel(model):
+\begin{itemize}
+\item transition: Converts geometric data into voxel layers.
+\item output: Returns structured voxel grid with layer index.
+\item exception: SliceError if voxel dimensions exceed limits.
+\end{itemize}
+\subsubsection{Local Functions}
+generateLayers(), computeBounds(), mapFacetsToVoxels()
+
+%=========================================================
+\newpage
+\section{MIS of Serialization Manager Module (M5)} \label{M5}
+\subsection{Module}
+Handles serialization and deserialization of voxel models and project data.
+\subsection{Uses}
+Database Handler (M18), Model Manager (M8)
+\subsection{Syntax}
+\begin{center}
+\begin{tabular}{p{3cm}p{4cm}p{4cm}p{2cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\midrule
+serializeModel & Model & EncodedData & WriteError\\
+deserializeModel & EncodedData & Model & ReadError\\
+\bottomrule
+\end{tabular}
+\end{center}
+\subsection{Semantics}
+\subsubsection{State Variables} None
+\subsubsection{Environment Variables} Reads/writes to storage via Database Handler
+\subsubsection{Access Routine Semantics}
+\noindent serializeModel(M):
+\begin{itemize}
+\item output: EncodedData in JSON/binary format.
+\end{itemize}
+\noindent deserializeModel(D):
+\begin{itemize}
+\item output: Reconstructed Model structure.
 \end{itemize}
 
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
-
-\subsubsection{Local Functions}
-
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
-
+%=========================================================
 \newpage
+\section{MIS of Model Manager Module (M8)} \label{M8}
+\subsection{Module}
+Maintains the internal voxel model, tracks metadata, and exposes APIs to modify
+model layers, voxels, and materials.
+\subsection{Uses}
+Serialization Manager (M5), History Manager (M9)
+\subsection{Syntax}
+\begin{center}
+\begin{tabular}{p{3cm}p{4cm}p{4cm}p{2cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\midrule
+addVoxel & position: tuple & None & InvalidPosition\\
+removeVoxel & position: tuple & None & InvalidPosition\\
+getVoxel & position: tuple & Voxel & NotFound\\
+\bottomrule
+\end{tabular}
+\end{center}
+\subsection{Semantics}
+State variable: currentModel : Model\\
+addVoxel(p): Adds voxel at p\\
+removeVoxel(p): Removes voxel from grid\\
+getVoxel(p): Retrieves voxel properties
 
-\bibliographystyle {plainnat}
-\bibliography {../../../refs/References}
-
+%=========================================================
 \newpage
+\section{MIS of History Manager Module (M9)} \label{M9}
+\subsection{Module}
+Manages undo/redo operations by recording and restoring model states.
+\subsection{Uses}
+Model Manager (M8)
+\subsection{Syntax}
+\begin{center}
+\begin{tabular}{p{3cm}p{4cm}p{4cm}p{2cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\midrule
+undo & None & Model & None\\
+redo & None & Model & None\\
+recordState & Model & None & None\\
+\bottomrule
+\end{tabular}
+\end{center}
+\subsection{Semantics}
+\subsubsection{State Variables}
+historyStack: sequence of Model\\
+index: integer pointer
+\subsubsection{Access Routine Semantics}
+undo(): index--, return previous Model\\
+redo(): index++, return next Model\\
+recordState(M): push new Model state
 
-\section{Appendix} \label{Appendix}
+%=========================================================
+\newpage
+\section{MIS of Voxel Tracking Module (M10)} \label{M10}
+\subsection{Module}
+Provides search and filtering operations to identify voxels matching given
+properties such as material, magnetization, or coordinates.
+\subsection{Uses}
+Model Manager (M8)
+\subsection{Syntax}
+\begin{center}
+\begin{tabular}{p{3cm}p{4cm}p{4cm}p{2cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\midrule
+trackVoxels & Predicate & Set<Voxel> & None\\
+\bottomrule
+\end{tabular}
+\end{center}
+\subsection{Semantics}
+\subsubsection{Access Routine Semantics}
+trackVoxels(\textit{predicate}):
+\begin{itemize}
+\item output: Returns set of voxels satisfying predicate conditions.
+\end{itemize}
 
-\wss{Extra information if required}
+%=========================================================
+\newpage
+\section{MIS of Database Handler Module (M18)} \label{M18}
+\subsection{Module}
+Handles saving and loading of serialized project data between storage and
+application logic.
+\subsection{Uses}
+Serialization Manager (M5)
+\subsection{Syntax}
+\begin{center}
+\begin{tabular}{p{3cm}p{4cm}p{4cm}p{2cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\midrule
+saveProject & EncodedData & None & WriteError\\
+loadProject & ProjectID & EncodedData & ReadError\\
+\bottomrule
+\end{tabular}
+\end{center}
+\subsection{Semantics}
+saveProject(D): Writes serialized data to persistent storage.\\
+loadProject(ID): Retrieves and returns serialized data.
 
-\newpage{}
+%=========================================================
+\newpage
+\section{MIS of Export Structure Module (M19)} \label{M19}
+\subsection{Module}
+Defines and validates the schema of exported files, ensuring consistency between
+internal model data and output format.
+\subsection{Uses}
+Database Handler (M18), Serialization Manager (M5)
+\subsection{Syntax}
+\begin{center}
+\begin{tabular}{p{3cm}p{4cm}p{4cm}p{2cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\midrule
+validateExport & Model & Boolean & SchemaError\\
+generateExport & Model & ExportFile & WriteError\\
+\bottomrule
+\end{tabular}
+\end{center}
+\subsection{Semantics}
+validateExport(M): Returns true if model matches export schema.\\
+generateExport(M): Produces structured export file containing voxel, layer, and
+magnetization data.
 
-\section*{Appendix --- Reflection}
-
-\wss{Not required for CAS 741 projects}
-
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Problem Analysis and Design.
-
-\input{../../Reflection.tex}
-
-\begin{enumerate}
-  \item What went well while writing this deliverable? 
-  \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
-  \item Which of your design decisions stemmed from speaking to your client(s)
-  or a proxy (e.g. your peers, stakeholders, potential users)? For those that
-  were not, why, and where did they come from?
-  \item While creating the design doc, what parts of your other documents (e.g.
-  requirements, hazard analysis, etc), it any, needed to be changed, and why?
-  \item What are the limitations of your solution?  Put another way, given
-  unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)
-  \item Give a brief overview of other design solutions you considered.  What
-  are the benefits and tradeoffs of those other designs compared with the chosen
-  design?  From all the potential options, why did you select the documented design?
-  (LO\_Explores)
-\end{enumerate}
-
-
+%=========================================================
+\newpage
+\bibliographystyle{plainnat}
+\bibliography{../../../refs/References}
 \end{document}
