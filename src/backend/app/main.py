@@ -1,10 +1,19 @@
-from fastapi import FastAPI
+# pyright: reportMissingImports=false
+
+"""
+FastAPI application entry point.
+"""
+
+from pathlib import Path
+
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import UploadFile
 import app.services.mesh_service as ms
 import app.services.voxel_service as vx
 import app.services.project_service as pj
 import os
+from fastapi.responses import FileResponse
 
 app = FastAPI()
 
@@ -16,9 +25,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+BACKEND_DIR = Path(__file__).parent.parent
+MODEL_DIR = BACKEND_DIR / "sample-stl-files"
+
+
 @app.get("/api/hello")
 def read_root():
     return {"message": "Hello from Python!"}
+
 
 @app.post("/api/voxelize")
 async def voxelize(stl_file: UploadFile, voxel_size: float, project_name: str):
@@ -50,6 +64,22 @@ async def voxelize(stl_file: UploadFile, voxel_size: float, project_name: str):
     filepath = pj.create_project(points, project_name, project_folder)
 
     return {"message": "Voxelization Status: Success", "projectpath": f"{filepath}"}
+
+
+@app.get("/api/models/sphere")
+def get_sphere_model():
+    """Return the sample sphere STL model."""
+    file_path = MODEL_DIR / "sphere.stl"
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="sphere.stl not found on server")
+
+    return FileResponse(
+        path=file_path,
+        media_type="model/stl",
+        filename="sphere.stl",
+    )
+
+
 
 
 
