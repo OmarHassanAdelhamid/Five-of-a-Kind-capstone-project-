@@ -125,38 +125,47 @@ described by giving their type signature followed by their specification.
 The following table is taken directly from the Module Guide document for this project.
 
 \begin{table}[h!]
-\centering
-\begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{Level 1} & \textbf{Level 2}\\
-\midrule
-
-{Hardware-Hiding} & ~ \\
-\midrule
-
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
-\midrule
-
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
-\bottomrule
-
-\end{tabular}
-\caption{Module Hierarchy}
-\label{TblMH}
-\end{table}
-
+  \centering
+  \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
+  \toprule
+  \textbf{Level 1} & \textbf{Level 2}\\
+  \midrule
+  
+  {Hardware-Hiding Module} & None \\
+  \midrule
+  
+  \multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Input Interpreter Module\\
+  & Voxel Slicing Module\\
+  & Display Partitioning Module\\
+  & Project Manager Module\\
+  & Serialization Manager Module\\
+  & Backend Communication Manager Module\\
+  & Interaction Controller Module\\
+  & Visualization State Manager Module\\
+  & Model Manager Module\\
+  & History Manager Module\\
+  & Autosave Manager Module\\
+  & Voxel Tracking Module\\
+  & Highlight Manager Module\\
+  & Export Validation Module\\
+  & Export Manager Module\\
+  & Error Diagnostic Handler Module\\
+  \midrule
+  
+  \multirow{3}{0.3\textwidth}{Software Decision Module} & Model Structure Module\\
+  & Graphics Adapter Module\\
+  & Database Handler Module\\
+  & Export Structure Module\\
+  \bottomrule
+  
+  \end{tabular}
+  \caption{Module Hierarchy}
+  \label{TblMH}
+  \end{table}
 \newpage
 ~\newpage
 
-\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
+\section{MIS of STL Interpreter} \label{Module1} \wss{Use labels for
   cross-referencing}
 
 \wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
@@ -204,28 +213,1078 @@ The following table is taken directly from the Module Guide document for this pr
 \wss{Try to minimize assumptions and anticipate programmer errors via
   exceptions, but for practical purposes assumptions are sometimes appropriate.}
 
-\subsubsection{Access Routine Semantics}
+\newpage
 
-\noindent \wss{accessProg}():
+\section{MIS of Voxel Slicing} \label{Module2} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+\wss{Short name for the module}
+
+\subsection{Uses}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{Not all modules will have state variables.  State variables give the module
+  a memory.}
+
+\subsubsection{Environment Variables}
+
+\wss{This section is not necessary for all modules.  Its purpose is to capture
+  when the module has external interaction with the environment, such as for a
+  device driver, screen interface, keyboard, file, etc.}
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\newpage
+
+\section{MIS of Display Partitioning} \label{Module3} 
+
+\subsection{Module}
+Provides core functionality for partitioning the model into distinct display segments.
+
+\subsection{Uses}
+
+\texttt{ModelStructure} to obtain the sliced model’s data representation.
+
+\subsection{Syntax}
+
+\noindent\textbf{Exported Constants}
+
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+  \item \texttt{MAX\_PARTITION}: \textit{int} — maximum number of partitions that can be created.
+  \item \texttt{MAX\_VOXEL\_PARTITION}: \textit{int} — maximum number of voxels per partition.
+  \item \texttt{AVAILABLE\_PARTITIONS}: \textit{List[string]} — configuration of valid partition IDs used by the display layout.
 \end{itemize}
 
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
+\noindent\textbf{Exported Access Programs}:
+\begin{center}
+  \renewcommand{\arraystretch}{1.55}
+  \begin{tabular}{p{4cm} p{5cm} p{3cm} p{3cm}}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+  \hline
+  
+  \texttt{getPartitions} &
+  None &
+  \textit{dict[string]} &
+  None \\
+  
+  \texttt{setCurrentPartition} &
+  id: \textit{string} \newline
+  partition: \textit{PartitionItem} &
+  void &
+  None \\
+  
+  \texttt{resizePartitions} &
+  id: \textit{string} \newline
+  width: \textit{int} \newline
+  height: \textit{int} \newline
+  depth: \textit{int} &
+  void &
+  None \\
+  
+  \end{tabular}
+  \end{center}
+\subsection{Semantics}
 
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
+\subsubsection{State Variables}
+\begin{itemize}
+  \item \texttt{PartitionItem}: \textit{record} — configuration for data that describes a partition.
+  \item \texttt{PartitionDict}: \textit{dict[string] = PartitionItem} — tracks all partitions.
+\end{itemize}
 
-\subsubsection{Local Functions}
+\subsubsection{Environment Variables}
+None
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+  \subsubsection{Assumptions}
+  \begin{itemize}
+    \item A valid and complete \texttt{ModelStructure} exists.
+    \item Display partitions adhere only to positive dimensions.
+    \item \texttt{AVAILABLE\_PARTITIONS} provides the display layout with a preset mapping to UI grid positions.
+  \end{itemize}
+\newpage
+
+\section{MIS of Serialization Manager} \label{Module5} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+\wss{Short name for the module}
+
+\subsection{Uses}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{Not all modules will have state variables.  State variables give the module
+  a memory.}
+
+\subsubsection{Environment Variables}
+
+\wss{This section is not necessary for all modules.  Its purpose is to capture
+  when the module has external interaction with the environment, such as for a
+  device driver, screen interface, keyboard, file, etc.}
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\newpage
+
+\section{MIS of Backend Communication Manager} \label{Module6} 
+  
+\subsection{Module}
+BackendCommunicationManager manages the transfer and synchronization of data between the backend server and frontend UI.
+
+\subsection{Uses}
+\begin{itemize}
+  \item ModelManager for interpretation into backend-compatible commands.
+  \item SerializationManager for necessary JSON and binary transforms.
+  \item InteractionController for processing raw UI information.
+\end{itemize}
+
+\subsection{Syntax}
+
+\noindent\textbf{Exported Constants}
+
+\begin{itemize}
+  \item None
+\end{itemize}
+
+\noindent\textbf{Exported Access Programs}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.55}
+\begin{tabular}{p{5cm} p{3cm} p{3cm} p{3cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+
+\texttt{checkServerStatus} &
+None &
+Promise\textless void\textgreater&
+Network Error \\
+
+\texttt{initDataLogs} &
+None &
+Promise\textless boolean\textgreater &
+Network Error \\
+
+\texttt{getDataLogs} &
+None &
+string &
+None \\
+
+\texttt{getInteraction} &
+None &
+UIdata: string &
+None \\
+
+\end{tabular}
+\end{center}
+
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+  \item \texttt{serverStatus}: \textit{ServerStatusType} — tracks the current connection status of the backend server.
+  \item \texttt{data\_log}: \textit{string} — all data gathered from the frontend that requires interpretation on the backend.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+  \item \texttt{SERVER\_URL}: \textit{string} — backend server URL from environment configuration.
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+  \item Backend service is reachable and operational.
+  \item Connection is available for data synchronization.
+  \item Valid configurations exist for necessary data transfer operations.
+\end{itemize}
+
+
+\newpage
+
+\section{Interaction Controller} \label{Module7} 
+
+\subsection{Module}
+InteractionController manages the process of raw events from interaction with UI to associated actions within internal code.
+
+\subsection{Uses}
+\begin{itemize}
+  \item \texttt{VisualizationManager} to establish current active view.
+  \item \texttt{BackendCommunicator} for taking the collected raw UI data from the frontend and sending it for interpretation.
+  \item \texttt{ModelManager} for handling user intent related to model modification.
+\end{itemize}
+
+\subsection{Syntax}
+
+\noindent\textbf{Exported Constants}
+
+\begin{itemize}
+  \item \texttt{UI\_EVENTS}: \textit{list[string]} — identifies all supported UI events that can be detected from user interaction.
+  \item \texttt{UI\_ACTIONS}: \textit{list[string]} — identifies all supported interactions that can be derived from UI events.
+\end{itemize}
+
+\noindent\textbf{Exported Access Programs}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.55}
+\begin{tabular}{p{4cm} p{4cm} p{3cm} p{3cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+
+\texttt{interpretEvent} &
+UIdata: \textit{string} &
+UIEvent &
+None \\
+
+\end{tabular}
+\end{center}
+
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+  \item \texttt{currentEvent}: \textit{UIEvent} — configuration for a UI event.
+  \item \texttt{currentView}: \textit{string} — identifies what view is currently displayed during interaction.
+  \item \texttt{pointerPosition}: \textit{[int, int]} — pointer coordinates captured from the most recent relevant event.
+  \item \texttt{allEvents}: \textit{list[string]} — identifies all supported UI events that can be detected from user interaction.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None
+
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item User intent does not exceed the scope of supported actions that can be derived.
+  \item There can only be one current active view at a given moment.
+  \item \texttt{pointerPosition} is contained within the screen resolution.
+\end{itemize}
+
+\newpage
+
+\section{MIS of Visualization State Manager} \label{Module8} 
+
+\subsection{Module}
+VisualizationManager oversees the creation of UI views while managing subsequent updates to the display state of the specified current UI views on a backend level.
+
+\subsection{Uses}
+\begin{itemize}
+  \item Display Partitioning for tracking different interface states across partitions.
+  \item Graphics Adapter for rendering updates visible to user.
+  \item Model Manager for managing model and metadata updates that affect state visualization.
+  \item Highlight Manager for managing change in voxels being highlighted.
+  \item ModelStructure for managing the specification of update bundles within the model.
+\end{itemize}
+
+\subsection{Syntax}
+
+\noindent\textbf{Exported Constants}
+
+\begin{itemize}
+  \item \texttt{DEFAULT\_VIEWS}: \textit{list[string]} — list of identifiers corresponding to the default views generated upon project initialization.
+\end{itemize}
+
+\noindent\textbf{Exported Access Programs}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.55}
+\begin{tabular}{p{4cm} p{6cm} p{3cm} p{2.5cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+
+\texttt{getCurrentView} &
+None &
+ViewState &
+None \\
+
+\texttt{setView} &
+state: \textit{ViewState} &
+void &
+None \\
+
+\texttt{getHighlightState} &
+None &
+HighlightState &
+None \\
+
+\texttt{updateModel} &
+voxelCoords: \textit{List[VoxelCoord]} \newline
+updateType: \textit{ModelUpdateType} &
+void &
+None \\
+
+\texttt{updateHighlight} &
+semanticKey: \textit{string} &
+void &
+None \\
+
+\end{tabular}
+\end{center}
+
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+  \item \texttt{currentView}: \textit{string} — identifies which UI view is currently shown to the user.
+  \item \texttt{viewStatus}: \textit{dict[string] = ViewItem} — stores all data encapsulated within a UI view.
+  \item \texttt{updateBundle}: \textit{dict[string] = UpdateItem} — stores all data needed to update a UI view upon a render request.
+  \item \texttt{pendingUpdates}: \textit{list[UpdateKey]} — updates waiting to be processed in rendering.
+  \item \texttt{renderStatus}: \textit{boolean} — records the success status of the rendering process.
+  \item \texttt{supportedViews}: \textit{list[string]} — identifiers corresponding to all available project views.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item Partitions are initialized.
+  \item ViewItem is properly formatted in accordance with ViewItem specification.
+  \item UpdateItem is properly formatted in accordance with UpdateItem specification.
+  \item \texttt{currentView}, \texttt{ViewState}, and \texttt{DEFAULT\_VIEWS} are elements of \texttt{supportedViews}.
+\end{itemize}
+
+\newpage
+
+
+\newpage
+
+\section{MIS of Model Manager} \label{Module9} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+\wss{Short name for the module}
+
+\subsection{Uses}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{Not all modules will have state variables.  State variables give the module
+  a memory.}
+
+\subsubsection{Environment Variables}
+
+\wss{This section is not necessary for all modules.  Its purpose is to capture
+  when the module has external interaction with the environment, such as for a
+  device driver, screen interface, keyboard, file, etc.}
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\newpage
+
+\section{MIS of History Manager} \label{Module10} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+\wss{Short name for the module}
+
+\subsection{Uses}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{Not all modules will have state variables.  State variables give the module
+  a memory.}
+
+\subsubsection{Environment Variables}
+
+\wss{This section is not necessary for all modules.  Its purpose is to capture
+  when the module has external interaction with the environment, such as for a
+  device driver, screen interface, keyboard, file, etc.}
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\newpage
+
+\section{MIS of Autosave Manager} \label{Module11} 
+
+\subsection{Module}
+AutosaveManager prepares data to be saved, monitors when updates require saving, and invokes periodic scheduled transfers to file-based storage.
+
+\subsection{Uses}
+\begin{itemize}
+  \item ModelManager for tracking changes that require savings.
+  \item SerializationManager for data preparation.
+  \item HistoryManager for logging recent changes.
+\end{itemize}
+
+\subsection{Syntax}
+
+\noindent\textbf{Exported Constants}
+
+\begin{itemize}
+  \item \texttt{AUTOSAVE\_INTERVAL\_MS}: \textit{int} — minimum amount of time (in milliseconds) between autosave operations.
+  \item \texttt{FILE\_ID}: \textit{string} — file to which autosave operations are written.
+\end{itemize}
+
+\noindent\textbf{Exported Access Programs}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.55}
+\begin{tabular}{p{4cm} p{3cm} p{3cm} p{3cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+
+\texttt{forceSave} &
+None &
+None &
+IO Error \\
+
+\texttt{enableAutosave} &
+None &
+None &
+None \\
+
+\texttt{disableAutosave} &
+None &
+None &
+None \\
+
+\texttt{lastAutosaveTime} &
+None &
+DateTime &
+None \\
+
+\end{tabular}
+\end{center}
+
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+  \item \texttt{autosavePermission}: \textit{bool} — indicates whether autosave is enabled or disabled.
+  \item \texttt{lastAutosave}: \textit{DateTime} — timestamp of last transfer to file-based storage.
+  \item \texttt{autosaveHistory}: \textit{dict[DateTime] = Update} — complete log of transfers to file-based storage.
+\end{itemize}
+
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+  \item \texttt{SYSTEM\_TIME}: \textit{DateTime} — global time supplied by the current system.
+\end{itemize}
+
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item \texttt{SYSTEM\_TIME} always increases monotonically.
+  \item Data preparation method is compatible with file-based storage.
+  \item Connection is available to file-based storage.
+  \item Valid configuration exists for operations to file-based storage.
+\end{itemize}
+
+\newpage
+
+\section{MIS of Voxel Tracking} \label{Module12} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+\wss{Short name for the module}
+
+\subsection{Uses}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{Not all modules will have state variables.  State variables give the module
+  a memory.}
+
+\subsubsection{Environment Variables}
+
+\wss{This section is not necessary for all modules.  Its purpose is to capture
+  when the module has external interaction with the environment, such as for a
+  device driver, screen interface, keyboard, file, etc.}
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\newpage
+
+\section{MIS of Highlight Manager} \label{Module13} 
+
+\subsection{Module}
+HighlightManager manages the voxel highlights in accordance with visual semantic meaning.
+
+\subsection{Uses}
+\begin{itemize}
+  \item \texttt{Visualization State Manager} for managing visual updates related to voxel highlights.
+\end{itemize}
+
+\subsection{Syntax}
+
+\noindent\textbf{Exported Constants}
+
+\begin{itemize}
+  \item \texttt{DEFAULT\_HIGHLIGHT\_MAP}: \textit{dict[string, string]} — mapping from semantic keys to their default highlight colours.
+\end{itemize}
+
+\noindent\textbf{Exported Access Programs}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.55}
+\begin{tabular}{p{4cm} p{5cm} p{3cm} p{3cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+
+\texttt{getHighlight} &
+semanticKey: \textit{string} &
+ColourValue &
+None \\
+
+\texttt{editPalette} &
+semanticKey: \textit{string} \newline
+newColour: \textit{ColourValue} &
+void &
+None \\
+
+\texttt{setHighlight} &
+semanticKey: \textit{string} &
+void &
+None \\
+
+\texttt{resetPalette} &
+None &
+void &
+None \\
+
+\end{tabular}
+\end{center}
+
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+  \item \texttt{highlightColourMap}: \textit{dict[string, string]} — current mapping from semantic keys to active highlight colours.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None
+
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item Semantic keys must correspond to valid entries maintained by the TrackingManager.
+  \item Colour values are valid colour representations.
+\end{itemize}
+
+\newpage
+
+\section{MIS of Export Validation} \label{Module14} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+\wss{Short name for the module}
+
+\subsection{Uses}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{Not all modules will have state variables.  State variables give the module
+  a memory.}
+
+\subsubsection{Environment Variables}
+
+\wss{This section is not necessary for all modules.  Its purpose is to capture
+  when the module has external interaction with the environment, such as for a
+  device driver, screen interface, keyboard, file, etc.}
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\newpage
+
+\section{MIS of Export Manager} \label{Module15} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+\wss{Short name for the module}
+
+\subsection{Uses}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{Not all modules will have state variables.  State variables give the module
+  a memory.}
+
+\subsubsection{Environment Variables}
+
+\wss{This section is not necessary for all modules.  Its purpose is to capture
+  when the module has external interaction with the environment, such as for a
+  device driver, screen interface, keyboard, file, etc.}
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\newpage
+
+\section{MIS of Error Diagnostic Handler } \label{Module16} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+\wss{Short name for the module}
+
+\subsection{Uses}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{Not all modules will have state variables.  State variables give the module
+  a memory.}
+
+\subsubsection{Environment Variables}
+
+\wss{This section is not necessary for all modules.  Its purpose is to capture
+  when the module has external interaction with the environment, such as for a
+  device driver, screen interface, keyboard, file, etc.}
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\newpage
+
+\section{MIS of Model Structure} \label{Module17} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+\wss{Short name for the module}
+
+\subsection{Uses}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{Not all modules will have state variables.  State variables give the module
+  a memory.}
+
+\subsubsection{Environment Variables}
+
+\wss{This section is not necessary for all modules.  Its purpose is to capture
+  when the module has external interaction with the environment, such as for a
+  device driver, screen interface, keyboard, file, etc.}
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\newpage
+
+\section{MIS of Graphics Adapter} \label{Module18} 
+
+\subsection{Module}
+GraphicsAdapter handles all communication with the graphics API to enable visual rendering and generate a model on the UI.
+
+\subsection{Uses}
+\begin{itemize}
+  \item VisualizationManager aggregates necessary backend data and relays updates to the rendered view.
+\end{itemize}
+
+\subsection{Syntax}
+
+\noindent\textbf{Exported Constants}
+
+\begin{itemize}
+  \item None
+\end{itemize}
+
+\noindent\textbf{Exported Access Programs}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.55}
+\begin{tabular}{p{4cm} p{5cm} p{3cm} p{3cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+
+\texttt{requestRender} &
+str: \textit{UpdateKey} \newline
+update: \textit{UpdateBundle} &
+void &
+Network Error \\
+
+\texttt{getUpdateStatus} &
+str: \textit{UpdateKey} &
+boolean &
+None \\
+
+\texttt{checkServerStatus} &
+None &
+Promise\textless void\textgreater &
+Network Error \\
+
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+  \item \texttt{updateStatus}: \textit{boolean} — tracks status of rendering completion.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+  \item \texttt{API\_BASE\_URL}: \textit{string} — external base URL for establishing environment configurations and enabling backend API requests.
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+  \item Backend service is reachable and operational.
+  \item Connection is available for API.
+  \item Valid configurations exist for necessary API operations.
+\end{itemize}
+
+\newpage
+
+\section{MIS of Database Handler} \label{Module19} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+\wss{Short name for the module}
+
+\subsection{Uses}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{Not all modules will have state variables.  State variables give the module
+  a memory.}
+
+\subsubsection{Environment Variables}
+
+\wss{This section is not necessary for all modules.  Its purpose is to capture
+  when the module has external interaction with the environment, such as for a
+  device driver, screen interface, keyboard, file, etc.}
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\newpage
+
+\section{MIS of Export Structure} \label{Module20} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+\wss{Short name for the module}
+
+\subsection{Uses}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\wss{Not all modules will have state variables.  State variables give the module
+  a memory.}
+
+\subsubsection{Environment Variables}
+
+\wss{This section is not necessary for all modules.  Its purpose is to capture
+  when the module has external interaction with the environment, such as for a
+  device driver, screen interface, keyboard, file, etc.}
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
 
 \newpage
 
