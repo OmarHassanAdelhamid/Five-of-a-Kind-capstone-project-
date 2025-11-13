@@ -8,6 +8,8 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amsfonts}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -48,8 +50,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+November 10, 2025 & 1.0 & Initial draft by All\\
 \bottomrule
 \end{tabularx}
 
@@ -67,18 +68,24 @@ This section records information for easy reference.
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   AC & Anticipated Change\\
+  API & Application Programming Interface \\
+  \progname & Explanation of program name\\
+  CAD & Computer-Aided Design\\
+  CSV & Comma Separated Values\\
   DAG & Directed Acyclic Graph \\
   M & Module \\
   MG & Module Guide \\
+  OBJ & Object file format (3D model)\\
   OS & Operating System \\
   R & Requirement\\
   SC & Scientific Computing \\
   SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
+  STL & Stereolithography file format\\
+  UI & User Interface\\
   UC & Unlikely Change \\
   UI & User Interface \\
+  XML & Extensible Markup Language\\
   3D & Three Dimensional \\
-  API & Application Programming Interface \\
   \bottomrule
 \end{tabular}\\
 
@@ -161,16 +168,31 @@ adapted here is called design for
 change.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-  hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item ...
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the initial input file (CAD file formats). Initially, the system will support STL files, but anticipated changes could require supporting additional CAD formats used in the industry. The change in input format affects the parsing logic, error handling, and inetgration with visualization manager. Changes will require updates to file importers and related data validation processes.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acInputConstraints}:] The constraints on the input parameters such as the maximum number of voxels and the maximum number of layers that can be displayed. These limits are currently fixed at 13,996,800,000 voxels and 518,400 voxels, but may need to be configurable in the future. Changes to these constraints will require updates to the input validation and parsing logic.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acVoxelSize}:] The dimensions of the voxel grid. The dimensions of the voxel grid are currently fixed at $300 \times 300\,\mu\mathrm{m}$ (XY) and $110\,\mu\mathrm{m}$ (Z), but may need to be configurable in the future as the user may want to use a different voxel size. Changes to these constraints will require updates to the voxelization algorithm and the layer navigation logic.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acVoxelization}:] The algorithm used to convert the mesh CAD file into a voxel grid. Anticipated changes will require updates to the voxelization algorithm to improve the accuracy, performance, or new features. 
+
+\item[\refstepcounter{acnum} \actheacnum \label{acMagnetization}:] The representation and format of magnetization direction data placed on the voxels, either by vector representation or coordinate system. This could involve changing the data structure (e.g., from Cartesian coordinates to Euler angles), supporting both absolute and relative directions, or accommodating multiple coordinate systems. Changes will require updates to the magnetization assignment logic.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acSelection}:] The implementation of selecting multiple voxels. Currently multi-selection is supported by selecting each voxel individually or an entire layer at once. Changes will require updates to the selection logic considering a more flexible selection method such lasso selection or rectangle selection.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acExport}:] The exported file format for the custom printer software is currently CSV. The file must contain the voxel location, layer, and magnetization direction and material ID data. Anticipated changes could require supporting other formats (such as JSON, XML, or other file formats). Changes will require updates to the export logic.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acDataStructure}:] The implementation of the data structures used to store and manage voxel grids and voxel properties. This could involve using different data structures such as a tree structure or a graph structure optimizing the performance metrics of the system, metrics such as memory usage, search speed, or parallel processing. Anticipating such changes allows for future performance and scalability enhancements. Changes will require updates to the data structures.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acUI}:] The layout and interaction methods of the user interface, including menu structure, keyboard shortcuts, and user feedback mechanisms. This anticipated change helps accommodate different user workflows, accessibility requirements, or even support for new input devices.  Changes will require updates to the UI logic.
+
 \end{description}
 
+\iffalse
 \wss{Anticipated changes relate to changes that would be made in requirements,
 design or implementation choices.  They are not related to changes that are made
 at run-time, like the values of parameters.}
+\fi
 
 \subsection{Unlikely Changes} \label{SecUchange}
 
@@ -182,9 +204,14 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices. The system is designed with the expectation that it operates with a limited and specific set of input and output devices. Input is handled through files (such as CAD input files or configuration files) and/or keyboard entry (for command-line or interactive parameter input). Output is provided via files (for export and logging), memory (for internal data storage and communication between modules), and/or a graphical screen (for visualization and user interface feedback).
+
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucArchitecture}:] The overall system architecture. The software follows a rigid four-manager structure that divides system functionality into Import, Visualization, Editing, and Export managers. Each manager is responsible for a core facet of application operation, and this separation is central to the modular design.
+
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucLayerOrder}:] The ordering of layers from bottom to top (Z-axis ordering). Layers within the voxel grid are organized along the Z-axis, proceeding from the lowest layer (the base) to the highest (the top). This convention aligns with common additive manufacturing and 3D modeling practices.
+
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucInteraction}:] The fundamental user interaction paradigm. The system targets a desktop usage scenario, using mouse and keyboard as primary input methods. This supports rapid interaction, direct manipulation of interface elements, and fine control over editing tasks.
+
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -220,6 +247,14 @@ actually be implemented.
 \item [\refstepcounter{mnum} \mthemnum \label{m20}:] Export Structure Module
 \end{description}
 
+
+
+
+\section{Connection Between Requirements and Design} \label{SecConnection}
+
+The design of the system is intended to satisfy the requirements developed in
+the SRS. In this stage, the system is decomposed into modules. The connection
+between requirements and modules is listed in Table~\ref{TblMH}.
 
 \begin{table}[h!]
 \centering
@@ -260,18 +295,14 @@ actually be implemented.
 \label{TblMH}
 \end{table}
 
-\section{Connection Between Requirements and Design} \label{SecConnection}
-
-The design of the system is intended to satisfy the requirements developed in
-the SRS. In this stage, the system is decomposed into modules. The connection
-between requirements and modules is listed in Table~\ref{TblRT}.
-
+\iffalse
 \wss{The intention of this section is to document decisions that are made
   ``between'' the requirements and the design.  To satisfy some requirements,
   design decisions need to be made.  Rather than make these decisions implicit,
   they are explicitly recorded here.  For instance, if a program has security
   requirements, a specific design decision may be made to satisfy those
   requirements with a password.}
+\fi
 
 \section{Module Decomposition} \label{SecMD}
 
@@ -289,7 +320,7 @@ Only the leaf modules in the hierarchy have to be implemented. If a dash
 (\emph{--}) is shown, this means that the module is not a leaf and will not have
 to be implemented.
 
-\subsection{Hardware Hiding Modules (\mref{mHH})}
+\subsection{Hardware Hiding Modules (None)}
 
 This system has no hardware components.
 
@@ -328,12 +359,11 @@ This system has no hardware components.
 \subsubsection{Project Manager Module (\mref{m4})}
 
 \begin{description}
-  \item[Secrets:]
-  \item[Services:]
-  \item[Implemented By:] \projectname{}
-  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
-\end{description}
+\item[Secrets:] How to create and initialize a new project workspace. How to establish the intitial project structure, metadata, and default configuration settings. How to allocate and manage project resources and state.
+\item[Services:] Creates new projects with appropriate initialization. Manages project setup cycle starting from the creation of a new project workspace to the an interactive user interface.
+\item[Implemented By:] \projectname{}
+\item[Type of Module:] Abstract Object: A component responsible for project initialization and workspace management.
+\end{description} 
 
 \subsubsection{Serialization Manager Module (\mref{m5})}
 
@@ -414,7 +444,7 @@ This system has no hardware components.
 \subsubsection{Highlight Manager Module (\mref{m13})}
 
 \begin{description}
-  \item[Secrets:] How to define the rules that associate voxel semantics with a highlight colour. How high colours are internally represented. How conflicts are resolved when a voxel qualifies for multiple highlight colours simultaneously. How colour palette, which encapsulates all highlight colours, is chosen. How accessibility requirements influence the selection of highlight colours.
+  \item[Secrets:] How to define the rules that associate voxel semantics with a highlight colour. How highlight colours are internally represented. How conflicts are resolved when a voxel qualifies for multiple highlight colours simultaneously. How colour palette, which encapsulates all highlight colours, is chosen. How accessibility requirements influence the selection of highlight colours.
   \item[Services:] Maps relationship between highlight colour and semantic meaning of highlighted voxels.
   \item[Implemented By:] \projectname{}
   \item[Type of Module:] Abstract Object
@@ -423,31 +453,119 @@ This system has no hardware components.
 \subsubsection{Export Validation Module (\mref{m14})}
 
 \begin{description}
-  \item[Secrets:]
-  \item[Services:]
-  \item[Implemented By:] \projectname{}
-  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
-\end{description}
+\item[Secrets:] How to validate whether a project metadata file is suitable for export. How to check export file format requirements, verify that all voxels have required material and magnetization properties, and ensure data integrity constraints are satisfied. How to determine export readiness based on validation rules.
+\item[Services:] Validates export readiness by checking export file format requirements, verifying completeness of voxel properties (material and magnetization), and ensuring all export constraints are met. Provides validation results and error reporting for export issues.
+\item[Implemented By:] \projectname{}
+\item[Type of Module:] Library: A reusable component providing validation functionality for export operations.
+\end{description} 
+
+\paragraph{Export Validation Formalization}
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Project Model:} A structure $P = (V, L, M)$ where:
+\begin{itemize}
+\item $V = \{v_1, v_2, \ldots, v_n\}$ is a set of voxels
+\item $L = \{l_1, l_2, \ldots, l_k\}$ is a set of layers
+\item $M$ is metadata containing project information
+\end{itemize}
+\item \textbf{Voxel:} An element $v_i = (p, m, mag)$ where:
+\begin{itemize}
+\item $p = (x, y, z)$ represents spatial position
+\item $m \in M_{types}$ represents material type (may be $\emptyset$)
+\item $mag \in \mathbb{R}^3$ represents magnetization vector (may be $\emptyset$)
+\end{itemize}
+\item \textbf{Printer Compatibility:} A constraint function $C_{printer}(P) \rightarrow \{valid, invalid\}$
+\item \textbf{Property Completeness:} A predicate $Complete(v) \equiv (m \neq \emptyset) \land (mag \neq \emptyset)$
+\item \textbf{Export Readiness:} A validation result $R = (status, errors)$ where $status \in \{ready, not\_ready\}$ and $errors$ is a set of validation error messages
+\end{itemize}
+
+\item \textbf{Validation Process}
+\begin{itemize}
+\item \textbf{Printer Compatibility Check:}
+$$C_{printer}(P) = \begin{cases}
+valid & \text{if } P \text{ satisfies printer specifications}\\
+invalid & \text{otherwise}
+\end{cases}$$
+\item \textbf{Property Completeness Check:}
+$$V_{complete} = \{v_i \in V \mid Complete(v_i)\}$$
+$$V_{incomplete} = V \setminus V_{complete}$$
+\item \textbf{Export Readiness Determination:}
+$$R.status = \begin{cases}
+ready & \text{if } C_{printer}(P) = valid \land V_{incomplete} = \emptyset\\
+not\_ready & \text{otherwise}
+\end{cases}$$
+$$R.errors = \begin{cases}
+\{C_{printer}(P).errors\} & \text{if } C_{printer}(P) = invalid\\
+\{\text{``Voxel } v_i \text{ missing property''} \mid v_i \in V_{incomplete}\} & \text{otherwise}
+\end{cases}$$
+\end{itemize}
+\item \textbf{Validation Constraints}
+\begin{itemize}
+\item All voxels must have assigned material: $\forall v_i \in V, m_i \neq \emptyset$
+\item All voxels must have assigned magnetization: $\forall v_i \in V, mag_i \neq \emptyset$
+\item Model must satisfy printer compatibility constraints: $C_{printer}(P) = valid$
+\end{itemize}
+\end{enumerate}
 
 \subsubsection{Export Manager Module (\mref{m15})}
 
 \begin{description}
-  \item[Secrets:]
-  \item[Services:]
-  \item[Implemented By:] \projectname{}
-  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:] How to export a project with the defined data structure format. How to transform internal model data into the export file format. How to serialize project data including voxel grids, metadata, material properties, and magnetization information according to export specifications.
+\item[Services:] Exports projects to external file formats with the defined data structure. Handles the conversion of internal model representations to export-compatible formats, ensuring data integrity and completeness during the export process.
+\item[Implemented By:] \projectname{}
+\item[Type of Module:] Abstract Object: A component responsible for coordinating the export process and data transformation.
 \end{description}
+
+\paragraph{Export Manager Formalization}
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Internal Model:} A structure $M_{internal} = (V, L, Meta)$ where:
+\begin{itemize}
+\item $V = \{v_1, v_2, \ldots, v_n\}$ is the set of voxels with positions $p_i = (x_i, y_i, z_i)$
+\item $L = \{l_1, l_2, \ldots, l_k\}$ is the ordered set of layers
+\item $Meta$ contains project metadata
+\end{itemize}
+\item \textbf{Export Format:} A structure $F_{export} = (structure)$ where:
+\begin{itemize}
+\item $structure$ defines the export data organization
+\end{itemize}
+\item \textbf{Transformation Function:} A mapping $T : M_{internal} \rightarrow F_{export}$
+\item \textbf{Export File:} A serialized representation $E = Serialize(F_{export})$
+\end{itemize}
+\item \textbf{Export Process}
+\begin{itemize}
+\item \textbf{Data Transformation:}
+$$F_{export} = T(M_{internal})$$
+where $T$ performs:
+\begin{itemize}
+\item Voxel aggregation: $V \rightarrow V_{export}$ (grouping by layer/region)
+\item Metadata mapping: $Meta \rightarrow Meta_{export}$
+\item Property serialization: $(m_i, mag_i) \rightarrow ExportFormat(m_i, mag_i)$
+\end{itemize}
+\item \textbf{Serialization:}
+$$E = CSVEncode(F_{export})$$
+\item \textbf{Integrity Preservation:}
+$$\forall v_i \in V, \exists v'_i \in V_{export} : Properties(v_i) = Properties(v'_i)$$
+where $Properties(v) = (position, material, magnetization)$
+\end{itemize}
+\item \textbf{Export Constraints}
+\begin{itemize}
+\item All voxels from $M_{internal}$ must be represented in $F_{export}$
+\item Layer ordering must be preserved: $Order(L) = Order(L_{export})$
+\item Material and magnetization properties must be preserved: $\forall v_i, Properties(v_i) = Properties(T(v_i))$
+\item Export file must conform to defined export structure specification
+\end{itemize}
+\end{enumerate}
 
 \subsubsection{Error Diagnostic Handler Module (\mref{m16})}
 
 \begin{description}
-  \item[Secrets:]
-  \item[Services:]
-  \item[Implemented By:] \projectname{}
-  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:] How to detect and communicate errors related to unresponsiveness of the model, graphics update failures, and model file issues. How to classify error types and determine error sources. How to handle error recovery and logging mechanisms.
+\item[Services:] Detects and diagnoses errors occurring during model updates, graphics rendering, or file operations. Provides error classification and logging.
+\item[Implemented By:] \projectname{}
+\item[Type of Module:] Library: A reusable component providing error detection, diagnosis, and handling functionality.
 \end{description}
 
 
