@@ -5,7 +5,7 @@ ifdef::env-draft[]
 TIP: _**This is the bulk of the System book, describing elements of functionality (behaviors)**. This chapter corresponds to the traditional view of requirements as defining "**what the system does**”. It is organized as one section, S.2.n, for each of the components identified in <<s1>>, describing the corresponding behaviors (functional and non-functional properties)._  <<BM22>>
 endif::[]
 
-The following section outlines the specific functional and non-functional requirements, where each requirement has been defined within the scope of a specified component. Each requirement contains a section underneath that outlines the priority, likelihood of change, and justification to convey its relative importance and potential variability.
+The following section outlines the specific functional and non-functional requirements, where each requirement has been defined within the scope of a specified component except for a few requirements that pertain to the entire system. Each requirement contains a section underneath that outlines the priority, likelihood of change, and justification to convey its relative importance and potential variability.
 
 For certain requirements, variables have been defined. A description of each variable as well as its assigned value has been included below:
 
@@ -101,6 +101,13 @@ This considers the maximum number of steps (eg. clicks, enter details into a tex
 [.maroon]#_Likelihood of change:_# High +
 [.maroon]#_Justification:_# It reduces wait time to improve user experience but is not critical. Changes to the MIN_RATE threshold may be necessary in order to sufficiently support the execution of a high-demand operation.
 
+. [[NF213]] *Ease of use:* Import Manager shall ensure projects can be created/opened in less than MAX_INTERACTIONS. (NF213)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# The process of initial project creation from either a CAD file or from scratch, or opening an existing project file should be as simple as possible to encourage system intuivity. This requirement is unlikely to change given this importance, but the definition of maximum interactions may need to be adjusted given possible complexity in project creation. 
+
 
 ==== (2.2.2) Visualization Manager
 
@@ -161,7 +168,6 @@ This considers the maximum number of steps (eg. clicks, enter details into a tex
 [.maroon]#_Likelihood of change:_# Medium +
 [.maroon]#_Justification:_# It provides users with easy visualization of remaining voxels that require magnetization, which improves usability in non-critical areas. Similarly to the Material tracker, there’s a possibility of change regarding what constitutes complete magnetization and how it is displayed to users.
 
-<<<
 ===== Non-Functional Requirements
 
 . [[NF221]] *Image updates:* Visualization Manager shall update any changes to the perspective of the 3D model with a latency of less than MAX_VIEW_LATENCY to allow a seamless user interaction. (NF221)
@@ -180,12 +186,12 @@ This considers the maximum number of steps (eg. clicks, enter details into a tex
 [.maroon]#_Justification:_# It will ensure software can sufficiently handle large-scale visuals within a project. The MAX_DISPLAY threshold is subject to change to ensure optimal visuals where there is minimal risk of undesirable lag.
 
 
-. [[NF223]] *Accessible colours:* Visualization Manager shall ensure all colours that highlight voxels have unique hex codes and can be distinctively recognized under standard lighting conditions. (NF223)
+. [[NF223]] *Accessible colours:* Visualization Manager shall ensure all colours utilized for all interfaces (e.g. voxel highlight colours, text colours, background colours) have sufficient contrast in accordance with WCAG 2.0 guidelines and can be distinctively recognized under standard lighting conditions. (NF223)
 
 +
 [.maroon]#_Priority:_# Medium (should-have) +
 [.maroon]#_Likelihood of change:_# Low +
-[.maroon]#_Justification:_# Its priority is linked to any tracker requirement. Once visual tracking is implemented, its priority is elevated to support distinct visualization of desired features for an improved user experience. It contains critical standards for easy visualization which means there’s limited flexibility for change.
+[.maroon]#_Justification:_# It contains critical standards for easy visualization which means there’s limited flexibility for change. If improper colours are used, the system may be rendered unusable.
 
 ==== (2.2.3) Editing Manager
 
@@ -264,7 +270,7 @@ This considers the maximum number of steps (eg. clicks, enter details into a tex
 
 ===== Non-Functional Requirements
 
-. [[NF231]] *Ease of use:* Editing Manager shall ensure that the process of a material or magnetization property to a large group of selected voxels can be completed in MAX_INTERACTIONS or less by a user who is familiar with how the printer operates, creating an intuitive interface. (NF231)
+. [[NF231]] *Ease of use:* Editing Manager shall ensure that all interactions covered in the above requirements (e.g. assigning properties, layer selection, undo/redo) can be completed in MAX_INTERACTIONS or less by a user who is familiar with how the printer operates, creating an intuitive interface. (NF231)
 
 +
 [.maroon]#_Priority:_# Medium (should-have) +
@@ -333,3 +339,27 @@ This considers the maximum number of steps (eg. clicks, enter details into a tex
 [.maroon]#_Likelihood of change:_# High +
 [.maroon]#_Justification:_# It ensures reduced wait time and improves overall user experience, though it is not critical. Changes to the MIN_RATE threshold may be necessary to sufficiently support high-demand operations.
 
+. [[NF243]] *Ease of use:* Export Manager shall ensure projects can be exported and/or saved in under MAX_INTERACTIONS. (NF243)
+
++
+[.maroon]#_Priority:_# Medium (should-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# Similar to previous Ease of use requirements, these operations should be as streamlined as possible to be intuitive and quick.
+
+==== (2.2.5) General Non-Functional Requirements
+
+These requirements do not apply to a specfic component but instead to the system as a whole.
+
+. [[GEN1]] *Manual Accessibility:* The system shall include a user's manual that is details primary use cases, minimizes description to what is necessary, and considered interpretable by primary users. (GEN1)
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# It is important that the included manual exhibits these properties, otherwise the document will not be helpful at its intended purpose - both helping new users learn how to accomplish their tasks with the system and acting as a quick reference to experienced users. 
+
+. [[GEN2]] *Implementation Maintainability:* The system shall be implemented in a modular, maintainable, and extensible fashion. (GEN2)
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# Ensuring the system exhibits these qualities is critical both during development to allow for easy modification and after, in the case that further revisions of the system are made. Given how these qualities are highly desirable, this requirement is inflexible.

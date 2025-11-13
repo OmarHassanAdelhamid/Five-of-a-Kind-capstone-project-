@@ -110,7 +110,7 @@ The following user stories comprise the backlog for the first sprint, focusing o
 
     - **Estimate**: **2 story points**
 
-    - **Reasoning**: Defining performance targets (NF211-NF212, NF221-NF223, NF231-NF232, NF241-NF242) requires analysis of system requirements, stakeholder expectations, and technical constraints. It involves research into performance benchmarks and setting realistic targets, justifying **2 story points**.
+    - **Reasoning**: Defining performance targets (NF211-NF213, NF221-NF223, NF231-NF232, NF241-NF243) requires analysis of system requirements, stakeholder expectations, and technical constraints. It involves research into performance benchmarks and setting realistic targets, justifying **2 story points**.
 ---
 
 **User Story 9: Create System Architecture Documentation**
