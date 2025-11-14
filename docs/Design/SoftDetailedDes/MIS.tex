@@ -171,14 +171,16 @@ The following table is taken directly from the Module Guide document for this pr
 
 \section{MIS of Input Interpreter} \label{Module1}
 
+InputInterpreter
+
 \subsection{Module}
-InputInterpreter is responsible for importing and parsing model or project files (e.g., STL, JSON) and normalizing them into a consistent internal format that downstream modules can process.
+The InputInterpreter module is responsible for importing and parsing model or project files (e.g., STL, JSON) and normalizing them into a consistent internal format that downstream modules can process.
 
 \subsection{Uses}
 \begin{itemize}
-  \item VoxelSlicing (M2) for voxel grid generation.
-  \item SerializationManager (M5) for project deserialization.
-  \item ModelStructure (M17) for organizing parsed geometry data.
+  \item \texttt{VoxelSlicing} for voxel grid generation.
+  \item \texttt{SerializationManager} for project deserialization.
+  \item \texttt{ModelManager} for organizing parsed geometry data.
 \end{itemize}
 
 \subsection{Syntax}
@@ -250,14 +252,15 @@ InputInterpreter is responsible for importing and parsing model or project files
 
 \section{MIS of Voxel Slicing} \label{Module2}
 
+VoxelSlicing
+
 \subsection{Module}
-VoxelSlicing is responsible for converting the geometric model into a structured voxel grid. It divides the 3D model along the Z-axis into discrete slices based on a specified resolution, mapping geometry into voxelized layers for simulation and visualization.
+The VoxelSlicing module is responsible for converting the geometric model into a structured voxel grid. It divides the 3D model along the Z-axis into discrete slices based on a specified resolution, mapping geometry into voxelized layers for simulation and visualization.
 
 \subsection{Uses}
 \begin{itemize}
-  \item InputInterpreter (M1) — provides intermediate geometric model data.
-  \item ModelManager (M9) — receives generated voxel grid for management and updates.
-  \item ModelStructure (M17) — defines the voxel and layer data structures.
+  \item \texttt{InputInterpreter} to provide intermediate geometric model data.
+  \item \texttt{ModelManager} to receive thegenerated voxel grid for management and updates.
 \end{itemize}
 
 \subsection{Syntax}
@@ -392,16 +395,97 @@ None
   \end{itemize}
 \newpage
 
-\section{MIS of Serialization Manager} \label{Module5}
+\section{MIS of Project Manager} \label{Module4}
+
+ProjectManager
 
 \subsection{Module}
-SerializationManager handles conversion of all internal model data between in-memory and persistent storage forms (JSON or binary). It ensures data integrity, schema consistency, and supports both saving and restoring complete project states.
+
+The ProjectManager module manages the creation, initialization, and persistence of project workspaces, handles project metadata storage, and ensures project resources are properly allocated.
 
 \subsection{Uses}
 \begin{itemize}
-  \item ModelManager (M9) — supplies model state to be serialized.
-  \item DatabaseHandler (M19) — stores serialized data persistently.
-  \item ExportManager (M15) — exports encoded model structures to files.
+  \item \texttt{ModelManager} to obtain and create the model structure and data representation.
+  \item \texttt{DisplayPartitioning} to create and manage the display partitions.
+  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.55}
+\begin{tabular}{p{4cm} p{5cm} p{3cm} p{3cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+ProjectManager & - & self & IOError \\
+create\_project & project\_path: str, \newline config: dict & None & \textbullet{} IOError \newline \textbullet{} ValueError \\
+load\_project & project\_path: str & None & \textbullet{} IOError \newline \textbullet{} FileNotFoundError \\
+save\_project & project\_path: str & None & IOError \\
+get\_project\_metadata & - & dict & - \\
+initialize\_workspace & workspace\_path: str & None & IOError \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+\item \texttt{project\_path}: str - Path to the current project directory
+\item \texttt{workspace\_root}: str - Root directory of the workspace
+\item \texttt{project\_metadata}: dict - Dictionary containing project configuration and metadata
+\item \texttt{model}: ModelStructure - Reference to the model structure instance
+\item \texttt{is\_initialized}: bool - Flag indicating if the project has been initialized
+\end{itemize}
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+\item \texttt{FILE\_SYSTEM}: The file system where project files are stored
+\item \texttt{WORKSPACE\_ROOT}: Root directory environment variable for workspace location
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+\item The file system has sufficient space for project creation
+\item The provided project path is a valid directory path
+\item Write permissions are available for the project directory
+\item The workspace root directory exists or can be created
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{itemize}
+\item \texttt{validate\_config(config: dict) -> bool}: Validates that the configuration dictionary contains required fields
+\item \texttt{create\_project\_structure(path: str) -> None}: Creates the directory structure for a new project
+\item \texttt{read\_metadata\_file(path: str) -> dict}: Reads and parses project metadata from file
+\item \texttt{write\_metadata\_file(path: str, metadata: dict) -> None}: Writes project metadata to file
+\end{itemize}
+
+\newpage
+
+
+\section{MIS of Serialization Manager} \label{Module5}
+
+SerializationManager
+
+\subsection{Module}
+The SerializationManager module handles conversion of all internal model data between in-memory and persistent storage forms (JSON or binary). It ensures data integrity, schema consistency, and supports both saving and restoring complete project states.
+
+\subsection{Uses}
+\begin{itemize}
+  \item \texttt{ModelManager} to supply the model state to be serialized.
+  \item \texttt{DatabaseHandler} to store the serialized data persistently.
+  \item \texttt{ExportManager} to export the encoded model structures to files.
 \end{itemize}
 
 \subsection{Syntax}
@@ -556,14 +640,14 @@ None \\
 InteractionController
 
 \subsection{Module}
-The InteractionController module manages the process of raw events from interaction with UI to associated actions within internal code.
+The InteractionController module manages the process of raw events from interaction with the UI to associated actions within internal code.
 
 \subsection{Uses}
 \begin{itemize}
   \item \texttt{VisualizationManager} to establish current active view.
-  \item \texttt{BackendCommunicationManager} for taking the collected raw UI data from the frontend and sending it for interpretation.
-  \item \texttt{ModelManager} for handling user intent related to model modification.
-  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
+  \item \texttt{BackendCommunicator} to take the collected raw UI data from the frontend and send it for interpretation.
+  \item \texttt{ModelManager} to handle user intent related to model modification.
+  \item \texttt{ErrorDiagnosticHandler} to handle error handling and diagnostics.
 \end{itemize}
 
 \subsection{Syntax}
@@ -681,15 +765,24 @@ None
 
 \section{MIS of Model Manager} \label{Module9}
 
+ModelManager
+
 \subsection{Module}
-ModelManager oversees the management and manipulation of the voxel-based 3D model. It provides APIs to add, remove, or modify voxels, update magnetization/material properties, and synchronize changes with autosave and history tracking modules.
+The ModelManager module oversees the management and manipulation of the voxel-based 3D model. It provides APIs to add, remove, or modify voxels, update magnetization/material properties, and synchronize changes with autosave and history tracking modules.
 
 \subsection{Uses}
 \begin{itemize}
-  \item VoxelSlicing (M2) — supplies initial voxel grid data.
-  \item SerializationManager (M5) — encodes or decodes model states for storage.
-  \item HistoryManager (M10) — records changes for undo/redo.
-  \item VoxelTracking (M12) — queries voxel properties.
+  \item \texttt{VoxelSlicing} to supply initial voxel grid data.
+  \item \texttt{SerializationManager} to encode or decode model states for storage.
+  \item \texttt{HistoryManager} to record changes for undo/redo.
+  \item \texttt{VoxelTracking} to query voxel properties.
+  \item \texttt{ErrorDiagnosticHandler} to handle error handling and diagnostics.
+  \item \texttt{AutosaveManager} to synchronize changes with autosave.
+  \item \texttt{HighlightManager} to manage change in voxels being highlighted.
+  \item \texttt{ModelStructure} to define the voxel and layer data structures.
+  \item \texttt{GraphicsAdapter} to render the model.
+  \item \texttt{DatabaseHandler} to store the model.
+  \item \texttt{ExportValidation} to validate the model.
 \end{itemize}
 
 \subsection{Syntax}
@@ -771,15 +864,18 @@ ModelManager oversees the management and manipulation of the voxel-based 3D mode
 
 \section{MIS of History Manager} \label{Module10}
 
+HistoryManager
+
 \subsection{Module}
-HistoryManager maintains the complete change history of the 3D voxel model.  
+The HistoryManager module maintains the complete change history of the 3D voxel model.  
 It allows undoing and redoing edits by recording incremental changes (deltas) after every modification.
 
 \subsection{Uses}
 \begin{itemize}
-  \item ModelManager (M9) — provides the model changes to record.
-  \item SerializationManager (M5) — encodes snapshots for persistence.
-  \item AutosaveManager (M11) — references latest history state during periodic saves.
+  \item \texttt{ModelManager} to provide the model changes to record.
+  \item \texttt{SerializationManager} to encode snapshots for persistence.
+  \item \texttt{AutosaveManager} to reference latest history state during periodic saves.
+  \item \texttt{ErrorDiagnosticHandler} to handle error handling and diagnostics.
 \end{itemize}
 
 \subsection{Syntax}
@@ -1408,13 +1504,16 @@ GraphicsAdapter handles all communication with the graphics API to enable visual
 
 \section{MIS of Database Handler} \label{Module19}
 
+DatabaseHandler
+
 \subsection{Module}
-DatabaseHandler manages persistent storage for project and model data. It provides standardized interfaces for reading, writing, and deleting serialized model files, ensuring version integrity and consistent access to saved projects.
+The DatabaseHandler module manages persistent storage for project and model data. It provides standardized interfaces for reading, writing, and deleting serialized model files, ensuring version integrity and consistent access to saved projects.
 
 \subsection{Uses}
 \begin{itemize}
-  \item SerializationManager (M5) — encodes and decodes model data before storage.
-  \item ModelManager (M9) — provides model structures to persist.
+  \item \texttt{SerializationManager} to encode and decode model data before storage.
+  \item \texttt{ModelManager} to provide model structures to persist.
+  \item \texttt{ErrorDiagnosticHandler} to handle error handling and diagnostics.
 \end{itemize}
 
 \subsection{Syntax}
