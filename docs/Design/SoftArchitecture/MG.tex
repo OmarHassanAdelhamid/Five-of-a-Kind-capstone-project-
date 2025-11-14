@@ -10,6 +10,7 @@
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{xcolor}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -33,11 +34,7 @@
 \newcommand{\mthemnum}{M\themnum}
 \newcommand{\mref}[1]{M\ref{#1}}
 
-\newcommand{\projectname}{AutoVox}
-% Define commonly used names to avoid "Undefined control sequence" errors
-\newcommand{\progname}{\projectname}
-\newcommand{\teamname}{\projectname{} Team}
-\newcommand{\authname}{\projectname{} Team}
+
 
 \begin{document}
 
@@ -87,7 +84,6 @@ This section records information for easy reference.
   STL & Stereolithography file format\\
   UI & User Interface\\
   UC & Unlikely Change \\
-  UI & User Interface \\
   XML & Extensible Markup Language\\
   3D & Three Dimensional \\
   \bottomrule
@@ -172,7 +168,7 @@ adapted here is called design for
 change.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the initial input file (CAD file formats). Initially, the system will support STL files, but anticipated changes could require supporting additional CAD formats used in the industry. The change in input format affects the parsing logic, error handling, and inetgration with visualization manager. Changes will require updates to file importers and related data validation processes.
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the initial input file (CAD file formats). Initially, the system will support STL files, but anticipated changes could require supporting additional CAD formats used in the industry. The change in input format affects the parsing logic, error handling, and integration with visualization manager. Changes will require updates to file importers and related data validation processes.
 
 \item[\refstepcounter{acnum} \actheacnum \label{acInputConstraints}:] The constraints on the input parameters such as the maximum number of voxels and the maximum number of layers that can be displayed. These limits are currently fixed at 13,996,800,000 voxels and 518,400 voxels, but may need to be configurable in the future. Changes to these constraints will require updates to the input validation and parsing logic.
 
@@ -333,12 +329,13 @@ This system has no hardware components.
 \subsubsection{Input Interpreter Module (\mref{m1})}
 
 \begin{description}
-\item[Secrets:] How data is extracted, parsed, and normalized from any compatible input file into the model’s internal format. This includes how the system identifies file type (STL, JSON, or binary), parses and interprets geometry or voxel-based structures, applies scaling and coordinate normalization, and handles malformed data or import errors. The internal logic for combining geometric mesh data with project metadata, and the reconstruction of previously exported project files, is hidden within this module.
-\item[Services:] Provides a unified import interface for all supported input formats. When the user selects a file to load, this module determines the file type and converts it into a consistent intermediate representation. For STL files, it extracts geometric mesh data (facets, vertices, normals) and scales it to the target voxel grid resolution. For past project files, it deserializes voxel data and associated metadata to rebuild the model state. It outputs a structured Intermediate Model object compatible with downstream modules such as Voxel Slicing (M2) and Serialization Manager (M5).
-\item[Implemented By:] \teamname{}
+\item[Secrets:] How to extract, parse, and normalize data from any compatible input file into the model’s internal format. How to identify file type (STL), parse and interpret geometry or voxel-based structures, apply scaling and coordinate normalization, and handle malformed data or import errors. How to combine geometric mesh data with project metadata, and reconstruct previously exported project files.
+\item[Services:] Provides a unified import interface for all supported input formats. When the user selects a file to load, this module determines the file type and converts it into a consistent intermediate representation. For STL files, it extracts geometric mesh data (facets, vertices, normals) and scales it to the target voxel grid resolution. For past project files, it deserializes voxel data and associated metadata to rebuild the model state. 
+\item[Implemented By:] \progname{}
 \item[Type of Module:] Library: a reusable parsing and normalization component that handles all input data extraction for both new and existing projects.
 \end{description}
 
+\iffalse
 \paragraph{Input Interpreter Formalization}
 
 
@@ -373,7 +370,6 @@ ParseSTL(F_{STL}) & \text{if } Type = STL\\
 Deserialize(F_{project}) & \text{if } Type = Project
 \end{cases}$$
 \item \textbf{Scaling:} $v' = s \cdot v, \forall v \in M_{raw}$
-\item \textbf{Normalization:} $v'' = v' - \frac{(x_{min}+x_{max},y_{min}+y_{max},z_{min}+z_{max})}{2}$
 \end{itemize}
 
 \item \textbf{Error Handling}
@@ -389,17 +385,18 @@ Deserialize(F_{project}) & \text{if } Type = Project
 \item Supplies structured geometry or voxel data to M2 and M5
 \end{itemize}
 \end{enumerate}
-
+\fi
 
 \subsubsection{Voxel Slicing Module (\mref{m2})}
 
 \begin{description}
-\item[Secrets:] How the input geometry or intermediate model is converted into a 3D voxel grid representation. The algorithms for slicing along the Z-axis, detecting layer boundaries, mapping voxels to spatial coordinates, and optimizing voxelization resolution are hidden within this module.
-\item[Services:] Converts geometric mesh or input model into voxel representation. Generates discrete voxel layers by slicing through the 3D model at fixed Z intervals. Produces a voxel grid structure compatible with Model Structure (M16) and Model Manager (M8). Maintains layer order and voxel occupancy data for further processing.
-\item[Implemented By:] \teamname{}
+\item[Secrets:] How to convert the input geometry or intermediate model into a 3D voxel grid representation. How to slice along the Z-axis, detect layer boundaries, map voxels to spatial coordinates, and optimize voxelization resolution.
+\item[Services:] Converts geometric mesh or input model into voxel representation. Generates discrete voxel layers by slicing through the 3D model at fixed Z intervals. 
+\item[Implemented By:] \progname{}
 \item[Type of Module:] Abstract Object: a computational module responsible for transforming geometry into voxelized form.
 \end{description}
 
+\iffalse
 \paragraph{Voxel Slicing Formalization}
 
 \begin{enumerate}
@@ -428,10 +425,11 @@ L = \{l_1, l_2, ..., l_n\}
 
 \item \textbf{Output}
 \begin{itemize}
-\item Returns $(G, L)$ to Model Manager (M8)
+\item Returns $(G, L)$ to Model Manager (M9)
 \item Provides geometric discretization data for magnetization and material assignment
 \end{itemize}
 \end{enumerate}
+\fi
 
 \subsubsection{Display Partitioning Module (\mref{m3})}
 
@@ -439,7 +437,7 @@ L = \{l_1, l_2, ..., l_n\}
   \item[Secrets:] How to determine the boundaries that define model partitions. How to define the relationship
   between display segments. How to represent partition boundaries. How to minimize the number of partitions created. How to ensure that display partitions maintain balanced spatial proportions. How to maintain partition stability during model modification. How to validate that a partition of voxels is viable to display within the UI.
   \item[Services:] Provide functionality for partitioning the model into distinct display segments defined by specific voxel groupings. Manages the relationships and alignment between display segments.
-  \item[Implemented By:] \projectname{}
+  \item[Implemented By:] \progname{}
   \item[Type of Module:] Abstract Object
 \end{description}
 
@@ -448,33 +446,34 @@ L = \{l_1, l_2, ..., l_n\}
 \begin{description}
 \item[Secrets:] How to create and initialize a new project workspace. How to establish the intitial project structure, metadata, and default configuration settings. How to allocate and manage project resources and state.
 \item[Services:] Creates new projects with appropriate initialization. Manages project setup cycle starting from the creation of a new project workspace to the an interactive user interface.
-\item[Implemented By:] \projectname{}
+\item[Implemented By:] \progname{}
 \item[Type of Module:] Abstract Object: A component responsible for project initialization and workspace management.
 \end{description} 
 
 \subsubsection{Serialization Manager Module (\mref{m5})}
 
 \begin{description}
-\item[Secrets:] How data structures representing the 3D model are serialized into and deserialized from persistent storage formats (JSON or binary). Includes compression, backward compatibility logic, and error recovery during serialization.
-\item[Services:] Converts model data between in-memory representation and serialized form. Encodes voxel grid, layer, and metadata into JSON/binary for saving and reconstructs them when loading. Used by Database Handler (M18) and Export Manager (M13) to ensure consistent data persistence.
-\item[Implemented By:] \teamname{}
+\item[Secrets:] How to serialize and deserialize data structures representing the 3D model into and from persistent storage formats (CSV). How to compress, backward compatibility logic, and error recovery during serialization.
+\item[Services:] Converts model data between in-memory representation and serialized form. Encodes voxel grid, layer, and metadata into CSV for saving and reconstructs them when loading. 
+\item[Implemented By:] \progname{}
 \item[Type of Module:] Library: a reusable component for encoding and decoding model data.
 \end{description}
 
+\iffalse
 \paragraph{Serialization Manager Formalization}
 
 \begin{enumerate}
 \item \textbf{Definitions}
 \begin{itemize}
 \item \textbf{Model Structure:} $M = (G, L, Meta)$
-\item \textbf{Serialized Form:} $S = Encode(M)$, where $S$ is a JSON/binary string
+\item \textbf{Serialized Form:} $S = Encode(M)$, where $S$ is a CSV string
 \item \textbf{Deserialized Structure:} $M' = Decode(S)$
 \end{itemize}
 
 \item \textbf{Conversion Process}
 \begin{itemize}
-\item \textbf{Serialization:} $Encode(M) = JSON.stringify(M)$
-\item \textbf{Deserialization:} $Decode(S) = JSON.parse(S)$
+\item \textbf{Serialization:} $Encode(M) = CSV.stringify(M)$
+\item \textbf{Deserialization:} $Decode(S) = CSV.parse(S)$
 \item Maintain consistency: $Decode(Encode(M)) = M$
 \end{itemize}
 
@@ -489,14 +488,14 @@ L = \{l_1, l_2, ..., l_n\}
 \item Returns $S$ for saving or $M'$ for reconstruction
 \end{itemize}
 \end{enumerate}
-
+\fi
 
 \subsubsection{Backend Communication Manager Module (\mref{m6})}
 
 \begin{description}
   \item[Secrets:] How the connection between the backend and frontend is established. How data is transformed, validated and transferred between the backend and frontend. How synchronization errors are detected during communication. How failed communication attempts are detected and handled.
   \item[Services:] Handles communication between the backend server and the frontend UI. Ensures synchronization of model data throughout the system.
-  \item[Implemented By:] \projectname{}
+  \item[Implemented By:] \progname{}
   \item[Type of Module:] Abstract Object
 \end{description}
 
@@ -505,7 +504,7 @@ L = \{l_1, l_2, ..., l_n\}
 \begin{description}
   \item[Secrets:] How events are internally represented. How to differentiate between similar events. How to define the rules that associate high-level action with a raw event. How to handle raw events where user intent is inconclusive. How to determine when multiple events should be interpreted as a single user action. How to apply context from UI when interpreting events.
   \item[Services:] Maps raw events from interaction with UI to high-level system actions that reflect user intent.
-  \item[Implemented By:] \projectname{}
+  \item[Implemented By:] \progname{}
   \item[Type of Module:] Abstract Object
 \end{description}
 
@@ -513,11 +512,13 @@ L = \{l_1, l_2, ..., l_n\}
 
 \begin{description}
 \item[Secrets:] How voxel updates, material and magnetization assignments, and auto-save processes are handled internally. How changes propagate through layers, how consistency is maintained across the model, and how synchronization with other modules occurs.
-\item[Services:] Provides editing functionality for voxel data. Allows adding, removing, or modifying voxels, and updating material or magnetization values. Coordinates auto-save and triggers History Manager (M9) updates. Interacts with Serialization Manager (M5) for persistent state.
-\usepackage{xcolor}
+\item[Services:] Provides editing functionality for voxel data. Allows adding, removing, or modifying voxels, and updating material or magnetization values. Coordinates auto-save and triggers History Manager (M10) updates. Interacts with Serialization Manager (M5) for persistent state.
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Object: a component responsible for managing visualization state and coordinating voxel editing operations.
 \end{description}
 
-\paragraph{Model Manager Formalization}
+\iffalse
+\paragraph{Visualization State Manager Formalization}
 
 \begin{enumerate}
 \item \textbf{Definitions}
@@ -535,11 +536,6 @@ M' = ApplyChanges(M, \Delta M)
 HistoryManager.Push(\Delta M)
 \]
 
-\item \textbf{Auto-save:}
-\[
-if\ elapsed\_time > t_{threshold} \Rightarrow SerializationManager.Save(M')
-\]
-
 \item \textbf{Constraints}
 \begin{itemize}
 \item Layer integrity preserved: $Order(L) = constant$
@@ -548,16 +544,19 @@ if\ elapsed\_time > t_{threshold} \Rightarrow SerializationManager.Save(M')
 \end{itemize}
 \end{enumerate}
 
+\fi
+
 \subsubsection{Model Manager Module (\mref{m9})}
 
 \begin{description}
-\item[Secrets:] How model changes are tracked, stored, and reversed. Implementation of delta-based versioning, memory-efficient state saving, and undo/redo indexing.
-\item[Services:] Maintains chronological history of model changes. Enables undo/redo functionality by restoring previous states. Works closely with Model Manager (M8) to record modifications and Serialization Manager (M5) to store snapshots.
-\item[Implemented By:] \teamname{}
+\item[Secrets:] How model changes, including voxel updates, material and magnetization assignments, and auto-save processes, are handled internally. How change propagation, property replication, and metadata consistency are managed across the model.
+\item[Services:] Handles voxel updates, material and magnetization assignments, and manages auto-save processes. Propagates changes through voxel layers while maintaining model-wide consistency. Synchronizes model state with other modules (such as Visualization State Manager (M8) and Serialization Manager (M5)) to ensure cohesive updates and persistent storage.
+\item[Implemented By:] \progname{}
 \item[Type of Module:] Abstract Object: a component for model state tracking and version control.
 \end{description}
 
-\paragraph{History Manager Formalization}
+\iffalse
+\paragraph{Model Manager Formalization}
 
 \begin{enumerate}
 \item \textbf{Definitions}
@@ -579,72 +578,59 @@ if\ elapsed\_time > t_{threshold} \Rightarrow SerializationManager.Save(M')
 \item No forward redo after new change: $M_{i+1..t}$ discarded on new edit
 \end{itemize}
 \end{enumerate}
+\fi
 \subsubsection{History Manager Module (\mref{m10})}
 
 \begin{description}
-\item[Secrets:] How the system determines which voxels satisfy a given property such as material type, magnetization vector, or spatial location. The internal search algorithms, indexing structures, and filtering logic are hidden within this module. Optimizations for performance (e.g., spatial hashing or pre-computed lookup tables) are also concealed.
-\item[Services:] Provides query and filtering capabilities over the voxel grid. Given a property condition, it returns the set of voxels that match. Supplies data for Highlight Manager (M11) to visualize these voxels. Supports compound queries such as logical AND/OR between material, magnetization, and position constraints.
-\item[Implemented By:] \teamname{}
-\item[Type of Module:] Abstract Object: a computational component for property-based voxel identification and filtering.
+\item[Secrets:] How changes to the voxel grid and project states are tracked and stored, including what the previous (past) version was and what the current version is after modification. How storage and retrieval of specific data from past history are handled to enable undo and redo functionality. How record-keeping is managed to ensure reliable and efficient state transitions.
+\item[Services:] Tracks and stores changes to the voxel grid and project states. Enables undo and redo functionality by restoring previous states. Manages storage and retrieval of specific data from past history.
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Object: a computational component for tracking and storing changes to the voxel grid and project states.
 \end{description}
 
-\paragraph{Voxel Tracking Formalization}
+\iffalse
+\paragraph{History Manager Formalization}
 
 \begin{enumerate}
 \item \textbf{Definitions}
 \begin{itemize}
 \item \textbf{Voxel:} $v = (p, m, mag)$ where $p=(x,y,z)\in\mathbb{Z}^3$, $m\in M_{types}$, $mag\in\mathbb{R}^3$
 \item \textbf{Voxel Grid:} $G=\{v_1,v_2,\ldots,v_n\}$
-\item \textbf{Property Predicate:} $\phi(v)$ — boolean condition evaluating a voxel’s property
-\item \textbf{Result Set:} $R=\{v\in G \mid \phi(v)=true\}$
+\item \textbf{Project State:} $P=\{v_1,v_2,\ldots,v_n\}$
 \end{itemize}
 
 \item \textbf{Tracking Process}
 \begin{itemize}
-\item Evaluate $\phi(v)$ for all $v\in G$
-\item Collect $R=\{v_i\ |\ \phi(v_i)\}$ for highlighting or further analysis
+\item Record the current state of the voxel grid and project states
+\item Store the previous state of the voxel grid and project states
+\item Enable undo and redo functionality by restoring previous states
 \end{itemize}
-
-\item \textbf{Supported Predicates}
-\begin{itemize}
-\item Material match: $\phi_m(v)\equiv(v.m=m_{target})$
-\item Magnetization threshold: $\phi_{mag}(v)\equiv(\|v.mag - mag_{target}\|<\epsilon)$
-\item Spatial region: $\phi_{p}(v)\equiv(v.p\in region)$
-\end{itemize}
-
-\item \textbf{Composite Queries}
-\[
-\phi(v)=
-\begin{cases}
-\phi_m(v)\land\phi_{mag}(v) & \text{(AND)}\\
-\phi_m(v)\lor\phi_{p}(v) & \text{(OR)}
-\end{cases}
-\]
 
 \item \textbf{Output}
 \begin{itemize}
-\item Returns set $R$ to Highlight Manager (M11)
-\item Guarantees deterministic results for identical predicates
+\item Returns the current state of the voxel grid and project states
+\item Returns the previous state of the voxel grid and project states
 \end{itemize}
 \end{enumerate}
+
+\fi
 
 \subsubsection{Autosave Manager Module (\mref{m11})}
 
 \begin{description}
   \item[Secrets:] How to collect and aggregate metrics to represent the current status of update operations. How to handle errors in metric collection. How multiple metrics are tracked concurrently. How the state of update execution is defined from collected metric data. How autosave execution is triggered. How autosave failures or interruptions are detected and handled.
   \item[Services:] Maintains real-time autosave status. Tracks metrics that are used to determine the current state of update execution.
-  \item[Implemented By:] \projectname{}
+  \item[Implemented By:] \progname{}
   \item[Type of Module:] Abstract Object
 \end{description}
 
 \subsubsection{Voxel Tracking Module (\mref{m12})}
 
 \begin{description}
-  \item[Secrets:]
-  \item[Services:]
-  \item[Implemented By:] \projectname{}
-  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+  \item[Secrets:] How to locate and track voxels that satisfy particular property criteria, such as selection state, material type, or user-defined rules. How to interpret the voxel grid data structure to efficiently identify and access relevant voxels. How to determine which voxels are currently subject to operations like highlighting, selection, or further processing.
+  \item[Services:] Interprets the voxel data structure to find and return voxels meeting specified property criteria (e.g., all voxels with a given material, within a spatial region, or currently selected). Enables other modules (such as Highlight Manager) to query the set of voxels that should be highlighted or acted upon based on their properties.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object: a computational component that provides querying and tracking of voxels with specific properties within the voxel grid.
 \end{description}
 
 \subsubsection{Highlight Manager Module (\mref{m13})}
@@ -652,7 +638,7 @@ if\ elapsed\_time > t_{threshold} \Rightarrow SerializationManager.Save(M')
 \begin{description}
   \item[Secrets:] How to define the rules that associate voxel semantics with a highlight colour. How highlight colours are internally represented. How conflicts are resolved when a voxel qualifies for multiple highlight colours simultaneously. How colour palette, which encapsulates all highlight colours, is chosen. How accessibility requirements influence the selection of highlight colours.
   \item[Services:] Maps relationship between highlight colour and semantic meaning of highlighted voxels.
-  \item[Implemented By:] \projectname{}
+  \item[Implemented By:] \progname{}
   \item[Type of Module:] Abstract Object
 \end{description}
 
@@ -661,10 +647,11 @@ if\ elapsed\_time > t_{threshold} \Rightarrow SerializationManager.Save(M')
 \begin{description}
 \item[Secrets:] How to validate whether a project metadata file is suitable for export. How to check export file format requirements, verify that all voxels have required material and magnetization properties, and ensure data integrity constraints are satisfied. How to determine export readiness based on validation rules.
 \item[Services:] Validates export readiness by checking export file format requirements, verifying completeness of voxel properties (material and magnetization), and ensuring all export constraints are met. Provides validation results and error reporting for export issues.
-\item[Implemented By:] \projectname{}
+\item[Implemented By:] \progname{}
 \item[Type of Module:] Library: A reusable component providing validation functionality for export operations.
 \end{description} 
 
+\iffalse
 \paragraph{Export Validation Formalization}
 \begin{enumerate}
 \item \textbf{Definitions}
@@ -713,16 +700,18 @@ $$R.errors = \begin{cases}
 \item Model must satisfy printer compatibility constraints: $C_{printer}(P) = valid$
 \end{itemize}
 \end{enumerate}
+\fi
 
 \subsubsection{Export Manager Module (\mref{m15})}
 
 \begin{description}
 \item[Secrets:] How to export a project with the defined data structure format. How to transform internal model data into the export file format. How to serialize project data including voxel grids, metadata, material properties, and magnetization information according to export specifications.
 \item[Services:] Exports projects to external file formats with the defined data structure. Handles the conversion of internal model representations to export-compatible formats, ensuring data integrity and completeness during the export process.
-\item[Implemented By:] \projectname{}
+\item[Implemented By:] \progname{}
 \item[Type of Module:] Abstract Object: A component responsible for coordinating the export process and data transformation.
 \end{description}
 
+\iffalse
 \paragraph{Export Manager Formalization}
 \begin{enumerate}
 \item \textbf{Definitions}
@@ -764,13 +753,14 @@ where $Properties(v) = (position, material, magnetization)$
 \item Export file must conform to defined export structure specification
 \end{itemize}
 \end{enumerate}
+\fi
 
 \subsubsection{Error Diagnostic Handler Module (\mref{m16})}
 
 \begin{description}
 \item[Secrets:] How to detect and communicate errors related to unresponsiveness of the model, graphics update failures, and model file issues. How to classify error types and determine error sources. How to handle error recovery and logging mechanisms.
 \item[Services:] Detects and diagnoses errors occurring during model updates, graphics rendering, or file operations. Provides error classification and logging.
-\item[Implemented By:] \projectname{}
+\item[Implemented By:] \progname{}
 \item[Type of Module:] Library: A reusable component providing error detection, diagnosis, and handling functionality.
 \end{description}
 
@@ -781,23 +771,23 @@ where $Properties(v) = (position, material, magnetization)$
 \subsubsection{Model Structure Module (\mref{m17})}
 
 \begin{description}
-  \item[Secrets:]
-  \item[Services:]
-  \item[Implemented By:] \projectname{}
-  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+  \item[Secrets:] How to define and implement the internal data structure for representing a 3D voxel grid, including how layers are organized and indexed, and how voxel metadata (such as material and magnetization) is stored and accessed. How to ensure efficient access, retrieval, and consistency of voxel properties within the grid.
+  \item[Services:] Defines the data structure for 3D voxel grid representation with layer organization and voxel metadata. Specifies how voxel grids are stored as three-dimensional arrays, how layers group voxels by Z-coordinate, and how voxel properties including material assignments and magnetization vectors are managed. 
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Data Type: specifies and maintains the structure of 3D voxel grid data with layer organization and voxel metadata.
 \end{description}
 
 \subsubsection{Graphics Adapter Module (\mref{m18})}
 
 \begin{description}
-\item[Secrets:] How persistent project and model data are stored, indexed, and accessed. The specific file-system or database technology (e.g., JSON files, SQLite, binary blobs) and its connection management are hidden. Includes caching and concurrency handling mechanisms.
-\item[Services:] Provides read and write access between the application and storage layer. Saves serialized models and retrieves them when requested. Ensures data integrity and version consistency using the Serialization Manager (M5). Supports CRUD operations for project entries and manages file metadata such as timestamps and file paths.
-\item[Implemented By:] \teamname{}
-\item[Type of Module:] Library: a persistence interface between the application logic and the underlying storage mechanism.
+\item[Secrets:] How to manage the persistence of project and model data, including how to store, index, and access the data. How to handle the specific file-system or database technology (e.g., CSV files) and its connection management. How to handle caching and concurrency handling mechanisms.
+\item[Services:] Provides read and write access between the application and storage layer. Saves serialized models and retrieves them when requested. Ensures data integrity and version consistency using the Serialization Manager (M5). 
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Library: a component responsible for managing the persistence of project and model data.
 \end{description}
 
-\paragraph{Database Handler Formalization}
+\iffalse
+\paragraph{Graphics Adapter Formalization}
 
 \begin{enumerate}
 \item \textbf{Definitions}
@@ -827,16 +817,17 @@ where $Properties(v) = (position, material, magnetization)$
 \item Ensures persistent consistency across sessions
 \end{itemize}
 \end{enumerate}
-
+\fi
 \subsubsection{Database Handler Module (\mref{m19})}
 
 \begin{description}
-\item[Secrets:] How exported files are structured internally, including field ordering, data types, and encoding format. The schema definition linking voxel properties, layers, and materials is hidden. Details of compatibility with printer software or external tools are encapsulated.
-\item[Services:] Defines the data schema used during export. Specifies how voxel data, layer information, and material/magnetization fields are organized. Provides structural templates used by Export Manager (M15) to generate valid output files. Ensures consistency between internal and external representations.
-\item[Implemented By:] \teamname{}
+\item[Secrets:] How to define and implement the internal data structure for representing a exported file, including field ordering, data types, and encoding format. How to ensure consistency between internal and external representations.
+\item[Services:] Defines the data schema used during export. Specifies how voxel data, layer information, and material/magnetization fields are organized. 
+\item[Implemented By:] \progname{}
 \item[Type of Module:] Abstract Data Type: specifies and maintains the structure of exported model data.
 \end{description}
 
+\iffalse
 \paragraph{Export Structure Formalization}
 
 \begin{enumerate}
@@ -868,15 +859,14 @@ where $Body(M)$ flattens voxel grid $G$ into ordered entries $E$.
 \item Guarantees consistency between internal model representation and exported file layout
 \end{itemize}
 \end{enumerate}
-
+\fi
 \subsubsection{Export Structure Module (\mref{m20})}
 
 \begin{description}
-  \item[Secrets:]
-  \item[Services:]
-  \item[Implemented By:] \projectname{}
-  \item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+  \item[Secrets:] How to define and implement the internal data structure for representing a exported file, including field ordering, data types, and encoding format. How to ensure consistency between internal and external representations.
+  \item[Services:] Defines the data schema used during export. Specifies how voxel data, layer information, and material/magnetization fields are organized. 
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Data Type: specifies and maintains the structure of exported model data.
 \end{description}
 
 \section{Traceability Matrix} \label{SecTM}
@@ -1090,7 +1080,7 @@ NF242 &
 \end{tabular}
 }
 \caption{Trace Between Non-Functional Requirements and Modules}
-\label{TblRT}
+\label{TblNFRT}
 \end{table} 
 
 
@@ -1102,18 +1092,15 @@ NF242 &
 \toprule
 \textbf{AC} & \textbf{Modules}\\
 \midrule
-\acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
+\acref{acInput} & \mref{m1}\\
+\acref{acInputConstraints} & \mref{m1}\\
+\acref{acVoxelSize} & \mref{m2}\\
+\acref{acVoxelization} & \mref{m2}\\
+\acref{acMagnetization} & \mref{m8}, \mref{m17}\\
+\acref{acSelection} & \mref{m7}, \mref{m12}\\
+\acref{acExport} & \mref{m15}, \mref{m20}\\
+\acref{acDataStructure} & \mref{m17}\\
+\acref{acUI} & \mref{m7}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
