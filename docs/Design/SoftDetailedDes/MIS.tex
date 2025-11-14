@@ -178,9 +178,10 @@ The InputInterpreter module is responsible for importing and parsing model or pr
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ModelStructure} to define the data structures for parsed geometry data.
-  \item \texttt{SerializationManager} for project deserialization.
+  \item \texttt{SerializationManager} for the input file deserialization.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
+  \item \texttt{VoxelSlicing} for voxel grid generation and layer generation.
+  \item \texttt{DisplayPartitioning} for display partitioning the model.
 \end{itemize}
 
 \subsection{Syntax}
@@ -260,8 +261,7 @@ The VoxelSlicing module is responsible for converting the geometric model into a
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{InputInterpreter} to provide intermediate geometric model data.
-  \item \texttt{ModelStructure} to define the voxel grid data structure.
+  \item \texttt{ProjectManager} to get the model structure and data representation, and store the resulting voxel grid and layer list.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -336,8 +336,7 @@ The DisplayPartitioning module provides core functionality for partitioning the 
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ModelManager} to obtain the sliced model's data representation.
-  \item \texttt{ModelStructure} to access the model structure for partitioning.
+  \item \texttt{ProjectManager} to get the model structure and data representation, and store the resulting voxel grid and layer list.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -410,10 +409,6 @@ The ProjectManager module manages the creation, initialization, and persistence 
 \subsection{Uses}
 \begin{itemize}
   \item \texttt{ModelManager} to obtain and create the model structure and data representation.
-  \item \texttt{ModelStructure} to define the model data structure.
-  \item \texttt{DisplayPartitioning} to create and manage the display partitions.
-  \item \texttt{SerializationManager} for serializing and deserializing project data.
-  \item \texttt{DatabaseHandler} for persistent storage of project files.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -486,11 +481,12 @@ initialize\_workspace & workspace\_path: str & None & IOError \\
 SerializationManager
 
 \subsection{Module}
-The SerializationManager module handles conversion of all internal model data between in-memory and persistent storage forms (JSON or binary). It ensures data integrity, schema consistency, and supports both saving and restoring complete project states.
+The SerializationManager module handles the conversion of all internal model data between in-memory and persistent storage forms (JSON or binary). It ensures data integrity, schema consistency, and supports both saving and restoring complete project states.
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ModelStructure} to access the model state to be serialized.
+  \item \texttt{ModuleManager} to get the current module state.
+  \item \texttt{AutosaveManager} to get the current autosave state.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -569,8 +565,8 @@ The BackendCommunicator module manages the transfer and synchronization of data 
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{SerializationManager} for necessary JSON and binary transforms.
-  \item \texttt{InteractionController} for processing raw UI information.
+  \item \texttt{SerializationManager} for necessary JSON, binary, and CSV transforms.
+  \item \texttt{InteractionController} for processing interaction data from the frontend.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -650,9 +646,8 @@ The InteractionController module manages the process of raw events from interact
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{VisualizationManager} to establish current active view.
-  \item \texttt{BackendCommunicator} to take the collected raw UI data from the frontend and send it for interpretation.
   \item \texttt{ModelManager} to handle user intent related to model modification.
+  \item \texttt{ExportManager} to handle user intent related to export.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -716,12 +711,10 @@ The VisualizationManager module oversees the creation of UI views while managing
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{DisplayPartitioning} for tracking different interface states across partitions.
   \item \texttt{GraphicsAdapter} for rendering updates visible to user.
-  \item \texttt{ModelManager} for managing model and metadata updates that affect state visualization.
-  \item \texttt{VoxelTrackingManager} for specifying the set of voxels affected by a given update.
+  \item \texttt{VoxelTracking} for specifying the set of voxels affected by a given update.
   \item \texttt{HighlightManager} for managing change in voxels being highlighted.
-  \item \texttt{HighlightManager} for managing change in voxels being highlighted.
+  \item \texttt{InteractionController} for handling user interaction data from the frontend.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -780,17 +773,9 @@ The ModelManager module oversees the management and manipulation of the voxel-ba
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{VoxelSlicing} to supply initial voxel grid data.
-  \item \texttt{SerializationManager} to encode or decode model states for storage.
-  \item \texttt{HistoryManager} to record changes for undo/redo.
-  \item \texttt{VoxelTracking} to query voxel properties.
-  \item \texttt{ErrorDiagnosticHandler} to handle error handling and diagnostics.
-  \item \texttt{AutosaveManager} to synchronize changes with autosave.
-  \item \texttt{HighlightManager} to manage change in voxels being highlighted.
-  \item \texttt{ModelStructure} to define the voxel and layer data structures.
-  \item \texttt{GraphicsAdapter} to render the model.
-  \item \texttt{DatabaseHandler} to store the model.
-  \item \texttt{ExportValidation} to validate the model.
+  \item \texttt{ModelStructure} to get the model structure and data representation.
+  \item \texttt{VisualizationManager} to get the current view state.
+  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
 \subsection{Syntax}
@@ -881,9 +866,6 @@ It allows undoing and redoing edits by recording incremental changes (deltas) af
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ModelManager} to provide the model changes to record.
-  \item \texttt{ModelStructure} to access model state for history snapshots.
-  \item \texttt{SerializationManager} to encode snapshots for persistence.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -959,9 +941,7 @@ The AutosaveManager module prepares data to be saved, monitors when updates requ
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ModelManager} for tracking changes that require saving.
-  \item \texttt{SerializationManager} for data preparation.
-  \item \texttt{HistoryManager} to reference latest history state during periodic saves.
+  \item \texttt{HistoryManager} to get the latest history state during periodic saves.
   \item \texttt{DatabaseHandler} to store serialized data persistently.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
@@ -1045,8 +1025,7 @@ The VoxelTracking module interprets the voxel data structure to locate and track
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ModelStructure} to access the voxel grid data structure.
-  \item \texttt{ModelManager} to access current model state for tracking.
+  \item \texttt{ModelStructure} to get the model structure and data representation.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -1151,8 +1130,6 @@ The HighlightManager module manages the voxel highlights in accordance with visu
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{Visualization State Manager} for managing visual updates related to voxel highlights.
-    \item \texttt{VoxelTracking} to query voxels that should be highlighted.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -1228,7 +1205,7 @@ The ExportValidation module validates export readiness by checking export file f
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ModelStructure} to access the model structure and data representation for validation.
+  \item \texttt{VoxelTracking} to get all the voxels in the model, ensure all voxels have material and magnetization properties.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -1296,8 +1273,7 @@ The ExportManager module coordinates the export process, transforms internal mod
 \subsection{Uses}
 \begin{itemize}
   \item \texttt{ModelStructure} to obtain the model structure and data representation.
-  \item \texttt{ExportValidation} to validate export readiness.
-  \item \texttt{SerializationManager} to serialize model data for export.
+  \item \texttt{ExportValidation} to validate export validity.
   \item \texttt{ExportStructure} to define the export data structure format.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
@@ -1525,7 +1501,6 @@ GraphicsAdapter handles all communication with the graphics API to enable visual
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{VisualizationManager} aggregates necessary backend data and relays updates to the rendered view.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -1580,8 +1555,7 @@ The DatabaseHandler module manages persistent storage for project and model data
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{SerializationManager} to encode and decode model data before storage.
-  \item \texttt{ModelStructure} to access model structures to persist.
+  \item \texttt{ModelStructure} to access model structures to keep track of the project.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
