@@ -821,10 +821,10 @@ where $Properties(v) = (position, material, magnetization)$
 \subsubsection{Database Handler Module (\mref{m19})}
 
 \begin{description}
-\item[Secrets:] How to define and implement the internal data structure for representing a exported file, including field ordering, data types, and encoding format. How to ensure consistency between internal and external representations.
-\item[Services:] Defines the data schema used during export. Specifies how voxel data, layer information, and material/magnetization fields are organized. 
+\item[Secrets:] How to define and implement the internal data structure for representing the model data, including field ordering, data types, and encoding format. How to ensure consistency between internal and external representations. How to handle the specific file-system or database technology (e.g., CSV files) and its connection management. How to handle caching and concurrency handling mechanisms.
+\item[Services:] Defines the data schema used for the model persistence. Specifies how voxel data, layer information, and material/magnetization fields are organized. Provides read and write access between the application and storage layer. Saves serialized models and retrieves them when requested.
 \item[Implemented By:] \progname{}
-\item[Type of Module:] Abstract Data Type: specifies and maintains the structure of exported model data.
+\item[Type of Module:] Abstract Data Type: specifies and maintains the structure of the model data.
 \end{description}
 
 \iffalse
@@ -1169,7 +1169,7 @@ arrows in the diagram typically correspond to the presence of import statement.}
 \fi
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{UsesHierarchy.png}
+\includegraphics[width=0.9\textwidth]{UsesHierarchy.png}
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
