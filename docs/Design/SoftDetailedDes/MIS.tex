@@ -178,9 +178,9 @@ The InputInterpreter module is responsible for importing and parsing model or pr
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{VoxelSlicing} for voxel grid generation.
+  \item \texttt{ModelStructure} to define the data structures for parsed geometry data.
   \item \texttt{SerializationManager} for project deserialization.
-  \item \texttt{ModelManager} for organizing parsed geometry data.
+  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
 \subsection{Syntax}
@@ -226,6 +226,7 @@ The InputInterpreter module is responsible for importing and parsing model or pr
   \item Deserialized data follows expected schema.
 \end{itemize}
 
+\iffalse
 \subsubsection{Access Routine Semantics}
 \begin{itemize}
   \item \texttt{loadFile(filePath)}: detects format and calls parsing logic.
@@ -248,7 +249,7 @@ The InputInterpreter module is responsible for importing and parsing model or pr
   \item \texttt{ParseError} — malformed geometry or facet data.
   \item \texttt{SchemaMismatchError} — project schema invalid or outdated.
 \end{itemize}
-
+\fi
 
 \section{MIS of Voxel Slicing} \label{Module2}
 
@@ -260,7 +261,8 @@ The VoxelSlicing module is responsible for converting the geometric model into a
 \subsection{Uses}
 \begin{itemize}
   \item \texttt{InputInterpreter} to provide intermediate geometric model data.
-  \item \texttt{ModelManager} to receive thegenerated voxel grid for management and updates.
+  \item \texttt{ModelStructure} to define the voxel grid data structure.
+  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
 \subsection{Syntax}
@@ -304,6 +306,7 @@ None
   \item The number of layers does not exceed system memory capacity.
 \end{itemize}
 
+\iffalse
 \subsubsection{Access Routine Semantics}
 \begin{itemize}
   \item \texttt{voxelizeModel(model, resolution)}: Converts mesh geometry into voxel occupancy.
@@ -323,7 +326,7 @@ None
   \item \texttt{GeometryError} — malformed or non-manifold geometry detected.
   \item \texttt{InvalidResolutionError} — one or more components of resolution $\le 0$.
 \end{itemize}
-
+\fi
 \section{MIS of Display Partitioning} \label{Module3} 
 
 DisplayPartitioning
@@ -334,6 +337,7 @@ The DisplayPartitioning module provides core functionality for partitioning the 
 \subsection{Uses}
 \begin{itemize}
   \item \texttt{ModelManager} to obtain the sliced model's data representation.
+  \item \texttt{ModelStructure} to access the model structure for partitioning.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -406,7 +410,10 @@ The ProjectManager module manages the creation, initialization, and persistence 
 \subsection{Uses}
 \begin{itemize}
   \item \texttt{ModelManager} to obtain and create the model structure and data representation.
+  \item \texttt{ModelStructure} to define the model data structure.
   \item \texttt{DisplayPartitioning} to create and manage the display partitions.
+  \item \texttt{SerializationManager} for serializing and deserializing project data.
+  \item \texttt{DatabaseHandler} for persistent storage of project files.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -483,9 +490,8 @@ The SerializationManager module handles conversion of all internal model data be
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ModelManager} to supply the model state to be serialized.
-  \item \texttt{DatabaseHandler} to store the serialized data persistently.
-  \item \texttt{ExportManager} to export the encoded model structures to files.
+  \item \texttt{ModelStructure} to access the model state to be serialized.
+  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
 \subsection{Syntax}
@@ -531,6 +537,7 @@ The SerializationManager module handles conversion of all internal model data be
   \item File system paths used for storage are valid and writable.
 \end{itemize}
 
+\iffalse
 \subsubsection{Access Routine Semantics}
 \begin{itemize}
   \item \texttt{encodeModel(model)}: Converts in-memory state to JSON string.  
@@ -551,7 +558,7 @@ The SerializationManager module handles conversion of all internal model data be
   \item \texttt{DeserializationError} — input data corrupted or incomplete.
   \item \texttt{SchemaMismatchError} — version mismatch detected in schema validation.
 \end{itemize}
-
+\fi
 
 \section{MIS of Backend Communication Manager} \label{Module6} 
 
@@ -647,7 +654,7 @@ The InteractionController module manages the process of raw events from interact
   \item \texttt{VisualizationManager} to establish current active view.
   \item \texttt{BackendCommunicator} to take the collected raw UI data from the frontend and send it for interpretation.
   \item \texttt{ModelManager} to handle user intent related to model modification.
-  \item \texttt{ErrorDiagnosticHandler} to handle error handling and diagnostics.
+  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
 \subsection{Syntax}
@@ -831,6 +838,7 @@ The ModelManager module oversees the management and manipulation of the voxel-ba
   \item Autosave operations will not interrupt ongoing edits.
 \end{itemize}
 
+\iffalse
 \subsubsection{Access Routine Semantics}
 \begin{itemize}
   \item \texttt{addVoxel(coord, material, mag)}: Adds new voxel entry at specified coordinate.
@@ -860,7 +868,7 @@ The ModelManager module oversees the management and manipulation of the voxel-ba
   \item \texttt{IOerror} — failure during save operation.
   \item \texttt{DeserializationError} — corrupted or incompatible input file.
 \end{itemize}
-
+\fi
 
 \section{MIS of History Manager} \label{Module10}
 
@@ -873,9 +881,9 @@ It allows undoing and redoing edits by recording incremental changes (deltas) af
 \subsection{Uses}
 \begin{itemize}
   \item \texttt{ModelManager} to provide the model changes to record.
+  \item \texttt{ModelStructure} to access model state for history snapshots.
   \item \texttt{SerializationManager} to encode snapshots for persistence.
-  \item \texttt{AutosaveManager} to reference latest history state during periodic saves.
-  \item \texttt{ErrorDiagnosticHandler} to handle error handling and diagnostics.
+  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
 \subsection{Syntax}
@@ -919,6 +927,7 @@ None
   \item The number of stored states does not exceed \texttt{MAX\_HISTORY\_SIZE}.
 \end{itemize}
 
+\iffalse
 \subsubsection{Access Routine Semantics}
 \begin{itemize}
   \item \texttt{recordChange(delta)}:  
@@ -938,7 +947,7 @@ None
 \begin{itemize}
   \item \texttt{EmptyHistoryError} — when attempting undo or redo with no entries available.
 \end{itemize}
-
+\fi
 
 \section{MIS of Autosave Manager} \label{Module11} 
 
@@ -949,9 +958,10 @@ The AutosaveManager module prepares data to be saved, monitors when updates requ
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ModelManager} for tracking changes that require savings.
+  \item \texttt{ModelManager} for tracking changes that require saving.
   \item \texttt{SerializationManager} for data preparation.
-  \item \texttt{HistoryManager} for logging recent changes.
+  \item \texttt{HistoryManager} to reference latest history state during periodic saves.
+  \item \texttt{DatabaseHandler} to store serialized data persistently.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -1025,54 +1035,110 @@ None \\
 
 \newpage
 
-\section{MIS of Voxel Tracking} \label{Module12} \wss{Use labels for
-  cross-referencing}
+\section{MIS of Voxel Tracking} \label{Module12}
 
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+VoxelTracking
 
 \subsection{Module}
-
-\wss{Short name for the module}
+The VoxelTracking module interprets the voxel data structure to locate and track voxels that satisfy particular property criteria, such as selection state, material type, or user-defined rules. It efficiently identifies and accesses relevant voxels to determine which voxels are currently subject to operations like highlighting, selection, or further processing.
 
 \subsection{Uses}
-
+\begin{itemize}
+  \item \texttt{ModelStructure} to access the voxel grid data structure.
+  \item \texttt{ModelManager} to access current model state for tracking.
+  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
+\begin{itemize}
+  \item \texttt{MAX\_QUERY\_RESULTS}: int — maximum number of voxels returned in a single query result.
+  \item \texttt{SUPPORTED\_PROPERTIES}: list[string] — list of property names that can be queried (e.g., "material", "magnetization", "selected", "layer").
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4cm} p{4.5cm} p{3.5cm} p{3.5cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+\texttt{queryByMaterial} & materialType: MaterialType & list[VoxelCoord] & InvalidMaterialError \\
+\texttt{queryBySelection} & isSelected: bool & list[VoxelCoord] & None \\
+\texttt{queryByRegion} & bounds: BoundingBox & list[VoxelCoord] & InvalidBoundsError \\
+\texttt{queryByLayer} & layerZ: int & list[VoxelCoord] & IndexError \\
+\texttt{queryByProperty} & propertyName: string, value: Any & list[VoxelCoord] & InvalidPropertyError \\
+\texttt{getVoxelProperties} & coord: VoxelCoord & VoxelProperties & NotFoundError \\
+\bottomrule
 \end{tabular}
 \end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+\begin{itemize}
+  \item \texttt{queryCache}: dict[string, list[VoxelCoord]] — cached results of recent queries for performance optimization.
+  \item \texttt{activeSelections}: set[VoxelCoord] — set of currently selected voxel coordinates.
+\end{itemize}
 
 \subsubsection{Environment Variables}
-
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+None
 
 \subsubsection{Assumptions}
+\begin{itemize}
+  \item Voxel coordinates provided in queries are within valid grid boundaries.
+  \item Property names used in queries match those defined in \texttt{SUPPORTED\_PROPERTIES}.
+  \item The voxel grid structure remains consistent during query operations.
+\end{itemize}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+\iffalse
+\subsubsection{Access Routine Semantics}
+\begin{itemize}
+  \item \texttt{queryByMaterial(materialType)}: Returns all voxel coordinates that have the specified material type.
+  \[
+  R = \{v.coord \mid v \in G, v.material = materialType\}
+  \]
+  
+  \item \texttt{queryBySelection(isSelected)}: Returns all voxel coordinates that match the selection state.
+  \[
+  R = \begin{cases}
+  activeSelections & \text{if } isSelected = true\\
+  \{v.coord \mid v \in G, v.coord \notin activeSelections\} & \text{if } isSelected = false
+  \end{cases}
+  \]
+  
+  \item \texttt{queryByRegion(bounds)}: Returns all voxel coordinates within the specified bounding box.
+  \[
+  R = \{v.coord = (x,y,z) \mid v \in G, bounds.min \leq (x,y,z) \leq bounds.max\}
+  \]
+  
+  \item \texttt{queryByLayer(layerZ)}: Returns all voxel coordinates in the specified layer.
+  \[
+  R = \{v.coord = (x,y,z) \mid v \in G, z = layerZ\}
+  \]
+  
+  \item \texttt{queryByProperty(propertyName, value)}: Returns all voxel coordinates where the specified property matches the given value.
+  \[
+  R = \{v.coord \mid v \in G, v[propertyName] = value\}
+  \]
+  
+  \item \texttt{getVoxelProperties(coord)}: Retrieves all properties of the voxel at the specified coordinate.
+  \[
+  P = \{property: value \mid property \in SUPPORTED\_PROPERTIES, value = v[property]\}
+  \]
+  where $v$ is the voxel at coordinate $coord$.
+\end{itemize}
 
+\subsubsection{Exceptions}
+\begin{itemize}
+  \item \texttt{InvalidMaterialError} — material type not recognized or not in valid material set.
+  \item \texttt{InvalidBoundsError} — bounding box is invalid (e.g., min > max) or out of grid boundaries.
+  \item \texttt{IndexError} — layer index is out of range.
+  \item \texttt{InvalidPropertyError} — property name not in \texttt{SUPPORTED\_PROPERTIES}.
+  \item \texttt{NotFoundError} — voxel coordinate not present in grid.
+\end{itemize}
+\fi
 \newpage
 
 \section{MIS of Highlight Manager} \label{Module13} 
@@ -1085,6 +1151,7 @@ The HighlightManager module manages the voxel highlights in accordance with visu
 \subsection{Uses}
 \begin{itemize}
   \item \texttt{Visualization State Manager} for managing visual updates related to voxel highlights.
+    \item \texttt{VoxelTracking} to query voxels that should be highlighted.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -1160,7 +1227,7 @@ The ExportValidation module validates export readiness by checking export file f
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ModelStructure} to obtain the model structure and data representation.
+  \item \texttt{ModelStructure} to access the model structure and data representation for validation.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -1228,7 +1295,9 @@ The ExportManager module coordinates the export process, transforms internal mod
 \subsection{Uses}
 \begin{itemize}
   \item \texttt{ModelStructure} to obtain the model structure and data representation.
-  \item \texttt{ExportValidation} to get the export validation result.
+  \item \texttt{ExportValidation} to validate export readiness.
+  \item \texttt{SerializationManager} to serialize model data for export.
+  \item \texttt{ExportStructure} to define the export data structure format.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -1375,7 +1444,6 @@ The ModelStructure module stores and organizes all voxel and layer data for the 
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ModelManager} for managing the model structure and data representation.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -1512,8 +1580,8 @@ The DatabaseHandler module manages persistent storage for project and model data
 \subsection{Uses}
 \begin{itemize}
   \item \texttt{SerializationManager} to encode and decode model data before storage.
-  \item \texttt{ModelManager} to provide model structures to persist.
-  \item \texttt{ErrorDiagnosticHandler} to handle error handling and diagnostics.
+  \item \texttt{ModelStructure} to access model structures to persist.
+  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
 \subsection{Syntax}
@@ -1557,100 +1625,71 @@ The DatabaseHandler module manages persistent storage for project and model data
   \item SerializationManager ensures schema compatibility before writing data.
 \end{itemize}
 
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
-
-\subsection{Module}
-
-\wss{Short name for the module}
-
-\subsection{Uses}
-
-
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
-
-\subsubsection{Environment Variables}
-
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
-
-\subsubsection{Assumptions}
-
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
-
 \newpage
 
-\section{MIS of Export Structure} \label{Module20} \wss{Use labels for
-  cross-referencing}
+\section{MIS of Export Structure} \label{Module20}
 
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+ExportStructure
 
 \subsection{Module}
-
-\wss{Short name for the module}
+The ExportStructure module defines and implements the internal data structure for representing exported files, including field ordering, data types, and encoding format. It ensures consistency between internal model representations and external file layouts used during export operations.
 
 \subsection{Uses}
-
+\begin{itemize}
+  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
+\begin{itemize}
+  \item \texttt{EXPORT\_SCHEMA\_VERSION}: string — current version of the export structure schema.
+  \item \texttt{FIELD\_ORDER}: list[string] — ordered list of field names in export format: ["x", "y", "z", "layer", "material\_id", "magnetization\_x", "magnetization\_y", "magnetization\_z"].
+  \item \texttt{DEFAULT\_ENCODING}: string — default character encoding for export files (e.g., "UTF-8").
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4cm} p{4.5cm} p{3.5cm} p{3.5cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
+\midrule
+\texttt{defineStructure} & format: string & ExportSchema & UnsupportedFormatError \\
+\texttt{getFieldOrder} & format: string & list[string] & UnsupportedFormatError \\
+\texttt{getFieldType} & fieldName: string & DataType & InvalidFieldError \\
+\texttt{validateStructure} & data: ExportData & bool & StructureMismatchError \\
+\texttt{createHeader} & metadata: dict & ExportHeader & None \\
+\bottomrule
 \end{tabular}
 \end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+\begin{itemize}
+  \item \texttt{exportSchema}: ExportSchema — current export structure schema definition.
+  \item \texttt{fieldTypes}: dict[string, DataType] — mapping from field names to their data types.
+\end{itemize}
 
 \subsubsection{Environment Variables}
-
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+None
 
 \subsubsection{Assumptions}
+\begin{itemize}
+  \item Export format identifiers match supported formats ("CSV").
+  \item Field names in export data match those defined in \texttt{FIELD\_ORDER}.
+  \item Data types conform to the schema defined by \texttt{fieldTypes}.
+  \item Export structure remains consistent across export operations.
+\end{itemize}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\subsubsection{Local Functions}
+\begin{itemize}
+  \item \texttt{mapInternalToExport(internalData: VoxelData) -> ExportData}: Maps internal voxel representation to export format structure.
+  \item \texttt{validateFieldValue(fieldName: string, value: Any) -> bool}: Validates that a field value matches its expected data type.
+  \item \texttt{encodeFieldValue(fieldName: string, value: Any) -> string}: Encodes a field value according to the export format specification.
+\end{itemize}
 
 \newpage
 
