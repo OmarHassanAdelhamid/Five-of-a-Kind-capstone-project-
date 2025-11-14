@@ -109,9 +109,18 @@ The following table summarizes the primitive data types used by \progname.
 \textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
 \midrule
 character & char & a single symbol or digit\\
+String & str & a sequence of characters\\
 integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
 natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
 real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+boolean & bool & True or False\\
+any type & Any & any data type is acceptable\\
+list & list[T] & an ordered collection of objects of type T\\
+set & set[T] & an unordered collection of unique objects of type T\\
+dictionary & dict[key] = value & data structure containing multiple key-value pairs\\
+tuple & tuple[T$_1$, T$_2$, \ldots] or tuple[T] & an ordered collection of values, potentially of different types\\
+void & void & indicates no return value\\
+current instance & self & a reference to the current instance of a module\\
 \bottomrule
 \end{tabular} 
 \end{center}
