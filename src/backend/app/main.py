@@ -5,6 +5,7 @@ FastAPI application entry point.
 """
 
 from pathlib import Path
+from typing import List
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -25,10 +26,14 @@ app.add_middleware(
 )
 
 BACKEND_DIR = Path(__file__).parent.parent
-MODEL_DIR = BACKEND_DIR / "sample-stl-files"
+SAMPLE_DIR = BACKEND_DIR / "sample-project-files"
+STL_STORAGE_DIR = SAMPLE_DIR / "stl"
+VOXEL_STORAGE_DIR = SAMPLE_DIR / "voxels"
+MODEL_DIR = STL_STORAGE_DIR  # Alias for compatibility with contributor's code
 
-# Ensure MODEL_DIR exists
-MODEL_DIR.mkdir(parents=True, exist_ok=True)
+# Ensure directories exist
+for directory in (STL_STORAGE_DIR, VOXEL_STORAGE_DIR):
+    directory.mkdir(parents=True, exist_ok=True)
 
 
 @app.get("/api/hello")
@@ -62,9 +67,9 @@ async def upload_stl_model(stl_file: UploadFile):
         (dict): Contains message reflecting status of the upload.
     '''
     try:
-        file_path = MODEL_DIR / stl_file.filename
-        file_contents = await stl_file.read()
-        file_path.write_bytes(file_contents)
+        with open(f"{MODEL_DIR}/{stl_file.filename}", "wb") as f:
+            file_contents = await stl_file.read()
+            f.write(file_contents)
 
         return {"message": f"STL file ({stl_file.filename}) uploaded successfully."}
     except Exception as e:
@@ -109,18 +114,42 @@ async def voxelize(stl_filename: str, voxel_size: float, project_name: str):
         return {"message": f"Voxelization Status of STL file ({stl_filename}): Success", "projectpath": f"{filepath}"}
 
 
-@app.get("/api/models/sphere")
-def get_sphere_model():
-    """Return the sample sphere STL model."""
-    file_path = MODEL_DIR / "sphere.stl"
-    if not file_path.exists():
-        raise HTTPException(status_code=404, detail="sphere.stl not found on server")
+@app.get("/api/models")
+def list_models() -> dict[str, List[str]]:
+    models = sorted(p.name for p in MODEL_DIR.glob("*.stl"))
+    return {"models": models}
 
+
+def _resolve_model_path(filename: str) -> Path:
+    file_path = (MODEL_DIR / filename).resolve()
+
+    try:
+        file_path.relative_to(MODEL_DIR.resolve())
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="Invalid model path.") from exc
+
+    if not file_path.is_file():
+        raise HTTPException(status_code=404, detail=f"{filename} not found on server.")
+
+    if file_path.suffix.lower() != ".stl":
+        raise HTTPException(status_code=400, detail="Requested file is not an STL model.")
+
+    return file_path
+
+
+@app.get("/api/models/{filename}")
+def get_model(filename: str):
+    file_path = _resolve_model_path(filename)
     return FileResponse(
         path=file_path,
         media_type="model/stl",
-        filename="sphere.stl",
+        filename=file_path.name,
     )
+
+
+@app.get("/api/models/sphere")
+def get_sphere_model():
+    return get_model("sphere.stl")
 
 
 
