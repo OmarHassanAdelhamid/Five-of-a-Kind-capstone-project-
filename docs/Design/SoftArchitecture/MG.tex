@@ -8,6 +8,9 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{xcolor}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -31,6 +34,8 @@
 \newcommand{\mthemnum}{M\themnum}
 \newcommand{\mref}[1]{M\ref{#1}}
 
+
+
 \begin{document}
 
 \title{Module Guide for \progname{}} 
@@ -46,8 +51,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+November 10, 2025 & 1.0 & Initial draft by All\\
 \bottomrule
 \end{tabularx}
 
@@ -65,16 +69,23 @@ This section records information for easy reference.
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   AC & Anticipated Change\\
+  API & Application Programming Interface \\
+  \progname & Explanation of program name\\
+  CAD & Computer-Aided Design\\
+  CSV & Comma Separated Values\\
   DAG & Directed Acyclic Graph \\
   M & Module \\
   MG & Module Guide \\
+  OBJ & Object file format (3D model)\\
   OS & Operating System \\
   R & Requirement\\
   SC & Scientific Computing \\
   SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
+  STL & Stereolithography file format\\
+  UI & User Interface\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  XML & Extensible Markup Language\\
+  3D & Three Dimensional \\
   \bottomrule
 \end{tabular}\\
 
@@ -157,16 +168,31 @@ adapted here is called design for
 change.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-  hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item ...
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the initial input file (CAD file formats). Initially, the system will support STL files, but anticipated changes could require supporting additional CAD formats used in the industry. The change in input format affects the parsing logic, error handling, and integration with visualization manager. Changes will require updates to file importers and related data validation processes.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acInputConstraints}:] The constraints on the input parameters such as the maximum number of voxels and the maximum number of layers that can be displayed. These limits are currently fixed at 13,996,800,000 voxels and 518,400 voxels, but may need to be configurable in the future. Changes to these constraints will require updates to the input validation and parsing logic.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acVoxelSize}:] The dimensions of the voxel grid. The dimensions of the voxel grid are currently fixed at $300 \times 300\,\mu\mathrm{m}$ (XY) and $110\,\mu\mathrm{m}$ (Z), but may need to be configurable in the future as the user may want to use a different voxel size. Changes to these constraints will require updates to the voxelization algorithm and the layer navigation logic.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acVoxelization}:] The algorithm used to convert the mesh CAD file into a voxel grid. Anticipated changes will require updates to the voxelization algorithm to improve the accuracy, performance, or new features. 
+
+\item[\refstepcounter{acnum} \actheacnum \label{acMagnetization}:] The representation and format of magnetization direction data placed on the voxels, either by vector representation or coordinate system. This could involve changing the data structure (e.g., from Cartesian coordinates to Euler angles), supporting both absolute and relative directions, or accommodating multiple coordinate systems. Changes will require updates to the magnetization assignment logic.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acSelection}:] The implementation of selecting multiple voxels. Currently multi-selection is supported by selecting each voxel individually or an entire layer at once. Changes will require updates to the selection logic considering a more flexible selection method such lasso selection or rectangle selection.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acExport}:] The exported file format for the custom printer software is currently CSV. The file must contain the voxel location, layer, and magnetization direction and material ID data. Anticipated changes could require supporting other formats (such as JSON, XML, or other file formats). Changes will require updates to the export logic.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acDataStructure}:] The implementation of the data structures used to store and manage voxel grids and voxel properties. This could involve using different data structures such as a tree structure or a graph structure optimizing the performance metrics of the system, metrics such as memory usage, search speed, or parallel processing. Anticipating such changes allows for future performance and scalability enhancements. Changes will require updates to the data structures.
+
+\item[\refstepcounter{acnum} \actheacnum \label{acUI}:] The layout and interaction methods of the user interface, including menu structure, keyboard shortcuts, and user feedback mechanisms. This anticipated change helps accommodate different user workflows, accessibility requirements, or even support for new input devices.  Changes will require updates to the UI logic.
+
 \end{description}
 
+\iffalse
 \wss{Anticipated changes relate to changes that would be made in requirements,
 design or implementation choices.  They are not related to changes that are made
 at run-time, like the values of parameters.}
+\fi
 
 \subsection{Unlikely Changes} \label{SecUchange}
 
@@ -178,9 +204,14 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices. The system is designed with the expectation that it operates with a limited and specific set of input and output devices. Input is handled through files (such as CAD input files or configuration files) and/or keyboard entry (for command-line or interactive parameter input). Output is provided via files (for export and logging), memory (for internal data storage and communication between modules), and/or a graphical screen (for visualization and user interface feedback).
+
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucArchitecture}:] The overall system architecture. The software follows a rigid four-manager structure that divides system functionality into Import, Visualization, Editing, and Export managers. Each manager is responsible for a core facet of application operation, and this separation is central to the modular design.
+
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucLayerOrder}:] The ordering of layers from bottom to top (Z-axis ordering). Layers within the voxel grid are organized along the Z-axis, proceeding from the lowest layer (the base) to the highest (the top). This convention aligns with common additive manufacturing and 3D modeling practices.
+
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucInteraction}:] The fundamental user interaction paradigm. The system targets a desktop usage scenario, using mouse and keyboard as primary input methods. This supports rapid interaction, direct manipulation of interface elements, and fine control over editing tasks.
+
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -191,10 +222,39 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+% Behaviour Hiding Modules
+\item [\refstepcounter{mnum} \mthemnum \label{m1}:] Input Interpreter Module
+\item [\refstepcounter{mnum} \mthemnum \label{m2}:] Voxel Slicing Module
+\item [\refstepcounter{mnum} \mthemnum \label{m3}:] Display Partitioning Module
+\item [\refstepcounter{mnum} \mthemnum \label{m4}:] Project Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m5}:] Serialization Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m6}:] Backend Communication Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m7}:] Interaction Controller Module
+\item [\refstepcounter{mnum} \mthemnum \label{m8}:] Visualization State Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m9}:] Model Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m10}:] History Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m11}:] Autosave Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m12}:] Voxel Tracking Module
+\item [\refstepcounter{mnum} \mthemnum \label{m13}:] Highlight Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m14}:] Export Validation Module
+\item [\refstepcounter{mnum} \mthemnum \label{m15}:] Export Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{m16}:] Error Diagnostic Handler Module
+
+% Software Decision Modules
+\item [\refstepcounter{mnum} \mthemnum \label{m17}:] Model Structure Module
+\item [\refstepcounter{mnum} \mthemnum \label{m18}:] Graphics Adapter Module
+\item [\refstepcounter{mnum} \mthemnum \label{m19}:] Database Handler Module
+\item [\refstepcounter{mnum} \mthemnum \label{m20}:] Export Structure Module
 \end{description}
 
+
+
+
+\section{Connection Between Requirements and Design} \label{SecConnection}
+
+The design of the system is intended to satisfy the requirements developed in
+the SRS. In this stage, the system is decomposed into modules. The connection
+between requirements and modules is listed in Table~\ref{TblMH}.
 
 \begin{table}[h!]
 \centering
@@ -203,22 +263,31 @@ actually be implemented.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+{Hardware-Hiding Module} & None \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Input Interpreter Module\\
+& Voxel Slicing Module\\
+& Display Partitioning Module\\
+& Project Manager Module\\
+& Serialization Manager Module\\
+& Backend Communication Manager Module\\
+& Interaction Controller Module\\
+& Visualization State Manager Module\\
+& Model Manager Module\\
+& History Manager Module\\
+& Autosave Manager Module\\
+& Voxel Tracking Module\\
+& Highlight Manager Module\\
+& Export Validation Module\\
+& Export Manager Module\\
+& Error Diagnostic Handler Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
-& ?\\
+\multirow{3}{0.3\textwidth}{Software Decision Module} & Model Structure Module\\
+& Graphics Adapter Module\\
+& Database Handler Module\\
+& Export Structure Module\\
 \bottomrule
 
 \end{tabular}
@@ -226,18 +295,14 @@ actually be implemented.
 \label{TblMH}
 \end{table}
 
-\section{Connection Between Requirements and Design} \label{SecConnection}
-
-The design of the system is intended to satisfy the requirements developed in
-the SRS. In this stage, the system is decomposed into modules. The connection
-between requirements and modules is listed in Table~\ref{TblRT}.
-
+\iffalse
 \wss{The intention of this section is to document decisions that are made
   ``between'' the requirements and the design.  To satisfy some requirements,
   design decisions need to be made.  Rather than make these decisions implicit,
   they are explicitly recorded here.  For instance, if a program has security
   requirements, a specific design decision may be made to satisfy those
   requirements with a password.}
+\fi
 
 \section{Module Decomposition} \label{SecMD}
 
@@ -255,57 +320,554 @@ Only the leaf modules in the hierarchy have to be implemented. If a dash
 (\emph{--}) is shown, this means that the module is not a leaf and will not have
 to be implemented.
 
-\subsection{Hardware Hiding Modules (\mref{mHH})}
+\subsection{Hardware Hiding Modules (None)}
 
-\begin{description}
-\item[Secrets:]The data structure and algorithm used to implement the virtual
-  hardware.
-\item[Services:]Serves as a virtual hardware used by the rest of the
-  system. This module provides the interface between the hardware and the
-  software. So, the system can use it to display outputs or to accept inputs.
-\item[Implemented By:] OS
-\end{description}
+This system has no hardware components.
 
 \subsection{Behaviour-Hiding Module}
 
-\begin{description}
-\item[Secrets:]The contents of the required behaviours.
-\item[Services:]Includes programs that provide externally visible behaviour of
-  the system as specified in the software requirements specification (SRS)
-  documents. This module serves as a communication layer between the
-  hardware-hiding module and the software decision module. The programs in this
-  module will need to change if there are changes in the SRS.
-\item[Implemented By:] --
-\end{description}
-
-\subsubsection{Input Format Module (\mref{mInput})}
+\subsubsection{Input Interpreter Module (\mref{m1})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the input data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:] How to extract, parse, and normalize data from any compatible input file into the model’s internal format. How to identify file type (STL), parse and interpret geometry or voxel-based structures, apply scaling and coordinate normalization, and handle malformed data or import errors. How to combine geometric mesh data with project metadata, and reconstruct previously exported project files.
+\item[Services:] Provides a unified import interface for all supported input formats. When the user selects a file to load, this module determines the file type and converts it into a consistent intermediate representation. For STL files, it extracts geometric mesh data (facets, vertices, normals) and scales it to the target voxel grid resolution. For past project files, it deserializes voxel data and associated metadata to rebuild the model state. 
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Library: a reusable parsing and normalization component that handles all input data extraction for both new and existing projects.
 \end{description}
 
-\subsubsection{Etc.}
+\iffalse
+\paragraph{Input Interpreter Formalization}
+
+
+
+
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Input File:} $F_{input} \in \{F_{STL}, F_{project}\}$ 
+\begin{itemize}
+\item $F_{STL} = (H, T)$ where $H$ is the header and $T = \{t_1, t_2, ..., t_n\}$ are triangular facets
+\item $F_{project} = (V, L, M)$ where $V$ is voxel grid, $L$ layer data, $M$ metadata
+\end{itemize}
+\item \textbf{Facet:} $t_i = (n_i, v_{i1}, v_{i2}, v_{i3})$, $n_i \in \mathbb{R}^3$, $v_{ij} \in \mathbb{R}^3$
+\item \textbf{Scaling Factor:} $s \in \mathbb{R}^+$
+\item \textbf{Intermediate Model:} $M_{intermediate} = (V, F, Meta)$
+\end{itemize}
+
+\item \textbf{Import Process}
+\begin{itemize}
+\item \textbf{File Type Detection:}
+$$Type(F_{input}) = 
+\begin{cases}
+STL & \text{if mesh identifier detected}\\
+Project & \text{if serialized metadata signature detected}
+\end{cases}$$
+\item \textbf{Parsing Logic:}
+$$M_{raw} =
+\begin{cases}
+ParseSTL(F_{STL}) & \text{if } Type = STL\\
+Deserialize(F_{project}) & \text{if } Type = Project
+\end{cases}$$
+\item \textbf{Scaling:} $v' = s \cdot v, \forall v \in M_{raw}$
+\end{itemize}
+
+\item \textbf{Error Handling}
+\begin{itemize}
+\item Degenerate facets $\rightarrow$ \texttt{InvalidFacetError}
+\item Missing metadata $\rightarrow$ \texttt{ImportFormatError}
+\item Unsupported extension $\rightarrow$ \texttt{UnsupportedFileTypeError}
+\end{itemize}
+
+\item \textbf{Output}
+\begin{itemize}
+\item $M_{intermediate} = (V', F', Meta)$
+\item Supplies structured geometry or voxel data to M2 and M5
+\end{itemize}
+\end{enumerate}
+\fi
+
+\subsubsection{Voxel Slicing Module (\mref{m2})}
+
+\begin{description}
+\item[Secrets:] How to convert the input geometry or intermediate model into a 3D voxel grid representation. How to slice along the Z-axis, detect layer boundaries, map voxels to spatial coordinates, and optimize voxelization resolution.
+\item[Services:] Converts geometric mesh or input model into voxel representation. Generates discrete voxel layers by slicing through the 3D model at fixed Z intervals. 
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Object: a computational module responsible for transforming geometry into voxelized form.
+\end{description}
+
+\iffalse
+\paragraph{Voxel Slicing Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Input Mesh:} $M_{intermediate} = (V, F)$
+\item \textbf{Voxel Grid:} $G = \{v_{xyz}\ |\ x,y,z \in \mathbb{N}\}$, discrete points in grid space
+\item \textbf{Voxel Resolution:} $(r_x, r_y, r_z) \in \mathbb{R}^3$
+\item \textbf{Layer:} $l_k = \{v_{xyz} \mid z = k \cdot r_z\}$
+\end{itemize}
+
+\item \textbf{Voxelization Algorithm}
+\begin{itemize}
+\item For each facet $t_i$ in $F$, determine all grid cells intersected by $t_i$
+\item Mark those grid cells as occupied voxels $v_{xyz}$
+\item Group occupied voxels into layers by $z$ coordinate
+\end{itemize}
+
+\item \textbf{Transformations}
+\[
+G = Voxelize(M_{intermediate}, r_x, r_y, r_z)
+\]
+\[
+L = \{l_1, l_2, ..., l_n\}
+\]
+
+\item \textbf{Output}
+\begin{itemize}
+\item Returns $(G, L)$ to Model Manager (M9)
+\item Provides geometric discretization data for magnetization and material assignment
+\end{itemize}
+\end{enumerate}
+\fi
+
+\subsubsection{Display Partitioning Module (\mref{m3})}
+
+\begin{description}
+  \item[Secrets:] How to determine the boundaries that define model partitions. How to define the relationship
+  between display segments. How to represent partition boundaries. How to minimize the number of partitions created. How to ensure that display partitions maintain balanced spatial proportions. How to maintain partition stability during model modification. How to validate that a partition of voxels is viable to display within the UI.
+  \item[Services:] Provide functionality for partitioning the model into distinct display segments defined by specific voxel groupings. Manages the relationships and alignment between display segments.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Project Manager Module (\mref{m4})}
+
+\begin{description}
+\item[Secrets:] How to create and initialize a new project workspace. How to establish the intitial project structure, metadata, and default configuration settings. How to allocate and manage project resources and state.
+\item[Services:] Creates new projects with appropriate initialization. Manages project setup cycle starting from the creation of a new project workspace to the an interactive user interface.
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Object: A component responsible for project initialization and workspace management.
+\end{description} 
+
+\subsubsection{Serialization Manager Module (\mref{m5})}
+
+\begin{description}
+\item[Secrets:] How to serialize and deserialize data structures representing the 3D model into and from persistent storage formats (CSV). How to compress, backward compatibility logic, and error recovery during serialization.
+\item[Services:] Converts model data between in-memory representation and serialized form. Encodes voxel grid, layer, and metadata into CSV for saving and reconstructs them when loading. 
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Library: a reusable component for encoding and decoding model data.
+\end{description}
+
+\iffalse
+\paragraph{Serialization Manager Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Model Structure:} $M = (G, L, Meta)$
+\item \textbf{Serialized Form:} $S = Encode(M)$, where $S$ is a CSV string
+\item \textbf{Deserialized Structure:} $M' = Decode(S)$
+\end{itemize}
+
+\item \textbf{Conversion Process}
+\begin{itemize}
+\item \textbf{Serialization:} $Encode(M) = CSV.stringify(M)$
+\item \textbf{Deserialization:} $Decode(S) = CSV.parse(S)$
+\item Maintain consistency: $Decode(Encode(M)) = M$
+\end{itemize}
+
+\item \textbf{Error Handling}
+\begin{itemize}
+\item If corrupted $S$: raise \texttt{DeserializationError}
+\item If missing fields: raise \texttt{SchemaMismatchError}
+\end{itemize}
+
+\item \textbf{Output}
+\begin{itemize}
+\item Returns $S$ for saving or $M'$ for reconstruction
+\end{itemize}
+\end{enumerate}
+\fi
+
+\subsubsection{Backend Communication Manager Module (\mref{m6})}
+
+\begin{description}
+  \item[Secrets:] How the connection between the backend and frontend is established. How data is transformed, validated and transferred between the backend and frontend. How synchronization errors are detected during communication. How failed communication attempts are detected and handled.
+  \item[Services:] Handles communication between the backend server and the frontend UI. Ensures synchronization of model data throughout the system.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Interaction Controller Module (\mref{m7})}
+
+\begin{description}
+  \item[Secrets:] How events are internally represented. How to differentiate between similar events. How to define the rules that associate high-level action with a raw event. How to handle raw events where user intent is inconclusive. How to determine when multiple events should be interpreted as a single user action. How to apply context from UI when interpreting events.
+  \item[Services:] Maps raw events from interaction with UI to high-level system actions that reflect user intent.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Visualization State Manager Module (\mref{m8})}
+
+\begin{description}
+\item[Secrets:] How voxel updates, material and magnetization assignments, and auto-save processes are handled internally. How changes propagate through layers, how consistency is maintained across the model, and how synchronization with other modules occurs.
+\item[Services:] Provides editing functionality for voxel data. Allows adding, removing, or modifying voxels, and updating material or magnetization values. Coordinates auto-save and triggers History Manager (M10) updates. Interacts with Serialization Manager (M5) for persistent state.
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Object: a component responsible for managing visualization state and coordinating voxel editing operations.
+\end{description}
+
+\iffalse
+\paragraph{Visualization State Manager Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Model:} $M = (G, L, Meta)$
+\item \textbf{Voxel:} $v = (p, m, mag)$
+\item \textbf{Modification:} $\Delta M = \{ \Delta v_1, \Delta v_2, ...\}$ set of voxel edits
+\end{itemize}
+
+\item \textbf{Update Process}
+\[
+M' = ApplyChanges(M, \Delta M)
+\]
+\[
+HistoryManager.Push(\Delta M)
+\]
+
+\item \textbf{Constraints}
+\begin{itemize}
+\item Layer integrity preserved: $Order(L) = constant$
+\item Valid material assignment: $\forall v, m \in M_{types}$
+\item Valid magnetization vector: $\forall v, \|mag\| \leq 1$
+\end{itemize}
+\end{enumerate}
+
+\fi
+
+\subsubsection{Model Manager Module (\mref{m9})}
+
+\begin{description}
+\item[Secrets:] How model changes, including voxel updates, material and magnetization assignments, and auto-save processes, are handled internally. How change propagation, property replication, and metadata consistency are managed across the model.
+\item[Services:] Handles voxel updates, material and magnetization assignments, and manages auto-save processes. Propagates changes through voxel layers while maintaining model-wide consistency. Synchronizes model state with other modules (such as Visualization State Manager (M8) and Serialization Manager (M5)) to ensure cohesive updates and persistent storage.
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Object: a component for model state tracking and version control.
+\end{description}
+
+\iffalse
+\paragraph{Model Manager Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{State Sequence:} $\Sigma = [M_0, M_1, ..., M_t]$
+\item \textbf{Current State Index:} $i \in [0,t]$
+\end{itemize}
+
+\item \textbf{Operations}
+\begin{itemize}
+\item \textbf{Record Change:} $Push(M_{i+1}) \Rightarrow \Sigma = \Sigma \cup M_{i+1}$
+\item \textbf{Undo:} $i' = i - 1$, restore $M_{i'}$
+\item \textbf{Redo:} $i' = i + 1$, restore $M_{i'}$
+\end{itemize}
+
+\item \textbf{Constraints}
+\begin{itemize}
+\item History length limited: $|\Sigma| \leq N_{max}$
+\item No forward redo after new change: $M_{i+1..t}$ discarded on new edit
+\end{itemize}
+\end{enumerate}
+\fi
+\subsubsection{History Manager Module (\mref{m10})}
+
+\begin{description}
+\item[Secrets:] How changes to the voxel grid and project states are tracked and stored, including what the previous (past) version was and what the current version is after modification. How storage and retrieval of specific data from past history are handled to enable undo and redo functionality. How record-keeping is managed to ensure reliable and efficient state transitions.
+\item[Services:] Tracks and stores changes to the voxel grid and project states. Enables undo and redo functionality by restoring previous states. Manages storage and retrieval of specific data from past history.
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Object: a computational component for tracking and storing changes to the voxel grid and project states.
+\end{description}
+
+\iffalse
+\paragraph{History Manager Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Voxel:} $v = (p, m, mag)$ where $p=(x,y,z)\in\mathbb{Z}^3$, $m\in M_{types}$, $mag\in\mathbb{R}^3$
+\item \textbf{Voxel Grid:} $G=\{v_1,v_2,\ldots,v_n\}$
+\item \textbf{Project State:} $P=\{v_1,v_2,\ldots,v_n\}$
+\end{itemize}
+
+\item \textbf{Tracking Process}
+\begin{itemize}
+\item Record the current state of the voxel grid and project states
+\item Store the previous state of the voxel grid and project states
+\item Enable undo and redo functionality by restoring previous states
+\end{itemize}
+
+\item \textbf{Output}
+\begin{itemize}
+\item Returns the current state of the voxel grid and project states
+\item Returns the previous state of the voxel grid and project states
+\end{itemize}
+\end{enumerate}
+
+\fi
+
+\subsubsection{Autosave Manager Module (\mref{m11})}
+
+\begin{description}
+  \item[Secrets:] How to collect and aggregate metrics to represent the current status of update operations. How to handle errors in metric collection. How multiple metrics are tracked concurrently. How the state of update execution is defined from collected metric data. How autosave execution is triggered. How autosave failures or interruptions are detected and handled.
+  \item[Services:] Maintains real-time autosave status. Tracks metrics that are used to determine the current state of update execution.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Voxel Tracking Module (\mref{m12})}
+
+\begin{description}
+  \item[Secrets:] How to locate and track voxels that satisfy particular property criteria, such as selection state, material type, or user-defined rules. How to interpret the voxel grid data structure to efficiently identify and access relevant voxels. How to determine which voxels are currently subject to operations like highlighting, selection, or further processing.
+  \item[Services:] Interprets the voxel data structure to find and return voxels meeting specified property criteria (e.g., all voxels with a given material, within a spatial region, or currently selected). Enables other modules (such as Highlight Manager) to query the set of voxels that should be highlighted or acted upon based on their properties.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object: a computational component that provides querying and tracking of voxels with specific properties within the voxel grid.
+\end{description}
+
+\subsubsection{Highlight Manager Module (\mref{m13})}
+
+\begin{description}
+  \item[Secrets:] How to define the rules that associate voxel semantics with a highlight colour. How highlight colours are internally represented. How conflicts are resolved when a voxel qualifies for multiple highlight colours simultaneously. How colour palette, which encapsulates all highlight colours, is chosen. How accessibility requirements influence the selection of highlight colours.
+  \item[Services:] Maps relationship between highlight colour and semantic meaning of highlighted voxels.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Export Validation Module (\mref{m14})}
+
+\begin{description}
+\item[Secrets:] How to validate whether a project metadata file is suitable for export. How to check export file format requirements, verify that all voxels have required material and magnetization properties, and ensure data integrity constraints are satisfied. How to determine export readiness based on validation rules.
+\item[Services:] Validates export readiness by checking export file format requirements, verifying completeness of voxel properties (material and magnetization), and ensuring all export constraints are met. Provides validation results and error reporting for export issues.
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Library: A reusable component providing validation functionality for export operations.
+\end{description} 
+
+\iffalse
+\paragraph{Export Validation Formalization}
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Project Model:} A structure $P = (V, L, M)$ where:
+\begin{itemize}
+\item $V = \{v_1, v_2, \ldots, v_n\}$ is a set of voxels
+\item $L = \{l_1, l_2, \ldots, l_k\}$ is a set of layers
+\item $M$ is metadata containing project information
+\end{itemize}
+\item \textbf{Voxel:} An element $v_i = (p, m, mag)$ where:
+\begin{itemize}
+\item $p = (x, y, z)$ represents spatial position
+\item $m \in M_{types}$ represents material type (may be $\emptyset$)
+\item $mag \in \mathbb{R}^3$ represents magnetization vector (may be $\emptyset$)
+\end{itemize}
+\item \textbf{Printer Compatibility:} A constraint function $C_{printer}(P) \rightarrow \{valid, invalid\}$
+\item \textbf{Property Completeness:} A predicate $Complete(v) \equiv (m \neq \emptyset) \land (mag \neq \emptyset)$
+\item \textbf{Export Readiness:} A validation result $R = (status, errors)$ where $status \in \{ready, not\_ready\}$ and $errors$ is a set of validation error messages
+\end{itemize}
+
+\item \textbf{Validation Process}
+\begin{itemize}
+\item \textbf{Printer Compatibility Check:}
+$$C_{printer}(P) = \begin{cases}
+valid & \text{if } P \text{ satisfies printer specifications}\\
+invalid & \text{otherwise}
+\end{cases}$$
+\item \textbf{Property Completeness Check:}
+$$V_{complete} = \{v_i \in V \mid Complete(v_i)\}$$
+$$V_{incomplete} = V \setminus V_{complete}$$
+\item \textbf{Export Readiness Determination:}
+$$R.status = \begin{cases}
+ready & \text{if } C_{printer}(P) = valid \land V_{incomplete} = \emptyset\\
+not\_ready & \text{otherwise}
+\end{cases}$$
+$$R.errors = \begin{cases}
+\{C_{printer}(P).errors\} & \text{if } C_{printer}(P) = invalid\\
+\{\text{``Voxel } v_i \text{ missing property''} \mid v_i \in V_{incomplete}\} & \text{otherwise}
+\end{cases}$$
+\end{itemize}
+\item \textbf{Validation Constraints}
+\begin{itemize}
+\item All voxels must have assigned material: $\forall v_i \in V, m_i \neq \emptyset$
+\item All voxels must have assigned magnetization: $\forall v_i \in V, mag_i \neq \emptyset$
+\item Model must satisfy printer compatibility constraints: $C_{printer}(P) = valid$
+\end{itemize}
+\end{enumerate}
+\fi
+
+\subsubsection{Export Manager Module (\mref{m15})}
+
+\begin{description}
+\item[Secrets:] How to export a project with the defined data structure format. How to transform internal model data into the export file format. How to serialize project data including voxel grids, metadata, material properties, and magnetization information according to export specifications.
+\item[Services:] Exports projects to external file formats with the defined data structure. Handles the conversion of internal model representations to export-compatible formats, ensuring data integrity and completeness during the export process.
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Object: A component responsible for coordinating the export process and data transformation.
+\end{description}
+
+\iffalse
+\paragraph{Export Manager Formalization}
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Internal Model:} A structure $M_{internal} = (V, L, Meta)$ where:
+\begin{itemize}
+\item $V = \{v_1, v_2, \ldots, v_n\}$ is the set of voxels with positions $p_i = (x_i, y_i, z_i)$
+\item $L = \{l_1, l_2, \ldots, l_k\}$ is the ordered set of layers
+\item $Meta$ contains project metadata
+\end{itemize}
+\item \textbf{Export Format:} A structure $F_{export} = (structure)$ where:
+\begin{itemize}
+\item $structure$ defines the export data organization
+\end{itemize}
+\item \textbf{Transformation Function:} A mapping $T : M_{internal} \rightarrow F_{export}$
+\item \textbf{Export File:} A serialized representation $E = Serialize(F_{export})$
+\end{itemize}
+\item \textbf{Export Process}
+\begin{itemize}
+\item \textbf{Data Transformation:}
+$$F_{export} = T(M_{internal})$$
+where $T$ performs:
+\begin{itemize}
+\item Voxel aggregation: $V \rightarrow V_{export}$ (grouping by layer/region)
+\item Metadata mapping: $Meta \rightarrow Meta_{export}$
+\item Property serialization: $(m_i, mag_i) \rightarrow ExportFormat(m_i, mag_i)$
+\end{itemize}
+\item \textbf{Serialization:}
+$$E = CSVEncode(F_{export})$$
+\item \textbf{Integrity Preservation:}
+$$\forall v_i \in V, \exists v'_i \in V_{export} : Properties(v_i) = Properties(v'_i)$$
+where $Properties(v) = (position, material, magnetization)$
+\end{itemize}
+\item \textbf{Export Constraints}
+\begin{itemize}
+\item All voxels from $M_{internal}$ must be represented in $F_{export}$
+\item Layer ordering must be preserved: $Order(L) = Order(L_{export})$
+\item Material and magnetization properties must be preserved: $\forall v_i, Properties(v_i) = Properties(T(v_i))$
+\item Export file must conform to defined export structure specification
+\end{itemize}
+\end{enumerate}
+\fi
+
+\subsubsection{Error Diagnostic Handler Module (\mref{m16})}
+
+\begin{description}
+\item[Secrets:] How to detect and communicate errors related to unresponsiveness of the model, graphics update failures, and model file issues. How to classify error types and determine error sources. How to handle error recovery and logging mechanisms.
+\item[Services:] Detects and diagnoses errors occurring during model updates, graphics rendering, or file operations. Provides error classification and logging.
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Library: A reusable component providing error detection, diagnosis, and handling functionality.
+\end{description}
+
 
 
 \subsection{Software Decision Module}
 
+\subsubsection{Model Structure Module (\mref{m17})}
+
 \begin{description}
-\item[Secrets:] The design decision based on mathematical theorems, physical
-  facts, or programming considerations. The secrets of this module are
-  \emph{not} described in the SRS.
-\item[Services:] Includes data structure and algorithms used in the system that
-  do not provide direct interaction with the user. 
-  % Changes in these modules are more likely to be motivated by a desire to
-  % improve performance than by externally imposed changes.
-\item[Implemented By:] --
+  \item[Secrets:] How to define and implement the internal data structure for representing a 3D voxel grid, including how layers are organized and indexed, and how voxel metadata (such as material and magnetization) is stored and accessed. How to ensure efficient access, retrieval, and consistency of voxel properties within the grid.
+  \item[Services:] Defines the data structure for 3D voxel grid representation with layer organization and voxel metadata. Specifies how voxel grids are stored as three-dimensional arrays, how layers group voxels by Z-coordinate, and how voxel properties including material assignments and magnetization vectors are managed. 
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Data Type: specifies and maintains the structure of 3D voxel grid data with layer organization and voxel metadata.
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Graphics Adapter Module (\mref{m18})}
+
+\begin{description}
+\item[Secrets:] How to manage the persistence of project and model data, including how to store, index, and access the data. How to handle the specific file-system or database technology (e.g., CSV files) and its connection management. How to handle caching and concurrency handling mechanisms.
+\item[Services:] Provides read and write access between the application and storage layer. Saves serialized models and retrieves them when requested. Ensures data integrity and version consistency using the Serialization Manager (M5). 
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Library: a component responsible for managing the persistence of project and model data.
+\end{description}
+
+\iffalse
+\paragraph{Graphics Adapter Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Serialized Data:} $S=Encode(M)$ from Serialization Manager (M5)
+\item \textbf{Storage Mapping:} $\mu: ProjectID \rightarrow S$
+\item \textbf{Database:} $D=\{(id_i,S_i)\mid id_i\in ID_{projects}\}$
+\end{itemize}
+
+\item \textbf{Operations}
+\begin{itemize}
+\item \textbf{Save:} $Store(D,id,S): D\leftarrow D\cup (id,S)$
+\item \textbf{Load:} $Retrieve(D,id)\rightarrow S$
+\item \textbf{Delete:} $Remove(D,id): D\leftarrow D\setminus (id,S)$
+\end{itemize}
+
+\item \textbf{Constraints}
+\begin{itemize}
+\item Unique project identifier: $\forall id_i,id_j, i\neq j \Rightarrow id_i\neq id_j$
+\item Integrity: $Decode(Retrieve(D,id))=M$
+\item Atomic write: partial failures do not corrupt $D$
+\end{itemize}
+
+\item \textbf{Output}
+\begin{itemize}
+\item Provides serialized model data to higher-level modules (M5, M4)
+\item Ensures persistent consistency across sessions
+\end{itemize}
+\end{enumerate}
+\fi
+\subsubsection{Database Handler Module (\mref{m19})}
+
+\begin{description}
+\item[Secrets:] How to define and implement the internal data structure for representing the model data, including field ordering, data types, and encoding format. How to ensure consistency between internal and external representations. How to handle the specific file-system or database technology (e.g., CSV files) and its connection management. How to handle caching and concurrency handling mechanisms.
+\item[Services:] Defines the data schema used for the model persistence. Specifies how voxel data, layer information, and material/magnetization fields are organized. Provides read and write access between the application and storage layer. Saves serialized models and retrieves them when requested.
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Data Type: specifies and maintains the structure of the model data.
+\end{description}
+
+\iffalse
+\paragraph{Export Structure Formalization}
+
+\begin{enumerate}
+\item \textbf{Definitions}
+\begin{itemize}
+\item \textbf{Export File:} $F_{export}=(Header,Body)$
+\item \textbf{Header:} metadata fields $\{version, date, projectID\}$
+\item \textbf{Body:} ordered list of voxel entries $E=\{e_1,e_2,\ldots,e_n\}$
+\item Each $e_i=(x_i,y_i,z_i,m_i,mag_i)$ with $m_i\in M_{types}$, $mag_i\in\mathbb{R}^3$
+\end{itemize}
+
+\item \textbf{Transformation Rule}
+\[
+F_{export}=Structure(M) =
+\{(Header(M), Body(M))\}
+\]
+where $Body(M)$ flattens voxel grid $G$ into ordered entries $E$.
+
+\item \textbf{Constraints}
+\begin{itemize}
+\item Field order preserved: $(x,y,z,m,mag)$
+\item All entries valid: $\forall e_i, m_i\neq\emptyset, \|mag_i\|\le1$
+\item Backward-compatible schema versioning maintained
+\end{itemize}
+
+\item \textbf{Output}
+\begin{itemize}
+\item Returns structural definition to Export Manager (M15)
+\item Guarantees consistency between internal model representation and exported file layout
+\end{itemize}
+\end{enumerate}
+\fi
+\subsubsection{Export Structure Module (\mref{m20})}
+
+\begin{description}
+  \item[Secrets:] How to define and implement the internal data structure for representing a exported file, including field ordering, data types, and encoding format. How to ensure consistency between internal and external representations.
+  \item[Services:] Defines the data schema used during export. Specifies how voxel data, layer information, and material/magnetization fields are organized. 
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Data Type: specifies and maintains the structure of exported model data.
+\end{description}
 
 \section{Traceability Matrix} \label{SecTM}
 
@@ -314,49 +876,270 @@ requirements and between the modules and the anticipated changes.
 
 % the table should use mref, the requirements should be named, use something
 % like fref
+
+\newcommand{\obox}{\fbox{\rule{0pt}{1.5ex}\hspace{1.5ex}}}
+\newcommand{\xbox}{\colorbox{black}{\rule{0pt}{1.5ex}\hspace{1.5ex}}}
+
+
 \begin{table}[H]
 \centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\small
+\setlength{\tabcolsep}{3pt}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{l|*{20}{c}}
 \toprule
-\textbf{Req.} & \textbf{Modules}\\
+\textbf{Req.} 
+& \mref{m1} & \mref{m2} & \mref{m3} & \mref{m4} & \mref{m5}
+& \mref{m6} & \mref{m7} & \mref{m8} & \mref{m9} & \mref{m10}
+& \mref{m11} & \mref{m12} & \mref{m13} & \mref{m14} & \mref{m15}
+& \mref{m16} & \mref{m17} & \mref{m18} & \mref{m19} & \mref{m20} \\
 \midrule
-R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-R2 & \mref{mInput}, \mref{mParams}\\
-R3 & \mref{mVerify}\\
-R4 & \mref{mOutput}, \mref{mControl}\\
-R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R9 & \mref{mVerifyOut}\\
-R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
+
+F211 &
+\xbox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+
+F212 &
+\xbox & \obox & \obox & \xbox & \xbox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+
+F213 &
+\xbox & \xbox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+
+F214 &
+\xbox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+
+F215 &
+\xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+
+F216 &
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+
+% --------------------------------------------------------------------------------
+
+F221 &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
+
+F222 &
+\obox & \obox & \xbox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox \\
+
+F223 &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
+
+F224 &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
+
+F225 &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
+\obox & \xbox & \xbox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
+
+F226 &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox &
+\obox & \xbox & \xbox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
+
+F227 &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox &
+\obox & \xbox & \xbox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
+
+% --------------------------------------------------------------------------------
+
+F231 &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+
+F232 &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+
+F233 &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+
+F234 &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+
+F235 &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \xbox &
+\obox & \xbox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+
+F236 &
+\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \xbox &
+\xbox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox \\
+
+F237 &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \xbox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox \\
+
+F238 &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \xbox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+
+F239 &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+
+F2310 &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+
+% --------------------------------------------------------------------------------
+
+F241 &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \xbox & \obox & \xbox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+
+F242 &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \xbox & \xbox \\
+
+F243 &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \xbox & \obox \\
+
+F244 &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox & \obox & \xbox \\
+
+F245 &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \xbox & \xbox \\
+
 \bottomrule
 \end{tabular}
-\caption{Trace Between Requirements and Modules}
+}
+\caption{Trace Between Functional Requirements and Modules}
 \label{TblRT}
 \end{table}
 
 \begin{table}[H]
 \centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\small
+\setlength{\tabcolsep}{3pt}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{l|*{20}{c}}
 \toprule
-\textbf{AC} & \textbf{Modules}\\
+\textbf{Req.} 
+& \mref{m1} & \mref{m2} & \mref{m3} & \mref{m4} & \mref{m5}
+& \mref{m6} & \mref{m7} & \mref{m8} & \mref{m9} & \mref{m10}
+& \mref{m11} & \mref{m12} & \mref{m13} & \mref{m14} & \mref{m15}
+& \mref{m16} & \mref{m17} & \mref{m18} & \mref{m19} & \mref{m20} \\
 \midrule
-\acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
+
+NF211 &
+\xbox & \xbox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox \\
+
+NF212 &
+\xbox & \xbox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox \\
+
+% --------------------------------------------------------------------------------
+
+NF221 &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox \\
+
+NF222 &
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \xbox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox \\
+
+NF223 &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+
+% --------------------------------------------------------------------------------
+
+NF231 &
+
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox \\
+
+NF232 &
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox \\
+
+% --------------------------------------------------------------------------------
+
+NF241 &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
+
+NF242 &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \xbox & \xbox & \xbox & \obox & \xbox & \xbox \\
+
 \bottomrule
 \end{tabular}
+}
+\caption{Trace Between Non-Functional Requirements and Modules}
+\label{TblRT}
+\end{table} 
+
+
+
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{l|*{20}{c}}
+\toprule
+\textbf{Req.} 
+& \mref{m1} & \mref{m2} & \mref{m3} & \mref{m4} & \mref{m5}
+& \mref{m6} & \mref{m7} & \mref{m8} & \mref{m9} & \mref{m10}
+& \mref{m11} & \mref{m12} & \mref{m13} & \mref{m14} & \mref{m15}
+& \mref{m16} & \mref{m17} & \mref{m18} & \mref{m19} & \mref{m20} \\
+\midrule
+
+\acref{acInput} &
+\xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox \\
+
+\acref{acInputConstraints} &
+\xbox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox \\
+
+\acref{acVoxelSize} &
+\obox & \xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox \\
+
+\acref{acVoxelization} &
+\xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+  
+\acref{acMagnetization} &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+  
+\acref{acSelection} &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox &
+\obox & \xbox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
+
+\acref{acExport} &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
+
+\acref{acDataStructure} &
+\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox \\
+
+\acref{acUI} &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
+
+\bottomrule
+\end{tabular}
+}
 \caption{Trace Between Anticipated Changes and Modules}
 \label{TblACT}
 \end{table}
@@ -374,6 +1157,7 @@ the modules. It can be seen that the graph is a directed acyclic graph
 system, and modules in the higher level of the hierarchy are essentially simpler
 because they use modules from the lower levels.
 
+\iffalse
 \wss{The uses relation is not a data flow diagram.  In the code there will often
 be an import statement in module A when it directly uses module B.  Module B
 provides the services that module A needs.  The code for module A needs to be
@@ -382,30 +1166,15 @@ relation is transitive, there is a use relation without an import, but the
 arrows in the diagram typically correspond to the presence of import statement.}
 
 \wss{If module A uses module B, the arrow is directed from A to B.}
-
+\fi
 \begin{figure}[H]
 \centering
-%\includegraphics[width=0.7\textwidth]{UsesHierarchy.png}
+\includegraphics[width=0.9\textwidth]{UsesHierarchy.png}
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
 
 %\section*{References}
-
-\section{User Interfaces}
-
-\wss{Design of user interface for software and hardware.  Attach an appendix if
-needed. Drawings, Sketches, Figma}
-
-\section{Design of Communication Protocols}
-
-\wss{If appropriate}
-
-\section{Timeline}
-
-\wss{Schedule of tasks and who is responsible}
-
-\wss{You can point to GitHub if this information is included there}
 
 \bibliographystyle {plainnat}
 \bibliography{../../../refs/References}
