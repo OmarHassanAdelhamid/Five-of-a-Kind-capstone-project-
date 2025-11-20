@@ -9,10 +9,10 @@ from typing import List
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import app.services.mesh_service as ms
 import app.services.voxel_service as vx
 import app.services.project_service as pj
-import os
 from fastapi.responses import FileResponse
 
 app = FastAPI()
@@ -34,6 +34,12 @@ MODEL_DIR = STL_STORAGE_DIR  # Alias for compatibility with contributor's code
 # Ensure directories exist
 for directory in (STL_STORAGE_DIR, VOXEL_STORAGE_DIR):
     directory.mkdir(parents=True, exist_ok=True)
+
+
+class VoxelizeRequest(BaseModel):
+    stl_filename: str
+    voxel_size: float
+    project_name: str
 
 
 @app.get("/api/hello")
@@ -75,24 +81,79 @@ async def upload_stl_model(stl_file: UploadFile):
     except Exception as e:
         return {"message": f"The following error occured whilst uploading STL file ({stl_file.filename}): {str(e)}"}
 
+
+@app.get("/api/voxelize/list")
+def list_voxelized_projects() -> dict[str, List[str]]:
+    '''
+    Lists all available voxelized project files.
+
+    Returns:
+        (dict): Contains list of available project filenames.
+    '''
+    projects = sorted(p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file())
+    return {"projects": projects}
+
+
+@app.get("/api/voxelize/")
+async def get_voxelized(project_name: str):
+    '''
+    Handles request to retrieve voxelized project coordinates.
+
+    Args:
+        project_name (str): The name of the project file to read.
+
+    Returns:
+        (dict): Contains the coordinates array and metadata.
+    '''
+    project_path = VOXEL_STORAGE_DIR / project_name
+    
+    if not project_path.exists():
+        # List available projects for better error message
+        available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
+        raise HTTPException(
+            status_code=404, 
+            detail=f"Project '{project_name}' not found. Available projects: {available if available else 'none'}"
+        )
+    
+    try:
+        coordinates = pj.read_project_coordinates(str(project_path))
+        # Convert numpy array to list for JSON serialization
+        coordinates_list = coordinates.tolist() if hasattr(coordinates, 'tolist') else coordinates
+        
+        return {
+            "project_name": project_name,
+            "coordinates": coordinates_list,
+            "num_voxels": len(coordinates_list) if coordinates_list is not None else 0
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading project: {str(e)}")
+
+
 @app.post("/api/voxelize")
-async def voxelize(stl_filename: str, voxel_size: float, project_name: str):
+async def voxelize(request: VoxelizeRequest):
     '''
     Handles request to voxelize an STL file.
 
     Args:
-        stl_filename (str): The name of the STL file within sample-stl-files to be voxelized.
-        voxel_size (float): Scale of voxel to 1 unit (e.g. if 10 voxels per 1 unit, would = 0.1).
+        request (VoxelizeRequest): Request body containing:
+            stl_filename (str): The name of the STL file within sample-stl-files to be voxelized.
+            voxel_size (float): Scale of voxel to 1 unit (e.g. if 10 voxels per 1 unit, would = 0.1).
+            project_name (str): Name of the project to create.
 
     Returns:
         (dict): Contains message reflecting status and the path to the resulting project file.
     '''
+    stl_filename = request.stl_filename
+    voxel_size = request.voxel_size
+    project_name = request.project_name
+    
     stl_path = MODEL_DIR / stl_filename
 
     if not stl_path.exists():
         raise HTTPException(status_code=404, detail=f"Filename {stl_filename} not found on server!")
 
-    with stl_path.open("r") as file:
+    with stl_path.open("rb") as file:
+        print("hello")
         # load passed stl file as a mesh
         mesh = ms.create_mesh(file, file_type='stl')
 
@@ -106,10 +167,9 @@ async def voxelize(stl_filename: str, voxel_size: float, project_name: str):
 
         # save points as csv to project file with init magnetization vector and material IDs
         # FOR POC: this will be in backend/sample-project-files
-        #TODO: update this to use pathlib and MODEL_DIR
-        parent_dir = os.path.abspath(os.path.join(os.getcwd(), "/..")) #check this.
-        project_folder = os.path.join(parent_dir, "/sample-project-files")
-        filepath = pj.create_project(points, project_name, project_folder)
+        filepath = pj.create_project(points, project_name, str(VOXEL_STORAGE_DIR))
+
+        print('we good')
 
         return {"message": f"Voxelization Status of STL file ({stl_filename}): Success", "projectpath": f"{filepath}"}
 
