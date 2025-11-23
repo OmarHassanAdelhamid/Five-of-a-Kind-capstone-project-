@@ -1,3 +1,4 @@
+<!--
 <Please keep the folder structure as given in the template repo.  We will
 discuss each artifact as we get to it in the course.  In some cases, like for
 the SRS, you should have a file of the same name.  For other cases, like the
@@ -25,8 +26,16 @@ the template that Dr. Mosser now uses in the third year requirements course.>
 <The Makefile assumes the SRS will be in a folder called SRS.  If you use the Makefile
 with a template other than the Scientific Computing template, you will have to delete
 the unnecessary folders and rename your folder to SRS.>
+-->
+
 # Documentation folders
 
-The folders and files for this folder are as follows:
+The important folders within this folder are as follows:
 
-Describe ...
+- ```Design``` High-level design decomposition of AutoVox in the form of a Module Guide and Module Interface Specification (MG and MIS).
+- ```DevelopmentPlan``` Initial overall project plans
+- ```HazardAnalysis``` Project safety analysis via FMEA
+- ```ProblemStatementAndGoals``` High-level problem definition and objectives
+- ```projMngmnt``` Statistics related to project management at major project milestones
+- ```SRS-Meyer/requirements``` Detailed requirements definitions for AutoVox
+- ```VnVPlan``` Plans for the verification and validation of AutoVox
