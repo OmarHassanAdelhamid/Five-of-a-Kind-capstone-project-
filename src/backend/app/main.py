@@ -153,7 +153,6 @@ async def voxelize(request: VoxelizeRequest):
         raise HTTPException(status_code=404, detail=f"Filename {stl_filename} not found on server!")
 
     with stl_path.open("rb") as file:
-        print("hello")
         # load passed stl file as a mesh
         mesh = ms.create_mesh(file, file_type='stl')
 
@@ -168,8 +167,6 @@ async def voxelize(request: VoxelizeRequest):
         # save points as csv to project file with init magnetization vector and material IDs
         # FOR POC: this will be in backend/sample-project-files
         filepath = pj.create_project(points, project_name, str(VOXEL_STORAGE_DIR))
-
-        print('we good')
 
         return {"message": f"Voxelization Status of STL file ({stl_filename}): Success", "projectpath": f"{filepath}"}
 

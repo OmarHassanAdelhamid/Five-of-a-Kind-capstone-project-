@@ -84,7 +84,7 @@ export const calculateVoxelSize = (
   let voxelSize: number
 
   if (modelSize && modelSize > 0) {
-    voxelSize = modelSize * 0.02
+    voxelSize = modelSize * 0.05
   } else if (coordinates.length > 1) {
     const firstCoord = coordinates[0]
     const secondCoord = coordinates[1]
