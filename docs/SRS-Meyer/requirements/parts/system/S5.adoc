@@ -5,6 +5,8 @@ ifdef::!env-draft[]
 TIP: _Specification of the conditions under which an implementation will be deemed satisfactory. Here, "verification" as shorthand for what is more explicitly called "Verification & Validation" (V&V), covering several levels of testing — module testing, integration testing, system testing, user acceptance testing — as well as other techniques such as static analysis and, when applicable, program proving._  <<BM22>>
 endif::[]
 
+This section serves as a brief overview of AutoVox's verification and validation plan; for more details, visit VnVPlan/VnVPlan.pdf within the docs folder. As such, full coverage of all requirements and all tests to be executed are not detailed here; high-level details and the most important tests are explained.
+
 ==== Functional Requirements
 
 To ensure that the requirements are fulfilled to their intended functionality, several validation approaches will be applied. 

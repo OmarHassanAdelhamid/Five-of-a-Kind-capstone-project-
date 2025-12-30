@@ -9,7 +9,8 @@ This section provides detailed usage scenarios that expand on the high-level sce
 
 ==== (S.4.1) Import and Voxelize CAD Model
 
-* **Use case**: UC1, UC2
+* **Use case**: <<UC1>>, <<UC2>>
+* **Related requirements**: <<F211>>, <<F213>>, <<F214>>, <<F215>>, <<F216>>, <<NF211>>, <<NF212>>, <<NF213>>, <<F221>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: System
 * **Precondition**: User has a completed 3D CAD file and the system is running on their desktop/laptop.
@@ -37,7 +38,8 @@ This scenario is important as it establishes the foundation for the entire proje
 
 ==== (S.4.2) Assign Properties to Voxels within a Layer
 
-* **Use case**: UC2, UC3
+* **Use case**: <<UC2>>, <<UC3>>
+* **Related requirements**: <<F221>>, <<F223>>, <<F224>>, <<F225>>, <<NF221>>, <<NF222>>, <<F231>>, <<F232>>, <<F233>>, <<F234>>, <<F235>>, <<F237>>, <<F2310>>, <<NF231>>, <<NF232>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: System
 * **Precondition**: CAD model has been successfully imported, or the model being constructed has a set of voxels, user is viewing a specific layer in the 3D viewer.
@@ -72,7 +74,8 @@ This scenario is improtant because it provides the core functionality of this sy
 
 ==== (S.4.3) Edit and Modify Existing Voxel Properties
 
-* **Use case**: UC3
+* **Use case**: <<UC3>>
+* **Related requirements**: <<F224>>, <<F225>>, <<F226>>, <<F227>>, <<NF223>>, <<F231>>, <<F233>>, <<F236>>, <<F238>>, <<NF231>>, <<NF232>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: System
 * **Precondition**: User has already assigned properties to some voxels and wants to make changes without restarting the entire process.
@@ -101,7 +104,8 @@ This scenario is important because it addresses the critical need for iterative 
 
 ==== (S.4.4) Add and Delete Voxels from within a Layer
 
-* **Use case**: UC4
+* **Use case**: <<UC4>>
+* **Related requirements**: <<F224>>, <<F236>>, <<F237>>, <<F239>>, <<NF231>>, <<NF232>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: System
 * **Precondition**: User has created a project (via import or from scratch) and wants to edit the voxels present.
@@ -130,7 +134,8 @@ This scenario is important as it reflects both the user's ability to create voxe
 
 ==== (S.4.5) Export Voxel Property Assignment Data for 3D Printing
 
-* **Use case**: UC5
+* **Use case**: <<UC5>>
+* **Related requirements**: <<F241>>, <<F242>>, <<F243>>, <<F244>>, <<NF241>>, <<NF242>>, <<NF243>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: Lab Operator, System
 * **Precondition**: User has completed property assignments for all layers and is ready to prepare the data for 3D printing.
@@ -158,17 +163,18 @@ This scenario is important because it represents the last step in the workflow, 
 
 ==== (S.4.6) Validate and Review Magnetization Design
 
-* **Use case**: UC1, UC5
+* **Use case**: <<UC1>>, <<UC5>>
+* **Related requirements**: <<F221>>, <<F222>>, <<F223>>, <<F224>>, <<F226>>, <<F227>>, <<NF221>>, <<NF222>>, <<NF223>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: Supervisor, System
 * **Precondition**: User has completed magnetization assignment and wants to validate the design before export and printing.
-* **Trigger**: User wants to review the complete magnetization pattern and ensure it meets the their needs.
+* **Trigger**: User wants to review the complete magnetization/material pattern and ensure it meets the their needs.
 * **Main Success Scenario**:
 
-    - 1. System displays the complete 3D model with magnetization visualization.
+    - 1. System displays the complete 3D model with magnetization and material visualization.
     - 2. User can rotate, zoom, and examine the model from different angles.
     - 3. System provides layer-by-layer navigation to review specific sections.
-    - 4. User can filter the view to show only voxels with specific magnetization directions.
+    - 4. User can filter the view to show only voxels with specific magnetization directions or material properties.
 * **Secondary Scenarios**:
 
     - 4.1. Supervisor requests changes after review - User can return to editing mode.
@@ -178,7 +184,8 @@ This scenario is important because it ensures quality and validation before movi
 
 ==== (S.4.7) Save Voxel Project File for Later Editing
 
-* **Use case**: UC5
+* **Use case**: <<UC5>>
+* **Related requirements**: !!
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: System
 * **Precondition**: User has begun a project.

@@ -1,4 +1,4 @@
-== (S) System
+== (S) System [[S]]
 
 //include::control.adoc[]
 
