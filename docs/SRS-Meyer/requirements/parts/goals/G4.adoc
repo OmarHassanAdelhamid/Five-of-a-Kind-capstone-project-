@@ -7,23 +7,23 @@ endif::[]
 
 The high-level functional requirements for the voxel-based design platform based on client input can be defined as follows, in no particular order:
 
-• *CAD-to-voxel conversion.* The system shall allow importing standard CAD models and automatically voxelizing them into a structured grid for further editing.
+• *CAD-to-voxel conversion.* The system shall allow importing standard CAD models and automatically voxelizing them into a structured grid for further editing. (G4-HF-1)
 
-• *Voxel editing and re-magnetization.* The system shall enable assigning and re-assigning material and magnetization properties at the voxel level, allowing modifications after the initial design without rebuilding the entire model.
+• *Voxel editing and re-magnetization.* The system shall enable assigning and re-assigning material and magnetization properties at the voxel level, allowing modifications after the initial design without rebuilding the entire model. (G4-HF-2)
 
-• *Batch voxel operations.* The system shall support batch editing and magnetization of groups of voxels in specified directions, reducing repetitive manual work.
+• *Batch voxel operations.* The system shall support batch editing and magnetization of groups of voxels in specified directions, reducing repetitive manual work. (G4-HF-3)
 
-• *Visualization tools.* The system shall provide visualization of material distribution and magnetization vectors across the voxel grid, assisting researchers in verification before fabrication.
+• *Visualization tools.* The system shall provide visualization of material distribution and magnetization vectors across the voxel grid, assisting researchers in verification before fabrication. (G4-HF-4)
 
-• *Export compatibility.* The system shall export voxelized designs into formats compatible with multi-material 3D printers, embedding metadata about material properties and magnetization.
+• *Export compatibility.* The system shall export voxelized designs into formats compatible with multi-material 3D printers, embedding metadata about material properties and magnetization. (G4-HF-5)
 
 Of the functional requirements listed above, the two most critical are *CAD-to-voxel conversion* and *voxel editing and re-magnetization*, as these form the foundation of the system’s usability and research value.
 
 Some high-level non-functional requirements for the platform can be defined as follows, in no particular order:
 
-• *Usability.* The platform should have an intuitive interface suitable for both researchers and students, minimizing training overhead.
+• *Usability.* The platform should have an intuitive interface suitable for both researchers and students, minimizing training overhead. (G4-HNF-1)
 
-• *Performance.* The system should handle CAD-to-voxel conversion and property assignment in a reasonable time, even for large and complex models.
+• *Performance.* The system should handle CAD-to-voxel conversion and property assignment in a reasonable time, even for large and complex models.(G4-HNF-2)
 
-• *Compatibility.* The platform should support common CAD file formats and integrate smoothly with existing 3D printing workflows.
+• *Compatibility.* The platform should support common CAD file formats and integrate smoothly with existing 3D printing workflows. (G4-HNF-3)
 
