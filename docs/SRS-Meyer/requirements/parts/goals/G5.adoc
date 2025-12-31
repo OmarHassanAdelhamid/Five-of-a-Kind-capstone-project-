@@ -7,10 +7,10 @@ endif::[]
 
 This section outlines the fundamental usage paths and primary interactions users will have with the system. These high-level use cases present the main scenarios that the system is designed to address. For more detailed, special scenarios, refer to <<s4>>.
 
-.High Level use cases diagram
-image::models/use_case_diagram.png[scale=70%,align="center"]
+.High-level Use Case Diagram
+image::models/use_case_diagram.svg[scale=70%,align="center"]
 
-The use case diagram above highlights how we anticipate our direct stakeholders will interact with the voxel property assignment system for the principal use cases. More details for these usages are as follows:
+Figure 2 above highlights how we anticipate our direct stakeholders will interact with the voxel property assignment system for the principal use cases. More details for these usages are as follows:
 
 * [[uc1,UC1]] *UC1: Import CAD File.* 
 

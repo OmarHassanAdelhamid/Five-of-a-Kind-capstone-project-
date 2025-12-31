@@ -205,7 +205,7 @@ This scenario is important because it ensures quality and validation before movi
 
 This scenario is important as users may not be able to complete all of the work in one sitting, or they may want to create many variations of the same base project during the design process. Saved project files must be complete and correct to maximise user satisfaction and reduce any user frustration with lost progress.
 
-==== Traceability Matrix between Use Cases and Functional Requirements
+.Traceability Matrix between Use Cases and Functional Requirements
 
 [cols="8*^"]
 |===
@@ -246,7 +246,7 @@ This scenario is important as users may not be able to complete all of the work 
 
 |===
 
-==== Traceability Matrix between Use Cases and Non-Functional Requirements
+.Traceability Matrix between Use Cases and Non-Functional Requirements
 
 [cols="8*^",options="header"]
 |===
@@ -273,7 +273,7 @@ This scenario is important as users may not be able to complete all of the work 
 
 |===
 
-==== Traceability Matrix between Use Cases and High-Level Use Cases
+.Traceability Matrix between Use Cases and High-Level Use Cases
 
 [cols="8*^",options="header"]
 |===

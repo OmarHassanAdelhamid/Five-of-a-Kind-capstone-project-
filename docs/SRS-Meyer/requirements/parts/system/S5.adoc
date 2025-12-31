@@ -50,7 +50,7 @@ The most important scenario in S.4 is <<S.4.2>>: Assign Properties to Voxels wit
     ** Corresponds to <<F236>>
 
 
-==== Traceability Matrix
+.Traceability Matrix between Tests and Requirements
 
 |===
 | Test | Test Description | Link to Requirements
