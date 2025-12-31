@@ -186,7 +186,7 @@ This considers the maximum number of steps (eg. clicks, enter details into a tex
 [.maroon]#_Justification:_# It will ensure software can sufficiently handle large-scale visuals within a project. The MAX_DISPLAY threshold is subject to change to ensure optimal visuals where there is minimal risk of undesirable lag.
 
 
-. [[NF223]] *Accessible colours (NF223):* Visualization Manager shall ensure all colours utilized for all interfaces (e.g. voxel highlight colours, text colours, background colours) have sufficient contrast in accordance with WCAG 2.0 guidelines and can be distinctively recognized under standard lighting conditions.
+. [[NF223]] *Accessible colours (NF223):* Visualization Manager shall ensure all colours utilized for all interfaces (e.g. voxel highlight colours, text colours, background colours) have sufficient contrast in accordance with WCAG 2.0 guidelines and can be distinctively recognized under standard lighting conditions. See more about WCAG 2.0 link:https://www.w3.org/WAI/standards-guidelines/wcag/[here] <<SH25,[5]>>.
 
 +
 [.maroon]#_Priority:_# Medium (should-have) +

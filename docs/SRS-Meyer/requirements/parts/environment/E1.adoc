@@ -45,7 +45,7 @@ The workspace a voxel model exists within (eg. a coordinate system). Voxels alig
 
 *Magnetization vector*
 
-A 3D polar coordinate the user enters to specify the magnitude and direction of the magnetic field within an individual voxel. Also referred to as a magnetization.
+A 3D polar coordinate the user enters to specify the magnitude and direction of the magnetic field within an individual voxel. Also referred to as a magnetization. See more about magnetic field theory link:https://www.britannica.com/science/magnetic-field[here] <<BR25,[3]>>.
 
 *Material ID*
 
