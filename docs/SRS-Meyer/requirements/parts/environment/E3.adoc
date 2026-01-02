@@ -9,7 +9,7 @@ This section details constraints imposed on the project. To summarize, key const
 
 * [[E3.1]] *Operating System Support (E3.1).* The system must support the Windows and Linux operating systems. This constraint is necessary to ensure the application can be installed and run on the lab computers utilised by the application's users. 
 
-* [[E3.2]] *STL File Support (E3.2).* To support the importing and converting of user-created external CAD files, the system must parse STL files. Information relating to the specifications of STL files can be found link:https://www.fabbers.com/tech/STL_Format[here] <<MB93,[4]>>.
+* [[E3.2]] *STL File Support (E3.2).* To support the importing and converting of user-created external CAD files, the system must parse STL files. Information relating to the specifications of STL files can be found link:https://www.fabbers.com/tech/STL_Format[here] <<MB93,[5]>>.
 
 * [[E3.3]] *Export File Support (E3.3).* In order to export user-created voxel project files in a format usable by pre-existing 3D printing software, the system must support the creation of export files containing all necessary metadata, organized in such a way that minimal changes need to be made to the existing software. 
 

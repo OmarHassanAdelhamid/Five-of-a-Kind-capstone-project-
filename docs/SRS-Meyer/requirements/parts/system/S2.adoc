@@ -104,7 +104,7 @@ Relates to the percentage of users that should be able to succeed at different t
 [.maroon]#_Likelihood of change:_# High +
 [.maroon]#_Justification:_# It reduces wait time to improve user experience but is not critical. Changes to the MIN_RATE threshold may be necessary in order to sufficiently support the execution of a high-demand operation.
 
-. [[NF213]] *Ease of use (NF213):* Import Manager shall ensure projects can be created or opened in less than MAX_INTERACTIONS.
+. [[NF213]] *Ease of use (NF213):* Import Manager shall ensure projects can be created or opened in less than MAX_INTERACTIONS by USABILITY_PERCENTAGE of users.
 
 +
 [.maroon]#_Priority:_# Medium (should-have) +
@@ -189,7 +189,7 @@ Relates to the percentage of users that should be able to succeed at different t
 [.maroon]#_Justification:_# It will ensure software can sufficiently handle large-scale visuals within a project. The MAX_DISPLAY threshold is subject to change to ensure optimal visuals where there is minimal risk of undesirable lag.
 
 
-. [[NF223]] *Accessible colours (NF223):* Visualization Manager shall ensure all colours utilized for all interfaces (e.g. voxel highlight colours, text colours, background colours) have sufficient contrast in accordance with WCAG 2.0 guidelines and can be distinctively recognized under standard lighting conditions. See more about WCAG 2.0 link:https://www.w3.org/WAI/standards-guidelines/wcag/[here] <<SH25,[5]>>.
+. [[NF223]] *Accessible colours (NF223):* Visualization Manager shall ensure all colours utilized for all interfaces (e.g. voxel highlight colours, text colours, background colours) have sufficient contrast in accordance with WCAG 2.0 guidelines and can be distinctively recognized under standard lighting conditions. See more about WCAG 2.0 link:https://www.w3.org/WAI/standards-guidelines/wcag/[here] <<SH25,[6]>>.
 
 +
 [.maroon]#_Priority:_# Medium (should-have) +

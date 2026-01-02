@@ -3,6 +3,7 @@
 
 * [[[BM22,1]]] Bertrand Meyer. _Handbook of Requirements and Business Analysis_. Springer. 2022.
 * [[[RE97,2]]] Ian Sommerville and Peter Sawyer. _Requirements Engineering: A good Practice Guide_. Wiley. 1997.
-* [[[BR25,3]]] Brittanica Editors. _magnetic field - definition_. Brittanica. 2025.
-* [[[MB93,4]]] Marshall Burns. _The StL Format - Automated Fabrication, Sec. 6.5_. Ennex Research Corp. 1999.
-* [[[SH25,5]]] Shawn Lawton Henry (Editor). _WCAG 2 Overview_. Web Accessibility Initiative. 2025.
+* [[[CO26,3]]] _COMSOL Multiphysics Simulation Software_. COMSOL. 2026.
+* [[[BR25,4]]] Brittanica Editors. _magnetic field - definition_. Brittanica. 2025.
+* [[[MB93,5]]] Marshall Burns. _The StL Format - Automated Fabrication, Sec. 6.5_. Ennex Research Corp. 1999.
+* [[[SH25,6]]] Shawn Lawton Henry (Editor). _WCAG 2 Overview_. Web Accessibility Initiative. 2025.
