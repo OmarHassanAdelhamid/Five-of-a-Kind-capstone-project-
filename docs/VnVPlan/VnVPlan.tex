@@ -1,10 +1,12 @@
 \documentclass[12pt, titlepage]{article}
 \usepackage{float}
 
+\usepackage{geometry}
+\usepackage{pdflscape}
 \usepackage{booktabs}
 \usepackage{tabularx}
-\usepackage{hyperref}
 \usepackage{float}
+\usepackage{hyperref}
 
 \hypersetup{
     colorlinks,
@@ -412,6 +414,7 @@ the specified requirements.
 \begin{enumerate}
 
 \item{test-FR-IM-1 Valid CAD File Import for New Project\\}
+\label{sec:t-im-1}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -428,6 +431,7 @@ the specified requirements.
 \textbf{How test will be performed:} Create a new project on the system and import a CAD file into the new project to verify that the system will correctly process the file and create a new project. The system should be able to handle the CAD file and initiate the voxel slicing process. This will be tested manually by the developer of the system.
 
 \item{test-FR-IM-2 Past Project File Import\\}
+\label{sec:t-im-2}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -444,6 +448,7 @@ the specified requirements.
 \textbf{How test will be performed:} Open a previously saved project containing magnetization and material properties on the system. Verify that the system correctly loads the project and all of the magnetization and material properties are preserved. The model should be ready for further editing and visualization. This will be tested manually by the developer of the system.
 
 \item{test-FR-IM-3 Invalid File Format Handling\\}
+\label{sec:t-im-3}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -466,6 +471,7 @@ the specified requirements.
 \begin{enumerate}
 
 \item{test-FR-IM-4 Voxel Size Configuration\\}
+\label{sec:t-im-4}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -482,6 +488,7 @@ the specified requirements.
 \textbf{How test will be performed:} Configure the voxel dimensions for the imported model by entering the dimensions into the system through the import interface by the user. Verify that the system correctly applies the specified voxel dimensions and successfully slices the model into voxels of the requested dimensions. This will be tested automatically by the developer of the system by running a script that configures the voxel dimensions and verifies that the system correctly slices the model into voxels of the requested dimensions.
 
 \item{test-FR-IM-5 Model Scaling Functionality\\}
+\label{sec:t-im-5}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -498,6 +505,7 @@ the specified requirements.
 \textbf{How test will be performed:} Modify the model dimensions to the desired printing size by entering the new dimensions into the system through the import interface by the user. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected scaling of the model to confirm that model integrity and accuracy are preserved as specified in F214
 
 \item{test-FR-IM-6 Partial Voxel Resolution\\}
+\label{sec:t-im-6}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -514,6 +522,7 @@ the specified requirements.
 \textbf{How test will be performed:} Import a model containing surfaces that intersect voxel boundaries. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected resolution of partial voxels to confirm that model integrity and accuracy are preserved as specified in F215
 
 \item{test-FR-IM-7 Model Division for Display\\}
+\label{sec:t-im-7}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -538,6 +547,7 @@ the specified requirements.
 \begin{enumerate}
 
 \item{test-FR-VM-1 3D Model Rendition with Clear Voxel Visualization\\}
+\label{sec:t-vm-1}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -554,6 +564,7 @@ the specified requirements.
 \textbf{How test will be performed:} Render a 3D model with clear visualization of sliced voxels by providing the Visualization Manager with sliced voxel data from the Import Manager. Verify that the system correctly renders the model and displays the individual voxels with proper boundaries and geometric accuracy. This will be tested manually by the developer of the system by providing the system with a CAD model and verifying that the system correctly renders the model and displays the individual voxels with proper boundaries and geometric accuracy. 
 
 \item{test-FR-VM-2 Partition Navigation Functionality\\}
+\label{sec:t-vm-2}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -570,6 +581,7 @@ the specified requirements.
 \textbf{How test will be performed:} Navigate between model partitions by clicking on the different display sections of the model. Verify that the system correctly provides smooth navigation between partitions, allowing users to access all model sections without performance degradation. This will be tested manually by the developer of the system.
 
 \item{test-FR-VM-3 Multi-Perspective 3D Model Interaction\\}
+\label{sec:t-vm-3}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -592,6 +604,7 @@ the specified requirements.
 \begin{enumerate}
 
 \item{test-FR-VM-4 Layer Isolation Functionality\\}
+\label{sec:t-vm-4}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -608,6 +621,7 @@ the specified requirements.
 \textbf{How test will be performed:} Select a specific layer to focus on by clicking on the layer in the display. Verify that the system correctly isolates the selected layer and renders all other voxels irrelevant while that layer is in focus. This will be tested manually by the developer of the system.
 
 \item{test-FR-VM-5 Voxel Selection Highlighting\\}
+\label{sec:t-vm-5}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -630,6 +644,7 @@ the specified requirements.
 \begin{enumerate}
 
 \item{test-FR-VM-6 Material Assignment Visual Tracking\\}
+\label{sec:t-vm-6}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -646,6 +661,7 @@ the specified requirements.
 \textbf{How test will be performed:} Assign material IDs to various voxels by clicking on the voxels in the display and assigning the material IDs. Verify that the system correctly updates the voxel colors to indicate material assignment completeness, providing clear visual feedback about assignment status. This will be tested manually by the developer of the system.
 
 \item{test-FR-VM-7 Magnetization Assignment Visual Tracking\\}
+\label{sec:t-vm-7}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -671,6 +687,7 @@ the specified requirements.
 \begin{enumerate}
 
 \item{test-FR-INT-1 Import to Visualization Data Transfer\\}
+\label{sec:t-int-1}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -697,6 +714,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \begin{enumerate}
 
 \item{test-FR-EM-1 Individual Voxel Magnetization Assignment\\}
+\label{sec:t-em-1}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -713,6 +731,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Load a 3D model, select a voxel using the interface, input magnetization values, and verify the assignment is recorded and visually displayed.
 
 \item{test-FR-EM-2 Group Voxel Magnetization Assignment\\}
+\label{sec:t-em-2}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -729,6 +748,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select multiple voxels using the interface, assign magnetization values, and verify all selected voxels receive the assignment.
 
 \item{test-FR-EM-3 Favourite Magnetization Vector Management\\}
+\label{sec:t-em-3}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -745,6 +765,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Create a favourite magnetization vector, save it to the favourite bar, and verify it can be selected and applied to voxels.
 
 \item{test-FR-EM-4 Individual Voxel Material Assignment\\}
+\label{sec:t-em-4}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -761,6 +782,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select a voxel, assign a material ID, and verify the assignment is recorded and visually displayed.
 
 \item{test-FR-EM-5 Group Voxel Material Assignment\\}
+\label{sec:t-em-5}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -777,6 +799,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select multiple voxels, assign a material ID, and verify all selected voxels receive the assignment.
 
 \item{test-FR-EM-6 Material Label Assignment\\}
+\label{sec:t-em-6}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -793,6 +816,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Access material management interface, assign a label to a material ID, and verify the label is displayed and associated correctly.
 
 \item{test-FR-EM-7 Property Replication Across Layers\\}
+\label{sec:t-em-7}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -809,6 +833,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select voxels with assigned properties in one layer, use the replication function to copy properties to another layer, and verify the properties are correctly applied.
 
 \item{test-FR-EM-8 Auto Save Functionality\\}
+\label{sec:t-em-8}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -825,6 +850,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Make property assignments, verify auto-save triggers, and confirm changes are preserved in the project file.
 
 \item{test-FR-EM-9 Edit History Access and Revert\\}
+\label{sec:t-em-9}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -841,6 +867,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Perform multiple edits, access edit history, select a previous version, and verify the model reverts correctly.
 
 \item{test-FR-EM-10 Entire Layer Selection and Assignment\\}
+\label{sec:t-em-10}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -857,6 +884,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select an entire layer, assign material and magnetization properties, and verify all voxels in the layer receive the assignments.
 
 \item{test-FR-EM-11 Manual Voxel Addition\\}
+\label{sec:t-em-11}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -873,6 +901,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Use the voxel addition tool to add a new voxel, verify it has correct dimensions, and confirm it starts with unassigned properties.
 
 \item{test-FR-EM-12 Manual Voxel Deletion\\}
+\label{sec:t-em-12}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -889,6 +918,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select a voxel, use the deletion tool, and verify the voxel is removed from the model.
 
 \item{test-FR-EM-13 Individual Voxel Property Reset\\}
+\label{sec:t-em-13}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -905,6 +935,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select a voxel with assigned properties, use the reset function, and verify the voxel returns to unassigned state.
 
 \item{test-FR-EM-14 Group Voxel Property Reset\\}
+\label{sec:t-em-14}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -933,6 +964,7 @@ as specified in requirements F241 through F245.
 \begin{enumerate}
 
 \item{test-FR-XM-1 Property Validation for Complete Magnetization\\}
+\label{sec:t-xm-1}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -949,6 +981,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Load a model with complete magnetization assignments, request export, and verify validation passes and export proceeds.
 
 \item{test-FR-XM-2 Property Validation for Incomplete Magnetization\\}
+\label{sec:t-xm-2}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -965,6 +998,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Load a model with incomplete magnetization, request export, and verify the system identifies missing assignments and provides appropriate feedback.
 
 \item{test-FR-XM-3 Standalone File Export\\}
+\label{sec:t-xm-3}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -981,6 +1015,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Export a model with a custom filename, verify the file is created with all metadata, and confirm it can be accessed outside the software.
 
 \item{test-FR-XM-4 Project Export in Native Format\\}
+\label{sec:t-xm-4}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -997,6 +1032,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Export a project in native format, verify the file contains all project data, and confirm it can be imported back into the software.
 
 \item{test-FR-XM-5 Export Progress Tracking\\}
+\label{sec:t-xm-5}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -1013,6 +1049,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Export a large model, observe the progress bar updates, and verify the progress indicators accurately reflect export status.
 
 \item{test-FR-XM-6 Model Summary Export\\}
+\label{sec:t-xm-6}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -1029,6 +1066,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Export a model with summary enabled, verify both files are created, and confirm the summary contains relevant model statistics.
 
 \item{test-FR-XM-7 Export Failure Recovery\\}
+\label{sec:t-xm-7}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -1045,6 +1083,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Initiate export, simulate failure during the process, and verify the original project file remains unchanged and accessible.
 
 \item{test-FR-XM-8 Export Performance Validation\\}
+\label{sec:t-xm-8}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -1087,6 +1126,7 @@ be involved? Be specific.}
 \begin{enumerate}
 
 \item{test-US-1 Design Acceptance \& Intuitivity Survey\\}
+\label{sec:t-nf-1}
 
 \textbf{Type:} Non-Functional, Dynamic, Manual, Survey-based
 
@@ -1105,9 +1145,10 @@ as well as how they would rank how intuitive functionalities are on a 5-point sc
 changes implemented where necessary to improve UI design in the case that expectations are not reached. A draft of the survey
 is included in the appendix of this document.
 
-Quantifiable Metric: 90\% of survey responses must rank 4 or above for intuitiveness of each feature.
+Quantifiable Metric: USABILITY\_PERCENTAGE\% of survey responses must rank 4 or above for intuitiveness of each feature.
 
 \item{test-US-2 Accessible Colours Check\\}
+\label{sec:t-nf-2}
 
 \textbf{Type:} Static, Manual
 
@@ -1125,6 +1166,7 @@ for material IDs, as well as colours used in the UI (e.g. text, buttons, sidebar
 Acceptance Criteria: All ratios must meet 3:1 contrast ratio for WCAG 2.0 compliance.
 
 \item{test-US-3 Design Ease of Use Test\\}
+\label{sec:t-nf-3}
 
 \textbf{Type:} Non-Functional, Dynamic, Manual, Survey-based
 
@@ -1134,12 +1176,13 @@ Acceptance Criteria: All ratios must meet 3:1 contrast ratio for WCAG 2.0 compli
 					
 \textbf{Input:} User completes core tasks (import file, material/magnetization assignment, export file)
 					
-\textbf{Output:} 90\% of users tested complete tasks in less than MAX\_INTERACTIONS.
+\textbf{Output:} USABILITY\_PERCENTAGE\% of users tested complete tasks in less than MAX\_INTERACTIONS.
 					
 \textbf{How test will be performed:} After a short explanation of core tasks, users will be asked to perform core tasks. Clicks per task
 are recorded and later analysed to verify that expectations are satisfied.
 
 \item{test-US-4 View Model and Layer Focus within application\\}
+\label{sec:t-nf-4}
 
 \textbf{Type:} Non-Functional, Dynamic, Manual
 
@@ -1156,6 +1199,7 @@ as if they intend to edit voxels within the layer. This confirms that the primar
 layer when editing voxels is satisfied.
 
 \item{test-US-5 Clear and Interpretable Warnings and Errors\\}
+\label{sec:t-nf-5}
 
 \textbf{Type:} Survey-based
 
@@ -1165,16 +1209,17 @@ layer when editing voxels is satisfied.
 					
 Input/Condition: User performs interactions that are known to result in error
 					
-Output/Result: 90\% of respondents agree that errors are informative
+Output/Result: USABILITY\_PERCENTAGE\% of respondents agree that errors are informative
 					
 \textbf{How test will be performed:} The user will be given direction in how to trigger different errors, and be exposed to
 all warning and error messages the system can generate. Users will explain whether they find it easy to understand
-or not (e.g. pass/fail). Investigation in how to reword prompts will take place for messages that under 90\% of users
+or not (e.g. pass/fail). Investigation in how to reword prompts will take place for messages that under USABILITY\_PERCENTAGE\% of users
 do not understand.
 
-Quantifiable Metric: For all messages, 90\% of users 'pass'.
+Quantifiable Metric: For all messages, USABILITY\_PERCENTAGE\% of users 'pass'.
 
 \item{test-US-6 Concise and Interpretable User Manual\\}
+\label{sec:t-nf-6}
 
 \textbf{Type:} Survey-based
 
@@ -1199,6 +1244,7 @@ Quantifiable Metric: Considered an initial success if areas of confusion for eac
 \begin{enumerate}
 
 \item{test-PS-1 Scalability Validation for Import and Visualization\\}
+\label{sec:t-nf-7}
 
 \textbf{Type:} Non-Functional, Dynamic, Automated
 
@@ -1219,6 +1265,7 @@ resulting model, the import module will be investigated for possible sources of 
 not render, error messages will be investigated for possible sources of refactoring. %check this with HA times
 					
 \item{test-PS-2 Performance Validation for Import, Visualization, Editing, and Export\\}
+\label{sec:t-nf-8}
 
 \textbf{Type:} Non-Functional, Dynamic, Automated
 
@@ -1238,6 +1285,7 @@ rates. Should performance fall short of these expectations, specific sections th
 that can be optimized. %check this with HA times (in/export)
 
 \item{test-PS-3 Resource Usage Validation Test\\}
+\label{sec:t-nf-9}
 
 \textbf{Type:} Non-Functional, Dynamic, Automated
 
@@ -1260,6 +1308,7 @@ that lead to increased usage will be investigated for precisely what part of the
 \begin{enumerate}
 
 \item{test-CO-1 Windows and Linux Compatibility Test\\}
+\label{sec:t-nf-10}
 
 \textbf{Type:} Non-Functional, Dynamic, Manual
 
@@ -1275,6 +1324,7 @@ Output/Result: Application is successfully installed and functions as intended.
 application. If the application opens successfully on each OS and can perform basic functionalities, the test is ruled a success.
 					
 \item{test-CO-2 Import and Export Compatibility Test\\}
+\label{sec:t-nf-11}
 
 \textbf{Type:} Non-Functional, Dynamic, Manual
 
@@ -1292,6 +1342,7 @@ dummy data to each layer and exports the project file to the 3D-printer ready fo
 completeness and correct formatting. 
 
 \item{test-CO-3 Project File Fail-safe\\} 
+\label{sec:t-nf-12}
 
 \textbf{Type:} Non-Functional, Dynamic, Manual
 
@@ -1308,6 +1359,7 @@ in the middle of the export. The project file is then checked against a copy of 
 if there are no differences, the test is considered a success. 
 
 \item{test-CO-4 PEP8 Standard Compliance\\}
+\label{sec:t-nf-13}
 
 \textbf{Type:} Static Analysis
 
@@ -1329,6 +1381,7 @@ warnings. All areas of note are then addressed, with possible refactorings or sm
 \begin{enumerate}
 
 \item{test-MA-1 Maintainable Codebase\\}
+\label{sec:t-nf-14}
 
 \textbf{Type:} Static Analysis
 
@@ -1377,101 +1430,240 @@ The following tables show the traceability between test cases and their correspo
   requirements.}
 \fi
 
-\begin{table}[h!]
-  \centering
-  \caption{Import Manager Tests and Corresponding Requirements}
-  \begin{tabular}{c c}
-    \hline
-    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
-    FR-IM-1 & F211\\
-    FR-IM-2 & F212\\
-    FR-IM-3 & F211\\
-    FR-IM-4 & F213\\
-    FR-IM-5 & F214\\
-    FR-IM-6 & F215\\
-    FR-IM-7 & F216\\
-  \end{tabular}
+\newcommand{\obox}{\fbox{\rule{0pt}{1.5ex}\hspace{1.5ex}}}
+\newcommand{\xbox}{\colorbox{black}{\rule{0pt}{1.5ex}\hspace{1.5ex}}}
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{6}{c}}
+\toprule
+\textbf{Reqs:} 
+& F211 & F212 & F213 & F214 & F215 & F216\\
+\midrule
+
+\hyperref[sec:t-im-1]{test-FR-IM-1} & 
+\xbox & \obox & \obox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-im-2]{test-FR-IM-2} & 
+\obox & \xbox & \obox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-im-3]{test-FR-IM-3} & 
+\xbox & \obox & \obox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-im-4]{test-FR-IM-4} & 
+\obox & \obox & \xbox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-im-5]{test-FR-IM-5} & 
+\obox & \obox & \obox & \xbox & \obox & \obox \\
+
+\hyperref[sec:t-im-6]{test-FR-IM-6} & 
+\obox & \obox & \obox & \obox & \xbox & \obox \\
+
+\hyperref[sec:t-im-7]{test-FR-IM-7} & 
+\obox & \obox & \obox & \obox & \obox & \xbox \\
+
+\bottomrule
+\end{tabular}
+\caption{Trace Between Import Manager Tests and Corresponding Requirements}
 \end{table}
 
-\begin{table}[h!]
-  \centering
-  \caption{Visualization Manager Tests and Corresponding Requirements}
-  \begin{tabular}{c c}
-    \hline
-    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
-    FR-VM-1 & F221\\
-    FR-VM-2 & F222\\
-    FR-VM-3 & F223\\
-    FR-VM-4 & F224\\
-    FR-VM-5 & F225\\
-    FR-VM-6 & F226\\
-    FR-VM-7 & F227\\
-    FR-INT-1 & F211, F221\\
-  \end{tabular}
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{8}{c}}
+\toprule
+\textbf{Reqs:} 
+& F211 & F221 & F222 & F223 & F224 & F225 & F226 & F227 \\
+\midrule
+
+\hyperref[sec:t-vm-1]{test-FR-VM-1} & 
+\obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-vm-2]{test-FR-VM-2} & 
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-vm-3]{test-FR-VM-3} & 
+\obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-vm-4]{test-FR-VM-4} & 
+\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-vm-5]{test-FR-VM-5} & 
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox\\
+
+\hyperref[sec:t-vm-6]{test-FR-VM-6} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox\\
+
+\hyperref[sec:t-vm-7]{test-FR-VM-7} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox\\
+
+\hyperref[sec:t-int-1]{test-FR-INT-1} & 
+\xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\bottomrule
+\end{tabular}
+\caption{Trace Between Visualization Manager Tests and Corresponding Requirements}
 \end{table}
 
-\begin{table}[h!]
-  \centering
-  \caption{Editing Manager Tests and Corresponding Requirements}
-  \begin{tabular}{c c}
-    \hline
-    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
-    FR-EM-1 & F231\\
-    FR-EM-2 & F231\\
-    FR-EM-3 & F232\\
-    FR-EM-4 & F233\\
-    FR-EM-5 & F233\\
-    FR-EM-6 & F234\\
-    FR-EM-7 & F235\\
-    FR-EM-8 & F236\\
-    FR-EM-9 & F237\\
-    FR-EM-10 & F238\\
-    FR-EM-11 & F239\\
-    FR-EM-12 & F239\\
-    FR-EM-13 & F2310\\
-    FR-EM-14 & F2310\\
-  \end{tabular}
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{10}{c}}
+\toprule
+\textbf{Reqs:} 
+& F231 & F232 & F233 & F234 & F235 & F236 & F237 & F238 & F239 & F2310 \\
+\midrule
+
+\hyperref[sec:t-em-1]{test-FR-EM-1} & 
+\xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-2]{test-FR-EM-2} & 
+\xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-3]{test-FR-EM-3} & 
+\obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-4]{test-FR-EM-4} & 
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-5]{test-FR-EM-5} & 
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-6]{test-FR-EM-6} & 
+\obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-7]{test-FR-EM-7} & 
+\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-8]{test-FR-EM-8} & 
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-9]{test-FR-EM-9} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-10]{test-FR-EM-10} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox\\
+
+\hyperref[sec:t-em-11]{test-FR-EM-11} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox\\
+
+\hyperref[sec:t-em-12]{test-FR-EM-12} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox\\
+
+\hyperref[sec:t-em-13]{test-FR-EM-13} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox\\
+
+\hyperref[sec:t-em-14]{test-FR-EM-14} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox\\
+
+\bottomrule
+\end{tabular}
+\caption{Trace Between Editing Manager Tests and Corresponding Requirements}
 \end{table}
 
-\begin{table}[h!]
-  \centering
-  \caption{Export Manager Tests and Corresponding Requirements}
-  \begin{tabular}{c c}
-    \hline
-    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
-    FR-XM-1 & F241\\
-    FR-XM-2 & F241\\
-    FR-XM-3 & F242\\
-    FR-XM-4 & F243\\
-    FR-XM-5 & F244\\
-    FR-XM-6 & F245\\
-    FR-XM-7 & F241\\
-    FR-XM-8 & F241\\
-  \end{tabular}
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{5}{c}}
+\toprule
+\textbf{Reqs:} 
+& F241 & F242 & F243 & F244 & F245 \\
+\midrule
+
+\hyperref[sec:t-xm-1]{test-FR-XM-1} & 
+\xbox & \obox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-xm-2]{test-FR-XM-2} & 
+\xbox & \obox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-xm-3]{test-FR-XM-3} & 
+\obox & \xbox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-xm-4]{test-FR-XM-4} & 
+\obox & \obox & \xbox & \obox & \obox \\
+
+\hyperref[sec:t-xm-5]{test-FR-XM-5} & 
+\obox & \obox & \obox & \xbox & \obox \\
+
+\hyperref[sec:t-xm-6]{test-FR-XM-6} & 
+\obox & \obox & \obox & \obox & \xbox \\
+
+\hyperref[sec:t-xm-7]{test-FR-XM-7} & 
+\xbox & \obox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-xm-8]{test-FR-XM-8} & 
+\xbox & \obox & \obox & \obox & \obox \\
+
+\bottomrule
+\end{tabular}
+\caption{Trace Between Export Manager Tests and Corresponding Requirements}
 \end{table}
 
-\begin{table}[h!]
-  \centering
-  \caption{Non-Functional Tests and Corresponding Requirements}
-  \begin{tabular}{c c}
-    \hline
-    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
-    US-1 & S3\\
-    US-2 & NF223\\
-    US-3 & NF213, NF231, NF243\\
-    US-4 & S3\\
-    US-5 & S4.1-7\\
-    US-6 & GEN1\\
-    PS-1 & NF211, NF222, NF212\\
-    PS-2 & NF212, NF221, NF232, NF242\\
-    PS-3 & E3.4\\
-    CO-1 & E3.1\\
-    CO-2 & E3.2, E3.3\\
-    CO-3 & NF241\\
-    CO-4 & DP.10\\
-    MA-1 & DP.10, GEN2\\
-  \end{tabular}
+\newgeometry{left=0.5cm,right=0.5cm,top=2cm,bottom=2cm}
+\begin{landscape}
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{20}{c}}
+\toprule
+\textbf{Reqs:} 
+& NF211 & NF212 & NF213 & NF221 & NF222 & NF223 & NF231 & NF232 & NF241 & NF242 & NF243 & GEN1 & GEN2 & E3.1 & E3.2 & E3.3 & E3.4 & S3 & S4 & DP.10 \\
+\midrule
+
+\hyperref[sec:t-nf-1]{test-US-1} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox\\
+
+\hyperref[sec:t-nf-2]{test-US-2} & 
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-3]{test-US-3} & 
+\obox & \obox & \xbox & \obox & \obox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-4]{test-US-4} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox\\
+
+\hyperref[sec:t-nf-5]{test-US-5} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox\\
+
+\hyperref[sec:t-nf-6]{test-US-6} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-7]{test-PS-1} & 
+\xbox & \xbox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-8]{test-PS-2} & 
+\obox & \xbox & \obox & \xbox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-9]{test-PS-3} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-10]{test-CO-1} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-11]{test-CO-2} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-12]{test-CO-3} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-13]{test-CO-4} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox\\
+
+\hyperref[sec:t-nf-14]{test-MA-1} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox\\
+
+\bottomrule
+\end{tabular}
+\caption{Trace Between Non-Functional Tests and Corresponding Requirements}
 \end{table}
+\end{landscape}
+\restoregeometry
 
 \newpage
 
@@ -1526,6 +1718,11 @@ Their values are defined in this section for easy maintenance.
   \item \textbf{MAX\_INTERACTIONS} = 5
   
   This considers the maximum number of steps (e.g. clicks, enter details into a text box) a user should take to complete a part of a task.
+
+  \item \textbf{USABILITY\_PERCENTAGE} = 90\%
+
+  Relates to the percentage of users that should be able to succeed at different tasks within the system, or agree that a certain feature is intuitive.
+
 \end{itemize}
 
 \subsection{Usability Survey Questions?}
