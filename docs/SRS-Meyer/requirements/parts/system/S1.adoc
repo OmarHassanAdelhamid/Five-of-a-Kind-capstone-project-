@@ -15,7 +15,7 @@ endif::[]
 
 This system will not directly interact with any external components. However, as outlined by the Exportation Manager, our system must output a file that is compatible with external printing software to support the natural workflow of the printing process.
 
-The application of the overall system functionality will be handled by the [.mcmaster]#AutoVox#, which is a desktop application. Users will be required to directly install the software on their laptop, as the [.mcmaster]#AutoVox# will be a locally deployed software system.
+The application of the overall system functionality will be handled by [.mcmaster]#AutoVox#, which is a desktop application. Users will be required to directly install the software on their laptop, as [.mcmaster]#AutoVox# will be a locally deployed software system. The team will be responsible for each of these four components that make up AutoVox; external components such as CAD software that creates initial STL files or software that interacts with the export files is out of scope. See <<E.2>> for more detail on the external components AutoVox interacts with.
 
 Figure 3 illustrates how the components detailed above are connected and interact. Figure 4 provides a boundary diagram for the system, detailing high-level interactions between the user and system (use cases shown here are detailed in section <<S.4>>).
 
