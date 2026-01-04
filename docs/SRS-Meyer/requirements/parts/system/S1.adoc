@@ -17,7 +17,10 @@ This system will not directly interact with any external components. However, as
 
 The application of the overall system functionality will be handled by the [.mcmaster]#AutoVox#, which is a desktop application. Users will be required to directly install the software on their laptop, as the [.mcmaster]#AutoVox# will be a locally deployed software system.
 
-Figure 3 below illustrates how the components detailed above are connected and interact.
+Figure 3 illustrates how the components detailed above are connected and interact. Figure 4 provides a boundary diagram for the system, detailing high-level interactions between the user and system (use cases shown here are detailed in section <<S.4>>).
 
-.Components involved in AutoVox platform
+.Components involved in AutoVox platform; system interaction diagram.
 image::models/components.svg[scale=50%,align="center"]
+
+.AutoVox boundary diagram.
+image::models/s1_boundary_diagram.svg[scale=65%,align="center"]
