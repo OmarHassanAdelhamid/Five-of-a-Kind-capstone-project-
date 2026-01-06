@@ -74,19 +74,21 @@ The document is organized into two main sections. The first section, \textbf{Gen
 
 \section{General Information}
 
+The following subsections cover a basic summary of what AutoVox aims to accomplish, and what the high-level objectives of this verification and validation plan are. In addition, the challenge level of this project and the selected extra documentation that will be developed and tested under this document are covered, as well as any other relevant documentation that aids in this document's understanding. 
+
 \subsection{Summary}
 
-The software system being tested is called \textbf{AutoVox}, developed by Team 10 --- \textit{Five of a Kind}. AutoVox is a desktop-based CAD enhancement tool that allows researchers and engineers to assign magnetic properties to individual voxels within a 3D model. It is designed to streamline the process of magnetization planning for multi-material 3D printing workflows within a research laboratory environment.
+The software system being tested is called \textbf{AutoVox}, developed by Team 10 --- \textit{Five of a Kind}. AutoVox is a desktop-based CAD enhancement tool that allows researchers and engineers to assign properties to individual voxels within a 3D model. It is designed to streamline the process of magnetization and material planning for multi-material 3D printing workflows within a research laboratory environment.
 
-Currently, magnetized objects are modeled voxel-by-voxel in COMSOL, requiring researchers to manually assign magnetization directions for each voxel and rebuild the model from scratch if an error occurs. AutoVox removes this bottleneck by enabling users to import pre-built CAD models (e.g., from AutoCAD), automatically slice them into voxel layers, and interactively select single or multiple voxels to assign or modify magnetization directions. The software also provides per-layer visualization, undo/redo functionality, and validation mechanisms to ensure complete and accurate voxel data before export.
+Currently, these objects are modeled within COMSOL, requiring researchers to tediously build models from sketches voxel-by-voxel, and assign properties to each voxel individually. AutoVox removes this bottleneck by enabling users to import pre-built CAD models (e.g., from AutoCAD), automatically slice them into voxels, and interactively select single or multiple voxels to assign or modify its properties. The software also provides per-layer visualization, undo/redo functionality, and validation mechanisms to ensure complete and accurate voxel data before export.
 
-The final output is a \textbf{Java-readable metadata file} that contains per-voxel magnetization information, which integrates directly with the custom 3D printer pipeline used in the lab. By automating voxel processing and enabling efficient magnetization editing, AutoVox dramatically reduces the time and effort required to prepare print-ready models, ensuring a faster, more reliable, and user-friendly workflow for advanced magnetized 3D printing research.
+The final output is a \textbf{Java-readable metadata file} that contains per-voxel property information, which integrates directly with the custom 3D printer pipeline used in the lab. By automating voxel processing and enabling efficient property editing, AutoVox dramatically reduces the time and effort required to prepare print-ready models, ensuring a faster, more reliable, and user-friendly workflow for advanced multi-material 3D printing research.
 
 \subsection{Objectives}
 
 The primary objective of the verification and validation (V\&V) process for \textbf{AutoVox} is to ensure that the system functions correctly, reliably, and efficiently according to the requirements defined in the Software Requirements Specification (SRS). The V\&V activities will confirm that each system component performs as intended, meets stakeholder expectations, and aligns with the project’s functional and non-functional goals.
 
-Specifically, the objectives of V\&V are to:
+Specifically, the objectives of V\&V are as follows:
 
 \begin{itemize}
   \item \textbf{Correctness:} Verify that all functional requirements are implemented as specified, including accurate import, voxelization, visualization, editing, and export of CAD models.
@@ -101,7 +103,7 @@ Overall, the V\&V process aims to provide stakeholders with confidence that \tex
 
 \subsection{Challenge Level and Extras}
 
-The challenge level for \textbf{AutoVox} is classified as \textbf{advanced}. The system integrates multiple complex subsystems, including 3D model import and voxelization, real-time voxel visualization and editing, magnetization assignment, and structured export to a custom printer pipeline. Each subsystem involves substantial technical and architectural considerations, such as handling large voxel datasets, maintaining UI synchronization, and ensuring data integrity across modules. These factors collectively establish the project as an advanced-level software system.
+The challenge level for \textbf{AutoVox} is classified as \textbf{advanced}. The system integrates multiple complex subsystems, including 3D model import and voxelization, real-time voxel visualization and editing, magnetization and material assignment, and structured export to a custom printer pipeline. Each subsystem involves substantial technical and architectural considerations, such as handling large voxel datasets, maintaining UI synchronization, and ensuring data integrity across modules. These factors collectively establish the project as an advanced-level software system.
 
 The extras included in this project are:
 
@@ -114,19 +116,15 @@ These extras complement the technical objectives of the project by ensuring that
 
 \subsection{Relevant Documentation}
 
+The documentation that supports the verification and validation (V\&V) process for \textbf{AutoVox} includes the Software Requirements Specification (SRS), Hazard Analysis (HA), Development Plan (DP), and Problem Statement and Goals. Each document serves a distinct purpose in guiding and supporting the testing strategy.
 
+The \textbf{Software Requirements Specification (SRS)} defines all functional and non-functional requirements for the system. It provides the foundation for test case design, ensuring that every requirement can be verified through measurable criteria and traced throughout the V\&V process \citet{SRS}.
 
-\citet{SRS}
+The \textbf{Hazard Analysis (HA)} identifies potential system hazards, their causes, and mitigation strategies. It establishes the safety requirements (SCRs) that must be verified to ensure the system operates safely and consistently under expected laboratory conditions \citet{HA}.
 
-The documentation that supports the verification and validation (V\&V) process for \textbf{ AutoVox} includes the Software Requirements Specification (SRS), Hazard Analysis (HA), Development Plan (DP), and Problem Statement and Goals. Each document serves a distinct purpose in guiding and supporting the testing strategy.
+The \textbf{Development Plan (DP)} outlines the project’s workflow, coding standards, continuous integration setup, and proof-of-concept demonstration plan. It informs the structure and scheduling of testing activities by defining the methods and tools used during development \citet{DP}.
 
-The \textbf{Software Requirements Specification (SRS)} defines all functional and non-functional requirements for the system. It provides the foundation for test case design, ensuring that every requirement can be verified through measurable criteria and traced throughout the V\&V process.
-
-The \textbf{Hazard Analysis (HA)} identifies potential system hazards, their causes, and mitigation strategies. It establishes the safety requirements (SCRs) that must be verified to ensure the system operates safely and consistently under expected laboratory conditions.
-
-The \textbf{Development Plan (DP)} outlines the project’s workflow, coding standards, continuous integration setup, and proof-of-concept demonstration plan. It informs the structure and scheduling of testing activities by defining the methods and tools used during development.
-
-The \textbf{Problem Statement and Goals} document provides the original motivation, scope, and intended outcomes of the project. It ensures that the V\&V process remains aligned with the project’s high-level objectives and stakeholder expectations.
+The \textbf{Problem Statement and Goals} document provides the original motivation, scope, and intended outcomes of the project. It ensures that the V\&V process remains aligned with the project’s high-level objectives and stakeholder expectations \citet{PS}.
 
 Finally, the project’s \textbf{GitHub Repository} serves as the central hub for all implementation artifacts, testing scripts, and documentation updates.\\
 \url{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project}
@@ -136,10 +134,11 @@ Together, these documents ensure that all verification and validation activities
 
 The \textbf{Plan} section outlines the structure and approach of the verification and validation (V\&V) process for \textbf{AutoVox}. It describes the composition of the V\&V team, their assigned roles, and responsibilities across different testing domains, ensuring that all system components are thoroughly verified and validated. This section also details the planned approach for verifying the Software Requirements Specification (SRS), including the review strategy, feedback mechanisms, and formal verification methods that will be employed to confirm that all requirements are correct, testable, and traceable throughout development.
 
-The verification and validation (V\&V) efforts for \textbf{AutoVox} will be conducted by \textbf{Team 10 --- \textit{Five of a Kind}}. Each member plays a specific role to ensure that all functional, non-functional, and safety requirements are properly verified and validated. The distribution of responsibilities ensures comprehensive coverage of testing, documentation, and review activities across all project domains.
+The verification and validation (V\&V) efforts for \textbf{AutoVox} will be conducted by \textbf{Team 10 --- \textit{Five of a Kind}}. Each member plays a specific role to ensure that all functional, non-functional, and safety requirements are properly verified and validated. The distribution of responsibilities ensures comprehensive coverage of testing, documentation, and review activities across all project domains. Table 1 reflects these responsibilities, assigning each member a specific role.
 
 \begin{table}[H]
 \centering
+\caption{Team roles and responsibilities for verification and validation}
 \begin{tabular}{|p{3.5cm}|p{4cm}|p{7cm}|}
 \hline
 \textbf{Name} & \textbf{Role} & \textbf{Responsibilities} \\
@@ -155,7 +154,6 @@ The verification and validation (V\&V) efforts for \textbf{AutoVox} will be cond
 \textbf{Khalid Farag} & Safety and Validation Tester & Validates safety and security requirements derived from the Hazard Analysis. Maintains traceability between identified hazards, safety requirements (SCRs), and corresponding test cases. \\
 \hline
 \end{tabular}
-\caption{Team roles and responsibilities for verification and validation.}
 \end{table}
 
 This structure ensures that all verification and validation efforts—ranging from requirement coverage and performance testing to usability evaluation and safety assurance—are systematically planned, executed, and reviewed in collaboration with the supervisor.
@@ -229,7 +227,7 @@ The design verification will primarily focus on the system framework and integra
 
 \noindent Reviews conducted with our supervisor, Dr. Onaizah, will primarily verify tolerance parameters within the output framework during integration with specialized 3D printing software. Diagrams may be developed to provide visual aids to help facilitate the technical conversations and enhance understanding. These diagrams will default to standard UML diagrams, unless a more simplified diagram is required due to disparity in technical proficiency.\\
 
-\noindent A checklist evaluation has been provided below for reference:\\
+\noindent Table 2 details the checklist that will be utilized during design verification to ensure all necessary tasks are completed.\\
 
 \begin{table}[H]
 \centering
@@ -271,7 +269,7 @@ The verification \& validation testing plan will also incorporate peer reviews a
 
 \noindent Within test validation, mutation testing will be integrated to assess the effectiveness of the system. This will include the assertion of defective input files, faulty voxel metadata updates, and unsupported display commands. Our goal with mutation testing is to generate quantifiable observations regarding our system’s capabilities of detecting undesirable anomalies.\\
 
-\noindent A checklist evaluation has been provided below for reference:\\
+\noindent Table 3 details a checklist that will be utilized during verification of the V\&V plan for reference.\\
 
 \begin{table}[H]
 \centering
@@ -322,6 +320,8 @@ Implementation verification will ensure that all segments of code strictly adher
 \item optimized interface responsiveness (F223)
 \item large database interaction (NF232, SCR3)
 \end{itemize}
+
+Table 4 details a checklist that will be utilized throughout implementation verification to ensure completeness.
 
 \begin{table}[H]
 \centering
@@ -1121,6 +1121,9 @@ table or graph.}
 How will they be done?  In cases like code (or document) walkthroughs, who will
 be involved? Be specific.}
 \fi
+
+The following subsections outline tests corresponding to non-functional requirements in the SRS. Instead of organizing these tests by each component, tests are grouped into common non-functional areas of testing.
+
 \subsubsection{Usability and Look \& Feel}
 
 \begin{enumerate}
@@ -1423,7 +1426,7 @@ are implicitly tested for by the following system tests and/or unit tests.
 
 \subsection{Traceability Between Test Cases and Requirements}
 
-The following tables show the traceability between test cases and their corresponding functional requirements.
+The following tables show the traceability between test cases and their corresponding functional requirements, and demonstrate that complete coverage is achieved.
 
 \iffalse
 \wss{Provide a table that shows which test cases are supporting which
@@ -1435,6 +1438,7 @@ The following tables show the traceability between test cases and their correspo
 
 \begin{table}[H]
 \centering
+\caption{Trace Between Import Manager Tests and Corresponding Requirements}
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{l|*{6}{c}}
@@ -1466,11 +1470,11 @@ The following tables show the traceability between test cases and their correspo
 
 \bottomrule
 \end{tabular}
-\caption{Trace Between Import Manager Tests and Corresponding Requirements}
 \end{table}
 
 \begin{table}[H]
 \centering
+\caption{Trace Between Visualization Manager Tests and Corresponding Requirements}
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{l|*{8}{c}}
@@ -1505,11 +1509,11 @@ The following tables show the traceability between test cases and their correspo
 
 \bottomrule
 \end{tabular}
-\caption{Trace Between Visualization Manager Tests and Corresponding Requirements}
 \end{table}
 
 \begin{table}[H]
 \centering
+\caption{Trace Between Editing Manager Tests and Corresponding Requirements}
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{l|*{10}{c}}
@@ -1562,11 +1566,11 @@ The following tables show the traceability between test cases and their correspo
 
 \bottomrule
 \end{tabular}
-\caption{Trace Between Editing Manager Tests and Corresponding Requirements}
 \end{table}
 
 \begin{table}[H]
 \centering
+\caption{Trace Between Export Manager Tests and Corresponding Requirements}
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{l|*{5}{c}}
@@ -1601,13 +1605,13 @@ The following tables show the traceability between test cases and their correspo
 
 \bottomrule
 \end{tabular}
-\caption{Trace Between Export Manager Tests and Corresponding Requirements}
 \end{table}
 
 \newgeometry{left=0.5cm,right=0.5cm,top=2cm,bottom=2cm}
 \begin{landscape}
 \begin{table}[H]
 \centering
+\caption{Trace Between Non-Functional Tests and Corresponding Requirements}
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{l|*{20}{c}}
@@ -1660,7 +1664,6 @@ The following tables show the traceability between test cases and their correspo
 
 \bottomrule
 \end{tabular}
-\caption{Trace Between Non-Functional Tests and Corresponding Requirements}
 \end{table}
 \end{landscape}
 \restoregeometry
@@ -1672,7 +1675,7 @@ The following tables show the traceability between test cases and their correspo
 				
 \bibliographystyle{plainnat}
 
-\bibliography{../../refs/References}
+\bibliography{../../refs/References.bib}
 
 \clearpage
 
@@ -1725,7 +1728,7 @@ Their values are defined in this section for easy maintenance.
 
 \end{itemize}
 
-\subsection{Usability Survey Questions?}
+\subsection{Usability Survey Questions}
 
 \iffalse
 \wss{This is a section that would be appropriate for some projects.}
