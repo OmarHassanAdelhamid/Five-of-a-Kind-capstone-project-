@@ -134,11 +134,12 @@ Together, these documents ensure that all verification and validation activities
 
 The \textbf{Plan} section outlines the structure and approach of the verification and validation (V\&V) process for \textbf{AutoVox}. It describes the composition of the V\&V team, their assigned roles, and responsibilities across different testing domains, ensuring that all system components are thoroughly verified and validated. This section also details the planned approach for verifying the Software Requirements Specification (SRS), including the review strategy, feedback mechanisms, and formal verification methods that will be employed to confirm that all requirements are correct, testable, and traceable throughout development.
 
-The verification and validation (V\&V) efforts for \textbf{AutoVox} will be conducted by \textbf{Team 10 --- \textit{Five of a Kind}}. Each member plays a specific role to ensure that all functional, non-functional, and safety requirements are properly verified and validated. The distribution of responsibilities ensures comprehensive coverage of testing, documentation, and review activities across all project domains. Table 1 reflects these responsibilities, assigning each member a specific role.
+The verification and validation (V\&V) efforts for \textbf{AutoVox} will be conducted by \textbf{Team 10 --- \textit{Five of a Kind}}. Each member plays a specific role to ensure that all functional, non-functional, and safety requirements are properly verified and validated. The distribution of responsibilities ensures comprehensive coverage of testing, documentation, and review activities across all project domains. Table~\ref{tab:roles} reflects these responsibilities, assigning each member a specific role.
 
 \begin{table}[H]
 \centering
 \caption{Team roles and responsibilities for verification and validation}
+\label{tab:roles}
 \begin{tabular}{|p{3.5cm}|p{4cm}|p{7cm}|}
 \hline
 \textbf{Name} & \textbf{Role} & \textbf{Responsibilities} \\
@@ -156,6 +157,8 @@ The verification and validation (V\&V) efforts for \textbf{AutoVox} will be cond
 \end{tabular}
 \end{table}
 
+These roles remain flexible in the case that there is notable overlap between the issues two (or more) roles focus on. For instance, if it were found that the implementation of a given feature drastically affects performance but satisfies functional requirements, some degree of coordination would need to take place between functional and non-functional testers as there would be overlap of responsibility and a need for close collaboration. Additionally, if one team member is less proficient at a specific task within their role, other members may of course provide assistance, given that the team member requesting help shares in their duties.
+
 This structure ensures that all verification and validation efforts—ranging from requirement coverage and performance testing to usability evaluation and safety assurance—are systematically planned, executed, and reviewed in collaboration with the supervisor.
 \subsection{SRS Verification}
 
@@ -172,16 +175,7 @@ The first stage of SRS verification will involve a detailed internal review cond
   \item \textbf{Olivia Reich} will review documentation-related and usability-focused requirements for clarity and completeness.
 \end{itemize}
 
-A collaborative \textbf{SRS Verification Checklist} will guide the review. The checklist will include the following key items:
-
-\begin{enumerate}
-  \item Each requirement is uniquely identified and unambiguous.
-  \item Functional requirements are measurable and testable.
-  \item Non-functional requirements specify clear performance criteria.
-  \item Safety and security requirements trace back to identified hazards.
-  \item Each requirement includes a defined verification or validation method.
-  \item Requirements are free of contradictions or redundancies.
-\end{enumerate}
+\noindent See Table~\ref{tab:srs} for the checklist that will guide this review.
 
 All findings and issues identified during the review will be documented as GitHub issues and assigned to the appropriate team member for correction prior to the next SRS revision.
 
@@ -195,10 +189,10 @@ The review meeting will include:
   \item A walkthrough of the SRS to verify alignment between requirements and project scope.
   \item Discussion of any ambiguous, conflicting, or technically challenging requirements.
   \item Presentation of requirements identified as high-risk and their proposed validation methods.
-  \item A feedback session for the supervisor to provide clarifications or suggest modifications.
+  \item An informal feedback session for the supervisor to provide clarifications or suggest modifications.
 \end{itemize}
 
-Supervisor feedback will be recorded within the GitHub issue tracker. Each comment will be linked to the corresponding requirement ID and tracked until resolution. Follow-up actions will be reviewed in subsequent supervisor meetings.
+The feedback session will take the form of an informal interview, during which supervisor comments will be recorded for later formatting into individual GitHub issues. Comments will revolve around the SRS walkthrough and following discussion, as well as examination of the SRS itself if needed. Each comment will be linked to the corresponding requirement or section of the document and tracked until resolution. Follow-up actions will be reviewed in subsequent supervisor meetings.
 
 \subsubsection{Peer Review and Class Feedback}
 
@@ -211,13 +205,49 @@ In addition to the supervisor review, the SRS will undergo peer evaluation durin
   \item Appropriateness of fit criteria and testability.
 \end{itemize}
 
-All peer feedback will be integrated systematically into the SRS through a traceability matrix, ensuring that each comment maps to a specific requirement and its revision status.
+All peer feedback will be integrated systematically into the SRS through a traceability table within an appendix, ensuring that each comment maps to a specific requirement and its revision status.
 
 \subsubsection{Continuous Verification and Traceability Maintenance}
 
 Throughout development, the team will maintain continuous verification of the SRS using GitHub issues, milestones, and project boards. Each requirement will be linked to corresponding design elements, test cases, and validation results. Regular bi-weekly internal reviews will verify that any new or modified requirements remain traceable and verifiable.
 
 This iterative approach ensures that the SRS remains accurate, actionable, and aligned with the evolving implementation. Any changes introduced after supervisor or peer feedback will trigger updates to both the traceability matrix and the V\&V Plan to maintain consistency across documents.
+
+\begin{table}[H]
+\centering
+\caption{SRS Verification Checklist}
+\label{tab:srs}
+\renewcommand{\arraystretch}{0.3}
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{|p{0.2\textwidth}|p{0.85\textwidth}|}
+\hline
+\textbf{Focus Area} & \textbf{Verification Tasks} \\ \hline
+Internal Review &
+\begin{itemize}
+  \item Each requirement is unique and unambiguous
+  \item Each requirement includes a priority level and justification
+  \item Any requirement does not contradict with any other requirements
+  \item Each requirement can be directly traced to a stakeholder need and vice versa
+  \item Functional requirements are measurable and testable
+  \item Non-functional requirements are measurable and testable and/or specify fit criteria, utilizing symbolic constants when necessary
+  \item Safety and security requirements can be traced to an identified hazard and vice versa
+  \item Each problem found is documented as a GitHub issue
+\end{itemize} \\ \hline
+Supervisor Review Preparation &
+\begin{itemize}
+  \item SRS highlights document prepared
+  \item Overview of SRS walkthrough completed
+  \item Next steps \& focus areas communicated and validated
+  \item All supervisor feedback recorded and formatted into separate issues in GitHub
+\end{itemize} \\ \hline
+Continuous Verification &
+\begin{itemize}
+  \item Each GitHub issue is closed either via commit or by comment with a detailed explanation
+  \item Appendix contains a traceability table mapping each GitHub issue to a change/comment and short explanation
+  \item Each change to the SRS triggers a change to affected documents and their respective traceability tables
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
 
 \textbf{Summary:} This structured, multi-level verification process guarantees that the SRS for \textbf{AutoVox} is validated both internally and externally. Through continuous review, stakeholder feedback, and traceability enforcement, the team ensures that all requirements are precise, measurable, and fully verifiable before system testing begins.
 
@@ -227,11 +257,12 @@ The design verification will primarily focus on the system framework and integra
 
 \noindent Reviews conducted with our supervisor, Dr. Onaizah, will primarily verify tolerance parameters within the output framework during integration with specialized 3D printing software. Diagrams may be developed to provide visual aids to help facilitate the technical conversations and enhance understanding. These diagrams will default to standard UML diagrams, unless a more simplified diagram is required due to disparity in technical proficiency.\\
 
-\noindent Table 2 details the checklist that will be utilized during design verification to ensure all necessary tasks are completed.\\
+\noindent Table~\ref{tab:des} details the checklist that will be utilized during design verification to ensure all necessary tasks are completed.\\
 
 \begin{table}[H]
 \centering
 \caption{Design Verification Checklist}
+\label{tab:des}
 \renewcommand{\arraystretch}{1.3}
 \setlength{\tabcolsep}{8pt}
 \begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
@@ -269,11 +300,12 @@ The verification \& validation testing plan will also incorporate peer reviews a
 
 \noindent Within test validation, mutation testing will be integrated to assess the effectiveness of the system. This will include the assertion of defective input files, faulty voxel metadata updates, and unsupported display commands. Our goal with mutation testing is to generate quantifiable observations regarding our system’s capabilities of detecting undesirable anomalies.\\
 
-\noindent Table 3 details a checklist that will be utilized during verification of the V\&V plan for reference.\\
+\noindent Table~\ref{tab:vnv} details a checklist that will be utilized during verification of the V\&V plan for reference.\\
 
 \begin{table}[H]
 \centering
 \caption{V\&V Plan Verification Checklist}
+\label{tab:vnv}
 \renewcommand{\arraystretch}{1.3}
 \setlength{\tabcolsep}{8pt}
 \begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
@@ -321,11 +353,12 @@ Implementation verification will ensure that all segments of code strictly adher
 \item large database interaction (NF232, SCR3)
 \end{itemize}
 
-Table 4 details a checklist that will be utilized throughout implementation verification to ensure completeness.
+Table~\ref{tab:impl} details a checklist that will be utilized throughout implementation verification to ensure completeness.
 
 \begin{table}[H]
 \centering
 \caption{Implementation Verification Checklist}
+\label{tab:impl}
 \renewcommand{\arraystretch}{1.3}
 \setlength{\tabcolsep}{8pt}
 \begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
@@ -1439,6 +1472,7 @@ The following tables show the traceability between test cases and their correspo
 \begin{table}[H]
 \centering
 \caption{Trace Between Import Manager Tests and Corresponding Requirements}
+\label{tab:imt}
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{l|*{6}{c}}
@@ -1475,6 +1509,7 @@ The following tables show the traceability between test cases and their correspo
 \begin{table}[H]
 \centering
 \caption{Trace Between Visualization Manager Tests and Corresponding Requirements}
+\label{tab:vmt}
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{l|*{8}{c}}
@@ -1514,6 +1549,7 @@ The following tables show the traceability between test cases and their correspo
 \begin{table}[H]
 \centering
 \caption{Trace Between Editing Manager Tests and Corresponding Requirements}
+\label{tab:emt}
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{l|*{10}{c}}
@@ -1571,6 +1607,7 @@ The following tables show the traceability between test cases and their correspo
 \begin{table}[H]
 \centering
 \caption{Trace Between Export Manager Tests and Corresponding Requirements}
+\label{tab:xmt}
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{l|*{5}{c}}
@@ -1612,6 +1649,7 @@ The following tables show the traceability between test cases and their correspo
 \begin{table}[H]
 \centering
 \caption{Trace Between Non-Functional Tests and Corresponding Requirements}
+\label{tab:nft}
 \small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{l|*{20}{c}}
