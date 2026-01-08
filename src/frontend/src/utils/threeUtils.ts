@@ -136,7 +136,7 @@ export const renderVoxelCubes = (
   modelSize?: number,
   modelOriginalCenter?: THREE.Vector3 | null,
   existingCubes?: THREE.Mesh[],
-): THREE.Mesh[] => {
+): { cubes: THREE.Mesh[]; cubeToCoordMap: Map<THREE.Mesh, { coord: number[]; index: number }> } => {
   // Remove existing cubes if provided
   if (existingCubes) {
     existingCubes.forEach((cube) => {
@@ -148,7 +148,11 @@ export const renderVoxelCubes = (
     })
   }
 
-  if (coordinates.length === 0) return []
+  const cubeToCoordMap = new Map<THREE.Mesh, { coord: number[]; index: number }>()
+
+  if (coordinates.length === 0) {
+    return { cubes: [], cubeToCoordMap }
+  }
 
   const voxelMaterial = new THREE.MeshStandardMaterial({
     color: 0xff0000,
@@ -161,18 +165,24 @@ export const renderVoxelCubes = (
   const cubeGeometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize)
 
   const cubes: THREE.Mesh[] = []
-  coordinates.forEach((coord) => {
+  coordinates.forEach((coord, index) => {
     const [x, y, z] = coord
     const position = new THREE.Vector3(x, y, z).add(centerOffset)
-    const cube = new THREE.Mesh(cubeGeometry, voxelMaterial)
+    // Create a new material instance for each cube so they can be colored independently
+    const material = voxelMaterial.clone()
+    const cube = new THREE.Mesh(cubeGeometry.clone(), material)
     cube.position.copy(position)
     cube.castShadow = true
     cube.receiveShadow = true
+    // Store user data for easy identification
+    cube.userData = { coord, index, originalCoord: [...coord] }
     scene.add(cube)
     cubes.push(cube)
+    // Store mapping for click detection
+    cubeToCoordMap.set(cube, { coord, index })
   })
 
-  return cubes
+  return { cubes, cubeToCoordMap }
 }
 
 export const disposeScene = (

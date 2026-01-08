@@ -74,3 +74,47 @@ export const uploadSTLFile = async (file: File): Promise<{ message?: string }> =
   return (await response.json()) as { message?: string }
 }
 
+export interface VoxelizeRequest {
+  stl_filename: string
+  voxel_size: number
+  project_name: string
+}
+
+export const voxelizeModel = async (
+  stlFilename: string,
+  voxelSize: number,
+  projectName: string,
+): Promise<{ message?: string; projectpath?: string }> => {
+  const requestBody: VoxelizeRequest = {
+    stl_filename: stlFilename,
+    voxel_size: voxelSize,
+    project_name: projectName,
+  }
+
+  const response = await fetch(`${API_BASE_URL}/api/voxelize`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestBody),
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json()
+    throw new Error(errorData.detail || errorData.message || 'Voxelization failed')
+  }
+
+  return (await response.json()) as { message?: string; projectpath?: string }
+}
+
+export const downloadVoxelCSV = async (projectName: string): Promise<Blob> => {
+  const response = await fetch(`${API_BASE_URL}/api/voxelize/download/${encodeURIComponent(projectName)}`)
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}))
+    throw new Error(errorData.detail || `Failed to download CSV (${response.status})`)
+  }
+
+  return await response.blob()
+}
+

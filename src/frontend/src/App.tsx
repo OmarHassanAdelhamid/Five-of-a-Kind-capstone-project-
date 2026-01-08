@@ -11,6 +11,8 @@ import {
   fetchAvailableProjects,
   fetchVoxelized,
   uploadSTLFile,
+  voxelizeModel,
+  downloadVoxelCSV,
 } from './utils/api'
 
 function App() {
@@ -24,6 +26,11 @@ function App() {
   const [projectName, setProjectName] = useState<string>('')
   const [availableProjects, setAvailableProjects] = useState<string[]>([])
   const [voxelCoordinates, setVoxelCoordinates] = useState<number[][]>([])
+  const [voxelizeState, setVoxelizeState] = useState<
+    'idle' | 'voxelizing' | 'success' | 'error'
+  >('idle')
+  const [voxelizeMessage, setVoxelizeMessage] = useState<string | null>(null)
+  const [voxelSize, setVoxelSize] = useState<string>('0.1')
 
   const fetchModels = useCallback(async (): Promise<string[]> => {
     try {
@@ -154,6 +161,71 @@ function App() {
     }
   }, [projectName, fetchVoxels])
 
+  const handleVoxelize = useCallback(async () => {
+    if (!selectedModel) {
+      setVoxelizeState('error')
+      setVoxelizeMessage('Please select a model first.')
+      return
+    }
+
+    const size = parseFloat(voxelSize)
+    if (isNaN(size) || size <= 0) {
+      setVoxelizeState('error')
+      setVoxelizeMessage('Please enter a valid voxel size (greater than 0).')
+      return
+    }
+
+    const defaultProjectName = selectedModel.replace('.stl', '') + '-voxels'
+    setVoxelizeState('voxelizing')
+    setVoxelizeMessage(`Voxelizing ${selectedModel}...`)
+
+    try {
+      const result = await voxelizeModel(selectedModel, size, defaultProjectName)
+      setVoxelizeState('success')
+      setVoxelizeMessage(result.message || 'Voxelization complete!')
+      
+      // Refresh project list
+      await fetchProjects()
+      
+      // Optionally load the new voxels
+      setProjectName(defaultProjectName)
+    } catch (error) {
+      console.error('Failed to voxelize model', error)
+      setVoxelizeState('error')
+      setVoxelizeMessage(
+        error instanceof Error
+          ? error.message
+          : 'Failed to voxelize model. Please try again.',
+      )
+    }
+  }, [selectedModel, voxelSize, fetchProjects])
+
+  const handleDownloadCSV = useCallback(async () => {
+    if (!projectName.trim()) {
+      setVoxelizeMessage('Please select a project to download.')
+      return
+    }
+
+    try {
+      const blob = await downloadVoxelCSV(projectName)
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${projectName}.csv`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+    } catch (error) {
+      console.error('Failed to download CSV', error)
+      setVoxelizeMessage(
+        error instanceof Error
+          ? error.message
+          : 'Failed to download CSV. Please try again.',
+      )
+    }
+  }, [projectName])
+
   return (
     <div className="app">
       <ModelViewer
@@ -183,6 +255,45 @@ function App() {
           disabled={status === 'loading'}
           voxelCount={voxelCoordinates.length}
         />
+        <div className="voxelize-section">
+          <h3>Voxelize Model</h3>
+          <div className="voxelize-controls">
+            <label htmlFor="voxel-size">
+              Voxel Size:
+              <input
+                id="voxel-size"
+                type="number"
+                step="0.01"
+                min="0.01"
+                value={voxelSize}
+                onChange={(e) => setVoxelSize(e.target.value)}
+                disabled={!selectedModel || status === 'loading' || voxelizeState === 'voxelizing'}
+                style={{ marginLeft: '8px', width: '80px' }}
+              />
+            </label>
+            <button
+              onClick={handleVoxelize}
+              disabled={!selectedModel || status === 'loading' || voxelizeState === 'voxelizing'}
+              className="voxelize-button"
+            >
+              {voxelizeState === 'voxelizing' ? 'Voxelizing...' : 'Voxelize Current Model'}
+            </button>
+          </div>
+          {voxelizeMessage && (
+            <p className={voxelizeState === 'error' ? 'error-message' : 'success-message'}>
+              {voxelizeMessage}
+            </p>
+          )}
+        </div>
+        <div className="download-section">
+          <button
+            onClick={handleDownloadCSV}
+            disabled={!projectName.trim() || status === 'loading'}
+            className="download-button"
+          >
+            Download CSV
+          </button>
+        </div>
       </section>
       <Footer modelsCount={models.length} selectedModel={selectedModel} />
     </div>
