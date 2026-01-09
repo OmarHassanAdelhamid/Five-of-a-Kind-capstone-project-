@@ -6,7 +6,7 @@ TIP: _Potential obstacles to meeting the schedule of <<p4>>, and measures for ad
 endif::[]
 This section identifies potential risks and threats that could impact the successful delivery of the system. It outlines proactive mitigation strategies to address these challenges:
 
-(P.6.1) Risks
+==== (P.6.1) Risks
 
 * **Risk #1: Unfamiliarity with CAD File Processing Libraries**
 	- The team has limited experience with libraries required for reading and processing mesh CAD files in the STL format. This unfamiliarity may result in difficulties with file conversion and voxelization, which are core features of the system. The risk is much larger during the proof of concept demonstration phase when the team will be largely unfamiliar with both the required libraries and Dr. Onaizah's existing codebase. To mitigate this risk, the team will allocate additional time for library research and experimentation during the early development phases. The proof of concept demonstration will focus specifically on validating the file conversion pipeline with simple CAD files, and the team will seek guidance from Dr. Onaizah and Kaitlyn Clancy on existing printer workflow integration.
@@ -17,7 +17,7 @@ This section identifies potential risks and threats that could impact the succes
 * **Risk #3: Integration Challenges with Existing 3D Printer Workflow**
 	- The system must export data in a sufficient format for integration with Dr. Onaizah's existing custom 3D printer workflow. The team has limited understanding of the existing printer system and may face challenges in ensuring compatibility and correct data format. This integration is critical for the system's success, as it enables the exported voxel data to be consumed by the existing printer system. To mitigate this risk, the team will schedule regular meetings with Dr. Onaizah and Kaitlyn Clancy to understand the existing workflow requirements. The proof of concept will include validation of the export format, and the team will maintain close communication with the printer operators throughout development.
 
-(P.6.2) Threats
+==== (P.6.2) Threats
 
 * **Threat #1: Technology Dependency Failures**
 	- The system depends on several external technologies including CAD file processing libraries, 3D rendering libraries, and database systems. If any of these technologies become unavailable, the project could be derailed. To address this threat, the team will research multiple library options for each critical component and maintain awareness of technology roadmaps. The system will be designed with modular layered architecture (pipeline) to allow for technology substitution if needed.
@@ -28,7 +28,7 @@ This section identifies potential risks and threats that could impact the succes
 * **Threat #3: Stakeholder Availability and Communication Gaps**
 	- The project success depends heavily on communication with Dr. Onaizah, Kaitlyn Clancy, and other stakeholders. If these key personnel become unavailable or communication breaks down, the project could lose critical guidance and validation. To address this threat, the team will maintain regular bi-weekly updates with Dr. Onaizah and establish backup communication channels. All stakeholder interactions will be documented to ensure efficient knowledge transfer.
 
-(P.6.3) SWOT Analysis
+==== (P.6.3) SWOT Analysis
 
 **Strengths:**
 - Strong team collaboration and established communication protocols

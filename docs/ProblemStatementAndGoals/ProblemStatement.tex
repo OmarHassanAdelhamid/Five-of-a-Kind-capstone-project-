@@ -33,19 +33,19 @@ Sept. 21st, 2025 & All & Personal Reflections\\
 \end{table}
 
 \section{Problem Statement}
-
+The following subsections detail the project's overall problem statement, its inputs and outputs in terms of 
+files and/or interactions, major stakeholders, and the environment the project will exist within (e.g. 
+software platform).
 
 \subsection{Problem}
 There is currently no CAD workflow that lets users take a finished 3D design and
-select individual voxels (note: a voxel is a cube building block in a 3D printer) by layers from bottom to top to assign
-magnetization. Without voxel selection and per-layer editing, researchers are
-forced to rebuild the object voxel-by-voxel (e.g., in COMSOL), manually choosing
-a magnetization direction for each voxel. This consumes hours per part and
-makes iteration fragile: if a mistake is made, there is no practical way to
-reselect or change a prior voxel’s magnetization without redoing subsequent work.
+select sets of voxels (note: a voxel is a cube building block in a 3D printer) to assign
+properties (e.g. a material, or magnetization). Without automated voxelization and per-layer editing, researchers are
+forced to rebuild the object voxel-by-voxel (e.g., in COMSOL), manually choosing properties for each voxel. 
+This consumes hours per part andmakes iteration fragile; if a mistake is made, there is no practical way to
+reselect or change a prior voxel’s properties without redoing subsequent work.
 Our system aims to remove this bottleneck by enabling per-layer voxel viewing,
-selection (single or multiple voxels), and re-assignment of magnetization
-directions on top of an imported design.
+selection (single or multiple voxels), and re-assignment of properties on top of an imported design.
 
 
 \subsection{Inputs and Outputs}
@@ -53,12 +53,12 @@ directions on top of an imported design.
 \begin{itemize}
   \item Mesh CAD file exported from common tools (e.g., AutoCAD) and ingested as a mesh for voxelization (e.g., STL/OBJ).
   \item Voxel grid initially fixed at $300 \times 300\,\mu\text{m}$ (XY) and $110\,\mu\text{m}$ (Z) to form cubes at the stated dimensions.
-  \item User interaction via a UI that slices the object into layers (bottom$\rightarrow$top) and allows selecting one or multiple voxels within a layer to assign magnetization.
+  \item User interaction via a UI that slices the object into layers (bottom$\rightarrow$top) and allows selecting one or multiple voxels within a layer to assign properties.
 \end{itemize}
 
 \noindent\textbf{Outputs }
 \begin{itemize}
-  \item A Java-readable export containing per-voxel data for the custom printer pipeline (voxel location/layer and magnetization direction metadata).
+  \item A Java-readable export containing per-voxel data for the custom printer pipeline (voxel location/layer and property metadata).
 \end{itemize}
 
 
@@ -68,9 +68,9 @@ directions on top of an imported design.
 \toprule
 \textbf{Stakeholder} & \textbf{Role / Interest}\\
 \midrule
-Researchers / Engineers & Primary users who design and print magnetized objects; need fast, reliable voxel-level magnetization after CAD.\\
+Researchers / Engineers & Primary users who design and print multi-material objects; need fast, reliable voxel-level property assignment after design creation.\\
 Lab Operators / Printer Owners & Consume the exported file to run the custom printer workflow; care about correctness and repeatability.\\
-Supervisors / PIs (Approvers) & Validate that a magnetization plan is correct for the experiment’s goals.\\
+Supervisors / PIs (Approvers) & Validate that assigned properties are correct for the experiment’s goals.\\
 \bottomrule
 \end{tabularx}
 \subsection{Environment}
@@ -83,14 +83,19 @@ Supervisors / PIs (Approvers) & Validate that a magnetization plan is correct fo
 
 
 \section{Goals}
+This section details the high-level goals of the project. 
+
 \begin{enumerate}
   \item \textbf{Import \& Voxelization:} Import a mesh CAD file and convert it to a voxel grid with fixed voxel size of $300 \times 300\,\mu\text{m}$ (XY) and $110\,\mu\text{m}$ (Z).
   \item \textbf{Layered UI \& Selection:} Provide a UI to browse layers from bottom to top and select voxels (single or multiple) within a layer.
-  \item \textbf{Magnetization Assignment \& Editing:} Assign a magnetization direction to selected voxels and allow re-selection and changes without restarting the design (with undo/redo).
-  \item \textbf{Export:} Generate a Java-readable file capturing per-voxel magnetization for the custom printer software.
+  \item \textbf{Property Assignment \& Editing:} Assign properties to selected voxels and allow re-selection and changes without restarting the design (with undo/redo).
+  \item \textbf{Export:} Generate a Java-readable file capturing per-voxel properties for the custom printer software.
 \end{enumerate}
 
 \section{Stretch Goals}
+This section lists some stretch goals for the project that may be considered if time permits, or if the 
+project continues past initial schedule.
+
 \begin{itemize}
   \item \textbf{Adjustable Voxel Size:} Make voxel dimensions configurable to match different printers (beyond the fixed initial values).
   \item \textbf{Solid CAD Ingest (Future):} Add support for solid CAD (e.g., STEP/IGES) with robust tessellation before voxelization.

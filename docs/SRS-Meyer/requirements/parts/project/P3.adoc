@@ -10,7 +10,7 @@ The development of AutoVox is planned over multiple sprints, beginning with comp
   
 
 - **Epic 2: SRS and Hazard Analysis Development** (October 6, 2025)
-  Develop comprehensive software requirements specification and conduct hazard analysis to identify potential risks and safety considerations in the voxel property assignment workflow. This phase ensures all functional and non-functional requirements are properly documented and validated, including the system's ability to handle STL mesh files, maintain configurable voxel dimensions, and export Java-readable files for the custom printer pipeline. This epic includes the completion of system architecture documentation (S1-S5) defining the four core components: Import Manager, Visualization Manager, Editing Manager, and Export Manager, along with their functional requirements, interfaces, and prioritization framework.
+  Develop comprehensive software requirements specification and conduct hazard analysis to identify potential risks and safety considerations in the voxel property assignment workflow. This phase ensures all functional and non-functional requirements are properly documented and validated, including the system's ability to handle STL mesh files, maintain configurable voxel dimensions, and export Java-readable files for the custom printer pipeline. This epic includes the completion of system architecture documentation (<<S, S1-S5>>) defining the four core components: Import Manager, Visualization Manager, Editing Manager, and Export Manager, along with their functional requirements, interfaces, and prioritization framework.
   
 
 - **Epic 3: Verification and Validation Planning** (October 27, 2025)
@@ -30,7 +30,7 @@ The development of AutoVox is planned over multiple sprints, beginning with comp
 **Sprint 3: Core Implementation and Testing (January - February 2026)**
 
 - **Epic 6: Final System Design Integration** (January 19, 2026)
-  Complete final system design incorporating lessons learned from proof of concept demonstration and any requirement refinements. This includes detailed specifications for the layered UI that allows browsing from bottom to top, voxel selection capabilities, and property assignment with undo/redo functionality. The design will implement the system as a locally deployed desktop application with wireframe mockups showing the main interface for 3D model interaction, layer navigation, and property assignment controls. Priority implementation will focus on must-have requirements: CAD file import (F211), 3D image generation (F221), layer viewing (F224), magnetization assignment (F231), material assignment (F233), and export functionality (F242).
+  Complete final system design incorporating lessons learned from proof of concept demonstration and any requirement refinements. This includes detailed specifications for the layered UI that allows browsing from bottom to top, voxel selection capabilities, and property assignment with undo/redo functionality. The design will implement the system as a locally deployed desktop application with wireframe mockups showing the main interface for 3D model interaction, layer navigation, and property assignment controls. Priority implementation will focus on must-have requirements: CAD file import (<<F211>>), 3D image generation (<<F221>>), layer viewing (<<F224>>), magnetization assignment (<<F231>>), material assignment (<<F233>>), and export functionality (<<F242>>).
   
 
 - **Epic 7: Revision 0 System Demonstration** (February 2-11, 2026)
@@ -40,7 +40,7 @@ The development of AutoVox is planned over multiple sprints, beginning with comp
 **Sprint 4: Validation and Final Delivery (March - April 2026)**
 
 - **Epic 8: Verification, Validation, and Extras** (March 9, 2026)
-  Complete verification and validation activities, documenting test results and system performance. Deliver user manual and usability report as specified in the problem statement. The user manual will provide comprehensive guidance on using the software's key features that differentiate it from normal CAD software, while the usability report will document findings from testing with researchers and lab operators. Validation will ensure all must-have requirements are met: system supports up to MAX_VOXELS (NF211, NF222), maintains MAX_VIEW_LATENCY image update latency (NF221), provides MAX_EDIT_LATENCY metadata updates (NF232), and achieves MIN_RATE export performance (NF212, NF242).
+  Complete verification and validation activities, documenting test results and system performance. Deliver user manual and usability report as specified in the problem statement. The user manual will provide comprehensive guidance on using the software's key features that differentiate it from normal CAD software, while the usability report will document findings from testing with researchers and lab operators. Validation will ensure all must-have requirements are met: system supports up to MAX_VOXELS (<<NF211>>, <<NF222>>), maintains MAX_VIEW_LATENCY image update latency (<<NF221>>), provides MAX_EDIT_LATENCY metadata updates (<<NF232>>), and achieves MIN_RATE import/export performance (<<NF212>>, <<NF242>>).
   
 
 - **Epic 9: Final System Demonstration** (March 23-26, 2026)

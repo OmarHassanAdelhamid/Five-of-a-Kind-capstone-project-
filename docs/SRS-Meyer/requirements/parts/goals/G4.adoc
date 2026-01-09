@@ -7,23 +7,21 @@ endif::[]
 
 The high-level functional requirements for the voxel-based design platform based on client input can be defined as follows, in no particular order:
 
-• *CAD-to-voxel conversion.* The system shall allow importing standard CAD models and automatically voxelizing them into a structured grid for further editing. (G4-HF-1)
+• [[G4-HF-1]] *Support automatic voxel model creation. (G4-HF-1)* The most time-consuming aspect of creating voxel models using current tools is creating them manually; a solution to this involves importing CAD files and converting them into a representative collection of voxels to support further editing. 
 
-• *Voxel editing and re-magnetization.* The system shall enable assigning and re-assigning material and magnetization properties at the voxel level, allowing modifications after the initial design without rebuilding the entire model. (G4-HF-2)
+• [[G4-HF-2]] *Offer voxel-based editing. (G4-HF-2)* A key functionality that is currently tedious is voxel property assignment; while edits to individual voxels is necessary, a solution such as batch-editing would greatly improve the user experience. To address this, the system should offer an interface allowing the assignment of material and magnetization properties both at the voxel-level and to groups of voxels. 
 
-• *Batch voxel operations.* The system shall support batch editing and magnetization of groups of voxels in specified directions, reducing repetitive manual work. (G4-HF-3)
+• [[G4-HF-3]] *Provide visualization tools. (G4-HF-3)* The ability to quickly examine the model structure and property distribution from various angles to verify model correctness is essential. Keeping in mind that visual examination is often most efficient, the system should provide visualization of material distribution and magnetization vectors across the voxel grid, assisting researchers in verification before fabrication. 
 
-• *Visualization tools.* The system shall provide visualization of material distribution and magnetization vectors across the voxel grid, assisting researchers in verification before fabrication. (G4-HF-4)
+• [[G4-HF-5]] *Ensure export compatibility. (G4-HF-5)* Current solutions require work-around-eqsue conversion from the files exported to what the custom 3D printer requires. In order to be both compatible with current printing solutions and relevant in the future, the system should export a file that contains the necessary voxel-level data in an widely-recongized, standard format, such as CSV. 
 
-• *Export compatibility.* The system shall export voxelized designs into formats compatible with multi-material 3D printers, embedding metadata about material properties and magnetization. (G4-HF-5)
+Of the functional requirements listed above, the two most critical are *automatic voxel model creation* and *voxel-based editing*, as these form the foundation of the system’s functional uses and research value.
 
-Of the functional requirements listed above, the two most critical are *CAD-to-voxel conversion* and *voxel editing and re-magnetization*, as these form the foundation of the system’s usability and research value.
+Some high-level non-functional requirements for the system can be defined as follows, in no particular order:
 
-Some high-level non-functional requirements for the platform can be defined as follows, in no particular order:
+• [[G4-HNF-1]] *Interface usability. (G4-HNF-1)* The system should have an interface that is suitable for both researchers and students, minimizing training overhead. Functions involving edits, changes to model perspective, and model import/export should be accomplished in as few interactions as possible, by a high percentage of users.
 
-• *Usability.* The platform should have an intuitive interface suitable for both researchers and students, minimizing training overhead. (G4-HNF-1)
+• [[G4-HNF-2]] *System performance. (G4-HNF-2)* The system should support model conversion at a minimum rate, and changes to visual perspectives or edits with a maximum delay, even for projects containing a maximum number of voxels. These rates, delays, and maximums will be set based on user needs.
 
-• *Performance.* The system should handle CAD-to-voxel conversion and property assignment in a reasonable time, even for large and complex models.(G4-HNF-2)
-
-• *Compatibility.* The platform should support common CAD file formats and integrate smoothly with existing 3D printing workflows. (G4-HNF-3)
+• [[G4-HNF-3]] *File compliance. (G4-HNF-3)* The systme should support a standard CAD file format and integrate with the existing custom 3D printing software. 
 

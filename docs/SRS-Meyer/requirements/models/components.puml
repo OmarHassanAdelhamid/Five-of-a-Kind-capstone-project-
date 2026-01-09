@@ -2,7 +2,7 @@
 
 !include ../_style/puml.style
 
-[MagData Platform] as MP
+[AutoVox Platform] as MP
 [Import Manager] as SM
 [Visualization Manager] as IM
 [Editing Manager] as MM

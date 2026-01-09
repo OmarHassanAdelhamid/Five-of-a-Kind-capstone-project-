@@ -5,13 +5,11 @@ ifdef::env-draft[]
 TIP: _New processes, or improvement to existing processes, made possible by the project's results. It presents the business benefits expected from the successful execution of the project. **This chapter is the core of the Goals book**, describing what the organization expects from the system. It ensures that the project remains focused: if at some stage it gets pushed in different directions, with “creeping featurism” threatening its integrity, a reminder about the original business goals stated in those chapters will help._  <<BM22>>
 endif::[]
 
-The primary benefit of this project is to provide a cost-effective and user-friendly voxel-based design tool that converts CAD models into voxel grids, enabling flexible editing and material property assignment. This solution reduces design time and supports the department’s research in multi-material 3D printing.
+This section summarizes the primary goals of AutoVox, and what is expected it will accomplish. This is described as a whole in Figure 1 below, showing the relationships between primary stakeholders and how each of their goals both interact and contribute to the overall benefit to society.
 
-For researchers and students, the tool will streamline workflows by allowing faster iteration and enabling edits or re-magnetization of voxel properties without rebuilding models from scratch.
+.Goal Model Diagram. Notation is as follows; clouds represent soft goals, rounded boxes represent hard/measurable goals, hexagons represent plans, and unrounded boxes represent resources.
+image::models/g3-goal-model-v2.svg[scale=70%,align="center"]
 
-For supervisors and the university, the system offers a more user-friendly and productive platform, allowing larger CAD models to be automatically voxelized and then edited efficiently. This makes complex designs more manageable and accelerates experimental research.
+The primary benefit of this project is to provide a cost-effective and user-friendly voxel-based design tool that converts CAD models into voxel grids, enabling flexible editing and material property assignment. To accomplish this, supporting goals such as reducing manual work, automating voxelization, providing visualization elements, and non-destructive editing are considered. This solution reduces time spent creating voxel models and supports the department’s research in multi-material 3D printing, aligning with the benefits expected by the following primary stakeholders and contributing to their goals.
 
-The following goal model diagram illustrates how these benefits map to the project’s stakeholders.
-
-image::models/G3_goal_model.svg[scale=70%,align="center"]
-
+For researchers and students, the tool will streamline workflows by allowing faster iteration and enabling edits to voxel properties without rebuilding models from scratch. Experimental testing is also accelerated and as a result, more projects can be run in parallel. Research throughput is then increased - a goal of supervisors and the university. These goals ultimately support department innovation, contributing to the overall benefit to society. With research running more quickly, innovative robotics solutions that benefit many areas of society can be developed and iterated on at a faster pace. 

@@ -7,10 +7,10 @@ endif::[]
 
 This section details any assumptions made that are not imposed upon the project. As follows are assumptions made to simplify project scope.
 
-* *Operating System Support:* We assume that only recent Windows releases and Linux distributions that are made use of by primary users will need to be supported. For the first development iteration, this is sufficient to satisfy all potential users.
+* [[E4.1]] *Operating System Support (E4.1):* We assume that only recent Windows releases and Linux distributions that are made use of by primary users will need to be supported. For the first development iteration, this is sufficient to satisfy all potential users.
 
-* *Processing Power:* We assume that the lab computers possess at least the resources required to handle rudimentary 3D graphics. 
+* [[E4.2]] *Processing Power (E4.2):* We assume that the lab computers possess at least the resources required to handle rudimentary 3D graphics. 
 
-* *Browser Support:* We assume that the system will only support Chromium browsers. This will capture a majority of the most popular browsers in use.
+* [[E4.3]] *Browser Support (E4.3):* We assume that the system will only support Chromium browsers. This will capture a majority of the most popular browsers in use.
 
-* *Language Support:* We assume that the only language the system supports will be English. This captures the needs of the primary users.
+* [[E4.4]] *Language Support (E4.4):* We assume that the only language the system supports will be English. This captures the needs of the primary users.
