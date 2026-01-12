@@ -271,6 +271,13 @@ Relates to the percentage of users that should be able to succeed at different t
 [.maroon]#_Likelihood of change:_# Low +
 [.maroon]#_Justification:_# It eases the process of user correction for widespread mistakes. There’s minimal chance of change since it encapsulates what a user would require to restore a blank canvas for property assignment.
 
+. [[F2311]] *Manual Saves (F2311):* Editing Manager shall allow users to manually save changes made to voxel properties or the model itself upon request.
+
++
+[.maroon]#_Priority:_# High (must-have) +
+[.maroon]#_Likelihood of change:_# Low +
+[.maroon]#_Justification:_# While autosaving provides essential functionality of saving the user's progress as they go and with ease, the ability to bypass this to manually save is critical in situations where the user needs the project to be saved in-between autosaves. Unlikely to change due to how fundamental this is.
+
 ===== Non-Functional Requirements
 
 . [[NF231]] *Ease of use (NF231):* Editing Manager shall ensure that all interactions covered in the above requirements (e.g. assigning properties, layer selection, undo/redo) can be completed in MAX_INTERACTIONS or less by USABILITY_PERCENTAGE of users.

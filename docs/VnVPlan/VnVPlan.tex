@@ -984,6 +984,22 @@ and user interface interactions as specified in requirements F231 through F2310.
 					
 \textbf{How test will be performed:} Select multiple voxels with assigned properties, use the reset function, and verify all selected voxels return to unassigned state.
 
+\item{test-FR-EM-15 Manual Save Functionality\\}
+\label{sec:t-em-15}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F2311
+
+\textbf{Initial State:} Model with unsaved changes.
+
+\textbf{Input:} User selects option to Save project.
+
+\textbf{Output:} Changes are saved successfully and confirmation is displayed.
+
+\textbf{Test Case Derivation:} Ensures that the user can manually preserve their progress should the situation arise, as per F2311.
+
+\textbf{How test will be performed:} Make changes to the property assignments in the model, use the save option to save the project, and verify the changes are reflected in the project file.
 
 \end{enumerate}
 
@@ -1552,53 +1568,56 @@ The following tables show the traceability between test cases and their correspo
 \label{tab:emt}
 \small
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{l|*{10}{c}}
+\begin{tabular}{l|*{11}{c}}
 \toprule
 \textbf{Reqs:} 
-& F231 & F232 & F233 & F234 & F235 & F236 & F237 & F238 & F239 & F2310 \\
+& F231 & F232 & F233 & F234 & F235 & F236 & F237 & F238 & F239 & F2310 & F2311\\
 \midrule
 
 \hyperref[sec:t-em-1]{test-FR-EM-1} & 
-\xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+\xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
 
 \hyperref[sec:t-em-2]{test-FR-EM-2} & 
-\xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+\xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
 
 \hyperref[sec:t-em-3]{test-FR-EM-3} & 
-\obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+\obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
 
 \hyperref[sec:t-em-4]{test-FR-EM-4} & 
-\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
 
 \hyperref[sec:t-em-5]{test-FR-EM-5} & 
-\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
 
 \hyperref[sec:t-em-6]{test-FR-EM-6} & 
-\obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox\\
+\obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
 
 \hyperref[sec:t-em-7]{test-FR-EM-7} & 
-\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox\\
+\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox\\
 
 \hyperref[sec:t-em-8]{test-FR-EM-8} & 
-\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox\\
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox\\
 
 \hyperref[sec:t-em-9]{test-FR-EM-9} & 
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox\\
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox\\
 
 \hyperref[sec:t-em-10]{test-FR-EM-10} & 
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox\\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox\\
 
 \hyperref[sec:t-em-11]{test-FR-EM-11} & 
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox\\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox\\
 
 \hyperref[sec:t-em-12]{test-FR-EM-12} & 
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox\\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox\\
 
 \hyperref[sec:t-em-13]{test-FR-EM-13} & 
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox\\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox\\
 
 \hyperref[sec:t-em-14]{test-FR-EM-14} & 
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox\\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox\\
+
+\hyperref[sec:t-em-15]{test-FR-EM-15} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox\\
 
 \bottomrule
 \end{tabular}
