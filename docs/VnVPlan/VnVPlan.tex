@@ -1,10 +1,12 @@
 \documentclass[12pt, titlepage]{article}
 \usepackage{float}
 
+\usepackage{geometry}
+\usepackage{pdflscape}
 \usepackage{booktabs}
 \usepackage{tabularx}
-\usepackage{hyperref}
 \usepackage{float}
+\usepackage{hyperref}
 
 \hypersetup{
     colorlinks,
@@ -72,19 +74,21 @@ The document is organized into two main sections. The first section, \textbf{Gen
 
 \section{General Information}
 
+The following subsections cover a basic summary of what AutoVox aims to accomplish, and what the high-level objectives of this verification and validation plan are. In addition, the challenge level of this project and the selected extra documentation that will be developed and tested under this document are covered, as well as any other relevant documentation that aids in this document's understanding. 
+
 \subsection{Summary}
 
-The software system being tested is called \textbf{AutoVox}, developed by Team 10 --- \textit{Five of a Kind}. AutoVox is a desktop-based CAD enhancement tool that allows researchers and engineers to assign magnetic properties to individual voxels within a 3D model. It is designed to streamline the process of magnetization planning for multi-material 3D printing workflows within a research laboratory environment.
+The software system being tested is called \textbf{AutoVox}, developed by Team 10 --- \textit{Five of a Kind}. AutoVox is a desktop-based CAD enhancement tool that allows researchers and engineers to assign properties to individual voxels within a 3D model. It is designed to streamline the process of magnetization and material planning for multi-material 3D printing workflows within a research laboratory environment.
 
-Currently, magnetized objects are modeled voxel-by-voxel in COMSOL, requiring researchers to manually assign magnetization directions for each voxel and rebuild the model from scratch if an error occurs. AutoVox removes this bottleneck by enabling users to import pre-built CAD models (e.g., from AutoCAD), automatically slice them into voxel layers, and interactively select single or multiple voxels to assign or modify magnetization directions. The software also provides per-layer visualization, undo/redo functionality, and validation mechanisms to ensure complete and accurate voxel data before export.
+Currently, these objects are modeled within COMSOL, requiring researchers to tediously build models from sketches voxel-by-voxel, and assign properties to each voxel individually. AutoVox removes this bottleneck by enabling users to import pre-built CAD models (e.g., from AutoCAD), automatically slice them into voxels, and interactively select single or multiple voxels to assign or modify its properties. The software also provides per-layer visualization, undo/redo functionality, and validation mechanisms to ensure complete and accurate voxel data before export.
 
-The final output is a \textbf{Java-readable metadata file} that contains per-voxel magnetization information, which integrates directly with the custom 3D printer pipeline used in the lab. By automating voxel processing and enabling efficient magnetization editing, AutoVox dramatically reduces the time and effort required to prepare print-ready models, ensuring a faster, more reliable, and user-friendly workflow for advanced magnetized 3D printing research.
+The final output is a \textbf{Java-readable metadata file} that contains per-voxel property information, which integrates directly with the custom 3D printer pipeline used in the lab. By automating voxel processing and enabling efficient property editing, AutoVox dramatically reduces the time and effort required to prepare print-ready models, ensuring a faster, more reliable, and user-friendly workflow for advanced multi-material 3D printing research.
 
 \subsection{Objectives}
 
 The primary objective of the verification and validation (V\&V) process for \textbf{AutoVox} is to ensure that the system functions correctly, reliably, and efficiently according to the requirements defined in the Software Requirements Specification (SRS). The V\&V activities will confirm that each system component performs as intended, meets stakeholder expectations, and aligns with the project’s functional and non-functional goals.
 
-Specifically, the objectives of V\&V are to:
+Specifically, the objectives of V\&V are as follows:
 
 \begin{itemize}
   \item \textbf{Correctness:} Verify that all functional requirements are implemented as specified, including accurate import, voxelization, visualization, editing, and export of CAD models.
@@ -99,7 +103,7 @@ Overall, the V\&V process aims to provide stakeholders with confidence that \tex
 
 \subsection{Challenge Level and Extras}
 
-The challenge level for \textbf{AutoVox} is classified as \textbf{advanced}. The system integrates multiple complex subsystems, including 3D model import and voxelization, real-time voxel visualization and editing, magnetization assignment, and structured export to a custom printer pipeline. Each subsystem involves substantial technical and architectural considerations, such as handling large voxel datasets, maintaining UI synchronization, and ensuring data integrity across modules. These factors collectively establish the project as an advanced-level software system.
+The challenge level for \textbf{AutoVox} is classified as \textbf{advanced}. The system integrates multiple complex subsystems, including 3D model import and voxelization, real-time voxel visualization and editing, magnetization and material assignment, and structured export to a custom printer pipeline. Each subsystem involves substantial technical and architectural considerations, such as handling large voxel datasets, maintaining UI synchronization, and ensuring data integrity across modules. These factors collectively establish the project as an advanced-level software system.
 
 The extras included in this project are:
 
@@ -112,19 +116,15 @@ These extras complement the technical objectives of the project by ensuring that
 
 \subsection{Relevant Documentation}
 
+The documentation that supports the verification and validation (V\&V) process for \textbf{AutoVox} includes the Software Requirements Specification (SRS), Hazard Analysis (HA), Development Plan (DP), and Problem Statement and Goals. Each document serves a distinct purpose in guiding and supporting the testing strategy.
 
+The \textbf{Software Requirements Specification (SRS)} defines all functional and non-functional requirements for the system. It provides the foundation for test case design, ensuring that every requirement can be verified through measurable criteria and traced throughout the V\&V process \citet{SRS}.
 
-\citet{SRS}
+The \textbf{Hazard Analysis (HA)} identifies potential system hazards, their causes, and mitigation strategies. It establishes the safety requirements (SCRs) that must be verified to ensure the system operates safely and consistently under expected laboratory conditions \citet{HA}.
 
-The documentation that supports the verification and validation (V\&V) process for \textbf{ AutoVox} includes the Software Requirements Specification (SRS), Hazard Analysis (HA), Development Plan (DP), and Problem Statement and Goals. Each document serves a distinct purpose in guiding and supporting the testing strategy.
+The \textbf{Development Plan (DP)} outlines the project’s workflow, coding standards, continuous integration setup, and proof-of-concept demonstration plan. It informs the structure and scheduling of testing activities by defining the methods and tools used during development \citet{DP}.
 
-The \textbf{Software Requirements Specification (SRS)} defines all functional and non-functional requirements for the system. It provides the foundation for test case design, ensuring that every requirement can be verified through measurable criteria and traced throughout the V\&V process.
-
-The \textbf{Hazard Analysis (HA)} identifies potential system hazards, their causes, and mitigation strategies. It establishes the safety requirements (SCRs) that must be verified to ensure the system operates safely and consistently under expected laboratory conditions.
-
-The \textbf{Development Plan (DP)} outlines the project’s workflow, coding standards, continuous integration setup, and proof-of-concept demonstration plan. It informs the structure and scheduling of testing activities by defining the methods and tools used during development.
-
-The \textbf{Problem Statement and Goals} document provides the original motivation, scope, and intended outcomes of the project. It ensures that the V\&V process remains aligned with the project’s high-level objectives and stakeholder expectations.
+The \textbf{Problem Statement and Goals} document provides the original motivation, scope, and intended outcomes of the project. It ensures that the V\&V process remains aligned with the project’s high-level objectives and stakeholder expectations \citet{PS}.
 
 Finally, the project’s \textbf{GitHub Repository} serves as the central hub for all implementation artifacts, testing scripts, and documentation updates.\\
 \url{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project}
@@ -134,10 +134,12 @@ Together, these documents ensure that all verification and validation activities
 
 The \textbf{Plan} section outlines the structure and approach of the verification and validation (V\&V) process for \textbf{AutoVox}. It describes the composition of the V\&V team, their assigned roles, and responsibilities across different testing domains, ensuring that all system components are thoroughly verified and validated. This section also details the planned approach for verifying the Software Requirements Specification (SRS), including the review strategy, feedback mechanisms, and formal verification methods that will be employed to confirm that all requirements are correct, testable, and traceable throughout development.
 
-The verification and validation (V\&V) efforts for \textbf{AutoVox} will be conducted by \textbf{Team 10 --- \textit{Five of a Kind}}. Each member plays a specific role to ensure that all functional, non-functional, and safety requirements are properly verified and validated. The distribution of responsibilities ensures comprehensive coverage of testing, documentation, and review activities across all project domains.
+The verification and validation (V\&V) efforts for \textbf{AutoVox} will be conducted by \textbf{Team 10 --- \textit{Five of a Kind}}. Each member plays a specific role to ensure that all functional, non-functional, and safety requirements are properly verified and validated. The distribution of responsibilities ensures comprehensive coverage of testing, documentation, and review activities across all project domains. Table~\ref{tab:roles} reflects these responsibilities, assigning each member a specific role.
 
 \begin{table}[H]
 \centering
+\caption{Team roles and responsibilities for verification and validation}
+\label{tab:roles}
 \begin{tabular}{|p{3.5cm}|p{4cm}|p{7cm}|}
 \hline
 \textbf{Name} & \textbf{Role} & \textbf{Responsibilities} \\
@@ -153,8 +155,9 @@ The verification and validation (V\&V) efforts for \textbf{AutoVox} will be cond
 \textbf{Khalid Farag} & Safety and Validation Tester & Validates safety and security requirements derived from the Hazard Analysis. Maintains traceability between identified hazards, safety requirements (SCRs), and corresponding test cases. \\
 \hline
 \end{tabular}
-\caption{Team roles and responsibilities for verification and validation.}
 \end{table}
+
+These roles remain flexible in the case that there is notable overlap between the issues two (or more) roles focus on. For instance, if it were found that the implementation of a given feature drastically affects performance but satisfies functional requirements, some degree of coordination would need to take place between functional and non-functional testers as there would be overlap of responsibility and a need for close collaboration. Additionally, if one team member is less proficient at a specific task within their role, other members may of course provide assistance, given that the team member requesting help shares in their duties.
 
 This structure ensures that all verification and validation efforts—ranging from requirement coverage and performance testing to usability evaluation and safety assurance—are systematically planned, executed, and reviewed in collaboration with the supervisor.
 \subsection{SRS Verification}
@@ -172,16 +175,7 @@ The first stage of SRS verification will involve a detailed internal review cond
   \item \textbf{Olivia Reich} will review documentation-related and usability-focused requirements for clarity and completeness.
 \end{itemize}
 
-A collaborative \textbf{SRS Verification Checklist} will guide the review. The checklist will include the following key items:
-
-\begin{enumerate}
-  \item Each requirement is uniquely identified and unambiguous.
-  \item Functional requirements are measurable and testable.
-  \item Non-functional requirements specify clear performance criteria.
-  \item Safety and security requirements trace back to identified hazards.
-  \item Each requirement includes a defined verification or validation method.
-  \item Requirements are free of contradictions or redundancies.
-\end{enumerate}
+\noindent See Table~\ref{tab:srs} for the checklist that will guide this review.
 
 All findings and issues identified during the review will be documented as GitHub issues and assigned to the appropriate team member for correction prior to the next SRS revision.
 
@@ -195,10 +189,10 @@ The review meeting will include:
   \item A walkthrough of the SRS to verify alignment between requirements and project scope.
   \item Discussion of any ambiguous, conflicting, or technically challenging requirements.
   \item Presentation of requirements identified as high-risk and their proposed validation methods.
-  \item A feedback session for the supervisor to provide clarifications or suggest modifications.
+  \item An informal feedback session for the supervisor to provide clarifications or suggest modifications.
 \end{itemize}
 
-Supervisor feedback will be recorded within the GitHub issue tracker. Each comment will be linked to the corresponding requirement ID and tracked until resolution. Follow-up actions will be reviewed in subsequent supervisor meetings.
+The feedback session will take the form of an informal interview, during which supervisor comments will be recorded for later formatting into individual GitHub issues. Comments will revolve around the SRS walkthrough and following discussion, as well as examination of the SRS itself if needed. Each comment will be linked to the corresponding requirement or section of the document and tracked until resolution. Follow-up actions will be reviewed in subsequent supervisor meetings.
 
 \subsubsection{Peer Review and Class Feedback}
 
@@ -211,13 +205,49 @@ In addition to the supervisor review, the SRS will undergo peer evaluation durin
   \item Appropriateness of fit criteria and testability.
 \end{itemize}
 
-All peer feedback will be integrated systematically into the SRS through a traceability matrix, ensuring that each comment maps to a specific requirement and its revision status.
+All peer feedback will be integrated systematically into the SRS through a traceability table within an appendix, ensuring that each comment maps to a specific requirement and its revision status.
 
 \subsubsection{Continuous Verification and Traceability Maintenance}
 
 Throughout development, the team will maintain continuous verification of the SRS using GitHub issues, milestones, and project boards. Each requirement will be linked to corresponding design elements, test cases, and validation results. Regular bi-weekly internal reviews will verify that any new or modified requirements remain traceable and verifiable.
 
 This iterative approach ensures that the SRS remains accurate, actionable, and aligned with the evolving implementation. Any changes introduced after supervisor or peer feedback will trigger updates to both the traceability matrix and the V\&V Plan to maintain consistency across documents.
+
+\begin{table}[H]
+\centering
+\caption{SRS Verification Checklist}
+\label{tab:srs}
+\renewcommand{\arraystretch}{0.3}
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{|p{0.2\textwidth}|p{0.85\textwidth}|}
+\hline
+\textbf{Focus Area} & \textbf{Verification Tasks} \\ \hline
+Internal Review &
+\begin{itemize}
+  \item Each requirement is unique and unambiguous
+  \item Each requirement includes a priority level and justification
+  \item Any requirement does not contradict with any other requirements
+  \item Each requirement can be directly traced to a stakeholder need and vice versa
+  \item Functional requirements are measurable and testable
+  \item Non-functional requirements are measurable and testable and/or specify fit criteria, utilizing symbolic constants when necessary
+  \item Safety and security requirements can be traced to an identified hazard and vice versa
+  \item Each problem found is documented as a GitHub issue
+\end{itemize} \\ \hline
+Supervisor Review Preparation &
+\begin{itemize}
+  \item SRS highlights document prepared
+  \item Overview of SRS walkthrough completed
+  \item Next steps \& focus areas communicated and validated
+  \item All supervisor feedback recorded and formatted into separate issues in GitHub
+\end{itemize} \\ \hline
+Continuous Verification &
+\begin{itemize}
+  \item Each GitHub issue is closed either via commit or by comment with a detailed explanation
+  \item Appendix contains a traceability table mapping each GitHub issue to a change/comment and short explanation
+  \item Each change to the SRS triggers a change to affected documents and their respective traceability tables
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
 
 \textbf{Summary:} This structured, multi-level verification process guarantees that the SRS for \textbf{AutoVox} is validated both internally and externally. Through continuous review, stakeholder feedback, and traceability enforcement, the team ensures that all requirements are precise, measurable, and fully verifiable before system testing begins.
 
@@ -227,11 +257,12 @@ The design verification will primarily focus on the system framework and integra
 
 \noindent Reviews conducted with our supervisor, Dr. Onaizah, will primarily verify tolerance parameters within the output framework during integration with specialized 3D printing software. Diagrams may be developed to provide visual aids to help facilitate the technical conversations and enhance understanding. These diagrams will default to standard UML diagrams, unless a more simplified diagram is required due to disparity in technical proficiency.\\
 
-\noindent A checklist evaluation has been provided below for reference:\\
+\noindent Table~\ref{tab:des} details the checklist that will be utilized during design verification to ensure all necessary tasks are completed.\\
 
 \begin{table}[H]
 \centering
 \caption{Design Verification Checklist}
+\label{tab:des}
 \renewcommand{\arraystretch}{1.3}
 \setlength{\tabcolsep}{8pt}
 \begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
@@ -269,11 +300,12 @@ The verification \& validation testing plan will also incorporate peer reviews a
 
 \noindent Within test validation, mutation testing will be integrated to assess the effectiveness of the system. This will include the assertion of defective input files, faulty voxel metadata updates, and unsupported display commands. Our goal with mutation testing is to generate quantifiable observations regarding our system’s capabilities of detecting undesirable anomalies.\\
 
-\noindent A checklist evaluation has been provided below for reference:\\
+\noindent Table~\ref{tab:vnv} details a checklist that will be utilized during verification of the V\&V plan for reference.\\
 
 \begin{table}[H]
 \centering
 \caption{V\&V Plan Verification Checklist}
+\label{tab:vnv}
 \renewcommand{\arraystretch}{1.3}
 \setlength{\tabcolsep}{8pt}
 \begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
@@ -321,9 +353,12 @@ Implementation verification will ensure that all segments of code strictly adher
 \item large database interaction (NF232, SCR3)
 \end{itemize}
 
+Table~\ref{tab:impl} details a checklist that will be utilized throughout implementation verification to ensure completeness.
+
 \begin{table}[H]
 \centering
 \caption{Implementation Verification Checklist}
+\label{tab:impl}
 \renewcommand{\arraystretch}{1.3}
 \setlength{\tabcolsep}{8pt}
 \begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
@@ -412,6 +447,7 @@ the specified requirements.
 \begin{enumerate}
 
 \item{test-FR-IM-1 Valid CAD File Import for New Project\\}
+\label{sec:t-im-1}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -428,6 +464,7 @@ the specified requirements.
 \textbf{How test will be performed:} Create a new project on the system and import a CAD file into the new project to verify that the system will correctly process the file and create a new project. The system should be able to handle the CAD file and initiate the voxel slicing process. This will be tested manually by the developer of the system.
 
 \item{test-FR-IM-2 Past Project File Import\\}
+\label{sec:t-im-2}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -444,6 +481,7 @@ the specified requirements.
 \textbf{How test will be performed:} Open a previously saved project containing magnetization and material properties on the system. Verify that the system correctly loads the project and all of the magnetization and material properties are preserved. The model should be ready for further editing and visualization. This will be tested manually by the developer of the system.
 
 \item{test-FR-IM-3 Invalid File Format Handling\\}
+\label{sec:t-im-3}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -466,6 +504,7 @@ the specified requirements.
 \begin{enumerate}
 
 \item{test-FR-IM-4 Voxel Size Configuration\\}
+\label{sec:t-im-4}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -482,6 +521,7 @@ the specified requirements.
 \textbf{How test will be performed:} Configure the voxel dimensions for the imported model by entering the dimensions into the system through the import interface by the user. Verify that the system correctly applies the specified voxel dimensions and successfully slices the model into voxels of the requested dimensions. This will be tested automatically by the developer of the system by running a script that configures the voxel dimensions and verifies that the system correctly slices the model into voxels of the requested dimensions.
 
 \item{test-FR-IM-5 Model Scaling Functionality\\}
+\label{sec:t-im-5}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -498,6 +538,7 @@ the specified requirements.
 \textbf{How test will be performed:} Modify the model dimensions to the desired printing size by entering the new dimensions into the system through the import interface by the user. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected scaling of the model to confirm that model integrity and accuracy are preserved as specified in F214
 
 \item{test-FR-IM-6 Partial Voxel Resolution\\}
+\label{sec:t-im-6}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -514,6 +555,7 @@ the specified requirements.
 \textbf{How test will be performed:} Import a model containing surfaces that intersect voxel boundaries. The developer will then manually inspect the rendered 3D model within the application. Verification will involve comparing the visual representation of the sliced model against the original CAD model and the expected resolution of partial voxels to confirm that model integrity and accuracy are preserved as specified in F215
 
 \item{test-FR-IM-7 Model Division for Display\\}
+\label{sec:t-im-7}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -538,6 +580,7 @@ the specified requirements.
 \begin{enumerate}
 
 \item{test-FR-VM-1 3D Model Rendition with Clear Voxel Visualization\\}
+\label{sec:t-vm-1}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -554,6 +597,7 @@ the specified requirements.
 \textbf{How test will be performed:} Render a 3D model with clear visualization of sliced voxels by providing the Visualization Manager with sliced voxel data from the Import Manager. Verify that the system correctly renders the model and displays the individual voxels with proper boundaries and geometric accuracy. This will be tested manually by the developer of the system by providing the system with a CAD model and verifying that the system correctly renders the model and displays the individual voxels with proper boundaries and geometric accuracy. 
 
 \item{test-FR-VM-2 Partition Navigation Functionality\\}
+\label{sec:t-vm-2}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -570,6 +614,7 @@ the specified requirements.
 \textbf{How test will be performed:} Navigate between model partitions by clicking on the different display sections of the model. Verify that the system correctly provides smooth navigation between partitions, allowing users to access all model sections without performance degradation. This will be tested manually by the developer of the system.
 
 \item{test-FR-VM-3 Multi-Perspective 3D Model Interaction\\}
+\label{sec:t-vm-3}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -592,6 +637,7 @@ the specified requirements.
 \begin{enumerate}
 
 \item{test-FR-VM-4 Layer Isolation Functionality\\}
+\label{sec:t-vm-4}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -608,6 +654,7 @@ the specified requirements.
 \textbf{How test will be performed:} Select a specific layer to focus on by clicking on the layer in the display. Verify that the system correctly isolates the selected layer and renders all other voxels irrelevant while that layer is in focus. This will be tested manually by the developer of the system.
 
 \item{test-FR-VM-5 Voxel Selection Highlighting\\}
+\label{sec:t-vm-5}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -630,6 +677,7 @@ the specified requirements.
 \begin{enumerate}
 
 \item{test-FR-VM-6 Material Assignment Visual Tracking\\}
+\label{sec:t-vm-6}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -646,6 +694,7 @@ the specified requirements.
 \textbf{How test will be performed:} Assign material IDs to various voxels by clicking on the voxels in the display and assigning the material IDs. Verify that the system correctly updates the voxel colors to indicate material assignment completeness, providing clear visual feedback about assignment status. This will be tested manually by the developer of the system.
 
 \item{test-FR-VM-7 Magnetization Assignment Visual Tracking\\}
+\label{sec:t-vm-7}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -671,6 +720,7 @@ the specified requirements.
 \begin{enumerate}
 
 \item{test-FR-INT-1 Import to Visualization Data Transfer\\}
+\label{sec:t-int-1}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -697,6 +747,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \begin{enumerate}
 
 \item{test-FR-EM-1 Individual Voxel Magnetization Assignment\\}
+\label{sec:t-em-1}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -713,6 +764,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Load a 3D model, select a voxel using the interface, input magnetization values, and verify the assignment is recorded and visually displayed.
 
 \item{test-FR-EM-2 Group Voxel Magnetization Assignment\\}
+\label{sec:t-em-2}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -729,6 +781,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select multiple voxels using the interface, assign magnetization values, and verify all selected voxels receive the assignment.
 
 \item{test-FR-EM-3 Favourite Magnetization Vector Management\\}
+\label{sec:t-em-3}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -745,6 +798,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Create a favourite magnetization vector, save it to the favourite bar, and verify it can be selected and applied to voxels.
 
 \item{test-FR-EM-4 Individual Voxel Material Assignment\\}
+\label{sec:t-em-4}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -761,6 +815,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select a voxel, assign a material ID, and verify the assignment is recorded and visually displayed.
 
 \item{test-FR-EM-5 Group Voxel Material Assignment\\}
+\label{sec:t-em-5}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -777,6 +832,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select multiple voxels, assign a material ID, and verify all selected voxels receive the assignment.
 
 \item{test-FR-EM-6 Material Label Assignment\\}
+\label{sec:t-em-6}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -793,6 +849,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Access material management interface, assign a label to a material ID, and verify the label is displayed and associated correctly.
 
 \item{test-FR-EM-7 Property Replication Across Layers\\}
+\label{sec:t-em-7}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -809,6 +866,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select voxels with assigned properties in one layer, use the replication function to copy properties to another layer, and verify the properties are correctly applied.
 
 \item{test-FR-EM-8 Auto Save Functionality\\}
+\label{sec:t-em-8}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -825,6 +883,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Make property assignments, verify auto-save triggers, and confirm changes are preserved in the project file.
 
 \item{test-FR-EM-9 Edit History Access and Revert\\}
+\label{sec:t-em-9}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -841,6 +900,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Perform multiple edits, access edit history, select a previous version, and verify the model reverts correctly.
 
 \item{test-FR-EM-10 Entire Layer Selection and Assignment\\}
+\label{sec:t-em-10}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -857,6 +917,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select an entire layer, assign material and magnetization properties, and verify all voxels in the layer receive the assignments.
 
 \item{test-FR-EM-11 Manual Voxel Addition\\}
+\label{sec:t-em-11}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -873,6 +934,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Use the voxel addition tool to add a new voxel, verify it has correct dimensions, and confirm it starts with unassigned properties.
 
 \item{test-FR-EM-12 Manual Voxel Deletion\\}
+\label{sec:t-em-12}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -889,6 +951,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select a voxel, use the deletion tool, and verify the voxel is removed from the model.
 
 \item{test-FR-EM-13 Individual Voxel Property Reset\\}
+\label{sec:t-em-13}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -905,6 +968,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 \textbf{How test will be performed:} Select a voxel with assigned properties, use the reset function, and verify the voxel returns to unassigned state.
 
 \item{test-FR-EM-14 Group Voxel Property Reset\\}
+\label{sec:t-em-14}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -920,6 +984,22 @@ and user interface interactions as specified in requirements F231 through F2310.
 					
 \textbf{How test will be performed:} Select multiple voxels with assigned properties, use the reset function, and verify all selected voxels return to unassigned state.
 
+\item{test-FR-EM-15 Manual Save Functionality\\}
+\label{sec:t-em-15}
+
+\textbf{Type:} Functional, Dynamic, Manual
+
+\textbf{Covers:} F2311
+
+\textbf{Initial State:} Model with unsaved changes.
+
+\textbf{Input:} User selects option to Save project.
+
+\textbf{Output:} Changes are saved successfully and confirmation is displayed.
+
+\textbf{Test Case Derivation:} Ensures that the user can manually preserve their progress should the situation arise, as per F2311.
+
+\textbf{How test will be performed:} Make changes to the property assignments in the model, use the save option to save the project, and verify the changes are reflected in the project file.
 
 \end{enumerate}
 
@@ -933,6 +1013,7 @@ as specified in requirements F241 through F245.
 \begin{enumerate}
 
 \item{test-FR-XM-1 Property Validation for Complete Magnetization\\}
+\label{sec:t-xm-1}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -949,6 +1030,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Load a model with complete magnetization assignments, request export, and verify validation passes and export proceeds.
 
 \item{test-FR-XM-2 Property Validation for Incomplete Magnetization\\}
+\label{sec:t-xm-2}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -965,6 +1047,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Load a model with incomplete magnetization, request export, and verify the system identifies missing assignments and provides appropriate feedback.
 
 \item{test-FR-XM-3 Standalone File Export\\}
+\label{sec:t-xm-3}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -981,6 +1064,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Export a model with a custom filename, verify the file is created with all metadata, and confirm it can be accessed outside the software.
 
 \item{test-FR-XM-4 Project Export in Native Format\\}
+\label{sec:t-xm-4}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -997,6 +1081,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Export a project in native format, verify the file contains all project data, and confirm it can be imported back into the software.
 
 \item{test-FR-XM-5 Export Progress Tracking\\}
+\label{sec:t-xm-5}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -1013,6 +1098,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Export a large model, observe the progress bar updates, and verify the progress indicators accurately reflect export status.
 
 \item{test-FR-XM-6 Model Summary Export\\}
+\label{sec:t-xm-6}
 
 \textbf{Type:} Functional, Dynamic, Manual
 
@@ -1029,6 +1115,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Export a model with summary enabled, verify both files are created, and confirm the summary contains relevant model statistics.
 
 \item{test-FR-XM-7 Export Failure Recovery\\}
+\label{sec:t-xm-7}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -1045,6 +1132,7 @@ as specified in requirements F241 through F245.
 \textbf{How test will be performed:} Initiate export, simulate failure during the process, and verify the original project file remains unchanged and accessible.
 
 \item{test-FR-XM-8 Export Performance Validation\\}
+\label{sec:t-xm-8}
 
 \textbf{Type:} Functional, Dynamic, Automated
 
@@ -1082,11 +1170,15 @@ table or graph.}
 How will they be done?  In cases like code (or document) walkthroughs, who will
 be involved? Be specific.}
 \fi
+
+The following subsections outline tests corresponding to non-functional requirements in the SRS. Instead of organizing these tests by each component, tests are grouped into common non-functional areas of testing.
+
 \subsubsection{Usability and Look \& Feel}
 
 \begin{enumerate}
 
 \item{test-US-1 Design Acceptance \& Intuitivity Survey\\}
+\label{sec:t-nf-1}
 
 \textbf{Type:} Non-Functional, Dynamic, Manual, Survey-based
 
@@ -1105,9 +1197,10 @@ as well as how they would rank how intuitive functionalities are on a 5-point sc
 changes implemented where necessary to improve UI design in the case that expectations are not reached. A draft of the survey
 is included in the appendix of this document.
 
-Quantifiable Metric: 90\% of survey responses must rank 4 or above for intuitiveness of each feature.
+Quantifiable Metric: USABILITY\_PERCENTAGE\% of survey responses must rank 4 or above for intuitiveness of each feature.
 
 \item{test-US-2 Accessible Colours Check\\}
+\label{sec:t-nf-2}
 
 \textbf{Type:} Static, Manual
 
@@ -1125,6 +1218,7 @@ for material IDs, as well as colours used in the UI (e.g. text, buttons, sidebar
 Acceptance Criteria: All ratios must meet 3:1 contrast ratio for WCAG 2.0 compliance.
 
 \item{test-US-3 Design Ease of Use Test\\}
+\label{sec:t-nf-3}
 
 \textbf{Type:} Non-Functional, Dynamic, Manual, Survey-based
 
@@ -1134,12 +1228,13 @@ Acceptance Criteria: All ratios must meet 3:1 contrast ratio for WCAG 2.0 compli
 					
 \textbf{Input:} User completes core tasks (import file, material/magnetization assignment, export file)
 					
-\textbf{Output:} 90\% of users tested complete tasks in less than MAX\_INTERACTIONS.
+\textbf{Output:} USABILITY\_PERCENTAGE\% of users tested complete tasks in less than MAX\_INTERACTIONS.
 					
 \textbf{How test will be performed:} After a short explanation of core tasks, users will be asked to perform core tasks. Clicks per task
 are recorded and later analysed to verify that expectations are satisfied.
 
 \item{test-US-4 View Model and Layer Focus within application\\}
+\label{sec:t-nf-4}
 
 \textbf{Type:} Non-Functional, Dynamic, Manual
 
@@ -1156,6 +1251,7 @@ as if they intend to edit voxels within the layer. This confirms that the primar
 layer when editing voxels is satisfied.
 
 \item{test-US-5 Clear and Interpretable Warnings and Errors\\}
+\label{sec:t-nf-5}
 
 \textbf{Type:} Survey-based
 
@@ -1165,16 +1261,17 @@ layer when editing voxels is satisfied.
 					
 Input/Condition: User performs interactions that are known to result in error
 					
-Output/Result: 90\% of respondents agree that errors are informative
+Output/Result: USABILITY\_PERCENTAGE\% of respondents agree that errors are informative
 					
 \textbf{How test will be performed:} The user will be given direction in how to trigger different errors, and be exposed to
 all warning and error messages the system can generate. Users will explain whether they find it easy to understand
-or not (e.g. pass/fail). Investigation in how to reword prompts will take place for messages that under 90\% of users
+or not (e.g. pass/fail). Investigation in how to reword prompts will take place for messages that under USABILITY\_PERCENTAGE\% of users
 do not understand.
 
-Quantifiable Metric: For all messages, 90\% of users 'pass'.
+Quantifiable Metric: For all messages, USABILITY\_PERCENTAGE\% of users 'pass'.
 
 \item{test-US-6 Concise and Interpretable User Manual\\}
+\label{sec:t-nf-6}
 
 \textbf{Type:} Survey-based
 
@@ -1199,6 +1296,7 @@ Quantifiable Metric: Considered an initial success if areas of confusion for eac
 \begin{enumerate}
 
 \item{test-PS-1 Scalability Validation for Import and Visualization\\}
+\label{sec:t-nf-7}
 
 \textbf{Type:} Non-Functional, Dynamic, Automated
 
@@ -1219,6 +1317,7 @@ resulting model, the import module will be investigated for possible sources of 
 not render, error messages will be investigated for possible sources of refactoring. %check this with HA times
 					
 \item{test-PS-2 Performance Validation for Import, Visualization, Editing, and Export\\}
+\label{sec:t-nf-8}
 
 \textbf{Type:} Non-Functional, Dynamic, Automated
 
@@ -1238,6 +1337,7 @@ rates. Should performance fall short of these expectations, specific sections th
 that can be optimized. %check this with HA times (in/export)
 
 \item{test-PS-3 Resource Usage Validation Test\\}
+\label{sec:t-nf-9}
 
 \textbf{Type:} Non-Functional, Dynamic, Automated
 
@@ -1260,6 +1360,7 @@ that lead to increased usage will be investigated for precisely what part of the
 \begin{enumerate}
 
 \item{test-CO-1 Windows and Linux Compatibility Test\\}
+\label{sec:t-nf-10}
 
 \textbf{Type:} Non-Functional, Dynamic, Manual
 
@@ -1275,6 +1376,7 @@ Output/Result: Application is successfully installed and functions as intended.
 application. If the application opens successfully on each OS and can perform basic functionalities, the test is ruled a success.
 					
 \item{test-CO-2 Import and Export Compatibility Test\\}
+\label{sec:t-nf-11}
 
 \textbf{Type:} Non-Functional, Dynamic, Manual
 
@@ -1292,6 +1394,7 @@ dummy data to each layer and exports the project file to the 3D-printer ready fo
 completeness and correct formatting. 
 
 \item{test-CO-3 Project File Fail-safe\\} 
+\label{sec:t-nf-12}
 
 \textbf{Type:} Non-Functional, Dynamic, Manual
 
@@ -1308,6 +1411,7 @@ in the middle of the export. The project file is then checked against a copy of 
 if there are no differences, the test is considered a success. 
 
 \item{test-CO-4 PEP8 Standard Compliance\\}
+\label{sec:t-nf-13}
 
 \textbf{Type:} Static Analysis
 
@@ -1329,6 +1433,7 @@ warnings. All areas of note are then addressed, with possible refactorings or sm
 \begin{enumerate}
 
 \item{test-MA-1 Maintainable Codebase\\}
+\label{sec:t-nf-14}
 
 \textbf{Type:} Static Analysis
 
@@ -1370,108 +1475,255 @@ are implicitly tested for by the following system tests and/or unit tests.
 
 \subsection{Traceability Between Test Cases and Requirements}
 
-The following tables show the traceability between test cases and their corresponding functional requirements.
+The following tables show the traceability between test cases and their corresponding functional requirements, and demonstrate that complete coverage is achieved.
 
 \iffalse
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
 \fi
 
-\begin{table}[h!]
-  \centering
-  \caption{Import Manager Tests and Corresponding Requirements}
-  \begin{tabular}{c c}
-    \hline
-    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
-    FR-IM-1 & F211\\
-    FR-IM-2 & F212\\
-    FR-IM-3 & F211\\
-    FR-IM-4 & F213\\
-    FR-IM-5 & F214\\
-    FR-IM-6 & F215\\
-    FR-IM-7 & F216\\
-  \end{tabular}
+\newcommand{\obox}{\fbox{\rule{0pt}{1.5ex}\hspace{1.5ex}}}
+\newcommand{\xbox}{\colorbox{black}{\rule{0pt}{1.5ex}\hspace{1.5ex}}}
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Import Manager Tests and Corresponding Requirements}
+\label{tab:imt}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{6}{c}}
+\toprule
+\textbf{Reqs:} 
+& F211 & F212 & F213 & F214 & F215 & F216\\
+\midrule
+
+\hyperref[sec:t-im-1]{test-FR-IM-1} & 
+\xbox & \obox & \obox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-im-2]{test-FR-IM-2} & 
+\obox & \xbox & \obox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-im-3]{test-FR-IM-3} & 
+\xbox & \obox & \obox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-im-4]{test-FR-IM-4} & 
+\obox & \obox & \xbox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-im-5]{test-FR-IM-5} & 
+\obox & \obox & \obox & \xbox & \obox & \obox \\
+
+\hyperref[sec:t-im-6]{test-FR-IM-6} & 
+\obox & \obox & \obox & \obox & \xbox & \obox \\
+
+\hyperref[sec:t-im-7]{test-FR-IM-7} & 
+\obox & \obox & \obox & \obox & \obox & \xbox \\
+
+\bottomrule
+\end{tabular}
 \end{table}
 
-\begin{table}[h!]
-  \centering
-  \caption{Visualization Manager Tests and Corresponding Requirements}
-  \begin{tabular}{c c}
-    \hline
-    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
-    FR-VM-1 & F221\\
-    FR-VM-2 & F222\\
-    FR-VM-3 & F223\\
-    FR-VM-4 & F224\\
-    FR-VM-5 & F225\\
-    FR-VM-6 & F226\\
-    FR-VM-7 & F227\\
-    FR-INT-1 & F211, F221\\
-  \end{tabular}
+\begin{table}[H]
+\centering
+\caption{Trace Between Visualization Manager Tests and Corresponding Requirements}
+\label{tab:vmt}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{8}{c}}
+\toprule
+\textbf{Reqs:} 
+& F211 & F221 & F222 & F223 & F224 & F225 & F226 & F227 \\
+\midrule
+
+\hyperref[sec:t-vm-1]{test-FR-VM-1} & 
+\obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-vm-2]{test-FR-VM-2} & 
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-vm-3]{test-FR-VM-3} & 
+\obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-vm-4]{test-FR-VM-4} & 
+\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-vm-5]{test-FR-VM-5} & 
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox\\
+
+\hyperref[sec:t-vm-6]{test-FR-VM-6} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox\\
+
+\hyperref[sec:t-vm-7]{test-FR-VM-7} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox\\
+
+\hyperref[sec:t-int-1]{test-FR-INT-1} & 
+\xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\bottomrule
+\end{tabular}
 \end{table}
 
-\begin{table}[h!]
-  \centering
-  \caption{Editing Manager Tests and Corresponding Requirements}
-  \begin{tabular}{c c}
-    \hline
-    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
-    FR-EM-1 & F231\\
-    FR-EM-2 & F231\\
-    FR-EM-3 & F232\\
-    FR-EM-4 & F233\\
-    FR-EM-5 & F233\\
-    FR-EM-6 & F234\\
-    FR-EM-7 & F235\\
-    FR-EM-8 & F236\\
-    FR-EM-9 & F237\\
-    FR-EM-10 & F238\\
-    FR-EM-11 & F239\\
-    FR-EM-12 & F239\\
-    FR-EM-13 & F2310\\
-    FR-EM-14 & F2310\\
-  \end{tabular}
+\begin{table}[H]
+\centering
+\caption{Trace Between Editing Manager Tests and Corresponding Requirements}
+\label{tab:emt}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{11}{c}}
+\toprule
+\textbf{Reqs:} 
+& F231 & F232 & F233 & F234 & F235 & F236 & F237 & F238 & F239 & F2310 & F2311\\
+\midrule
+
+\hyperref[sec:t-em-1]{test-FR-EM-1} & 
+\xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-2]{test-FR-EM-2} & 
+\xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-3]{test-FR-EM-3} & 
+\obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-4]{test-FR-EM-4} & 
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-5]{test-FR-EM-5} & 
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-6]{test-FR-EM-6} & 
+\obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-7]{test-FR-EM-7} & 
+\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-8]{test-FR-EM-8} & 
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-9]{test-FR-EM-9} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-10]{test-FR-EM-10} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-em-11]{test-FR-EM-11} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox\\
+
+\hyperref[sec:t-em-12]{test-FR-EM-12} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox\\
+
+\hyperref[sec:t-em-13]{test-FR-EM-13} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox\\
+
+\hyperref[sec:t-em-14]{test-FR-EM-14} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox\\
+
+\hyperref[sec:t-em-15]{test-FR-EM-15} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox\\
+
+\bottomrule
+\end{tabular}
 \end{table}
 
-\begin{table}[h!]
-  \centering
-  \caption{Export Manager Tests and Corresponding Requirements}
-  \begin{tabular}{c c}
-    \hline
-    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
-    FR-XM-1 & F241\\
-    FR-XM-2 & F241\\
-    FR-XM-3 & F242\\
-    FR-XM-4 & F243\\
-    FR-XM-5 & F244\\
-    FR-XM-6 & F245\\
-    FR-XM-7 & F241\\
-    FR-XM-8 & F241\\
-  \end{tabular}
+\begin{table}[H]
+\centering
+\caption{Trace Between Export Manager Tests and Corresponding Requirements}
+\label{tab:xmt}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{5}{c}}
+\toprule
+\textbf{Reqs:} 
+& F241 & F242 & F243 & F244 & F245 \\
+\midrule
+
+\hyperref[sec:t-xm-1]{test-FR-XM-1} & 
+\xbox & \obox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-xm-2]{test-FR-XM-2} & 
+\xbox & \obox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-xm-3]{test-FR-XM-3} & 
+\obox & \xbox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-xm-4]{test-FR-XM-4} & 
+\obox & \obox & \xbox & \obox & \obox \\
+
+\hyperref[sec:t-xm-5]{test-FR-XM-5} & 
+\obox & \obox & \obox & \xbox & \obox \\
+
+\hyperref[sec:t-xm-6]{test-FR-XM-6} & 
+\obox & \obox & \obox & \obox & \xbox \\
+
+\hyperref[sec:t-xm-7]{test-FR-XM-7} & 
+\xbox & \obox & \obox & \obox & \obox \\
+
+\hyperref[sec:t-xm-8]{test-FR-XM-8} & 
+\xbox & \obox & \obox & \obox & \obox \\
+
+\bottomrule
+\end{tabular}
 \end{table}
 
-\begin{table}[h!]
-  \centering
-  \caption{Non-Functional Tests and Corresponding Requirements}
-  \begin{tabular}{c c}
-    \hline
-    \textbf{Test ID (test-)} & \textbf{Requirement and/or Relevant Documentation} \\ \hline
-    US-1 & S3\\
-    US-2 & NF223\\
-    US-3 & NF213, NF231, NF243\\
-    US-4 & S3\\
-    US-5 & S4.1-7\\
-    US-6 & GEN1\\
-    PS-1 & NF211, NF222, NF212\\
-    PS-2 & NF212, NF221, NF232, NF242\\
-    PS-3 & E3.4\\
-    CO-1 & E3.1\\
-    CO-2 & E3.2, E3.3\\
-    CO-3 & NF241\\
-    CO-4 & DP.10\\
-    MA-1 & DP.10, GEN2\\
-  \end{tabular}
+\newgeometry{left=0.5cm,right=0.5cm,top=2cm,bottom=2cm}
+\begin{landscape}
+\begin{table}[H]
+\centering
+\caption{Trace Between Non-Functional Tests and Corresponding Requirements}
+\label{tab:nft}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{20}{c}}
+\toprule
+\textbf{Reqs:} 
+& NF211 & NF212 & NF213 & NF221 & NF222 & NF223 & NF231 & NF232 & NF241 & NF242 & NF243 & GEN1 & GEN2 & E3.1 & E3.2 & E3.3 & E3.4 & S3 & S4 & DP.10 \\
+\midrule
+
+\hyperref[sec:t-nf-1]{test-US-1} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox\\
+
+\hyperref[sec:t-nf-2]{test-US-2} & 
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-3]{test-US-3} & 
+\obox & \obox & \xbox & \obox & \obox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-4]{test-US-4} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox\\
+
+\hyperref[sec:t-nf-5]{test-US-5} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox\\
+
+\hyperref[sec:t-nf-6]{test-US-6} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-7]{test-PS-1} & 
+\xbox & \xbox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-8]{test-PS-2} & 
+\obox & \xbox & \obox & \xbox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-9]{test-PS-3} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-10]{test-CO-1} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-11]{test-CO-2} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-12]{test-CO-3} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox\\
+
+\hyperref[sec:t-nf-13]{test-CO-4} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox\\
+
+\hyperref[sec:t-nf-14]{test-MA-1} & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox\\
+
+\bottomrule
+\end{tabular}
 \end{table}
+\end{landscape}
+\restoregeometry
 
 \newpage
 
@@ -1480,7 +1732,7 @@ The following tables show the traceability between test cases and their correspo
 				
 \bibliographystyle{plainnat}
 
-\bibliography{../../refs/References}
+\bibliography{../../refs/References.bib}
 
 \clearpage
 
@@ -1526,9 +1778,14 @@ Their values are defined in this section for easy maintenance.
   \item \textbf{MAX\_INTERACTIONS} = 5
   
   This considers the maximum number of steps (e.g. clicks, enter details into a text box) a user should take to complete a part of a task.
+
+  \item \textbf{USABILITY\_PERCENTAGE} = 90\%
+
+  Relates to the percentage of users that should be able to succeed at different tasks within the system, or agree that a certain feature is intuitive.
+
 \end{itemize}
 
-\subsection{Usability Survey Questions?}
+\subsection{Usability Survey Questions}
 
 \iffalse
 \wss{This is a section that would be appropriate for some projects.}

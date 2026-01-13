@@ -7,11 +7,11 @@ endif::[]
 
 This section details constraints imposed on the project. To summarize, key constraints include specifically which files and operating systems the system must support.
 
-* *Operating System Support.* The system must support the Windows and Linux operating systems. This constraint is necessary to ensure the application can be installed and run on the lab computers utilised by the application's users. (E3.1)
+* [[E3.1]] *Operating System Support (E3.1).* The system must support the Windows and Linux operating systems. This constraint is necessary to ensure the application can be installed and run on the lab computers utilised by the application's users. 
 
-* *STL File Support.* To support the importing and converting of user-created external CAD files, the system must parse STL files. Information relating to the specifications of STL files can be found link:https://www.fabbers.com/tech/STL_Format[here.] (E3.2)
+* [[E3.2]] *STL File Support (E3.2).* To support the importing and converting of user-created external CAD files, the system must parse STL files. Information relating to the specifications of STL files can be found link:https://www.fabbers.com/tech/STL_Format[here] <<MB93,[5]>>.
 
-* *Export File Support.* In order to export user-created voxel project files in a format usable by pre-existing 3D printing software, the system must support the creation of export files containing all necessary metadata, organized in such a way that minimal changes need to be made to the existing software. (E3.3)
+* [[E3.3]] *Export File Support (E3.3).* In order to export user-created voxel project files in a format usable by pre-existing 3D printing software, the system must support the creation of export files containing all necessary metadata, organized in such a way that minimal changes need to be made to the existing software. 
 
-* *Minimize resource usage.* The system must be implemented in such a way to minimise the usage of computer resources as much as is feasible. Some level of usage is unavoidable; a main feature of the system is the rendering of a 3D graphical user interface. However, it is important to balance needed functionality and device resource usage. Desktop resources are limited, and may be utilised for other tasks simultaneously. (E3.4)
+* [[E3.4]] *Minimize resource usage (E3.4).* The system must be implemented in such a way to minimise the usage of computer resources as much as is feasible. Some level of usage is unavoidable; a main feature of the system is the rendering of a 3D graphical user interface. However, it is important to balance needed functionality and device resource usage. Desktop resources are limited, and may be utilised for other tasks simultaneously. 
 

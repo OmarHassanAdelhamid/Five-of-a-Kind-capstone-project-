@@ -7,9 +7,10 @@ endif::[]
 
 This section provides detailed usage scenarios that expand on the high-level scenarios described in <<g5>>. These scenarios incorporate the system components and secondary scenarios.
 
-==== (S.4.1) Import and Voxelize CAD Model
+==== [[S.4.1]] (S.4.1) Import and Voxelize CAD Model
 
-* **Use case**: UC1, UC2
+* **Use case**: <<UC1>>, <<UC2>>
+* **Related requirements**: <<F211>>, <<F213>>, <<F214>>, <<F215>>, <<F216>>, <<NF211>>, <<NF212>>, <<NF213>>, <<F221>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: System
 * **Precondition**: User has a completed 3D CAD file and the system is running on their desktop/laptop.
@@ -35,9 +36,10 @@ This section provides detailed usage scenarios that expand on the high-level sce
 
 This scenario is important as it establishes the foundation for the entire project. The ability to reliably import and convert a CAD file to voxels is critical for users who need to work with existing designs rather than starting from scratch.
 
-==== (S.4.2) Assign Properties to Voxels within a Layer
+==== [[S.4.2]] (S.4.2) Assign Properties to Voxels within a Layer
 
-* **Use case**: UC2, UC3
+* **Use case**: <<UC2>>, <<UC3>>
+* **Related requirements**: <<F221>>, <<F223>>, <<F224>>, <<F225>>, <<NF221>>, <<NF222>>, <<F231>>, <<F232>>, <<F233>>, <<F234>>, <<F235>>, <<F237>>, <<F2310>>, <<NF231>>, <<NF232>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: System
 * **Precondition**: CAD model has been successfully imported, or the model being constructed has a set of voxels, user is viewing a specific layer in the 3D viewer.
@@ -70,9 +72,10 @@ This scenario is important as it establishes the foundation for the entire proje
 
 This scenario is improtant because it provides the core functionality of this system, which is allowing users to precisly control both magnetization vectors and material assignments at the voxel level. The layer by layer approach allows users to assign properties while also maintaining a 3D view of the structure. The ability to select multiple voxels and apply the same properties to all of them significantly reduces the time required compared to manual voxel-by-voxel assignment.
 
-==== (S.4.3) Edit and Modify Existing Voxel Properties
+==== [[S.4.3]] (S.4.3) Edit and Modify Existing Voxel Properties
 
-* **Use case**: UC3
+* **Use case**: <<UC3>>
+* **Related requirements**: <<F224>>, <<F225>>, <<F226>>, <<F227>>, <<NF223>>, <<F231>>, <<F233>>, <<F236>>, <<F238>>, <<NF231>>, <<NF232>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: System
 * **Precondition**: User has already assigned properties to some voxels and wants to make changes without restarting the entire process.
@@ -99,9 +102,10 @@ This scenario is improtant because it provides the core functionality of this sy
 
 This scenario is important because it addresses the critical need for iterative design refinement. Users often need to make adjustments to property assignments based on simulation results or design requirements. The ability to edit existing assignments without restarting the entire process saves significant time and reduces frustration, making the system practical for real-world research workflows.
 
-==== (S.4.4) Add and Delete Voxels from within a Layer
+==== [[S.4.4]] (S.4.4) Add and Delete Voxels from within a Layer
 
-* **Use case**: UC4
+* **Use case**: <<UC4>>
+* **Related requirements**: <<F224>>, <<F236>>, <<F237>>, <<F239>>, <<NF231>>, <<NF232>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: System
 * **Precondition**: User has created a project (via import or from scratch) and wants to edit the voxels present.
@@ -128,9 +132,10 @@ This scenario is important because it addresses the critical need for iterative 
 
 This scenario is important as it reflects both the user's ability to create voxel models from scratch, or correct any undesired voxel placements after conversion from a CAD file. Being able to edit models at this level is critical to success in satisfying the designer's vision.
 
-==== (S.4.5) Export Voxel Property Assignment Data for 3D Printing
+==== [[S.4.5]] (S.4.5) Export Voxel Property Assignment Data for 3D Printing
 
-* **Use case**: UC5
+* **Use case**: <<UC5>>
+* **Related requirements**: <<F241>>, <<F242>>, <<F243>>, <<F244>>, <<NF241>>, <<NF242>>, <<NF243>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: Lab Operator, System
 * **Precondition**: User has completed property assignments for all layers and is ready to prepare the data for 3D printing.
@@ -156,19 +161,20 @@ This scenario is important as it reflects both the user's ability to create voxe
 
 This scenario is important because it represents the last step in the workflow, ensuring that the users can take what they have been working on and successfully transfer it to a physical printing process. The export functionality must be reliable and produce a file that is compatible with the existing  printing pipeline, while maintaining the magnetization data (CSV) throughout the transition.
 
-==== (S.4.6) Validate and Review Magnetization Design
+==== [[S.4.6]] (S.4.6) Validate and Review Magnetization Design
 
-* **Use case**: UC1, UC5
+* **Use case**: <<UC1>>, <<UC5>>
+* **Related requirements**: <<F221>>, <<F222>>, <<F223>>, <<F224>>, <<F226>>, <<F227>>, <<NF221>>, <<NF222>>, <<NF223>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: Supervisor, System
 * **Precondition**: User has completed magnetization assignment and wants to validate the design before export and printing.
-* **Trigger**: User wants to review the complete magnetization pattern and ensure it meets the their needs.
+* **Trigger**: User wants to review the complete magnetization/material pattern and ensure it meets the their needs.
 * **Main Success Scenario**:
 
-    - 1. System displays the complete 3D model with magnetization visualization.
+    - 1. System displays the complete 3D model with magnetization and material visualization.
     - 2. User can rotate, zoom, and examine the model from different angles.
     - 3. System provides layer-by-layer navigation to review specific sections.
-    - 4. User can filter the view to show only voxels with specific magnetization directions.
+    - 4. User can filter the view to show only voxels with specific magnetization directions or material properties.
 * **Secondary Scenarios**:
 
     - 4.1. Supervisor requests changes after review - User can return to editing mode.
@@ -176,9 +182,10 @@ This scenario is important because it represents the last step in the workflow, 
 
 This scenario is important because it ensures quality and validation before moving on to the final step of exporting the file. This prevents the expensive and time-consuming 3D printing process on a file that is not what's needed. 
 
-==== (S.4.7) Save Voxel Project File for Later Editing
+==== [[S.4.7]] (S.4.7) Save Voxel Project File for Later Editing
 
-* **Use case**: UC5
+* **Use case**: <<UC5>>
+* **Related requirements**: <<F2311>>, <<F243>>, <<NF231>>, <<NF243>>
 * **Primary Actor**: Researcher/Engineer
 * **Supporting Actors**: System
 * **Precondition**: User has begun a project.
@@ -197,3 +204,86 @@ This scenario is important because it ensures quality and validation before movi
 * **Success Postcondition**: Project file is saved correctly and it is safe to close the program.
 
 This scenario is important as users may not be able to complete all of the work in one sitting, or they may want to create many variations of the same base project during the design process. Saved project files must be complete and correct to maximise user satisfaction and reduce any user frustration with lost progress.
+
+.Traceability Matrix between Use Cases and Functional Requirements
+
+[cols="8*^"]
+|===
+
+| | <<S.4.1>> | <<S.4.2>> | <<S.4.3>> | <<S.4.4>> | <<S.4.5>> | <<S.4.6>> | <<S.4.7>> 
+
+| <<F211>> | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F212>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F213>> | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F214>> | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F215>> | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F216>> | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+
+| <<F221>> | icon:check-square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[]
+| <<F222>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[]
+| <<F223>> | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[]
+| <<F224>> | icon:square[] | icon:check-square[] | icon:check-square[] | icon:check-square[] | icon:square[] | icon:check-square[] | icon:square[]
+| <<F225>> | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F226>> | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[]
+| <<F227>> | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[]
+
+| <<F231>> | icon:square[] | icon:check-square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F232>> | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F233>> | icon:square[] | icon:check-square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F234>> | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F235>> | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F236>> | icon:square[] | icon:square[] | icon:check-square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F237>> | icon:square[] | icon:check-square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F238>> | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F239>> | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F2310>> | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<F2311>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[]
+
+| <<F241>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[]
+| <<F242>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[]
+| <<F243>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:check-square[]
+| <<F244>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[]
+| <<F245>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+
+|===
+
+.Traceability Matrix between Use Cases and Non-Functional Requirements
+
+[cols="8*^",options="header"]
+|===
+
+| | <<S.4.1>> | <<S.4.2>> | <<S.4.3>> | <<S.4.4>> | <<S.4.5>> | <<S.4.6>> | <<S.4.7>> 
+
+| <<NF211>> | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<NF212>> | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<NF213>> | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+
+| <<NF221>> | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[]
+| <<NF222>> | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[]
+| <<NF223>> | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[]
+
+| <<NF231>> | icon:square[] | icon:check-square[] | icon:check-square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:check-square[]
+| <<NF232>> | icon:square[] | icon:check-square[] | icon:check-square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[]
+
+| <<NF241>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[]
+| <<NF242>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[]
+| <<NF243>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:check-square[]
+
+| <<GEN1>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<GEN2>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+
+|===
+
+.Traceability Matrix between Use Cases and High-Level Use Cases
+
+[cols="8*^",options="header"]
+|===
+| | <<S.4.1>> | <<S.4.2>> | <<S.4.3>> | <<S.4.4>> | <<S.4.5>> | <<S.4.6>> | <<S.4.7>> 
+
+| <<UC1>> | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[]
+| <<UC2>> | icon:check-square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<UC3>> | icon:square[] | icon:check-square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[] | icon:square[]
+| <<UC4>> | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:square[] | icon:square[] | icon:square[]
+| <<UC5>> | icon:square[] | icon:square[] | icon:square[] | icon:square[] | icon:check-square[] | icon:check-square[] | icon:check-square[]
+
+|===

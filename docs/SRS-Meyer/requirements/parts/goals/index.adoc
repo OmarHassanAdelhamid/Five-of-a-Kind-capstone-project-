@@ -1,4 +1,4 @@
-== (G) Goals
+== (G) Goals [[G]]
 
 ifdef::env-draft[]
 NOTE: _Goals are "needs of the target organization, which the system will address". While the development team is the principal user of the other books, the Goals book addresses a wider audience: essentially, all stakeholders_ <<BM22>>

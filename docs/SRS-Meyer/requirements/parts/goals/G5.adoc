@@ -5,64 +5,55 @@ ifdef::env-draft[]
 TIP: _Fundamental usage paths through the system. It presents the main scenarios (use cases) that the system should cover. The scenarios chosen for appearing here, in the Goals book, should only be the **main usage patterns**, without details such as special and erroneous cases; they should be stated in user terms only, independently of the system's structure. Detailed usage scenarios, taking into account system details and special cases, will appear in the System book (<<s4>>)._  <<BM22>>
 endif::[]
 
-This section outlines the fundamental usage paths and primary interactions users will have with the system. These high-level use cases present the main scenarios that the system is designed to address. For more detailed, special scenarios, take a look at the <<s4>>.
+This section outlines the fundamental usage paths and primary interactions users will have with the system. These high-level use cases present the main scenarios that the system is designed to address. For more detailed, special scenarios, refer to <<s4>>.
 
-.High Level use cases diagram
-image::models/use_case_diagram.png[scale=70%,align="center"]
+.High-level Use Case Diagram
+image::models/use_case_diagram.svg[scale=70%,align="center"]
 
-The use case diagram above highlights how we anticipate our direct stakeholders will interact with the voxel property assignment system for the principal use cases. More details for these usages are as follows:
+Figure 2 above highlights how we anticipate our direct stakeholders will interact with the voxel property assignment system for the principal use cases. More details for these usages are as follows:
 
 * [[uc1,UC1]] *UC1: Import CAD File.* 
 
-    1. User obtains a finished 3D CAD file from CAD software (e.g., AutoCAD).
-    2. User opens the  system and selects the option to import the CAD file.
-    3. System converts the file to a voxel grid with fixed dimensions.
-    4. System displays the voxelized model ready for magnetization assignment.
+    1. User obtains a finished CAD file from CAD software (e.g., AutoCAD).
+    2. User opens the system and selects the option to import the CAD file.
+    3. System converts the file to a set of voxels and creates a new project file.
+    4. System displays the voxelized model ready for property assignment.
 
 +
 
 * [[uc2,UC2]] *UC2: Browse and Select Voxels.* 
 
     1. User opens the system and selects an existing project file.
-    2. System loads and displays the selected file, sliced into layers from bottom to top.
-    3. User navigates through layers to view the voxel structure.
-    4. User selects individual voxels or multiple voxels within a layer.
-    5. System highlights selected voxels for material and/or magnetization vector assignment.
-    6. User can modify selections across different layers.
+    2. System loads and displays the selected file.
+    3. User navigates layers to view the voxel structure and selects a set of voxels.
+    4. System highlights selected voxels for property assignment.
+    5. User can modify selections across different layers.
 
 +
 
 * [[uc3,UC3]] *UC3: Assign Properties to Voxels.* 
 
-    1. User opens the system and selects an existing project file with the intention of assigning material IDs and magnetization vectors to voxels.
-    2. User selects voxels requiring a specific set of properties assigned to them.
-    3. User specifies the magnetization direction for the selected voxels, which the system applies.
-    4. System provides visual feedback indicating the voxels have been magnetized.
-    5. User specifies the material ID for the selected voxels, which the system applies.
-    6. System provides visual feedback indicating the voxels assigned material ID.
-    7. System maintains editing history, providing user the option to undo/redo.
-    8. User completes property assignment for all required voxels.
+    1. User opens the system and selects an existing project file, and selects voxels.
+    2. User specifies a magnetization direction.
+    3. System provides visual feedback indicating the voxels have been magnetized.
+    4. User specifies a material ID.
+    5. System provides visual feedback indicating the voxels have been assigned a material.
 
 +
 
 * [[uc4, UC4]] *UC4: Add and Delete Voxels.*
 
-    1. User opens the system and selects an existing project file with the intention of adding and deleting voxels.
+    1. User opens the system and selects an existing project file.
     2. User selects a grid space where they wish to create a new voxel.
     3. System adds a new blank voxel to the model at the selected space.
     4. User selects a voxel they wish to delete.
     5. System removes the voxel from the model.
-    6. User completes all needed voxel additions and deletions.
+
 +
 
 * [[uc5,UC5]] *UC5: Export Property assignment Data.* 
 
-    1. User completes property assignment for the entire model.
-    2. User initiates export process from the system.
-    3. System validates that all voxels have both a material and a magnetization vector assigned.
-    4. System generates a file containing per-voxel data, including voxel location, magnetization vector, and material ID, ensuring compatibility with custom printer software.
-    5. User receives the exported file for printer pipeline integration.
-
-
-
-
+    1. User completes property assignment for the entire model and initiates export process.
+    2. System validates that all voxels have both a material and a magnetization vector assigned.
+    3. System generates a file containing per-voxel data, including voxel location, magnetization vector, and material ID.
+    4. User receives the exported file for use with a multi-material 3D printer.

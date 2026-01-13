@@ -1,4 +1,4 @@
-== (P) Project
+== (P) Project [[P]]
 
 //include::control.adoc[]
 
