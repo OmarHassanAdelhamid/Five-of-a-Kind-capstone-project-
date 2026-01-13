@@ -152,14 +152,14 @@ the completeness of the design against the requirements provided in the SRS. The
 other shows the relation between anticipated changes and the modules. Section
 \ref{SecUse} describes the use relation between modules.
 
-\section{Anticipated and Unlikely Changes} \label{SecChange}
+\section{Anticipated and Unlikely Changes}\label{SecChange}
 
 This section lists possible changes to the system. According to the likeliness
 of the change, the possible changes are classified into two
 categories. Anticipated changes are listed in Section \ref{SecAchange}, and
 unlikely changes are listed in Section \ref{SecUchange}.
 
-\subsection{Anticipated Changes} \label{SecAchange}
+\subsection{Anticipated Changes}\label{SecAchange}
 
 Anticipated changes are the source of the information that is to be hidden
 inside the modules. Ideally, changing one of the anticipated changes will only
@@ -168,23 +168,23 @@ adapted here is called design for
 change.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the initial input file (CAD file formats). Initially, the system will support STL files, but anticipated changes could require supporting additional CAD formats used in the industry. The change in input format affects the parsing logic, error handling, and integration with visualization manager. Changes will require updates to file importers and related data validation processes.
+\item[\refstepcounter{acnum} \actheacnum\label{acInput}:] The format of the initial input file (CAD file formats). Initially, the system will support STL files, but anticipated changes could require supporting additional CAD formats used in the industry. The change in input format affects the parsing logic, error handling, and integration with visualization manager. Changes will require updates to file importers and related data validation processes.
 
-\item[\refstepcounter{acnum} \actheacnum \label{acInputConstraints}:] The constraints on the input parameters such as the maximum number of voxels and the maximum number of layers that can be displayed. These limits are currently fixed at 13,996,800,000 voxels and 518,400 voxels, but may need to be configurable in the future. Changes to these constraints will require updates to the input validation and parsing logic.
+\item[\refstepcounter{acnum} \actheacnum\label{acInputConstraints}:] The constraints on the input parameters such as the maximum number of voxels and the maximum number of layers that can be displayed. These limits are currently fixed at 13,996,800,000 voxels and 518,400 voxels, but may need to be configurable in the future. Changes to these constraints will require updates to the input validation and parsing logic.
 
-\item[\refstepcounter{acnum} \actheacnum \label{acVoxelSize}:] The dimensions of the voxel grid. The dimensions of the voxel grid are currently fixed at $300 \times 300\,\mu\mathrm{m}$ (XY) and $110\,\mu\mathrm{m}$ (Z), but may need to be configurable in the future as the user may want to use a different voxel size. Changes to these constraints will require updates to the voxelization algorithm and the layer navigation logic.
+\item[\refstepcounter{acnum} \actheacnum\label{acVoxelSize}:] The dimensions of the voxel grid. The dimensions of the voxel grid are currently fixed at $300 \times 300\,\mu\mathrm{m}$ (XY) and $110\,\mu\mathrm{m}$ (Z), but may need to be configurable in the future as the user may want to use a different voxel size. Changes to these constraints will require updates to the voxelization algorithm and the layer navigation logic.
 
-\item[\refstepcounter{acnum} \actheacnum \label{acVoxelization}:] The algorithm used to convert the mesh CAD file into a voxel grid. Anticipated changes will require updates to the voxelization algorithm to improve the accuracy, performance, or new features. 
+\item[\refstepcounter{acnum} \actheacnum\label{acVoxelization}:] The algorithm used to convert the mesh CAD file into a voxel grid. Anticipated changes will require updates to the voxelization algorithm to improve the accuracy, performance, or new features. 
 
-\item[\refstepcounter{acnum} \actheacnum \label{acMagnetization}:] The representation and format of magnetization direction data placed on the voxels, either by vector representation or coordinate system. This could involve changing the data structure (e.g., from Cartesian coordinates to Euler angles), supporting both absolute and relative directions, or accommodating multiple coordinate systems. Changes will require updates to the magnetization assignment logic.
+\item[\refstepcounter{acnum} \actheacnum\label{acMagnetization}:] The representation and format of magnetization direction data placed on the voxels, either by vector representation or coordinate system. This could involve changing the data structure (e.g., from Cartesian coordinates to Euler angles), supporting both absolute and relative directions, or accommodating multiple coordinate systems. Changes will require updates to the magnetization assignment logic.
 
-\item[\refstepcounter{acnum} \actheacnum \label{acSelection}:] The implementation of selecting multiple voxels. Currently multi-selection is supported by selecting each voxel individually or an entire layer at once. Changes will require updates to the selection logic considering a more flexible selection method such lasso selection or rectangle selection.
+\item[\refstepcounter{acnum} \actheacnum\label{acSelection}:] The implementation of selecting multiple voxels. Currently multi-selection is supported by selecting each voxel individually or an entire layer at once. Changes will require updates to the selection logic considering a more flexible selection method such lasso selection or rectangle selection.
 
-\item[\refstepcounter{acnum} \actheacnum \label{acExport}:] The exported file format for the custom printer software is currently CSV. The file must contain the voxel location, layer, and magnetization direction and material ID data. Anticipated changes could require supporting other formats (such as JSON, XML, or other file formats). Changes will require updates to the export logic.
+\item[\refstepcounter{acnum} \actheacnum\label{acExport}:] The exported file format for the custom printer software is currently CSV. The file must contain the voxel location, layer, and magnetization direction and material ID data. Anticipated changes could require supporting other formats (such as JSON, XML, or other file formats). Changes will require updates to the export logic.
 
-\item[\refstepcounter{acnum} \actheacnum \label{acDataStructure}:] The implementation of the data structures used to store and manage voxel grids and voxel properties. This could involve using different data structures such as a tree structure or a graph structure optimizing the performance metrics of the system, metrics such as memory usage, search speed, or parallel processing. Anticipating such changes allows for future performance and scalability enhancements. Changes will require updates to the data structures.
+\item[\refstepcounter{acnum} \actheacnum\label{acDataStructure}:] The implementation of the data structures used to store and manage voxel grids and voxel properties. This could involve using different data structures such as a tree structure or a graph structure optimizing the performance metrics of the system, metrics such as memory usage, search speed, or parallel processing. Anticipating such changes allows for future performance and scalability enhancements. Changes will require updates to the data structures.
 
-\item[\refstepcounter{acnum} \actheacnum \label{acUI}:] The layout and interaction methods of the user interface, including menu structure, keyboard shortcuts, and user feedback mechanisms. This anticipated change helps accommodate different user workflows, accessibility requirements, or even support for new input devices.  Changes will require updates to the UI logic.
+\item[\refstepcounter{acnum} \actheacnum\label{acUI}:] The layout and interaction methods of the user interface, such as menu structure, keyboard shortcuts, and user feedback mechanisms. This anticipated change helps accommodate different user workflows, accessibility requirements, or even support for new input devices. Changes will require updates to the UI presentation or logic.
 
 \end{description}
 
@@ -194,7 +194,7 @@ design or implementation choices.  They are not related to changes that are made
 at run-time, like the values of parameters.}
 \fi
 
-\subsection{Unlikely Changes} \label{SecUchange}
+\subsection{Unlikely Changes}\label{SecUchange}
 
 The module design should be as general as possible. However, a general system is
 more complex. Sometimes this complexity is not necessary. Fixing some design
@@ -204,13 +204,13 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices. The system is designed with the expectation that it operates with a limited and specific set of input and output devices. Input is handled through files (such as CAD input files or configuration files) and/or keyboard entry (for command-line or interactive parameter input). Output is provided via files (for export and logging), memory (for internal data storage and communication between modules), and/or a graphical screen (for visualization and user interface feedback).
+\item[\refstepcounter{ucnum} \uctheucnum\label{ucIO}:] Input/Output devices. The system is designed with the expectation that it operates with a limited and specific set of input and output devices. Input is handled through files (such as CAD input files or configuration files) and/or keyboard entry (for command-line or interactive parameter input). Output is provided via files (for export and logging), memory (for internal data storage and communication between modules), and/or a graphical screen (for visualization and user interface feedback).
 
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucArchitecture}:] The overall system architecture. The software follows a rigid four-manager structure that divides system functionality into Import, Visualization, Editing, and Export managers. Each manager is responsible for a core facet of application operation, and this separation is central to the modular design.
+\item[\refstepcounter{ucnum} \uctheucnum\label{ucArchitecture}:] The overall system architecture. The software follows a rigid four-manager structure that divides system functionality into Import, Visualization, Editing, and Export managers. Each manager is responsible for a core facet of application operation, and this separation is central to the modular design.
 
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucLayerOrder}:] The ordering of layers from bottom to top (Z-axis ordering). Layers within the voxel grid are organized along the Z-axis, proceeding from the lowest layer (the base) to the highest (the top). This convention aligns with common additive manufacturing and 3D modeling practices.
+\item[\refstepcounter{ucnum} \uctheucnum\label{ucLayerOrder}:] The ordering of layers from bottom to top (Z-axis ordering). Layers within the voxel grid are organized along the Z-axis, proceeding from the lowest layer (the base) to the highest (the top). This convention aligns with common additive manufacturing and 3D modeling practices.
 
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucInteraction}:] The fundamental user interaction paradigm. The system targets a desktop usage scenario, using mouse and keyboard as primary input methods. This supports rapid interaction, direct manipulation of interface elements, and fine control over editing tasks.
+\item[\refstepcounter{ucnum} \uctheucnum\label{ucInteraction}:] The fundamental user interaction paradigm. The system targets a desktop usage scenario, using mouse and keyboard as primary input methods. This supports rapid interaction, direct manipulation of interface elements, and fine control over editing tasks.
 
 \end{description}
 
@@ -223,34 +223,34 @@ actually be implemented.
 
 \begin{description}
 % Behaviour Hiding Modules
-\item [\refstepcounter{mnum} \mthemnum \label{m1}:] Input Interpreter Module
-\item [\refstepcounter{mnum} \mthemnum \label{m2}:] Voxel Slicing Module
-\item [\refstepcounter{mnum} \mthemnum \label{m3}:] Display Partitioning Module
-\item [\refstepcounter{mnum} \mthemnum \label{m4}:] Project Manager Module
-\item [\refstepcounter{mnum} \mthemnum \label{m5}:] Serialization Manager Module
-\item [\refstepcounter{mnum} \mthemnum \label{m6}:] Backend Communication Manager Module
-\item [\refstepcounter{mnum} \mthemnum \label{m7}:] Interaction Controller Module
-\item [\refstepcounter{mnum} \mthemnum \label{m8}:] Visualization State Manager Module
-\item [\refstepcounter{mnum} \mthemnum \label{m9}:] Model Manager Module
-\item [\refstepcounter{mnum} \mthemnum \label{m10}:] History Manager Module
-\item [\refstepcounter{mnum} \mthemnum \label{m11}:] Autosave Manager Module
-\item [\refstepcounter{mnum} \mthemnum \label{m12}:] Voxel Tracking Module
-\item [\refstepcounter{mnum} \mthemnum \label{m13}:] Highlight Manager Module
-\item [\refstepcounter{mnum} \mthemnum \label{m14}:] Export Validation Module
-\item [\refstepcounter{mnum} \mthemnum \label{m15}:] Export Manager Module
-\item [\refstepcounter{mnum} \mthemnum \label{m16}:] Error Diagnostic Handler Module
+\item [\refstepcounter{mnum} \mthemnum\label{m1}:] Input Interpreter Module
+\item [\refstepcounter{mnum} \mthemnum\label{m2}:] Voxel Slicing Module
+\item [\refstepcounter{mnum} \mthemnum\label{m3}:] Display Partitioning Module
+\item [\refstepcounter{mnum} \mthemnum\label{m4}:] Project Manager Module
+\item [\refstepcounter{mnum} \mthemnum\label{m5}:] Serialization Manager Module
+\item [\refstepcounter{mnum} \mthemnum\label{m6}:] Backend Communication Manager Module
+\item [\refstepcounter{mnum} \mthemnum\label{m7}:] Interaction Controller Module
+\item [\refstepcounter{mnum} \mthemnum\label{m8}:] Visualization State Manager Module
+\item [\refstepcounter{mnum} \mthemnum\label{m9}:] Model Manager Module
+\item [\refstepcounter{mnum} \mthemnum\label{m10}:] History Manager Module
+\item [\refstepcounter{mnum} \mthemnum\label{m11}:] Autosave Manager Module
+\item [\refstepcounter{mnum} \mthemnum\label{m12}:] Voxel Tracking Module
+\item [\refstepcounter{mnum} \mthemnum\label{m13}:] Highlight Manager Module
+\item [\refstepcounter{mnum} \mthemnum\label{m14}:] Export Validation Module
+\item [\refstepcounter{mnum} \mthemnum\label{m15}:] Export Manager Module
+\item [\refstepcounter{mnum} \mthemnum\label{m16}:] Error Diagnostic Handler Module
 
 % Software Decision Modules
-\item [\refstepcounter{mnum} \mthemnum \label{m17}:] Model Structure Module
-\item [\refstepcounter{mnum} \mthemnum \label{m18}:] Graphics Adapter Module
-\item [\refstepcounter{mnum} \mthemnum \label{m19}:] Database Handler Module
-\item [\refstepcounter{mnum} \mthemnum \label{m20}:] Export Structure Module
+\item [\refstepcounter{mnum} \mthemnum\label{m17}:] Model Structure Module
+\item [\refstepcounter{mnum} \mthemnum\label{m18}:] Graphics Adapter Module
+\item [\refstepcounter{mnum} \mthemnum\label{m19}:] Database Handler Module
+\item [\refstepcounter{mnum} \mthemnum\label{m20}:] Export Structure Module
 \end{description}
 
 
 
 
-\section{Connection Between Requirements and Design} \label{SecConnection}
+\section{Connection Between Requirements and Design}\label{SecConnection}
 
 The design of the system is intended to satisfy the requirements developed in
 the SRS. In this stage, the system is decomposed into modules. The connection
@@ -258,6 +258,7 @@ between requirements and modules is listed in Table~\ref{TblMH}.
 
 \begin{table}[h!]
 \centering
+\caption{Module Hierarchy}
 \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
 \toprule
 \textbf{Level 1} & \textbf{Level 2}\\
@@ -290,9 +291,7 @@ between requirements and modules is listed in Table~\ref{TblMH}.
 & Export Structure Module\\
 \bottomrule
 
-\end{tabular}
-\caption{Module Hierarchy}
-\label{TblMH}
+\end{tabular}\label{TblMH}
 \end{table}
 
 \iffalse
@@ -304,7 +303,7 @@ between requirements and modules is listed in Table~\ref{TblMH}.
   requirements with a password.}
 \fi
 
-\section{Module Decomposition} \label{SecMD}
+\section{Module Decomposition}\label{SecMD}
 
 Modules are decomposed according to the principle of ``information hiding''
 proposed by \citet{ParnasEtAl1984}. The \emph{Secrets} field in a module
