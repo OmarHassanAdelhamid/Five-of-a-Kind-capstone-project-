@@ -328,71 +328,19 @@ This system has no hardware components.
 \subsubsection{Input Interpreter Module (\mref{m1})}
 
 \begin{description}
-\item[Secrets:] How to extract, parse, and normalize data from any compatible input file into the model’s internal format. How to identify file type (STL), parse and interpret geometry or voxel-based structures, apply scaling and coordinate normalization, and handle malformed data or import errors. How to combine geometric mesh data with project metadata, and reconstruct previously exported project files.
-\item[Services:] Provides a unified import interface for all supported input formats. When the user selects a file to load, this module determines the file type and converts it into a consistent intermediate representation. For STL files, it extracts geometric mesh data (facets, vertices, normals) and scales it to the target voxel grid resolution. For past project files, it deserializes voxel data and associated metadata to rebuild the model state. 
+\item[Secrets:] How to extract, parse, and normalize data from any compatible input file into the model’s internal format. How to identify file type, and how to parse and interpret 3D geometry.
+\item[Services:] Provides a unified import interface for all supported input formats. When the user selects a CAD file to load, this module determines the file type and converts it into a consistent intermediate representation. For STL files, it extracts geometric mesh data (facets, vertices, normals) and scales it to the target voxel grid resolution.
 \item[Implemented By:] \progname{}
-\item[Type of Module:] Library: a reusable parsing and normalization component that handles all input data extraction for both new and existing projects.
+\item[Type of Module:] Library: a reusable parsing and normalization component that handles all input data extraction for new projects.
 \end{description}
-
-\iffalse
-\paragraph{Input Interpreter Formalization}
-
-
-
-
-
-\begin{enumerate}
-\item \textbf{Definitions}
-\begin{itemize}
-\item \textbf{Input File:} $F_{input} \in \{F_{STL}, F_{project}\}$ 
-\begin{itemize}
-\item $F_{STL} = (H, T)$ where $H$ is the header and $T = \{t_1, t_2, ..., t_n\}$ are triangular facets
-\item $F_{project} = (V, L, M)$ where $V$ is voxel grid, $L$ layer data, $M$ metadata
-\end{itemize}
-\item \textbf{Facet:} $t_i = (n_i, v_{i1}, v_{i2}, v_{i3})$, $n_i \in \mathbb{R}^3$, $v_{ij} \in \mathbb{R}^3$
-\item \textbf{Scaling Factor:} $s \in \mathbb{R}^+$
-\item \textbf{Intermediate Model:} $M_{intermediate} = (V, F, Meta)$
-\end{itemize}
-
-\item \textbf{Import Process}
-\begin{itemize}
-\item \textbf{File Type Detection:}
-$$Type(F_{input}) = 
-\begin{cases}
-STL & \text{if mesh identifier detected}\\
-Project & \text{if serialized metadata signature detected}
-\end{cases}$$
-\item \textbf{Parsing Logic:}
-$$M_{raw} =
-\begin{cases}
-ParseSTL(F_{STL}) & \text{if } Type = STL\\
-Deserialize(F_{project}) & \text{if } Type = Project
-\end{cases}$$
-\item \textbf{Scaling:} $v' = s \cdot v, \forall v \in M_{raw}$
-\end{itemize}
-
-\item \textbf{Error Handling}
-\begin{itemize}
-\item Degenerate facets $\rightarrow$ \texttt{InvalidFacetError}
-\item Missing metadata $\rightarrow$ \texttt{ImportFormatError}
-\item Unsupported extension $\rightarrow$ \texttt{UnsupportedFileTypeError}
-\end{itemize}
-
-\item \textbf{Output}
-\begin{itemize}
-\item $M_{intermediate} = (V', F', Meta)$
-\item Supplies structured geometry or voxel data to M2 and M5
-\end{itemize}
-\end{enumerate}
-\fi
 
 \subsubsection{Voxel Slicing Module (\mref{m2})}
 
 \begin{description}
-\item[Secrets:] How to convert the input geometry or intermediate model into a 3D voxel grid representation. How to slice along the Z-axis, detect layer boundaries, map voxels to spatial coordinates, and optimize voxelization resolution.
-\item[Services:] Converts geometric mesh or input model into voxel representation. Generates discrete voxel layers by slicing through the 3D model at fixed Z intervals. 
+\item[Secrets:] How to convert the input geometry into a set of voxels. How to slice along all axes and optimize voxelization resolution.
+\item[Services:] Converts geometric mesh into voxel representation. Generates discrete voxels by slicing through the 3D model at fixed intervals. 
 \item[Implemented By:] \progname{}
-\item[Type of Module:] Abstract Object: a computational module responsible for transforming geometry into voxelized form.
+\item[Type of Module:] Library: a computational module responsible for transforming geometry into voxelized form.
 \end{description}
 
 \iffalse
@@ -434,19 +382,19 @@ L = \{l_1, l_2, ..., l_n\}
 
 \begin{description}
   \item[Secrets:] How to determine the boundaries that define model partitions. How to define the relationship
-  between display segments. How to represent partition boundaries. How to minimize the number of partitions created. How to ensure that display partitions maintain balanced spatial proportions. How to maintain partition stability during model modification. How to validate that a partition of voxels is viable to display within the UI.
+  between display segments. How to represent partition boundaries. How to minimize the number of partitions created. How to ensure that display partitions maintain balanced spatial proportions. How to validate that a partition of voxels is viable to display within the UI.
   \item[Services:] Provide functionality for partitioning the model into distinct display segments defined by specific voxel groupings. Manages the relationships and alignment between display segments.
   \item[Implemented By:] \progname{}
-  \item[Type of Module:] Abstract Object
+  \item[Type of Module:] Library: a reusable set of functions responsible for defining and partitioning sets of voxels into display segments.
 \end{description}
 
 \subsubsection{Project Manager Module (\mref{m4})}
 
 \begin{description}
-\item[Secrets:] How to create and initialize a new project workspace. How to establish the intitial project structure, metadata, and default configuration settings. How to allocate and manage project resources and state.
-\item[Services:] Creates new projects with appropriate initialization. Manages project setup cycle starting from the creation of a new project workspace to the an interactive user interface.
+\item[Secrets:] How to create and initialize a new project workspace. How to establish the intitial project structure, metadata, and default configuration settings. How to allocate and manage project resources and state. How to save and load projects and how frequently to autosave. How multiple workspaces are managed.
+\item[Services:] Creates new projects with appropriate initialization. Manages loading projects, and the autonomous and manual saving of projects. Manages swapping between workspaces.
 \item[Implemented By:] \progname{}
-\item[Type of Module:] Abstract Object: A component responsible for project initialization and workspace management.
+\item[Type of Module:] Abstract Object: a component responsible for project initialization and workspace management.
 \end{description} 
 
 \subsubsection{Serialization Manager Module (\mref{m5})}

@@ -182,22 +182,20 @@ The following table is taken directly from the Module Guide document for this pr
 InputInterpreter
 
 \subsection{Module}
-The InputInterpreter module is responsible for importing and parsing model or project files (e.g., STL, CSV) and normalizing them into a consistent internal format that downstream modules can process.
+The InputInterpreter module is responsible for importing and parsing CAD model files and normalizing them into a consistent internal format that downstream modules can process.
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{SerializationManager} for the input file deserialization.
+  \item \texttt{VoxelSlicing} for voxel generation from input CAD file.
+  \item \texttt{DisplayPartitioning} to partition the resulting set of voxels.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
-  \item \texttt{VoxelSlicing} for voxel grid generation and layer generation.
-  \item \texttt{DisplayPartitioning} for display partitioning the model.
 \end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
 \begin{itemize}
-  \item \texttt{SUPPORTED\_FORMATS}: list[str] — supported file types (STL, CSV, binary).
-  \item \texttt{DEFAULT\_SCALE}: float — default scaling applied to geometry.
+  \item \texttt{SUPPORTED\_FORMATS}: list[str] — supported file types.
 \end{itemize}
 
 \subsubsection{Exported Access Programs}
@@ -207,10 +205,8 @@ The InputInterpreter module is responsible for importing and parsing model or pr
 \toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \midrule
-\texttt{loadFile} & filePath: str & IntermediateModel & FileNotFoundError, UnsupportedFileTypeError \\
-\texttt{detectFormat} & filePath: str & str & None \\
-\texttt{parseSTL} & fileData: str & MeshModel & ParseError \\
-\texttt{deserializeProject} & fileData: str & ProjectModel & SchemaMismatchError \\
+\texttt{loadFile} & \texttt{filePath: str} & \texttt{ModelStructure} & \texttt{FileNotFoundError}, \texttt{UnsupportedFileTypeError} \\
+\texttt{detectFormat} & \texttt{filePath: str} & \texttt{str} & \texttt{FileNotFoundError} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -218,58 +214,51 @@ The InputInterpreter module is responsible for importing and parsing model or pr
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{currentModel}: IntermediateModel — latest parsed internal representation.
-  \item \texttt{detectedFormat}: str — identifies file type.
-\end{itemize}
+None.
 
 \subsubsection{Environment Variables}
 \begin{itemize}
-  \item \texttt{FILE\_PATH}: str — path to the input file on the filesystem.
+  \item \texttt{FILE\_PATH: str} — path to the input file.
 \end{itemize}
 
 \subsubsection{Assumptions}
 \begin{itemize}
-  \item The file path exists and is readable.
-  \item Data structure conforms to supported file format.
-  \item Deserialized data follows expected schema.
+  \item The outer folder of the file path exists, even if the file may not be found.
+  \item Data structure of the file conforms to the file format.
 \end{itemize}
 
-\iffalse
 \subsubsection{Access Routine Semantics}
+\texttt{loadFile(filePath: str) -> ModelStructure}
 \begin{itemize}
-  \item \texttt{loadFile(filePath)}: detects format and calls parsing logic.
-  \[
-  currentModel :=
-  \begin{cases}
-  parseSTL(fileData) & \text{if STL format}\\
-  deserializeProject(fileData) & \text{if Project format}
-  \end{cases}
-  \]
-  \item \texttt{detectFormat(filePath)}: returns file type by inspecting header or extension.
-  \item \texttt{parseSTL(fileData)}: converts triangular facets \(t_i=(n_i,v_{i1},v_{i2},v_{i3})\), where \(n_i,v_{ij}\in\mathbb{R}^3\), into internal mesh structure.
-  \item \texttt{deserializeProject(fileData)}: decodes serialized voxel data and metadata.
+  \item \textbf{Transition:}
+  \begin{itemize}
+    \item[-] loads file specified at passed file path
+    \item[-] passes file to VoxelSlicing
+    \item[-] passes resulting voxels to DisplayPartitioning
+    \item[-] returns resulting ModelStructure
+  \end{itemize}
+  \item \textbf{Output:} \texttt{ModelStructure} to be passed to ModelManager
+  \item \textbf{Exceptions:} \texttt{FileNotFoundError} if file does not exist; \texttt{UnsupportedFileTypeError} if file type is not in \texttt{SUPPORTED\_FORMATS}
+\end{itemize}
+\texttt{detectFormat(filePath: str) -> str}
+\begin{itemize}
+  \item \textbf{Transition:} returns file type via header or extension inspection
+  \item \textbf{Output:} \texttt{str} indicating file type
+  \item \textbf{Exceptions:} \texttt{FileNotFoundError} if file does not exist
 \end{itemize}
 
-\subsubsection{Exceptions}
-\begin{itemize}
-  \item \texttt{FileNotFoundError} — invalid path or unreadable file.
-  \item \texttt{UnsupportedFileTypeError} — format not recognized.
-  \item \texttt{ParseError} — malformed geometry or facet data.
-  \item \texttt{SchemaMismatchError} — project schema invalid or outdated.
-\end{itemize}
-\fi
+\subsubsection{Local Functions}
+None.
 
 \section{MIS of Voxel Slicing (M2)}\label{Module2}
 
 VoxelSlicing
 
 \subsection{Module}
-The VoxelSlicing module is responsible for converting the geometric model into a structured voxel grid. It divides the 3D model along the Z-axis into discrete slices based on a specified resolution, mapping geometry into voxelized layers for simulation and visualization.
+The VoxelSlicing module is responsible for converting the geometric model into a structured voxel grid. It divides the 3D model into discrete voxels based on a specified resolution for simulation and visualization.
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ProjectManager} to get the model structure and data representation, and store the resulting voxel grid and layer list.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -277,8 +266,8 @@ The VoxelSlicing module is responsible for converting the geometric model into a
 
 \subsubsection{Exported Constants}
 \begin{itemize}
-  \item \texttt{DEFAULT\_RESOLUTION}: tuple(float, float, float) — default voxel size in x, y, and z directions.
-  \item \texttt{MAX\_LAYERS}: int — maximum number of layers allowed per model.
+  \item \texttt{DEFAULT\_RESOLUTION: tuple(float, float, float)} — default voxel size in x, y, and z directions.
+  \item \texttt{MAX\_LAYERS: int} — maximum number of voxels in the z-dimension.
 \end{itemize}
 
 \subsubsection{Exported Access Programs}
@@ -288,9 +277,7 @@ The VoxelSlicing module is responsible for converting the geometric model into a
 \toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \midrule
-\texttt{voxelizeModel} & model: IntermediateModel, resolution: tuple & VoxelGrid & ResolutionError, GeometryError \\
-\texttt{generateLayers} & voxelGrid: VoxelGrid & list[Layer] & None \\
-\texttt{setResolution} & resolution: tuple & void & InvalidResolutionError \\
+\texttt{voxelizeModel} & \texttt{model: list[Vector3D]}, \texttt{resolution: tuple(float, float, float)} & \texttt{list[Vector3D]} & None \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -298,43 +285,29 @@ The VoxelSlicing module is responsible for converting the geometric model into a
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{voxelGrid}: VoxelGrid — stores the resulting voxelized representation.
-  \item \texttt{layerList}: list[Layer] — ordered collection of Z-level layers.
-  \item \texttt{resolution}: tuple(float, float, float) — current voxel grid spacing.
-\end{itemize}
+None.
 
 \subsubsection{Environment Variables}
-None
+None.
 
 \subsubsection{Assumptions}
 \begin{itemize}
   \item Input model geometry is well-defined and watertight.
   \item Resolution values are positive real numbers.
-  \item The number of layers does not exceed system memory capacity.
+  \item The resulting number of voxels does not exceed system memory capacity.
 \end{itemize}
 
-\iffalse
 \subsubsection{Access Routine Semantics}
+\texttt{voxelizeModel(points: list[Vector3D], resolution: tuple(float, float, float)) -> list[Vector3D]}
 \begin{itemize}
-  \item \texttt{voxelizeModel(model, resolution)}: Converts mesh geometry into voxel occupancy.
-  \[
-  G = \{v_{xyz} \mid x,y,z \in \mathbb{N},\ \text{facet intersects voxel}(x,y,z)\}
-  \]
-  \item \texttt{generateLayers(voxelGrid)}: Groups voxels into Z-level layers.
-  \[
-  L = \{l_k = \{v_{xyz} \mid z = k \cdot r_z\}\ |\ k \in [1,n]\}
-  \]
-  \item \texttt{setResolution(resolution)}: Updates internal resolution state.
+  \item \textbf{Transition:} produces a set of 3D-coordinates representing voxel centres, given bounding vertexes of the model
+  \item \textbf{Output:} \texttt{list[Vector3D]} of voxel centres
+  \item \textbf{Exceptions:} None
 \end{itemize}
 
-\subsubsection{Exceptions}
-\begin{itemize}
-  \item \texttt{ResolutionError} — invalid resolution leading to empty grid.
-  \item \texttt{GeometryError} — malformed or non-manifold geometry detected.
-  \item \texttt{InvalidResolutionError} — one or more components of resolution $\le 0$.
-\end{itemize}
-\fi
+\subsubsection{Local Functions}
+None.
+
 \section{MIS of Display Partitioning (M3)}\label{Module3} 
 
 DisplayPartitioning
@@ -344,67 +317,60 @@ The DisplayPartitioning module provides core functionality for partitioning the 
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ProjectManager} to get the model structure and data representation, and store the resulting voxel grid and layer list.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
 \begin{itemize}
-  \item \texttt{MAX\_PARTITION}: int — maximum number of partitions that can be created.
-  \item \texttt{MAX\_VOXEL\_PARTITION}: int — maximum number of voxels per partition.
-  \item \texttt{AVAILABLE\_PARTITIONS}: list[str] — configuration of valid partition IDs used by the display layout.
+  \item \texttt{MAX\_PARTITIONS: int} — maximum number of partitions that can be created
+  \item \texttt{MAX\_VOXELS\_PER\_PARTITION: int} — maximum number of voxels per partition
 \end{itemize}
 
 \subsubsection{Exported Access Programs}
 \begin{center}
-  \renewcommand{\arraystretch}{1.55}
-  \begin{tabular}{p{4cm} p{5cm} p{3cm} p{3cm}}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-  \hline
-  
-  \texttt{getPartitions} &
-  None &
-  dict[str] &
-  None \\
-  
-  \texttt{setCurrentPartition} &
-  id: str, \newline
-  partition: partitionItem &
-  void &
-  None \\
-  
-  \texttt{resizePartitions} &
-  id: str, \newline
-  width: int, \newline
-  height: int, \newline
-  depth: int &
-  void &
-  None \\
-  
-  \end{tabular}
-  \end{center}
+\renewcommand{\arraystretch}{1.55}
+\begin{tabular}{p{4cm} p{5cm} p{3cm} p{3cm}}
+\toprule
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\midrule
+\texttt{getPartitions} & \texttt{voxels: list[Vector3D]} & \texttt{dict[str] = partitionItem} & None \\
+\texttt{mapVoxels} & \texttt{voxels: list[Voxel], \newline partition: partitionItem} & list[Voxel] & None\\
+\bottomrule
+\end{tabular}
+\end{center}
+
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{partitionItem}: record — configuration for data that describes a partition.
-  \item \texttt{partitionDict}: dict[str] = partitionItem — tracks all partitions.
-\end{itemize}
+None.
 
 \subsubsection{Environment Variables}
-None
+None.
 
-  \subsubsection{Assumptions}
+\subsubsection{Assumptions}
   \begin{itemize}
-    \item A valid and complete \texttt{ModelStructure} exists.
-    \item Display partitions adhere only to positive dimensions.
-    \item \texttt{AVAILABLE\_PARTITIONS} provides the display layout with a preset mapping to UI grid positions.
+    \item the \texttt{list[Vector3D]} passed is the complete set of voxels in a given model.
   \end{itemize}
 \newpage
+
+\subsubsection{Access Routine Semantics}
+\texttt{getPartitions(voxels: list[Vector3D]) -> dict[str] = partitionItem}
+\begin{itemize}
+  \item \textbf{Transition:} creates set of model partitions based upon passed voxels
+  \item \textbf{Output:} \texttt{dict[str] = partitionItem} that maps 2D spatial IDs to \texttt{partitionItem}s
+  \item \textbf{Exceptions:} None
+\end{itemize}
+\texttt{mapVoxels(voxels: list[Voxel], partition: PartitionItem) -> list[Voxel]}
+\begin{itemize}
+  \item \textbf{Transition:} modifies set of voxels to map them to the passed partition
+  \item \textbf{Output:} \texttt{list[Voxel]} - the same list passed in, with partition mappings modified
+  \item \textbf{Exceptions:} None
+\end{itemize}
+
+\subsubsection{Local Functions}
+None.
 
 \section{MIS of Project Manager (M4)}\label{Module4}
 
@@ -423,66 +389,122 @@ The ProjectManager module manages the creation, initialization, and persistence 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
-None
+\begin{itemize}
+  \item \texttt{AUTOSAVE\_INTERVAL: int} - number of seconds between automatic saves 
+\end{itemize}
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
 \renewcommand{\arraystretch}{1.55}
-\begin{tabular}{p{4cm} p{5cm} p{3cm} p{3cm}}
-\hline
+\begin{tabular}{p{5.2cm} p{5cm} p{3cm} p{3cm}}
+\toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\texttt{ProjectManager} & - & self & IOError \\
-\texttt{createProject} & projectPath: str, \newline config: dict & None & IOError, \newline ValueError \\
-\texttt{loadProject} & projectPath: str & None & IOError, \newline FileNotFoundError \\
-\texttt{saveProject} & projectPath: str & None & IOError \\
-\texttt{getProjectMetadata} & - & dict & - \\
-\texttt{initializeWorkspace} & workspacePath: str & None & IOError \\
-\hline
+\midrule
+\texttt{ProjectManager} & \texttt{workspaceRoot: str} & \texttt{self} & \texttt{IOError} \\
+\texttt{createNewProject} & \texttt{projectPath: str, \newline config: dict[str] = str} & \texttt{bool} & \texttt{IOError}, \newline \texttt{ValueError} \\
+\texttt{loadProject} & \texttt{projectPath: str} & \texttt{bool} & \texttt{IOError}, \newline \texttt{FileNotFoundError} \\
+\texttt{saveCurrentProject} & None & \texttt{bool} & \texttt{IOError} \\
+\texttt{getCurrentProjectMetadata} & None & \texttt{dict[str] = str} & None \\
+\texttt{changeWorkspace} & \texttt{workspaceRoot: str} & \texttt{bool} & \texttt{IOError} \\
+\bottomrule
 \end{tabular}
 \end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
 \begin{itemize}
-\item \texttt{projectPath}: str - Path to the current project directory
-\item \texttt{workspaceRoot}: str - Root directory of the workspace
-\item \texttt{projectMetadata}: dict - Dictionary containing project configuration and metadata
-\item \texttt{model}: ModelStructure - Reference to the model structure instance
-\item \texttt{isInitialized}: bool - Flag indicating if the project has been initialized
+  \item \texttt{currentProjectPath: str} - Path to the current project directory
+  \item \texttt{workspaceRoot: str} - Root directory of the current workspace
+  \item \texttt{projectMetadata: dict[str] = str} - Dictionary containing metadata of the current project
+  \item \texttt{model: ModelManager} - Reference to the model of the current project
 \end{itemize}
 
 \subsubsection{Environment Variables}
-
 \begin{itemize}
-\item \texttt{FILE\_SYSTEM}: The file system where project files are stored
-\item \texttt{WORKSPACE\_ROOT}: Root directory environment variable for workspace location
+  \item \texttt{FILE\_SYSTEM}: The file system where the workspaces exist within
+  \item \texttt{FILE\_PERMISSIONS}: Permissions the module has (read, write) within the current workspace
 \end{itemize}
 
 \subsubsection{Assumptions}
-
 \begin{itemize}
-\item The file system has sufficient space for project creation
-\item The provided project path is a valid directory path
-\item Write permissions are available for the project directory
-\item The workspace root directory exists or can be created
+  \item The file system has sufficient space for project/file creation
+  \item Read/write permissions are available for the workspace directory
+  \item The provided project paths exist within the current workspace path, or can be created
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+\texttt{ProjectManager(workspaceRoot: str) -> self}
+\begin{itemize}
+  \item \textbf{Transition:} Creates new ProjectManager object and initializes workspace
+  \item \textbf{Output:} \texttt{self} - a reference to itself
+  \item \textbf{Exceptions:} \texttt{IOError} if passed workspace path does not exist or cannot be created
+\end{itemize}
+\texttt{createNewProject(projectPath: str, config: dict[str] = str) -> bool}
+\begin{itemize}
+  \item \textbf{Transition:} creates a new project at the specified relative path within the current workspace. \texttt{config} notably contains information such as whether the project shall begin with a CAD model or not, and the path of the CAD model to be processed by \texttt{ModelManager}.
+  \begin{itemize}
+    \item calls \texttt{validateConfig} to verify correctness
+    \item calls \texttt{createProjectStructure} to create and initialize project folder
+    \item uses \texttt{ModelManager} to create a model, passing path to the CAD model to be converted if needed
+    \item calls \texttt{writeMetadataFile} to write initial metadata to the project folder
+  \end{itemize}
+  \item \textbf{Output:} \texttt{bool} indicating process success
+  \item \textbf{Exceptions:} \texttt{IOError} if project path could not be created, \texttt{ValueError} if configuration invalid
+\end{itemize}
+\texttt{loadProject(projectPath: str) -> bool}
+\begin{itemize}
+  \item \textbf{Transition:} updates current project path, loads the existing model with ModelManager, and loads metadata file into internal dictionary via \texttt{readMetadataFile}
+  \item \textbf{Output:} \texttt{bool} indicating process success
+  \item \textbf{Exceptions:} \texttt{IOError} if project path cannot be resolved, \texttt{FileNotFoundError} if any needed file within the project directly does not exist.
+\end{itemize}
+\texttt{saveCurrentProject() -> bool}
+\begin{itemize}
+  \item \textbf{Transition:} saves all project components via a call to \texttt{ModelManager} to save the model and a call to \texttt{writeMetadataFile}
+  \item \textbf{Output:} \texttt{bool} indicating process success
+  \item \textbf{Exceptions:} \texttt{IOError} if any file cannot be saved
+\end{itemize}
+\texttt{getCurrentProjectMetadata() -> dict[str] = str}
+\begin{itemize}
+  \item \textbf{Transition:} returns current metadata from related state variable
+  \item \textbf{Output:} \texttt{dict[str] = str} the requested metadata
+  \item \textbf{Exceptions:} None
+\end{itemize}
+\texttt{changeWorkspace(workspaceRoot: str) -> bool}
+\begin{itemize}
+  \item \textbf{Transition:} changes workspace, and saves/closes any open project
+  \item \textbf{Output:} \texttt{bool} indicating process success
+  \item \textbf{Exceptions:} \texttt{IOError} if new workspace path cannot be resolved
 \end{itemize}
 
 \subsubsection{Local Functions}
-
+\texttt{validateConfig(config: dict[str] = str) -> bool}
 \begin{itemize}
-\item \texttt{validateConfig(config: dict) -> bool}: Validates that the configuration dictionary contains required fields
-\item \texttt{createProjectStructure(path: str) -> None}: Creates the directory structure for a new project
-\item \texttt{readMetadataFile(path: str) -> dict}: Reads and parses project metadata from file
-\item \texttt{writeMetadataFile(path: str, metadata: dict) -> None}: Writes project metadata to file
+  \item \textbf{Transition:} validates the configuration dictionary contains required fields
+  \item \textbf{Output:} \texttt{bool} indicating validity
+  \item \textbf{Exceptions:} None
+\end{itemize}
+\texttt{createProjectStructure(path: str) -> bool}
+\begin{itemize}
+  \item \textbf{Transition:} Creates directory and its structure for a new project
+  \item \textbf{Output:} \texttt{bool} indicating process success
+  \item \textbf{Exceptions:} \texttt{IOError} if structure cannot be created
+\end{itemize}
+\texttt{readMetadataFile(path: str) -> dict[str] = str}
+\begin{itemize}
+  \item \textbf{Transition:} reads and parses project metadata from passed file
+  \item \textbf{Output:} \texttt{dict[str] = str} - the metadata read
+  \item \textbf{Exceptions:} \texttt{FileNotFoundError} if file cannot be found
+\end{itemize}
+\texttt{writeMetadataFile(metadata: dict[str] = str) -> bool}
+\begin{itemize}
+  \item \textbf{Transition:} writes project metadata to file
+  \item \textbf{Output:} \texttt{bool} indicating process success
+  \item \textbf{Exceptions:} \texttt{IOError} if path cannot be resolved
 \end{itemize}
 
 \newpage
-
 
 \section{MIS of Serialization Manager (M5)}\label{Module5}
 
