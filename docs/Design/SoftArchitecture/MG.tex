@@ -449,10 +449,10 @@ L = \{l_1, l_2, ..., l_n\}
 \subsubsection{Interaction Controller Module (\mref{m7})}
 
 \begin{description}
-  \item[Secrets:] How events are internally represented. How to differentiate between similar events. How to define the rules that associate high-level action with a raw event. How to handle raw events where user intent is inconclusive. How to determine when multiple events should be interpreted as a single user action. How to apply context from UI when interpreting events.
-  \item[Services:] Maps raw events from interaction with UI to high-level system actions that reflect user intent.
+  \item[Secrets:] How events are internally handled. How to differentiate between similar events. How to define the rules that associate events with actions to take. How to handle events where user intent is inconclusive. How to determine when multiple events should be interpreted as a single action. How to apply context from UI when interpreting events.
+  \item[Services:] Maps events from interaction with UI tosystem actions that reflect user intent.
   \item[Implemented By:] \progname{}
-  \item[Type of Module:] Abstract Object
+  \item[Type of Module:] Abstract Object: a component responsible for internal event handling and action routing that internally must track the current view displayed to the user for context.
 \end{description}
 
 \subsubsection{Visualization State Manager Module (\mref{m8})}
