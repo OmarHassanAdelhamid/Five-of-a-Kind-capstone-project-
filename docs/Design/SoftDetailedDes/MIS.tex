@@ -305,6 +305,52 @@ None.
   \item \textbf{Exceptions:} None
 \end{itemize}
 
+\noindent \textbf{Formalization of \texttt{voxelizeModel}}\\
+Adapted from ideas discussed in \textit{An Accurate Method for Voxelizing Polygon Meshes}, Huang et. al.\\
+\textit{Definitions}
+\begin{itemize}
+  \item 3D point - a tuple containing three real values, indicating a point in 3D space: t = ($\mathbb{R}$, $\mathbb{R}$, $\mathbb{R}$)
+  \item 3D triangle - a tuple containing three 3D points, uniquely defining a triangle: $p = (t_1, t_2, t_3)$
+  \item 3D mesh - a set of triangles that form a closed surface, e.g.
+  \begin{center}
+  $M = \{p_1, p_2, ..., p_n\}$, where
+  $(\forall p | p \in M: (\forall t | t \in p: (\exists p_a, p_b | p_a \in M \land p_b \in M$ 
+  $\land p_a \neq p_b \land p_b \neq p \land p_a \neq p: t \in p_a \land t \in p_b)))$
+  \end{center}
+  \item voxel - a 3D cube, defined by its central 3D point: v = t
+  \item resolution - $\mathbb{R} > 0$, defines unit length of voxels
+  \item voxel grid - set of equally spaced voxels of unit length \textit{resolution} and with centres separated by length \textit{resolution} in each cardinal direction,  thereby completely filling 3D space: $G = {v_1, v_2, ..., v_n}$
+\end{itemize}
+
+\noindent \textit{Voxelization Process}
+\begin{itemize}
+  \item \textit{Generation of surface voxels:} - let $S$ be the union of the three following sets, where all $v \in G$, $v \in G \implies (\exists n_1, n_2, n_3 | n_1, n_2, n_3 \in \mathbb{Z}: (\forall t | t \in v: t = (n_1 \cdot resolution, c_2 \cdot resolution, c_3 \cdot resolution)))$.\\
+  $S_v$ - set of all voxels that represent all polygon vertices in M.
+  \begin{center}
+  $S_v = \{v_1, v_2, ..., v_n\}$, such that\\
+  $(\forall p | p \in M: (\forall t | t \in p: (\exists v | v \in S_v: ||v-t||\leq radius) \land (\forall v | v \notin S_v: ||v-t||>radius)))$,\\
+  where $radius$ is the radius of a bounding sphere about $t$.
+  \end{center}
+  $S_e$ - set of all voxels that represent all polygon edges in M.
+  \begin{center}
+  $S_e = \{v_1, v_2, ..., v_n\}$, such that\\
+  $(\forall p | p \in M: (\forall t_1, t_2 | t_1, t_2 \in p \land t_1 \neq t_2: (\forall t_x | t_x = t_1 + \alpha(t_2 - t_1): (\exists v | v \in S_e: ||v-t_x||\leq radius) \land (\forall v | v \notin S_e: ||v-t_x|| > radius))))$,\\
+  where $\alpha = [0, 1]$.
+  \end{center}
+  $S_b$ - set of all voxels that represent all polygon faces in M.
+  \begin{center}
+  $S_b = \{v_1, v_2, ..., v_n\}$, such that\\
+  $(\forall p | p \in M: (\forall t_1, t_2, t_3 | t_1, t_2, t_3 \in p \land t_1 \neq t_2 \land t_2 \neq t_2 \land t_1 \neq t_3: (\exists v | v \in S_b: v \in T^+(t_1, t_2, t_3)) \land (\forall v | v \notin S_b: v \notin T^+(t_1, t_2, t_3))))$,\\
+  where $T(a, b, c) = \{a + \alpha(b-a) + \beta(c-a) | \alpha, \beta \geq 0, \alpha + \beta \leq 1\}$,
+  $T^+(a, b, c) = \{t + xn | t \in T(a, b, c), -radius \leq x \leq radius, n = \frac{(b-a)\times(c-a)}{||(b-a)\times(c-a)||}\}$
+  \end{center}
+  \item \textit{Generation of inner voxels:} given $S$, create set $F$ of voxels such that:
+  \begin{center}
+  $F = \{v | (\forall t | t \in v: (\exists v', v'' | v', v'' \in S \land v' \neq v'' \land v' \neq v \land v'' \neq v: (\exists t^+, t^- | t^+ \in v' \land t^- \in v'': t + \mathbb{R} = t^+ \land t - \mathbb{R} = t^-)))\}$
+  \end{center}
+  \item Return $S \cup F$.
+\end{itemize}
+
 \subsubsection{Local Functions}
 None.
 
