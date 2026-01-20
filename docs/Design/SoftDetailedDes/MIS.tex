@@ -408,7 +408,37 @@ None.
   \item \textbf{Output:} \texttt{dict[str] = partitionItem} that maps 2D spatial IDs to \texttt{partitionItem}s
   \item \textbf{Exceptions:} None
 \end{itemize}
-\texttt{mapVoxels(voxels: list[Voxel], partition: PartitionItem) -> list[Voxel]}
+
+\noindent \textbf{Formalization of \texttt{getPartitions}}\\
+\textit{Definitions}
+\begin{itemize}
+  \item 3D point - a tuple containing three real values, indicating a point in 3D space: t = ($\mathbb{R}$, $\mathbb{R}$, $\mathbb{R}$)
+  \item partition - sector of 3D space that is finite in x and y, but extends infinitely in z and can therefore be defined by a pair of 2D coordinates: p = $((\mathbb{R}, \mathbb{R}), (\mathbb{R}, \mathbb{R}))$. For ease of notation, $p.x$ and $p.y$ refer to a partition's length in the x and y dimensions respectively.
+  \item voxel - a 3D cube, defined by its central 3D point: v = t
+\end{itemize}
+\textit{Partition Definition}\\
+Given a set of all voxels $V$, create a minimal set of partitions $P$ such that:
+\begin{itemize}
+  \item No partitions overlap:
+  \begin{center}
+  $(\forall p, p' | p, p' \in P: (\forall t, t' | t \in p \land t' \in p': t \neq t'))$
+  \end{center}
+  \item Partitions are all the same size, and square:
+  \begin{center}
+  $(\forall p, p' | p, p' \in P: p.x = p'.x \land p.y = p'.y) \land (\forall p | p \in P: p.x = p.y)$
+  \end{center}
+  \item The set of partitions cover all voxels in the space:
+  \begin{center}
+  $(\forall v | v \in V: (\exists p | p \in P: v \in P))$
+  \end{center}
+  \item The number of voxels in one partition is renderable:
+  \begin{center}
+  $(+v | v \in P: 1) \leq$ MAX\_VOXELS\_PER\_PARTITION
+  \end{center}
+\end{itemize}
+\noindent Assign a unique ID to each partition to allow traversal between partitions and return P.
+\\\\
+\noindent \texttt{mapVoxels(voxels: list[Voxel], partition: PartitionItem) -> list[Voxel]}
 \begin{itemize}
   \item \textbf{Transition:} modifies set of voxels to map them to the passed partition
   \item \textbf{Output:} \texttt{list[Voxel]} - the same list passed in, with partition mappings modified
