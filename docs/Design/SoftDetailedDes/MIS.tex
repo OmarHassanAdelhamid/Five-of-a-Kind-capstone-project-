@@ -714,17 +714,28 @@ None
 
 VisualizationManager
 
+% \subsection{Module}
+% The VisualizationManager module oversees the creation of UI views while managing subsequent updates to the display state of the specified current UI views on a backend level.
 \subsection{Module}
-The VisualizationManager module oversees the creation of UI views while managing subsequent updates to the display state of the specified current UI views on a backend level.
+The VisualizationManager module maintains visualization-related state associated with UI views and records visualization update requests corresponding to changes in the underlying model and highlight state.
 
+
+% \subsection{Uses}
+% \begin{itemize}
+%   \item \texttt{GraphicsAdapter} for rendering updates visible to user.
+%   \item \texttt{VoxelTracking} for specifying the set of voxels affected by a given update.
+%   \item \texttt{HighlightManager} for managing change in voxels being highlighted.
+%   \item \texttt{InteractionController} for handling user interaction data from the frontend.
+%   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
+% \end{itemize}
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{GraphicsAdapter} for rendering updates visible to user.
-  \item \texttt{VoxelTracking} for specifying the set of voxels affected by a given update.
-  \item \texttt{HighlightManager} for managing change in voxels being highlighted.
-  \item \texttt{InteractionController} for handling user interaction data from the frontend.
+  \item \texttt{GraphicsAdapter} for issuing rendering requests corresponding to visualization state updates.
+  \item \texttt{HighlightManager} for obtaining semantic highlight state information.
+  \item \texttt{InteractionController} as a source of interaction-triggered visualization state change notifications.
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
+
 
 \subsection{Syntax}
 
@@ -733,42 +744,89 @@ The VisualizationManager module oversees the creation of UI views while managing
   \item \texttt{DEFAULT\_VIEWS}: list[str] — list of identifiers corresponding to the default views generated upon project initialization.
 \end{itemize}
 
+% \subsubsection{Exported Access Programs}
+% \begin{center}
+% \renewcommand{\arraystretch}{1.55}
+% \begin{tabular}{p{4cm} p{6cm} p{3cm} p{2.5cm}}
+% \hline
+% \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\ \hline
+% \texttt{getCurrentView} & None & ViewState & None \\
+% \texttt{setView} & state: ViewState & void & None \\
+% \texttt{getHighlightState} & None & HighlightState & None \\
+% \texttt{updateModel} & voxelCoords: list[VoxelCoord], \newline updateType: ModelUpdateType & void & None \\
+% \texttt{updateHighlight} & semanticKey: str & void & None \\
+% \hline
+% \end{tabular}
+% \end{center}
 \subsubsection{Exported Access Programs}
 \begin{center}
 \renewcommand{\arraystretch}{1.55}
 \begin{tabular}{p{4cm} p{6cm} p{3cm} p{2.5cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\ \hline
-\texttt{getCurrentView} & None & ViewState & None \\
-\texttt{setView} & state: ViewState & void & None \\
-\texttt{getHighlightState} & None & HighlightState & None \\
-\texttt{updateModel} & voxelCoords: list[VoxelCoord], \newline updateType: ModelUpdateType & void & None \\
-\texttt{updateHighlight} & semanticKey: str & void & None \\
+\texttt{getCurrentView} & None & str & None \\
+\texttt{setView} & state: str & void & None \\
 \hline
 \end{tabular}
 \end{center}
 
+
+% \subsection{Semantics}
+
+% \subsubsection{State Variables}
+% \begin{itemize}
+%   \item \texttt{currentView}: str — identifies which UI view is currently shown to the user.
+%   \item \texttt{viewStatus}: dict[str] = ViewItem — stores all data encapsulated within a UI view.
+%   \item \texttt{updateBundle}: dict[str] = UpdateItem — stores all data needed to update a UI view upon a render request.
+%   \item \texttt{pendingUpdates}: list[UpdateKey] — updates waiting to be processed in rendering.
+%   \item \texttt{renderStatus}: bool — records the success status of the rendering process.
+%   \item \texttt{supportedViews}: list[str] — identifiers corresponding to all available project views.
+% \end{itemize}
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 \begin{itemize}
   \item \texttt{currentView}: str — identifies which UI view is currently shown to the user.
   \item \texttt{viewStatus}: dict[str] = ViewItem — stores all data encapsulated within a UI view.
-  \item \texttt{updateBundle}: dict[str] = UpdateItem — stores all data needed to update a UI view upon a render request.
-  \item \texttt{pendingUpdates}: list[UpdateKey] — updates waiting to be processed in rendering.
-  \item \texttt{renderStatus}: bool — records the success status of the rendering process.
+  \item \texttt{updateBundle}: dict[str] = UpdateItem — stores all data needed to describe a visualization update request.
+  \item \texttt{pendingUpdates}: list[UpdateKey] — visualization update requests waiting to be forwarded for rendering.
+  \item \texttt{renderStatus}: bool — records the status of the most recent rendering request.
   \item \texttt{supportedViews}: list[str] — identifiers corresponding to all available project views.
 \end{itemize}
 
-\subsubsection{Environment Variables}
-None
 
+% \subsubsection{Environment Variables}
+% None
+
+% \subsubsection{Assumptions}
+% \begin{itemize}
+%   \item Partitions are initialized.
+%   \item ViewItem is properly formatted in accordance with ViewItem specification.
+%   \item UpdateItem is properly formatted in accordance with UpdateItem specification.
+%   \item \texttt{currentView}, \texttt{ViewState}, and \texttt{DEFAULT\_VIEWS} are elements of \texttt{supportedViews}.
+% \end{itemize}
 \subsubsection{Assumptions}
 \begin{itemize}
-  \item Partitions are initialized.
+  \item Visualization state references only initialized and valid view identifiers.
   \item ViewItem is properly formatted in accordance with ViewItem specification.
   \item UpdateItem is properly formatted in accordance with UpdateItem specification.
   \item \texttt{currentView}, \texttt{ViewState}, and \texttt{DEFAULT\_VIEWS} are elements of \texttt{supportedViews}.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+getCurrentView() $\rightarrow$ str
+\begin{itemize}
+  \item Transition: retrieves the identifier of the currently active visualization view.
+  \item Output: str representing the current view identifier.
+  \item Exceptions: None.
+\end{itemize}
+
+setView(state: str) $\rightarrow$ void
+\begin{itemize}
+  \item Transition: updates the current visualization view to the specified view identifier.
+  \item Output: None.
+  \item Exceptions: None.
 \end{itemize}
 
 
@@ -777,12 +835,13 @@ None
 ModelManager
 
 \subsection{Module}
-The ModelManager module oversees the management and manipulation of the voxel-based 3D model. It provides APIs to add, remove, or modify voxels, update magnetization/material properties, and synchronize changes with autosave and history tracking modules.
+The ModelManager module manages and mutates the voxel-based 3D model. It provides operations to add, remove, and modify voxels, update material and magnetization properties, and explicitly persist model state through save operations.
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{ModelStructure} to get the model structure and data representation.
-  \item \texttt{VisualizationManager} to get the current view state.
+  \item \texttt{ModelStructure} to access and update the model’s internal data representation.
+  \item \texttt{VoxelTracking} to track changes made to voxel data.
+
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -791,7 +850,6 @@ The ModelManager module oversees the management and manipulation of the voxel-ba
 \subsubsection{Exported Constants}
 \begin{itemize}
   \item \texttt{MAX\_VOXEL\_COUNT}: int — maximum allowed voxel entries per project.
-  \item \texttt{AUTOSAVE\_INTERVAL\_S}: float — time threshold (in seconds) before triggering autosave.
 \end{itemize}
 
 \subsubsection{Exported Access Programs}
@@ -801,14 +859,16 @@ The ModelManager module oversees the management and manipulation of the voxel-ba
 \toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \midrule
-\texttt{addVoxel} & coord: VoxelCoord, material: MaterialType, mag: Vector3 & void & InvalidInputError \\
-\texttt{removeVoxel} & coord: VoxelCoord & void & NotFoundError \\
-\texttt{modifyVoxel} & coord: VoxelCoord, newData: VoxelData & void & NotFoundError \\
-\texttt{saveModel} & None & bool & IOerror \\
+\texttt{addVoxel} & coord: Any, material: Any, mag: Any & void & InvalidInputError \\
+\texttt{removeVoxel} & coord: Any & void & NotFoundError \\
+\texttt{modifyVoxel} & coord: Any, newData: Any & void & NotFoundError \\
+\texttt{saveModel} & None & bool & IOError \\
+\texttt{forceSave} & None & bool & IOError \\
 \texttt{loadModel} & filePath: str & bool & DeserializationError \\
 \bottomrule
 \end{tabular}
 \end{center}
+
 
 \subsection{Semantics}
 
@@ -816,7 +876,6 @@ The ModelManager module oversees the management and manipulation of the voxel-ba
 \begin{itemize}
   \item \texttt{voxelGrid}: VoxelGrid — stores all voxel elements and layer mapping.
   \item \texttt{metadata}: dict — contains file name, author, timestamp, etc.
-  \item \texttt{autosaveTimer}: float — time since last autosave.
   \item \texttt{unsavedChanges}: bool — true if edits have occurred since last save.
 \end{itemize}
 
@@ -829,40 +888,142 @@ The ModelManager module oversees the management and manipulation of the voxel-ba
 \begin{itemize}
   \item Voxel coordinates fall within the defined model boundaries.
   \item Data supplied for voxel modifications are valid according to schema.
-  \item Autosave operations will not interrupt ongoing edits.
+  \item Save operations are explicitly invoked and do not interrupt ongoing edits.
 \end{itemize}
 
-\iffalse
 \subsubsection{Access Routine Semantics}
+
+addVoxel(coord: Any, material: Any, mag: Any) $\rightarrow$ void
 \begin{itemize}
-  \item \texttt{addVoxel(coord, material, mag)}: Adds new voxel entry at specified coordinate.
-  \[
-  G' = G \cup \{v = (coord, material, mag)\}
-  \]
-  Triggers \texttt{HistoryManager.push}($\Delta M$).
+  \item Transition: inserts a new voxel into the model at the specified coordinate with the given material and magnetization properties.
+  \item Output: None.
+  \item Exceptions: InvalidInputError if the provided data is invalid.
+\end{itemize}
+
+removeVoxel(coord: Any) $\rightarrow$ void
+\begin{itemize}
+  \item Transition: removes the voxel at the specified coordinate from the model.
+  \item Output: None.
+  \item Exceptions: NotFoundError if the voxel does not exist.
+\end{itemize}
+
+modifyVoxel(coord: Any, newData: Any) $\rightarrow$ void
+\begin{itemize}
+  \item Transition: updates the properties of the voxel at the specified coordinate using the provided data.
+  \item Output: None.
+  \item Exceptions: NotFoundError if the voxel does not exist.
+\end{itemize}
+
+saveModel() $\rightarrow$ bool
+\begin{itemize}
+  \item Transition: serializes and persists the current model state to storage.
+  \item Output: bool indicating whether the save operation was successful.
+  \item Exceptions: IOError if the save operation fails.
+\end{itemize}
+
+forceSave() $\rightarrow$ bool
+\begin{itemize}
+  \item Transition: immediately serializes and persists the current model state, regardless of unsaved change state.
+  \item Output: bool indicating whether the save operation was successful.
+  \item Exceptions: IOError if the save operation fails.
+\end{itemize}
+
+loadModel(filePath: str) $\rightarrow$ bool
+\begin{itemize}
+  \item Transition: loads and deserializes model data from the specified file path, replacing the current model state.
+  \item Output: bool indicating whether the load operation was successful.
+  \item Exceptions: DeserializationError if loading fails due to invalid data.
+\end{itemize}
+
+% ModelManager
+
+% \subsection{Module}
+% The ModelManager module oversees the management and manipulation of the voxel-based 3D model. It provides APIs to add, remove, or modify voxels, update magnetization/material properties, and synchronize changes with autosave and history tracking modules.
+
+% \subsection{Uses}
+% \begin{itemize}
+%   \item \texttt{ModelStructure} to get the model structure and data representation.
+%   \item \texttt{VisualizationManager} to get the current view state.
+%   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
+% \end{itemize}
+
+% \subsection{Syntax}
+
+% \subsubsection{Exported Constants}
+% \begin{itemize}
+%   \item \texttt{MAX\_VOXEL\_COUNT}: int — maximum allowed voxel entries per project.
+%   \item \texttt{AUTOSAVE\_INTERVAL\_S}: float — time threshold (in seconds) before triggering autosave.
+% \end{itemize}
+
+% \subsubsection{Exported Access Programs}
+% \begin{center}
+% \renewcommand{\arraystretch}{1.3}
+% \begin{tabular}{p{4cm} p{4.5cm} p{3.5cm} p{3.5cm}}
+% \toprule
+% \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+% \midrule
+% \texttt{addVoxel} & coord: VoxelCoord, material: MaterialType, mag: Vector3 & void & InvalidInputError \\
+% \texttt{removeVoxel} & coord: VoxelCoord & void & NotFoundError \\
+% \texttt{modifyVoxel} & coord: VoxelCoord, newData: VoxelData & void & NotFoundError \\
+% \texttt{saveModel} & None & bool & IOerror \\
+% \texttt{loadModel} & filePath: str & bool & DeserializationError \\
+% \bottomrule
+% \end{tabular}
+% \end{center}
+
+% \subsection{Semantics}
+
+% \subsubsection{State Variables}
+% \begin{itemize}
+%   \item \texttt{voxelGrid}: VoxelGrid — stores all voxel elements and layer mapping.
+%   \item \texttt{metadata}: dict — contains file name, author, timestamp, etc.
+%   \item \texttt{autosaveTimer}: float — time since last autosave.
+%   \item \texttt{unsavedChanges}: bool — true if edits have occurred since last save.
+% \end{itemize}
+
+% \subsubsection{Environment Variables}
+% \begin{itemize}
+%   \item \texttt{SAVE\_PATH}: str — default save location for serialized project data.
+% \end{itemize}
+
+% \subsubsection{Assumptions}
+% \begin{itemize}
+%   \item Voxel coordinates fall within the defined model boundaries.
+%   \item Data supplied for voxel modifications are valid according to schema.
+%   \item Autosave operations will not interrupt ongoing edits.
+% \end{itemize}
+
+% \iffalse
+% \subsubsection{Access Routine Semantics}
+% \begin{itemize}
+%   \item \texttt{addVoxel(coord, material, mag)}: Adds new voxel entry at specified coordinate.
+%   \[
+%   G' = G \cup \{v = (coord, material, mag)\}
+%   \]
+%   Triggers \texttt{HistoryManager.push}($\Delta M$).
   
-  \item \texttt{removeVoxel(coord)}: Deletes voxel from grid and logs change.
-  \[
-  G' = G \setminus \{v \mid v.coord = coord\}
-  \]
+%   \item \texttt{removeVoxel(coord)}: Deletes voxel from grid and logs change.
+%   \[
+%   G' = G \setminus \{v \mid v.coord = coord\}
+%   \]
 
-  \item \texttt{modifyVoxel(coord, newData)}: Updates voxel’s attributes.
-  \[
-  v' = newData \text{ if } v.coord = coord
-  \]
+%   \item \texttt{modifyVoxel(coord, newData)}: Updates voxel’s attributes.
+%   \[
+%   v' = newData \text{ if } v.coord = coord
+%   \]
 
-  \item \texttt{saveModel()}: Serializes model and writes to file via \texttt{SerializationManager}.
-  \item \texttt{loadModel(filePath)}: Deserializes project data from storage and rebuilds voxel grid.
-\end{itemize}
+%   \item \texttt{saveModel()}: Serializes model and writes to file via \texttt{SerializationManager}.
+%   \item \texttt{loadModel(filePath)}: Deserializes project data from storage and rebuilds voxel grid.
+% \end{itemize}
 
-\subsubsection{Exceptions}
-\begin{itemize}
-  \item \texttt{InvalidInputError} — malformed coordinate or data type.
-  \item \texttt{NotFoundError} — voxel coordinate not present in grid.
-  \item \texttt{IOerror} — failure during save operation.
-  \item \texttt{DeserializationError} — corrupted or incompatible input file.
-\end{itemize}
-\fi
+% \subsubsection{Exceptions}
+% \begin{itemize}
+%   \item \texttt{InvalidInputError} — malformed coordinate or data type.
+%   \item \texttt{NotFoundError} — voxel coordinate not present in grid.
+%   \item \texttt{IOerror} — failure during save operation.
+%   \item \texttt{DeserializationError} — corrupted or incompatible input file.
+% \end{itemize}
+% \fi
 
 \section{MIS of History Manager (M10)}\label{Module10}
 
@@ -940,96 +1101,96 @@ None
 \end{itemize}
 \fi
 
-\section{MIS of Autosave Manager (M11)}\label{Module11} 
+% \section{MIS of Autosave Manager (M11)}\label{Module11} 
 
-AutosaveManager
+% AutosaveManager
 
-\subsection{Module}
-The AutosaveManager module prepares data to be saved, monitors when updates require saving, and invokes periodic scheduled transfers to file-based storage.
+% \subsection{Module}
+% The AutosaveManager module prepares data to be saved, monitors when updates require saving, and invokes periodic scheduled transfers to file-based storage.
 
-\subsection{Uses}
-\begin{itemize}
-  \item \texttt{HistoryManager} to get the latest history state during periodic saves.
-  \item \texttt{DatabaseHandler} to store serialized data persistently.
-  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
-\end{itemize}
+% \subsection{Uses}
+% \begin{itemize}
+%   \item \texttt{HistoryManager} to get the latest history state during periodic saves.
+%   \item \texttt{DatabaseHandler} to store serialized data persistently.
+%   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
+% \end{itemize}
 
-\subsection{Syntax}
+% \subsection{Syntax}
 
-\subsubsection{Exported Constants}
+% \subsubsection{Exported Constants}
 
-\begin{itemize}
-  \item \texttt{AUTOSAVE\_INTERVAL\_MS}: int — minimum amount of time (in milliseconds) between autosave operations.
-  \item \texttt{FILE\_ID}: str — file to which autosave operations are written.
-\end{itemize}
+% \begin{itemize}
+%   \item \texttt{AUTOSAVE\_INTERVAL\_MS}: int — minimum amount of time (in milliseconds) between autosave operations.
+%   \item \texttt{FILE\_ID}: str — file to which autosave operations are written.
+% \end{itemize}
 
-\subsubsection{Exported Access Programs}
+% \subsubsection{Exported Access Programs}
 
-\begin{center}
-\renewcommand{\arraystretch}{1.55}
-\begin{tabular}{p{4cm} p{3cm} p{3cm} p{3cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
+% \begin{center}
+% \renewcommand{\arraystretch}{1.55}
+% \begin{tabular}{p{4cm} p{3cm} p{3cm} p{3cm}}
+% \hline
+% \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+% \hline
 
-\texttt{forceSave} &
-None &
-None &
-IO Error \\
+% \texttt{forceSave} &
+% None &
+% None &
+% IO Error \\
 
-\texttt{enableAutosave} &
-None &
-None &
-None \\
+% \texttt{enableAutosave} &
+% None &
+% None &
+% None \\
 
-\texttt{disableAutosave} &
-None &
-None &
-None \\
+% \texttt{disableAutosave} &
+% None &
+% None &
+% None \\
 
-\texttt{lastAutosaveTime} &
-None &
-DateTime &
-None \\
+% \texttt{lastAutosaveTime} &
+% None &
+% DateTime &
+% None \\
 
-\end{tabular}
-\end{center}
-
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-\begin{itemize}
-  \item \texttt{autosavePermission}: bool — indicates whether autosave is enabled or disabled.
-  \item \texttt{lastAutosave}: DateTime — timestamp of last transfer to file-based storage.
-  \item \texttt{autosaveHistory}: dict[DateTime] = Update — complete log of transfers to file-based storage.
-\end{itemize}
+% \end{tabular}
+% \end{center}
 
 
-\subsubsection{Environment Variables}
+% \subsection{Semantics}
 
-\begin{itemize}
-  \item \texttt{SYSTEM\_TIME}: DateTime — global time supplied by the current system.
-\end{itemize}
+% \subsubsection{State Variables}
+
+% \begin{itemize}
+%   \item \texttt{autosavePermission}: bool — indicates whether autosave is enabled or disabled.
+%   \item \texttt{lastAutosave}: DateTime — timestamp of last transfer to file-based storage.
+%   \item \texttt{autosaveHistory}: dict[DateTime] = Update — complete log of transfers to file-based storage.
+% \end{itemize}
 
 
-\subsubsection{Assumptions}
-\begin{itemize}
-  \item \texttt{SYSTEM\_TIME} always increases monotonically.
-  \item Data preparation method is compatible with file-based storage.
-  \item Connection is available to file-based storage.
-  \item Valid configuration exists for operations to file-based storage.
-\end{itemize}
+% \subsubsection{Environment Variables}
 
-\newpage
+% \begin{itemize}
+%   \item \texttt{SYSTEM\_TIME}: DateTime — global time supplied by the current system.
+% \end{itemize}
+
+
+% \subsubsection{Assumptions}
+% \begin{itemize}
+%   \item \texttt{SYSTEM\_TIME} always increases monotonically.
+%   \item Data preparation method is compatible with file-based storage.
+%   \item Connection is available to file-based storage.
+%   \item Valid configuration exists for operations to file-based storage.
+% \end{itemize}
+
+% \newpage
 
 \section{MIS of Voxel Tracking (M12)}\label{Module12}
 
 VoxelTracking
 
 \subsection{Module}
-The VoxelTracking module interprets the voxel data structure to locate and track voxels that satisfy particular property criteria, such as selection state, material type, or user-defined rules. It efficiently identifies and accesses relevant voxels to determine which voxels are currently subject to operations like highlighting, selection, or further processing.
+The VoxelTracking module interprets the voxel data structure to locate and track voxels that satisfy particular property criteria, such as selection state, material type, or user-defined rules. It provides read-only access to voxel query results without modifying model state or interpreting user interaction.
 
 \subsection{Uses}
 \begin{itemize}
@@ -1052,22 +1213,23 @@ The VoxelTracking module interprets the voxel data structure to locate and track
 \toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \midrule
-\texttt{queryByMaterial} & materialType: MaterialType & list[VoxelCoord] & InvalidMaterialError \\
-\texttt{queryBySelection} & isSelected: bool & list[VoxelCoord] & None \\
-\texttt{queryByRegion} & bounds: BoundingBox & list[VoxelCoord] & InvalidBoundsError \\
-\texttt{queryByLayer} & layerZ: int & list[VoxelCoord] & IndexError \\
-\texttt{queryByProperty} & propertyName: str, value: Any & list[VoxelCoord] & InvalidPropertyError \\
-\texttt{getVoxelProperties} & coord: VoxelCoord & VoxelProperties & NotFoundError \\
+\texttt{queryByMaterial} & materialType: Any & list[Any] & InvalidMaterialError \\
+\texttt{queryBySelection} & isSelected: bool & list[Any] & None \\
+\texttt{queryByRegion} & bounds: Any & list[Any] & InvalidBoundsError \\
+\texttt{queryByLayer} & layerZ: Z & list[Any] & IndexError \\
+\texttt{queryByProperty} & propertyName: str, value: Any & list[Any] & InvalidPropertyError \\
+\texttt{getVoxelProperties} & coord: Any & dict[str] = Any & NotFoundError \\
 \bottomrule
 \end{tabular}
 \end{center}
+
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 \begin{itemize}
-  \item \texttt{queryCache}: dict[str] = list[VoxelCoord] — cached results of recent queries for performance optimization.
-  \item \texttt{activeSelections}: set[VoxelCoord] — set of currently selected voxel coordinates.
+  \item \texttt{queryCache}: dict[str] = list[VoxelCoord] — cached results of recent read-only queries for performance optimization.
+  \item \texttt{activeSelections}: set[VoxelCoord] — cached snapshot of selection state derived from model state.
 \end{itemize}
 
 \subsubsection{Environment Variables}
@@ -1080,54 +1242,154 @@ None
   \item The voxel grid structure remains consistent during query operations.
 \end{itemize}
 
-\iffalse
 \subsubsection{Access Routine Semantics}
+
+queryByMaterial(materialType: Any) $\rightarrow$ list[Any]
 \begin{itemize}
-  \item \texttt{queryByMaterial(materialType)}: Returns all voxel coordinates that have the specified material type.
-  \[
-  R = \{v.coord \mid v \in G, v.material = materialType\}
-  \]
-  
-  \item \texttt{queryBySelection(isSelected)}: Returns all voxel coordinates that match the selection state.
-  \[
-  R = \begin{cases}
-  activeSelections & \text{if } isSelected = true\\
-  \{v.coord \mid v \in G, v.coord \notin activeSelections\} & \text{if } isSelected = false
-  \end{cases}
-  \]
-  
-  \item \texttt{queryByRegion(bounds)}: Returns all voxel coordinates within the specified bounding box.
-  \[
-  R = \{v.coord = (x,y,z) \mid v \in G, bounds.min \leq (x,y,z) \leq bounds.max\}
-  \]
-  
-  \item \texttt{queryByLayer(layerZ)}: Returns all voxel coordinates in the specified layer.
-  \[
-  R = \{v.coord = (x,y,z) \mid v \in G, z = layerZ\}
-  \]
-  
-  \item \texttt{queryByProperty(propertyName, value)}: Returns all voxel coordinates where the specified property matches the given value.
-  \[
-  R = \{v.coord \mid v \in G, v[propertyName] = value\}
-  \]
-  
-  \item \texttt{getVoxelProperties(coord)}: Retrieves all properties of the voxel at the specified coordinate.
-  \[
-  P = \{property: value \mid property \in SUPPORTED\_PROPERTIES, value = v[property]\}
-  \]
-  where $v$ is the voxel at coordinate $coord$.
+  \item Transition: retrieves all voxel identifiers whose material property matches the specified material type.
+  \item Output: list[Any] containing voxel identifiers.
+  \item Exceptions: InvalidMaterialError if the material type is not recognized.
 \end{itemize}
 
-\subsubsection{Exceptions}
+queryBySelection(isSelected: bool) $\rightarrow$ list[Any]
 \begin{itemize}
-  \item \texttt{InvalidMaterialError} — material type not recognized or not in valid material set.
-  \item \texttt{InvalidBoundsError} — bounding box is invalid (e.g., min > max) or out of grid boundaries.
-  \item \texttt{IndexError} — layer index is out of range.
-  \item \texttt{InvalidPropertyError} — property name not in \texttt{SUPPORTED\_PROPERTIES}.
-  \item \texttt{NotFoundError} — voxel coordinate not present in grid.
+  \item Transition: retrieves all voxel identifiers that match the specified selection state.
+  \item Output: list[Any] containing voxel identifiers.
+  \item Exceptions: None.
 \end{itemize}
-\fi
-\newpage
+
+queryByRegion(bounds: Any) $\rightarrow$ list[Any]
+\begin{itemize}
+  \item Transition: retrieves all voxel identifiers that lie within the specified spatial bounds.
+  \item Output: list[Any] containing voxel identifiers.
+  \item Exceptions: InvalidBoundsError if the bounds are invalid.
+\end{itemize}
+
+queryByLayer(layerZ: Z) $\rightarrow$ list[Any]
+\begin{itemize}
+  \item Transition: retrieves all voxel identifiers that belong to the specified layer.
+  \item Output: list[Any] containing voxel identifiers.
+  \item Exceptions: IndexError if the layer index is out of range.
+\end{itemize}
+
+queryByProperty(propertyName: str, value: Any) $\rightarrow$ list[Any]
+\begin{itemize}
+  \item Transition: retrieves all voxel identifiers whose specified property matches the given value.
+  \item Output: list[Any] containing voxel identifiers.
+  \item Exceptions: InvalidPropertyError if the property name is not supported.
+\end{itemize}
+
+getVoxelProperties(coord: Any) $\rightarrow$ dict[str] = Any
+\begin{itemize}
+  \item Transition: retrieves all stored properties associated with the specified voxel identifier.
+  \item Output: dict[str] = Any containing voxel properties.
+  \item Exceptions: NotFoundError if the voxel identifier does not exist.
+\end{itemize}
+
+
+
+% VoxelTracking
+
+% \subsection{Module}
+% The VoxelTracking module interprets the voxel data structure to locate and track voxels that satisfy particular property criteria, such as selection state, material type, or user-defined rules. It efficiently identifies and accesses relevant voxels to determine which voxels are currently subject to operations like highlighting, selection, or further processing.
+
+% \subsection{Uses}
+% \begin{itemize}
+%   \item \texttt{ModelStructure} to get the model structure and data representation.
+%   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
+% \end{itemize}
+
+% \subsection{Syntax}
+
+% \subsubsection{Exported Constants}
+% \begin{itemize}
+%   \item \texttt{MAX\_QUERY\_RESULTS}: int — maximum number of voxels returned in a single query result.
+%   \item \texttt{SUPPORTED\_PROPERTIES}: list[str] — list of property names that can be queried (e.g., "material", "magnetization", "selected", "layer").
+% \end{itemize}
+
+% \subsubsection{Exported Access Programs}
+% \begin{center}
+% \renewcommand{\arraystretch}{1.3}
+% \begin{tabular}{p{4cm} p{4.5cm} p{3.5cm} p{3.5cm}}
+% \toprule
+% \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+% \midrule
+% \texttt{queryByMaterial} & materialType: MaterialType & list[VoxelCoord] & InvalidMaterialError \\
+% \texttt{queryBySelection} & isSelected: bool & list[VoxelCoord] & None \\
+% \texttt{queryByRegion} & bounds: BoundingBox & list[VoxelCoord] & InvalidBoundsError \\
+% \texttt{queryByLayer} & layerZ: int & list[VoxelCoord] & IndexError \\
+% \texttt{queryByProperty} & propertyName: str, value: Any & list[VoxelCoord] & InvalidPropertyError \\
+% \texttt{getVoxelProperties} & coord: VoxelCoord & VoxelProperties & NotFoundError \\
+% \bottomrule
+% \end{tabular}
+% \end{center}
+
+% \subsection{Semantics}
+
+% \subsubsection{State Variables}
+% \begin{itemize}
+%   \item \texttt{queryCache}: dict[str] = list[VoxelCoord] — cached results of recent queries for performance optimization.
+%   \item \texttt{activeSelections}: set[VoxelCoord] — set of currently selected voxel coordinates.
+% \end{itemize}
+
+% \subsubsection{Environment Variables}
+% None
+
+% \subsubsection{Assumptions}
+% \begin{itemize}
+%   \item Voxel coordinates provided in queries are within valid grid boundaries.
+%   \item Property names used in queries match those defined in \texttt{SUPPORTED\_PROPERTIES}.
+%   \item The voxel grid structure remains consistent during query operations.
+% \end{itemize}
+
+% \iffalse
+% \subsubsection{Access Routine Semantics}
+% \begin{itemize}
+%   \item \texttt{queryByMaterial(materialType)}: Returns all voxel coordinates that have the specified material type.
+%   \[
+%   R = \{v.coord \mid v \in G, v.material = materialType\}
+%   \]
+  
+%   \item \texttt{queryBySelection(isSelected)}: Returns all voxel coordinates that match the selection state.
+%   \[
+%   R = \begin{cases}
+%   activeSelections & \text{if } isSelected = true\\
+%   \{v.coord \mid v \in G, v.coord \notin activeSelections\} & \text{if } isSelected = false
+%   \end{cases}
+%   \]
+  
+%   \item \texttt{queryByRegion(bounds)}: Returns all voxel coordinates within the specified bounding box.
+%   \[
+%   R = \{v.coord = (x,y,z) \mid v \in G, bounds.min \leq (x,y,z) \leq bounds.max\}
+%   \]
+  
+%   \item \texttt{queryByLayer(layerZ)}: Returns all voxel coordinates in the specified layer.
+%   \[
+%   R = \{v.coord = (x,y,z) \mid v \in G, z = layerZ\}
+%   \]
+  
+%   \item \texttt{queryByProperty(propertyName, value)}: Returns all voxel coordinates where the specified property matches the given value.
+%   \[
+%   R = \{v.coord \mid v \in G, v[propertyName] = value\}
+%   \]
+  
+%   \item \texttt{getVoxelProperties(coord)}: Retrieves all properties of the voxel at the specified coordinate.
+%   \[
+%   P = \{property: value \mid property \in SUPPORTED\_PROPERTIES, value = v[property]\}
+%   \]
+%   where $v$ is the voxel at coordinate $coord$.
+% \end{itemize}
+
+% \subsubsection{Exceptions}
+% \begin{itemize}
+%   \item \texttt{InvalidMaterialError} — material type not recognized or not in valid material set.
+%   \item \texttt{InvalidBoundsError} — bounding box is invalid (e.g., min > max) or out of grid boundaries.
+%   \item \texttt{IndexError} — layer index is out of range.
+%   \item \texttt{InvalidPropertyError} — property name not in \texttt{SUPPORTED\_PROPERTIES}.
+%   \item \texttt{NotFoundError} — voxel coordinate not present in grid.
+% \end{itemize}
+% \fi
+% \newpage
 
 \section{MIS of Highlight Manager (M13)}\label{Module13} 
 
@@ -1201,6 +1463,36 @@ None
   \item Colour values are valid colour representations.
 \end{itemize}
 
+\subsubsection{Access Routine Semantics}
+
+getHighlight(semanticKey: str) $\rightarrow$ str
+\begin{itemize}
+  \item Transition: retrieves the highlight colour associated with the specified semantic key.
+  \item Output: str representing the highlight colour.
+  \item Exceptions: None.
+\end{itemize}
+
+editPalette(semanticKey: str, newColour: str) $\rightarrow$ void
+\begin{itemize}
+  \item Transition: updates the highlight colour mapping for the specified semantic key.
+  \item Output: None.
+  \item Exceptions: None.
+\end{itemize}
+
+setHighlight(semanticKey: str) $\rightarrow$ void
+\begin{itemize}
+  \item Transition: applies the highlight associated with the specified semantic key to relevant voxels.
+  \item Output: None.
+  \item Exceptions: None.
+\end{itemize}
+
+resetPalette() $\rightarrow$ void
+\begin{itemize}
+  \item Transition: restores all highlight colours to their default values.
+  \item Output: None.
+  \item Exceptions: None.
+\end{itemize}
+
 \newpage
 
 \section{MIS of Export Validation (M14)}\label{Module14}
@@ -1213,7 +1505,7 @@ The ExportValidation module validates export readiness by checking export file f
 
 \subsection{Uses}
 \begin{itemize}
-  \item \texttt{VoxelTracking} to get all the voxels in the model, ensure all voxels have material and magnetization properties.
+  
   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
 \end{itemize}
 
@@ -1234,9 +1526,9 @@ The ExportValidation module validates export readiness by checking export file f
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\texttt{validateExportReadiness} & model: ModelStructure & ValidationResult & - \\
-\texttt{checkPrinterCompatibility} & model: ModelStructure & bool & - \\
-\texttt{checkPropertyCompleteness} & model: ModelStructure & list[str] & - \\
+\texttt{validateExportReadiness} & model: Any & Any & None \\
+\texttt{checkPrinterCompatibility} & model: Any & bool & None \\
+\texttt{checkPropertyCompleteness} & model: Any & list[str] & None \\
 \texttt{validateFileFormat} & filePath: str & bool & IOError \\
 \hline
 \end{tabular}
@@ -1259,6 +1551,37 @@ None
 \item All voxels in the model have consistent property structures
 \item File paths provided are accessible and readable
 \end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+validateExportReadiness(model: Any) $\rightarrow$ Any
+\begin{itemize}
+  \item Transition: evaluates whether the provided model satisfies all export constraints, including size limits, property completeness, and format requirements.
+  \item Output: Any representing the result of export readiness validation.
+  \item Exceptions: None.
+\end{itemize}
+
+checkPrinterCompatibility(model: Any) $\rightarrow$ bool
+\begin{itemize}
+  \item Transition: checks whether the provided model satisfies printer-specific constraints and limitations.
+  \item Output: bool indicating printer compatibility.
+  \item Exceptions: None.
+\end{itemize}
+
+checkPropertyCompleteness(model: Any) $\rightarrow$ list[str]
+\begin{itemize}
+  \item Transition: verifies that all required voxel properties are present and returns identifiers of any missing properties.
+  \item Output: list[str] containing names of missing properties, if any.
+  \item Exceptions: None.
+\end{itemize}
+
+validateFileFormat(filePath: str) $\rightarrow$ bool
+\begin{itemize}
+  \item Transition: validates that the export file format at the specified file path meets supported format requirements.
+  \item Output: bool indicating whether the file format is valid.
+  \item Exceptions: IOError if the file cannot be accessed.
+\end{itemize}
+
 
 \subsubsection{Local Functions}
 
@@ -1335,6 +1658,37 @@ The ExportManager module coordinates the export process, transforms internal mod
 \item The export format is supported
 \end{itemize}
 
+\subsubsection{Access Routine Semantics}
+
+ExportManager() $\rightarrow$ self
+\begin{itemize}
+  \item Transition: initializes the export manager with default configuration values.
+  \item Output: self.
+  \item Exceptions: None.
+\end{itemize}
+
+exportProject(model: Any, exportPath: str, format: str) $\rightarrow$ void
+\begin{itemize}
+  \item Transition: coordinates the export process by validating the model, transforming model data into the specified export format, and writing the serialized data to the given export path.
+  \item Output: None.
+  \item Exceptions: IOError if writing fails; ValueError if the export format is invalid.
+\end{itemize}
+
+transformToExportFormat(model: Any, format: str) $\rightarrow$ Any
+\begin{itemize}
+  \item Transition: transforms the provided model data into an intermediate export-compatible data representation based on the specified format.
+  \item Output: Any representing export-formatted data.
+  \item Exceptions: None.
+\end{itemize}
+
+serializeData(data: Any, format: str) $\rightarrow$ str
+\begin{itemize}
+  \item Transition: serializes the provided export data into a string representation according to the specified format.
+  \item Output: str representing serialized export data.
+  \item Exceptions: ValueError if serialization fails due to unsupported format.
+\end{itemize}
+
+
 \subsubsection{Local Functions}
 
 \begin{itemize}
@@ -1406,6 +1760,44 @@ None
 \item Log file location is writable
 \item Error codes follow the defined constants
 \end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+detectError(errorContext: dict[str] = Any) $\rightarrow$ Any
+\begin{itemize}
+  \item Transition: analyzes the provided error context to detect and generate an error diagnostic record.
+  \item Output: Any representing the detected error diagnostic.
+  \item Exceptions: None.
+\end{itemize}
+
+classifyError(errorCode: str, errorContext: dict[str] = Any) $\rightarrow$ Any
+\begin{itemize}
+  \item Transition: classifies the error based on the provided error code and contextual information.
+  \item Output: Any representing the determined error classification.
+  \item Exceptions: None.
+\end{itemize}
+
+logError(errorDiagnostic: Any) $\rightarrow$ void
+\begin{itemize}
+  \item Transition: records the provided error diagnostic information in persistent error logs.
+  \item Output: None.
+  \item Exceptions: IOError if the error log cannot be written.
+\end{itemize}
+
+handleErrorRecovery(errorDiagnostic: Any) $\rightarrow$ Any
+\begin{itemize}
+  \item Transition: determines and returns an appropriate recovery action based on the provided error diagnostic.
+  \item Output: Any representing the recovery action.
+  \item Exceptions: None.
+\end{itemize}
+
+getErrorSource(errorDiagnostic: Any) $\rightarrow$ str
+\begin{itemize}
+  \item Transition: identifies the source component associated with the provided error diagnostic.
+  \item Output: str indicating the source of the error.
+  \item Exceptions: None.
+\end{itemize}
+
 
 \subsubsection{Local Functions}
 
@@ -1525,12 +1917,14 @@ GraphicsAdapter handles all communication with the graphics API to enable visual
 \begin{tabular}{p{4cm} p{5cm} p{3cm} p{3cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\ \hline
-\texttt{requestRender} & str: UpdateKey, \newline update: UpdateBundle & void & NetworkError \\
-\texttt{getUpdateStatus} & str: UpdateKey & bool & None \\
-\texttt{checkServerStatus} & None & Promise\textless void\textgreater & NetworkError \\
+\texttt{requestRender} & key: str, \newline update: dict[str] = Any & void & NetworkError \\
+\texttt{getUpdateStatus} & key: str & bool & None \\
+\texttt{checkServerStatus} & None & void & NetworkError \\
 \hline
 \end{tabular}
 \end{center}
+
+
 
 \subsection{Semantics}
 
@@ -1549,6 +1943,28 @@ GraphicsAdapter handles all communication with the graphics API to enable visual
   \item Backend service is reachable and operational.
   \item Connection is available for API.
   \item Valid configurations exist for necessary API operations.
+\end{itemize}
+\subsubsection{Access Routine Semantics}
+
+requestRender(key: str, update: dict[str] = Any) $\rightarrow$ void
+\begin{itemize}
+  \item Transition: sends a rendering request identified by the given key along with the associated update data to the graphics backend.
+  \item Output: None.
+  \item Exceptions: NetworkError if the rendering request cannot be transmitted.
+\end{itemize}
+
+getUpdateStatus(key: str) $\rightarrow$ bool
+\begin{itemize}
+  \item Transition: retrieves the current rendering status associated with the specified update key.
+  \item Output: bool indicating whether rendering has completed successfully.
+  \item Exceptions: None.
+\end{itemize}
+
+checkServerStatus() $\rightarrow$ void
+\begin{itemize}
+  \item Transition: checks connectivity and availability of the graphics backend service.
+  \item Output: None.
+  \item Exceptions: NetworkError if the backend service cannot be reached.
 \end{itemize}
 
 
@@ -1581,10 +1997,11 @@ The DatabaseHandler module manages persistent storage for project and model data
 \begin{tabular}{p{4cm} p{4.5cm} p{3.5cm} p{3.5cm}}
 \toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\ \midrule
-\texttt{saveProject} & id: str, data: SerializedModel & bool & IOError \\
-\texttt{loadProject} & id: str & SerializedModel & FileNotFoundError \\
+\texttt{saveProject} & id: str, data: Any & bool & IOError \\
+\texttt{loadProject} & id: str & Any & FileNotFoundError \\
 \texttt{deleteProject} & id: str & bool & IOError \\
-\texttt{listProjects} & None & list[str] & None \\ \bottomrule
+\texttt{listProjects} & None & list[str] & None \\
+\bottomrule
 \end{tabular}
 \end{center}
 
@@ -1606,6 +2023,36 @@ The DatabaseHandler module manages persistent storage for project and model data
   \item Project IDs are unique.
   \item File I/O operations succeed given sufficient permissions.
   \item SerializationManager ensures schema compatibility before writing data.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+saveProject(id: str, data: Any) $\rightarrow$ bool
+\begin{itemize}
+  \item Transition: stores the provided serialized project data under the given project identifier in persistent storage.
+  \item Output: bool indicating whether the save operation was successful.
+  \item Exceptions: IOError if the data cannot be written to persistent storage.
+\end{itemize}
+
+loadProject(id: str) $\rightarrow$ Any
+\begin{itemize}
+  \item Transition: retrieves the serialized project data associated with the specified project identifier from persistent storage.
+  \item Output: Any representing the loaded serialized project data.
+  \item Exceptions: FileNotFoundError if no project exists with the given identifier.
+\end{itemize}
+
+deleteProject(id: str) $\rightarrow$ bool
+\begin{itemize}
+  \item Transition: removes the project data associated with the specified project identifier from persistent storage.
+  \item Output: bool indicating whether the deletion was successful.
+  \item Exceptions: IOError if the project data cannot be removed.
+\end{itemize}
+
+listProjects() $\rightarrow$ list[str]
+\begin{itemize}
+  \item Transition: retrieves a list of all project identifiers currently stored in persistent storage.
+  \item Output: list[str] containing all stored project identifiers.
+  \item Exceptions: None.
 \end{itemize}
 
 \newpage
@@ -1638,14 +2085,15 @@ The ExportStructure module defines and implements the internal data structure fo
 \toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \midrule
-\texttt{defineStructure} & format: str & ExportSchema & UnsupportedFormatError \\
+\texttt{defineStructure} & format: str & dict[str] = Any & UnsupportedFormatError \\
 \texttt{getFieldOrder} & format: str & list[str] & UnsupportedFormatError \\
-\texttt{getFieldType} & fieldName: str & DataType & InvalidFieldError \\
-\texttt{validateStructure} & data: ExportData & bool & StructureMismatchError \\
-\texttt{createHeader} & metadata: dict & ExportHeader & None \\
+\texttt{getFieldType} & fieldName: str & Any & InvalidFieldError \\
+\texttt{validateStructure} & data: Any & bool & StructureMismatchError \\
+\texttt{createHeader} & metadata: dict[str] = Any & dict[str] = Any & None \\
 \bottomrule
 \end{tabular}
 \end{center}
+
 
 \subsection{Semantics}
 
@@ -1664,6 +2112,43 @@ None
   \item Field names in export data match those defined in \texttt{FIELD\_ORDER}.
   \item Data types conform to the schema defined by \texttt{fieldTypes}.
   \item Export structure remains consistent across export operations.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+defineStructure(format: str) $\rightarrow$ dict[str] = Any
+\begin{itemize}
+  \item Transition: selects and defines the export structure schema corresponding to the specified export format and stores it as the active export schema.
+  \item Output: dict[str] = Any representing the defined export schema.
+  \item Exceptions: UnsupportedFormatError if the export format is not supported.
+\end{itemize}
+
+getFieldOrder(format: str) $\rightarrow$ list[str]
+\begin{itemize}
+  \item Transition: retrieves the ordered list of field names associated with the specified export format.
+  \item Output: list[str] representing the field order.
+  \item Exceptions: UnsupportedFormatError if the export format is not supported.
+\end{itemize}
+
+getFieldType(fieldName: str) $\rightarrow$ Any
+\begin{itemize}
+  \item Transition: retrieves the expected data type for the specified export field name.
+  \item Output: Any representing the field’s data type.
+  \item Exceptions: InvalidFieldError if the field name is not part of the export schema.
+\end{itemize}
+
+validateStructure(data: Any) $\rightarrow$ bool
+\begin{itemize}
+  \item Transition: checks whether the provided export data conforms to the active export schema and field ordering.
+  \item Output: bool indicating whether the structure is valid.
+  \item Exceptions: StructureMismatchError if the data does not match the export schema.
+\end{itemize}
+
+createHeader(metadata: dict[str] = Any) $\rightarrow$ dict[str] = Any
+\begin{itemize}
+  \item Transition: generates an export header using the provided metadata in accordance with the export schema.
+  \item Output: dict[str] = Any representing the export header.
+  \item Exceptions: None.
 \end{itemize}
 
 
