@@ -1,6 +1,8 @@
 import numpy as np
 import os
 import json
+from typing import Dict, List, Tuple
+
 
 from collections import defaultdict
 
@@ -79,3 +81,52 @@ def read_surface(filepath: str):
         perimeter_coords.append([voxel["x"], voxel["y"], voxel["z"]])
 
     return np.array(perimeter_coords) if perimeter_coords else np.empty((0, 3), dtype=int)
+
+def organize_voxels_into_layers(
+    voxel_data: np.ndarray,
+    voxel_size: float = None,
+    axis: str = "z",
+) -> Dict[float, np.ndarray]:
+    if len(voxel_data) == 0:
+        return {}
+    col = 0 if axis == "x" else 1 if axis == "y" else 2
+    _precision = 12
+    layers: Dict[float, list] = {}
+    for voxel in voxel_data:
+        v = round(float(voxel[col]), _precision)
+        if v not in layers:
+            layers[v] = []
+        layers[v].append(voxel)
+    return {k: np.array(layers[k]) for k in sorted(layers.keys())}
+
+def get_layer_info(layers: Dict[float, np.ndarray]) -> List[Dict]:
+    layer_info = []
+    for layer_value, voxels in layers.items():
+        layer_info.append({
+            "layer_value": float(layer_value),
+            "num_voxels": len(voxels)
+        })
+    return layer_info
+
+def update_layer_in_project(
+    project_data: np.ndarray,
+    layer_value: float,
+    new_layer_voxels: np.ndarray,
+    voxel_size: float = None,
+    axis: str = "z",
+) -> np.ndarray:
+    if len(project_data) == 0:
+        return new_layer_voxels
+    col = 0 if axis == "x" else 1 if axis == "y" else 2
+    _precision = 12
+    layer_rounded = round(layer_value, _precision)
+    voxel_vals = np.array([round(float(v), _precision) for v in project_data[:, col]])
+    mask = np.abs(voxel_vals - layer_rounded) > 1e-9
+    other_voxels = project_data[mask]
+    
+    if len(new_layer_voxels) > 0:
+        updated_data = np.vstack([other_voxels, new_layer_voxels])
+    else:
+        updated_data = other_voxels
+    
+    return updated_data
