@@ -1,30 +1,81 @@
 import numpy as np
 import os
+import json
 
-def create_project(coordinates: np.array, filename: str, path: str):
+from collections import defaultdict
+
+#new method to create JSON file 
+def create_json(coordinates: np.array, filename: str, path: str, origin: np.ndarray, voxel_size):
     project_path = os.path.join(path, filename)
+    layers = {}
+    ox, oy, oz = origin
 
-    with open(project_path, "w") as file:
-        for coord in coordinates:
-            proj_line = f"{coord[0]},{coord[1]},{coord[2]},1,0,0\n" #magnetization magnitude, angle, ID
-            file.write(proj_line)
-    
+    for x, y, z in coordinates:
+        ix = round((x - ox) / voxel_size)
+        iy = round((y - oy) / voxel_size)
+        iz = round((z - oz) / voxel_size)
+
+        layer_key = f"L:{iz}"
+        voxel_key = f"V:{ix},{iy},{iz}"
+
+        if layer_key not in layers:
+            layers[layer_key] = {"voxels": {}}
+
+        layers[layer_key]["voxels"][voxel_key] = {
+            "x": x,
+            "y": y,
+            "z": z,
+            "magnetization": 1,
+            "angle": 0,
+            "id": 0
+        }
+
+    layer_order = sorted(layers.keys(), key=lambda k: int(k.split(":")[1]))
+    data = {
+        "layers": layers,
+        "layer_order": layer_order
+    }
+
+    with open(project_path, "w") as f:
+        json.dump(data, f, indent=2, sort_keys=True)
     return project_path
 
-def read_project_coordinates(filepath: str):
-    coordinates = None
+#create a list of all voxels with integer coordinates
+def get_voxels_int(layers: dict) -> set[tuple[int, int, int]]:
+    voxel_coords = set()
+    for layer in layers.values():
+        for vkey in layer["voxels"].keys():
+            ix, iy, iz = map(int, vkey.split(":")[1].split(","))
+            voxel_coords.add((ix, iy, iz))
+    return voxel_coords
+
+#determine outer perimeter of surface
+def get_surface(occupied: set[tuple[int, int, int]]) -> set[tuple[int, int, int]]:
+    directions = [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+
+    surface_voxels = set()
+    for x, y, z in occupied:
+        for dx, dy, dz in directions:
+            if (x + dx, y + dy, z + dz) not in occupied:
+                surface_voxels.add((x, y, z))
+                break
+    return surface_voxels
+
+#new method to read JSON file + only read surface voxels
+def read_surface(filepath: str):
     with open(filepath, "r") as file:
-        lines = file.readlines()
-        num_voxels = len(lines)
-        if num_voxels == 0:
-            return np.empty((0, 3))
-        
-        coordinates = np.empty((num_voxels, 3))
+        data = json.load(file)
 
-        for i, line in enumerate(lines):
-            voxel_data = line.strip().split(',')
-            if len(voxel_data) >= 3:
-                coordinates[i] = [float(voxel_data[0]), float(voxel_data[1]), float(voxel_data[2])]
-    
-    return coordinates
+    layers = data["layers"]
+    perimeter_coords = []
+    all_voxels = get_voxels_int(layers)
+    surface = get_surface(all_voxels)
 
+    for ix, iy, iz in surface:
+        layer_key = f"L:{iz}"
+        voxel_key = f"V:{ix},{iy},{iz}"
+        layer = data["layers"][layer_key]
+        voxel = layer["voxels"][voxel_key]
+        perimeter_coords.append([voxel["x"], voxel["y"], voxel["z"]])
+
+    return np.array(perimeter_coords) if perimeter_coords else np.empty((0, 3), dtype=int)

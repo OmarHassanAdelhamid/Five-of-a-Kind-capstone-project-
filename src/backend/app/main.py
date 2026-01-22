@@ -116,7 +116,7 @@ async def get_voxelized(project_name: str):
         )
     
     try:
-        coordinates = pj.read_project_coordinates(str(project_path))
+        coordinates = pj.read_surface(str(project_path))
         # Convert numpy array to list for JSON serialization
         coordinates_list = coordinates.tolist() if hasattr(coordinates, 'tolist') else coordinates
         
@@ -166,7 +166,12 @@ async def voxelize(request: VoxelizeRequest):
 
         # save points as csv to project file with init magnetization vector and material IDs
         # FOR POC: this will be in backend/sample-project-files
-        filepath = pj.create_project(points, project_name, str(VOXEL_STORAGE_DIR))
+        #filepath = pj.create_project(points, project_name, str(VOXEL_STORAGE_DIR))
+        
+        origin = voxelized.translation
+        filepath = pj.create_json(points, project_name, str(VOXEL_STORAGE_DIR), origin, voxel_size)
+
+
 
         return {"message": f"Voxelization Status of STL file ({stl_filename}): Success", "projectpath": f"{filepath}"}
 
