@@ -8,7 +8,7 @@ export interface VoxelizedData {
 
 export const fetchAvailableModels = async (): Promise<string[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/list-stl`)
+    const response = await fetch(`${API_BASE_URL}/api/models/list-stl`)
     if (!response.ok) {
       throw new Error(`Failed to fetch models (${response.status})`)
     }
