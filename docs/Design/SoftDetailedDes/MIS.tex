@@ -2360,7 +2360,7 @@ graduate attribute of Problem Analysis and Design.
 
 \subsubsection*{1. What went well while writing this deliverable?}
 \bigskip\bigskip
-\textbf{Omar: }
+\textbf{Omar: } What went well for me during this deliverable was working with a clearer system structure than in previous revisions. The module hierarchy and relationships were much more defined, which made it easier to understand how each component fit into the overall architecture. This helped me focus on implementing and documenting simpler modules efficiently while still contributing meaningfully to the project. Communication within the team was also smoother, which made coordination and integration less stressful and more productive.
 \newline
 \newline
 \textbf{Daniel: } 
@@ -2377,7 +2377,7 @@ graduate attribute of Problem Analysis and Design.
 \subsubsection*{2. What pain points did you experience during this deliverable, and how
 did you resolve them?}
 \bigskip
-\textbf{Omar: }
+\textbf{Omar: } One of the main pain points I experienced was keeping track of all the module dependencies and ensuring consistency between the Module Guide and the MIS documents as changes were made. Small inconsistencies could easily propagate and cause confusion. I resolved this by frequently cross-referencing the architecture diagram and updating documentation incrementally instead of in large batches. Asking for clarification early and verifying assumptions with teammates also helped prevent larger issues later on.
 \newline
 \newline
 \textbf{Daniel: } 
@@ -2393,7 +2393,7 @@ did you resolve them?}
 
 \subsubsection*{3. Which of your design decisions stemmed from speaking to your client(s)
 or a proxy (e.g. your peers, stakeholders, potential users)? For those that
-were not, why, and where did they come from?}
+were not, why, and where did they come from?} Several key design decisions were influenced by discussions with teammates acting as proxies for end users, as well as guidance provided by the TA during feedback and review sessions. The TA’s input helped reinforce the importance of clear module boundaries, low coupling, and well defined responsibilities, which directly shaped how the system was decomposed into modules. Feedback from peers also emphasized the need for maintainability and clarity over unnecessary architectural complexity. Design decisions that did not stem directly from client or TA input were informed by course material, software architecture principles discussed in lectures, and the team’s prior experience with similar systems.
 
 \subsubsection*{4. While creating the design doc, what parts of your other documents (e.g.
 requirements, hazard analysis, etc), it any, needed to be changed, and why?}
@@ -2404,6 +2404,8 @@ unlimited resources, what could you do to make the project better? (LO\_ProbSolu
 \subsubsection*{6. Give a brief overview of other design solutions you considered.  What
 are the benefits and tradeoffs of those other designs compared with the chosen
 design?  From all the potential options, why did you select the documented design?
-(LO\_Explores)}
+(LO\_Explores)} The primary design pattern used in this project follows the Model View Controller (MVC) architecture. MVC was selected because it provides a clear separation of concerns: the model manages voxel data and application state, the view handles visualization and rendering, and the controller coordinates user interactions and system behavior. This structure aligns well with the project’s interactive nature and made the system easier to develop, reason about, and document.
+
+Several alternative design approaches were considered. A monolithic design, where most responsibilities are handled within a small number of modules, was deemed unsuitable because it would tightly couple components and make the system harder to maintain and extend. A layered architecture was also considered, but it did not provide sufficient flexibility for handling complex user interactions and visualization updates. Additionally, an event driven or publish subscribe architecture was explored; while powerful, it would have introduced unnecessary complexity and overhead for a project of this scale. Ultimately, MVC offered the best balance between modularity, clarity, and implementation feasibility, making it the most appropriate choice for this project.
 
 \end{document}
