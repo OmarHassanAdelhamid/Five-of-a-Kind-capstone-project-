@@ -457,11 +457,18 @@ L = \{l_1, l_2, ..., l_n\}
 
 \subsubsection{Visualization State Manager Module (\mref{m8})}
 
+% \begin{description}
+% \item[Secrets:] How voxel updates, material and magnetization assignments, and auto-save processes are handled internally. How changes propagate through layers, how consistency is maintained across the model, and how synchronization with other modules occurs.
+% \item[Services:] Provides editing functionality for voxel data. Allows adding, removing, or modifying voxels, and updating material or magnetization values. Coordinates auto-save and triggers History Manager (M10) updates. Interacts with Serialization Manager (M5) for persistent state.
+% \item[Implemented By:] \progname{}
+% \item[Type of Module:] Abstract Object: a component responsible for managing visualization state and coordinating voxel editing operations.
+% \end{description}
+
 \begin{description}
-\item[Secrets:] How voxel updates, material and magnetization assignments, and auto-save processes are handled internally. How changes propagate through layers, how consistency is maintained across the model, and how synchronization with other modules occurs.
-\item[Services:] Provides editing functionality for voxel data. Allows adding, removing, or modifying voxels, and updating material or magnetization values. Coordinates auto-save and triggers History Manager (M10) updates. Interacts with Serialization Manager (M5) for persistent state.
+\item[Secrets:] How visualization-related state is represented and maintained independently of model modification, user interaction, and persistence mechanisms. How changes to the underlying model are reflected as visualization state transitions without exposing rendering or interaction logic.
+\item[Services:] Maintains the current visualization state of the system, including active views and highlight states. Coordinates visualization state updates by aggregating state change descriptors from upstream modules and forwarding structured update requests to the Graphics Adapter.
 \item[Implemented By:] \progname{}
-\item[Type of Module:] Abstract Object: a component responsible for managing visualization state and coordinating voxel editing operations.
+\item[Type of Module:] Abstract Object: a component responsible for maintaining visualization state and coordinating visualization updates.
 \end{description}
 
 \iffalse
@@ -495,12 +502,21 @@ HistoryManager.Push(\Delta M)
 
 \subsubsection{Model Manager Module (\mref{m9})}
 
+% \begin{description}
+% \item[Secrets:] How model changes, including voxel updates, material and magnetization assignments, and auto-save processes, are handled internally. How change propagation, property replication, and metadata consistency are managed across the model.
+% \item[Services:] Handles voxel updates, material and magnetization assignments, and manages auto-save processes. Propagates changes through voxel layers while maintaining model-wide consistency. Synchronizes model state with other modules (such as Visualization State Manager (M8) and Serialization Manager (M5)) to ensure cohesive updates and persistent storage.
+% \item[Implemented By:] \progname{}
+% \item[Type of Module:] Abstract Object: a component for model state tracking and version control.
+% \end{description}
+
+
 \begin{description}
-\item[Secrets:] How model changes, including voxel updates, material and magnetization assignments, and auto-save processes, are handled internally. How change propagation, property replication, and metadata consistency are managed across the model.
-\item[Services:] Handles voxel updates, material and magnetization assignments, and manages auto-save processes. Propagates changes through voxel layers while maintaining model-wide consistency. Synchronizes model state with other modules (such as Visualization State Manager (M8) and Serialization Manager (M5)) to ensure cohesive updates and persistent storage.
+\item[Secrets:] How model state is represented and mutated, including voxel updates and material and magnetization assignments. How model state is persisted through explicit save operations of the model file.
+\item[Services:] Manages voxel-based model state by providing operations to add, remove, and modify voxels and update material and magnetization properties. Provides explicit save operations for persisting model state. Maintains model-wide consistency and exposes model state changes to dependent modules without coordinating visualization or user interaction.
 \item[Implemented By:] \progname{}
-\item[Type of Module:] Abstract Object: a component for model state tracking and version control.
+\item[Type of Module:] Abstract Object: a component responsible for model state management and persistence.
 \end{description}
+
 
 \iffalse
 \paragraph{Model Manager Formalization}
@@ -541,7 +557,7 @@ HistoryManager.Push(\Delta M)
 \begin{enumerate}
 \item \textbf{Definitions}
 \begin{itemize}
-\item \textbf{Voxel:} $v = (p, m, mag)$ where $p=(x,y,z)\in\mathbb{Z}^3$, $m\in M_{types}$, $mag\in\mathbb{R}^3$
+\item \textbf{Voxel:} $v = (p, m, mag)$ where $p=(x,y,z)\in\,mathbb{Z}^3$, $m\in M_{types}$, $mag\in\mathbb{R}^3$
 \item \textbf{Voxel Grid:} $G=\{v_1,v_2,\ldots,v_n\}$
 \item \textbf{Project State:} $P=\{v_1,v_2,\ldots,v_n\}$
 \end{itemize}
@@ -562,23 +578,31 @@ HistoryManager.Push(\Delta M)
 
 \fi
 
-\subsubsection{Autosave Manager Module (\mref{m11})}
+% \subsubsection{Autosave Manager Module (\mref{m11})}
 
-\begin{description}
-  \item[Secrets:] How to collect and aggregate metrics to represent the current status of update operations. How to handle errors in metric collection. How multiple metrics are tracked concurrently. How the state of update execution is defined from collected metric data. How autosave execution is triggered. How autosave failures or interruptions are detected and handled.
-  \item[Services:] Maintains real-time autosave status. Tracks metrics that are used to determine the current state of update execution.
-  \item[Implemented By:] \progname{}
-  \item[Type of Module:] Abstract Object
-\end{description}
+% \begin{description}
+%   \item[Secrets:] How to collect and aggregate metrics to represent the current status of update operations. How to handle errors in metric collection. How multiple metrics are tracked concurrently. How the state of update execution is defined from collected metric data. How autosave execution is triggered. How autosave failures or interruptions are detected and handled.
+%   \item[Services:] Maintains real-time autosave status. Tracks metrics that are used to determine the current state of update execution.
+%   \item[Implemented By:] \progname{}
+%   \item[Type of Module:] Abstract Object
+% \end{description}
 
 \subsubsection{Voxel Tracking Module (\mref{m12})}
 
+% \begin{description}
+%   \item[Secrets:] How to locate and track voxels that satisfy particular property criteria, such as selection state, material type, or user-defined rules. How to interpret the voxel grid data structure to efficiently identify and access relevant voxels. How to determine which voxels are currently subject to operations like highlighting, selection, or further processing.
+%   \item[Services:] Interprets the voxel data structure to find and return voxels meeting specified property criteria (e.g., all voxels with a given material, within a spatial region, or currently selected). Enables other modules (such as Highlight Manager) to query the set of voxels that should be highlighted or acted upon based on their properties.
+%   \item[Implemented By:] \progname{}
+%   \item[Type of Module:] Abstract Object: a computational component that provides querying and tracking of voxels with specific properties within the voxel grid.
+% \end{description}
+
 \begin{description}
-  \item[Secrets:] How to locate and track voxels that satisfy particular property criteria, such as selection state, material type, or user-defined rules. How to interpret the voxel grid data structure to efficiently identify and access relevant voxels. How to determine which voxels are currently subject to operations like highlighting, selection, or further processing.
-  \item[Services:] Interprets the voxel data structure to find and return voxels meeting specified property criteria (e.g., all voxels with a given material, within a spatial region, or currently selected). Enables other modules (such as Highlight Manager) to query the set of voxels that should be highlighted or acted upon based on their properties.
+  \item[Secrets:] How to locate and track voxels that satisfy particular property criteria, such as selection state, material type, or user-defined rules. How to interpret the voxel grid data structure to efficiently identify and access relevant voxels without exposing model mutation or interaction logic.
+  \item[Services:] Interprets the voxel data structure to find and return voxels meeting specified property criteria (e.g., all voxels with a given material, within a spatial region, or within a given layer). Enables other modules (such as Highlight Manager) to query voxel sets based on their properties.
   \item[Implemented By:] \progname{}
-  \item[Type of Module:] Abstract Object: a computational component that provides querying and tracking of voxels with specific properties within the voxel grid.
+  \item[Type of Module:] Abstract Object: a computational component that provides read-only querying and tracking of voxels with specific properties within the voxel grid.
 \end{description}
+
 
 \subsubsection{Highlight Manager Module (\mref{m13})}
 
