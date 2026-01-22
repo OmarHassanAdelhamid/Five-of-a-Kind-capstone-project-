@@ -153,24 +153,21 @@ The following table is taken directly from the Module Guide document for this pr
   & Voxel Slicing Module (M2)\\
   & Display Partitioning Module (M3)\\
   & Project Manager Module (M4)\\
-  & Serialization Manager Module (M5)\\
-  & Backend Communication Manager Module (M6)\\
-  & Interaction Controller Module (M7)\\
-  & Visualization State Manager Module (M8)\\
-  & Model Manager Module (M9)\\
-  & History Manager Module (M10)\\
-  & Autosave Manager Module (M11)\\
-  & Voxel Tracking Module (M12)\\
-  & Highlight Manager Module (M13)\\
-  & Export Validation Module (M14)\\
-  & Export Manager Module (M15)\\
-  & Error Diagnostic Handler Module (M16)\\
+  & Interaction Controller Module (M5)\\
+  & Visualization State Manager Module (M6)\\
+  & Model Manager Module (M7)\\
+  & History Manager Module (M8)\\
+  & Voxel Tracking Module (M9)\\
+  & Highlight Manager Module (M10)\\
+  & Export Validation Module (M11)\\
+  & Export Manager Module (M12)\\
+  & Error Diagnostic Handler Module (M13)\\
   \midrule
   
-  \multirow{3}{0.3\textwidth}{Software Decision Module} & Model Structure Module (M17)\\
-  & Graphics Adapter Module (M18)\\
-  & Database Handler Module (M19)\\
-  & Export Structure Module (M20)\\
+  \multirow{3}{0.3\textwidth}{Software Decision Module} 
+  & Model Structure Module (M14)\\
+  & Graphics Adapter Module (M15)\\
+  & Export Structure Module (M16)\\
   \bottomrule
   
   \end{tabular}
@@ -583,168 +580,8 @@ The ProjectManager module manages the creation, initialization, and persistence 
 
 \newpage
 
-\section{MIS of Serialization Manager (M5)}\label{Module5}
 
-SerializationManager
-
-\subsection{Module}
-The SerializationManager module handles the conversion of all internal model data between in-memory and persistent storage forms (JSON or binary). It ensures data integrity, schema consistency, and supports both saving and restoring complete project states.
-
-\subsection{Uses}
-\begin{itemize}
-  \item \texttt{ModuleManager} to get the current module state.
-  \item \texttt{AutosaveManager} to get the current autosave state.
-  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
-\end{itemize}
-
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-\begin{itemize}
-  \item \texttt{SUPPORTED\_FORMATS}: list[str] — allowed serialization formats \{JSON, BIN\}.
-  \item \texttt{CURRENT\_SCHEMA\_VERSION}: str — defines latest project data schema.
-\end{itemize}
-
-
-\subsubsection{Exported Access Programs}
-\begin{center}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{p{4cm} p{4.5cm} p{3.5cm} p{3.5cm}}
-\toprule
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\midrule
-\texttt{encodeModel} & model: ModelState & str & SerializationError \\
-\texttt{decodeModel} & data: str & ModelState & DeserializationError, SchemaMismatchError \\
-\texttt{verifySchema} & data: str & bool & SchemaMismatchError \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{serializedData}: str — current encoded representation.
-  \item \texttt{schemaVersion}: str — identifies schema used during last encode/decode.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-\begin{itemize}
-  \item \texttt{SAVE\_PATH}: str — default file path for serialized model data.
-\end{itemize}
-
-\subsubsection{Assumptions}
-\begin{itemize}
-  \item Input model follows internal data structure specification.
-  \item Decoded data matches the expected schema version.
-  \item File system paths used for storage are valid and writable.
-\end{itemize}
-
-\iffalse
-\subsubsection{Access Routine Semantics}
-\begin{itemize}
-  \item \texttt{encodeModel(model)}: Converts in-memory state to JSON string.  
-  \[
-  S := \text{JSON.stringify}(model)
-  \]
-  Ensures \( Decode(S) = model \).
-  \item \texttt{decodeModel(data)}: Parses JSON/BIN data back to full ModelState.
-  \[
-  M' := \text{JSON.parse}(data)
-  \]
-  \item \texttt{verifySchema(data)}: Checks that schema version in data header matches \texttt{CURRENT\_SCHEMA\_VERSION}.
-\end{itemize}
-
-\subsubsection{Exceptions}
-\begin{itemize}
-  \item \texttt{SerializationError} — error while encoding data to string.
-  \item \texttt{DeserializationError} — input data corrupted or incomplete.
-  \item \texttt{SchemaMismatchError} — version mismatch detected in schema validation.
-\end{itemize}
-\fi
-
-\section{MIS of Backend Communication Manager (M6)}\label{Module6} 
-
-BackendCommunicator
-  
-\subsection{Module}
-The BackendCommunicator module manages the transfer and synchronization of data between the backend server and frontend UI.
-
-\subsection{Uses}
-\begin{itemize}
-  \item \texttt{SerializationManager} for necessary JSON, binary, and CSV transforms.
-  \item \texttt{InteractionController} for processing interaction data from the frontend.
-  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
-\end{itemize}
-
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
-\begin{itemize}
-  \item None
-\end{itemize}
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\renewcommand{\arraystretch}{1.55}
-\begin{tabular}{p{5cm} p{3cm} p{3cm} p{3cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-
-\texttt{checkServerStatus} &
-None &
-Promise\textless void\textgreater&
-Network Error \\
-
-\texttt{initDataLogs} &
-None &
-Promise\textless bool\textgreater &
-Network Error \\
-
-\texttt{getDataLogs} &
-None &
-str &
-None \\
-
-\texttt{getInteraction} &
-None &
-UIdata: str &
-None \\
-
-\end{tabular}
-\end{center}
-
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-\begin{itemize}
-  \item \texttt{serverStatus}: ServerStatusType — tracks the current connection status of the backend server.
-  \item \texttt{dataLog}: str — all data gathered from the frontend that requires interpretation on the backend.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-
-\begin{itemize}
-  \item \texttt{SERVER\_URL}: str — backend server URL from environment configuration.
-\end{itemize}
-
-\subsubsection{Assumptions}
-
-\begin{itemize}
-  \item Backend service is reachable and operational.
-  \item Connection is available for data synchronization.
-  \item Valid configurations exist for necessary data transfer operations.
-\end{itemize}
-
-
-\newpage
-
-\section{MIS of Interaction Controller (M7)}\label{Module7} 
+\section{MIS of Interaction Controller (M5)}\label{Module7} 
 
 InteractionController
 
@@ -835,7 +672,7 @@ None.
 
 \newpage
 
-\section{MIS of Visualization State Manager (M8)}\label{Module8}
+\section{MIS of Visualization State Manager (M6)}\label{Module8}
 
 VisualizationManager
 
@@ -955,7 +792,7 @@ setView(state: str) $\rightarrow$ void
 \end{itemize}
 
 
-\section{MIS of Model Manager (M9)}\label{Module9}
+\section{MIS of Model Manager (M7)}\label{Module9}
 
 ModelManager
 
@@ -1150,7 +987,7 @@ loadModel(filePath: str) $\rightarrow$ bool
 % \end{itemize}
 % \fi
 
-\section{MIS of History Manager (M10)}\label{Module10}
+\section{MIS of History Manager (M8)}\label{Module10}
 
 HistoryManager
 
@@ -1243,91 +1080,7 @@ None.
   \item \textbf{Exceptions:} None
 \end{itemize}
 
-% \section{MIS of Autosave Manager (M11)}\label{Module11} 
-
-% AutosaveManager
-
-% \subsection{Module}
-% The AutosaveManager module prepares data to be saved, monitors when updates require saving, and invokes periodic scheduled transfers to file-based storage.
-
-% \subsection{Uses}
-% \begin{itemize}
-%   \item \texttt{HistoryManager} to get the latest history state during periodic saves.
-%   \item \texttt{DatabaseHandler} to store serialized data persistently.
-%   \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
-% \end{itemize}
-
-% \subsection{Syntax}
-
-% \subsubsection{Exported Constants}
-
-% \begin{itemize}
-%   \item \texttt{AUTOSAVE\_INTERVAL\_MS}: int — minimum amount of time (in milliseconds) between autosave operations.
-%   \item \texttt{FILE\_ID}: str — file to which autosave operations are written.
-% \end{itemize}
-
-% \subsubsection{Exported Access Programs}
-
-% \begin{center}
-% \renewcommand{\arraystretch}{1.55}
-% \begin{tabular}{p{4cm} p{3cm} p{3cm} p{3cm}}
-% \hline
-% \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-% \hline
-
-% \texttt{forceSave} &
-% None &
-% None &
-% IO Error \\
-
-% \texttt{enableAutosave} &
-% None &
-% None &
-% None \\
-
-% \texttt{disableAutosave} &
-% None &
-% None &
-% None \\
-
-% \texttt{lastAutosaveTime} &
-% None &
-% DateTime &
-% None \\
-
-% \end{tabular}
-% \end{center}
-
-
-% \subsection{Semantics}
-
-% \subsubsection{State Variables}
-
-% \begin{itemize}
-%   \item \texttt{autosavePermission}: bool — indicates whether autosave is enabled or disabled.
-%   \item \texttt{lastAutosave}: DateTime — timestamp of last transfer to file-based storage.
-%   \item \texttt{autosaveHistory}: dict[DateTime] = Update — complete log of transfers to file-based storage.
-% \end{itemize}
-
-
-% \subsubsection{Environment Variables}
-
-% \begin{itemize}
-%   \item \texttt{SYSTEM\_TIME}: DateTime — global time supplied by the current system.
-% \end{itemize}
-
-
-% \subsubsection{Assumptions}
-% \begin{itemize}
-%   \item \texttt{SYSTEM\_TIME} always increases monotonically.
-%   \item Data preparation method is compatible with file-based storage.
-%   \item Connection is available to file-based storage.
-%   \item Valid configuration exists for operations to file-based storage.
-% \end{itemize}
-
-% \newpage
-
-\section{MIS of Voxel Tracking (M12)}\label{Module12}
+\section{MIS of Voxel Tracking (M9)}\label{Module12}
 
 VoxelTracking
 
@@ -1533,7 +1286,7 @@ getVoxelProperties(coord: Any) $\rightarrow$ dict[str] = Any
 % \fi
 % \newpage
 
-\section{MIS of Highlight Manager (M13)}\label{Module13} 
+\section{MIS of Highlight Manager (M10)}\label{Module13} 
 
 HighlightManager
 
@@ -1637,7 +1390,7 @@ resetPalette() $\rightarrow$ void
 
 \newpage
 
-\section{MIS of Export Validation (M14)}\label{Module14}
+\section{MIS of Export Validation (M11)}\label{Module14}
 
 ExportValidation
 
@@ -1735,7 +1488,7 @@ validateFileFormat(filePath: str) $\rightarrow$ bool
 
 \newpage
 
-\section{MIS of Export Manager (M15)}\label{Module15} 
+\section{MIS of Export Manager (M12)}\label{Module15} 
 
 ExportManager
 
@@ -1842,7 +1595,7 @@ serializeData(data: Any, format: str) $\rightarrow$ str
 
 \newpage
 
-\section{MIS of Error Diagnostic Handler (M16)}\label{Module16}
+\section{MIS of Error Diagnostic Handler (M13)}\label{Module16}
 
 ErrorDiagnosticHandler
 
@@ -1953,7 +1706,7 @@ getErrorSource(errorDiagnostic: Any) $\rightarrow$ str
 \newpage
 
 
-\section{MIS of Model Structure (M17)}\label{Module17}
+\section{MIS of Model Structure (M14)}\label{Module17}
 
 ModelStructure
 
@@ -2048,7 +1801,7 @@ None.
 
 \newpage
 
-\section{MIS of Graphics Adapter (M18)}\label{Module18}
+\section{MIS of Graphics Adapter (M15)}\label{Module18}
 
 GraphicsAdapter
 
@@ -2123,97 +1876,9 @@ checkServerStatus() $\rightarrow$ void
   \item Exceptions: NetworkError if the backend service cannot be reached.
 \end{itemize}
 
-
 \newpage
 
-\section{MIS of Database Handler (M19)}\label{Module19}
-
-DatabaseHandler
-
-\subsection{Module}
-The DatabaseHandler module manages persistent storage for project and model data. It provides standardized interfaces for reading, writing, and deleting serialized model files, ensuring version integrity and consistent access to saved projects.
-
-\subsection{Uses}
-\begin{itemize}
-  \item \texttt{ModelStructure} to access model structures to keep track of the project.
-  \item \texttt{ErrorDiagnosticHandler} for error handling and diagnostics.
-\end{itemize}
-
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-\begin{itemize}
-  \item \texttt{DEFAULT\_SAVE\_DIR}: str — default directory path for project files.
-  \item \texttt{DB\_FORMAT\_VERSION}: str — current format version for data compatibility.
-\end{itemize}
-
-\subsubsection{Exported Access Programs}
-\begin{center}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{p{4cm} p{4.5cm} p{3.5cm} p{3.5cm}}
-\toprule
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\ \midrule
-\texttt{saveProject} & id: str, data: Any & bool & IOError \\
-\texttt{loadProject} & id: str & Any & FileNotFoundError \\
-\texttt{deleteProject} & id: str & bool & IOError \\
-\texttt{listProjects} & None & list[str] & None \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{projectMap}: dict[str] = SerializedModel — mapping of project identifiers to serialized data.
-  \item \texttt{storagePath}: str — root directory for persistent project files.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-\begin{itemize}
-  \item \texttt{FILE\_SYSTEM}: OS-level file system used for reading/writing project data.
-\end{itemize}
-
-\subsubsection{Assumptions}
-\begin{itemize}
-  \item Project IDs are unique.
-  \item File I/O operations succeed given sufficient permissions.
-  \item SerializationManager ensures schema compatibility before writing data.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-
-saveProject(id: str, data: Any) $\rightarrow$ bool
-\begin{itemize}
-  \item Transition: stores the provided serialized project data under the given project identifier in persistent storage.
-  \item Output: bool indicating whether the save operation was successful.
-  \item Exceptions: IOError if the data cannot be written to persistent storage.
-\end{itemize}
-
-loadProject(id: str) $\rightarrow$ Any
-\begin{itemize}
-  \item Transition: retrieves the serialized project data associated with the specified project identifier from persistent storage.
-  \item Output: Any representing the loaded serialized project data.
-  \item Exceptions: FileNotFoundError if no project exists with the given identifier.
-\end{itemize}
-
-deleteProject(id: str) $\rightarrow$ bool
-\begin{itemize}
-  \item Transition: removes the project data associated with the specified project identifier from persistent storage.
-  \item Output: bool indicating whether the deletion was successful.
-  \item Exceptions: IOError if the project data cannot be removed.
-\end{itemize}
-
-listProjects() $\rightarrow$ list[str]
-\begin{itemize}
-  \item Transition: retrieves a list of all project identifiers currently stored in persistent storage.
-  \item Output: list[str] containing all stored project identifiers.
-  \item Exceptions: None.
-\end{itemize}
-
-\newpage
-
-\section{MIS of Export Structure (M20)}\label{Module20}
+\section{MIS of Export Structure (M16)}\label{Module20}
 
 ExportStructure
 
@@ -2363,7 +2028,7 @@ graduate attribute of Problem Analysis and Design.
 \textbf{Omar: }
 \newline
 \newline
-\textbf{Daniel: } 
+\textbf{Daniel: } Overall, the two major issues I foresaw with this deliverbale - the restructuring of some modules and the formalization of the more complex pieces of our software - went smoother than I expected. The existing module decomposition made sense to me even though I did not work on the initial revision besides reviewing it, and the only major changes were altering the hierarchy. The formalization of how voxels are created also went better after some research that provided a base inspiration into how to define the algorithm's output.
 \newline
 \newline
 \textbf{Andrew: } Integrating the UI and backend from Daniel went really well this deliverable. Working with him in unison was very helpful, and we got everything done in expert time.
@@ -2380,7 +2045,7 @@ did you resolve them?}
 \textbf{Omar: }
 \newline
 \newline
-\textbf{Daniel: } 
+\textbf{Daniel: } A pain point I experienced was maintaining consistency with my partner. While the split between modules allowed us to work in parallel effectively, there was some overlap in types, which required us to examine our work and ensure we named things in the same fashion. Additionally, ensuring that the functions each module possessed needed to exist and what module would call it posed difficulty at times, especially for more abstract modules that are ultimately more implementation specific in their required functions.
 \newline
 \newline
 \textbf{Andrew: } I was part of the code team for this deliverable, so like Khalid - I did not have many point points regarding this MIS. Of my own exploration and work, I built the MVP UI and made sure to include an initial renderer, export and import manager using javascript frameworks and previous implementations of STL renderers. The pain point here was to find a suitable renderer and have it work in unison with our other modules, but it was not too much of a headache.
@@ -2397,6 +2062,8 @@ were not, why, and where did they come from?}
 
 \subsubsection*{4. While creating the design doc, what parts of your other documents (e.g.
 requirements, hazard analysis, etc), it any, needed to be changed, and why?}
+
+During the creation of the Design Docs, a major changed revolved around a missing requirement identified - the ability to manually save projects. The SRS required an update throughout many of its sections, as well as the VnV Plan which required an additional functional system test. Many of the other changes were actually in the reverse direction; consistency changes in the SRS or VnV that trickled into changed in the Design Docs, however most of these changes were minor (e.g. the alteration of wording to align with wording in other documents).
 
 \subsubsection*{5. What are the limitations of your solution?  Put another way, given
 unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)}

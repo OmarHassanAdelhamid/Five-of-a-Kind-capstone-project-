@@ -227,13 +227,10 @@ actually be implemented.
 \item [\refstepcounter{mnum} \mthemnum\label{m2}:] Voxel Slicing Module
 \item [\refstepcounter{mnum} \mthemnum\label{m3}:] Display Partitioning Module
 \item [\refstepcounter{mnum} \mthemnum\label{m4}:] Project Manager Module
-\item [\refstepcounter{mnum} \mthemnum\label{m5}:] Serialization Manager Module
-\item [\refstepcounter{mnum} \mthemnum\label{m6}:] Backend Communication Manager Module
 \item [\refstepcounter{mnum} \mthemnum\label{m7}:] Interaction Controller Module
 \item [\refstepcounter{mnum} \mthemnum\label{m8}:] Visualization State Manager Module
 \item [\refstepcounter{mnum} \mthemnum\label{m9}:] Model Manager Module
 \item [\refstepcounter{mnum} \mthemnum\label{m10}:] History Manager Module
-\item [\refstepcounter{mnum} \mthemnum\label{m11}:] Autosave Manager Module
 \item [\refstepcounter{mnum} \mthemnum\label{m12}:] Voxel Tracking Module
 \item [\refstepcounter{mnum} \mthemnum\label{m13}:] Highlight Manager Module
 \item [\refstepcounter{mnum} \mthemnum\label{m14}:] Export Validation Module
@@ -243,7 +240,6 @@ actually be implemented.
 % Software Decision Modules
 \item [\refstepcounter{mnum} \mthemnum\label{m17}:] Model Structure Module
 \item [\refstepcounter{mnum} \mthemnum\label{m18}:] Graphics Adapter Module
-\item [\refstepcounter{mnum} \mthemnum\label{m19}:] Database Handler Module
 \item [\refstepcounter{mnum} \mthemnum\label{m20}:] Export Structure Module
 \end{description}
 
@@ -271,13 +267,10 @@ between requirements and modules is listed in Table~\ref{TblMH}.
 & Voxel Slicing Module\\
 & Display Partitioning Module\\
 & Project Manager Module\\
-& Serialization Manager Module\\
-& Backend Communication Manager Module\\
 & Interaction Controller Module\\
 & Visualization State Manager Module\\
 & Model Manager Module\\
 & History Manager Module\\
-& Autosave Manager Module\\
 & Voxel Tracking Module\\
 & Highlight Manager Module\\
 & Export Validation Module\\
@@ -287,7 +280,6 @@ between requirements and modules is listed in Table~\ref{TblMH}.
 
 \multirow{3}{0.3\textwidth}{Software Decision Module} & Model Structure Module\\
 & Graphics Adapter Module\\
-& Database Handler Module\\
 & Export Structure Module\\
 \bottomrule
 
@@ -396,55 +388,6 @@ L = \{l_1, l_2, ..., l_n\}
 \item[Implemented By:] \progname{}
 \item[Type of Module:] Abstract Object: a component responsible for project initialization and workspace management.
 \end{description} 
-
-\subsubsection{Serialization Manager Module (\mref{m5})}
-
-\begin{description}
-\item[Secrets:] How to serialize and deserialize data structures representing the 3D model into and from persistent storage formats (CSV). How to compress, backward compatibility logic, and error recovery during serialization.
-\item[Services:] Converts model data between in-memory representation and serialized form. Encodes voxel grid, layer, and metadata into CSV for saving and reconstructs them when loading. 
-\item[Implemented By:] \progname{}
-\item[Type of Module:] Library: a reusable component for encoding and decoding model data.
-\end{description}
-
-\iffalse
-\paragraph{Serialization Manager Formalization}
-
-\begin{enumerate}
-\item \textbf{Definitions}
-\begin{itemize}
-\item \textbf{Model Structure:} $M = (G, L, Meta)$
-\item \textbf{Serialized Form:} $S = Encode(M)$, where $S$ is a CSV string
-\item \textbf{Deserialized Structure:} $M' = Decode(S)$
-\end{itemize}
-
-\item \textbf{Conversion Process}
-\begin{itemize}
-\item \textbf{Serialization:} $Encode(M) = CSV.stringify(M)$
-\item \textbf{Deserialization:} $Decode(S) = CSV.parse(S)$
-\item Maintain consistency: $Decode(Encode(M)) = M$
-\end{itemize}
-
-\item \textbf{Error Handling}
-\begin{itemize}
-\item If corrupted $S$: raise \texttt{DeserializationError}
-\item If missing fields: raise \texttt{SchemaMismatchError}
-\end{itemize}
-
-\item \textbf{Output}
-\begin{itemize}
-\item Returns $S$ for saving or $M'$ for reconstruction
-\end{itemize}
-\end{enumerate}
-\fi
-
-\subsubsection{Backend Communication Manager Module (\mref{m6})}
-
-\begin{description}
-  \item[Secrets:] How the connection between the backend and frontend is established. How data is transformed, validated and transferred between the backend and frontend. How synchronization errors are detected during communication. How failed communication attempts are detected and handled.
-  \item[Services:] Handles communication between the backend server and the frontend UI. Ensures synchronization of model data throughout the system.
-  \item[Implemented By:] \progname{}
-  \item[Type of Module:] Abstract Object
-\end{description}
 
 \subsubsection{Interaction Controller Module (\mref{m7})}
 
@@ -577,15 +520,6 @@ HistoryManager.Push(\Delta M)
 \end{enumerate}
 
 \fi
-
-% \subsubsection{Autosave Manager Module (\mref{m11})}
-
-% \begin{description}
-%   \item[Secrets:] How to collect and aggregate metrics to represent the current status of update operations. How to handle errors in metric collection. How multiple metrics are tracked concurrently. How the state of update execution is defined from collected metric data. How autosave execution is triggered. How autosave failures or interruptions are detected and handled.
-%   \item[Services:] Maintains real-time autosave status. Tracks metrics that are used to determine the current state of update execution.
-%   \item[Implemented By:] \progname{}
-%   \item[Type of Module:] Abstract Object
-% \end{description}
 
 \subsubsection{Voxel Tracking Module (\mref{m12})}
 
@@ -789,14 +723,6 @@ where $Properties(v) = (position, material, magnetization)$
 \end{itemize}
 \end{enumerate}
 \fi
-\subsubsection{Database Handler Module (\mref{m19})}
-
-\begin{description}
-\item[Secrets:] How to define and implement the internal data structure for representing the model data, including field ordering, data types, and encoding format. How to ensure consistency between internal and external representations. How to handle the specific file-system or database technology (e.g., CSV files) and its connection management. How to handle caching and concurrency handling mechanisms.
-\item[Services:] Defines the data schema used for the model persistence. Specifies how voxel data, layer information, and material/magnetization fields are organized. Provides read and write access between the application and storage layer. Saves serialized models and retrieves them when requested.
-\item[Implemented By:] \progname{}
-\item[Type of Module:] Abstract Data Type: specifies and maintains the structure of the model data.
-\end{description}
 
 \iffalse
 \paragraph{Export Structure Formalization}
@@ -857,132 +783,136 @@ requirements and between the modules and the anticipated changes.
 \small
 \setlength{\tabcolsep}{3pt}
 \resizebox{\textwidth}{!}{
-\begin{tabular}{l|*{20}{c}}
+\begin{tabular}{l|*{16}{c}}
 \toprule
 \textbf{Req.} 
-& \mref{m1} & \mref{m2} & \mref{m3} & \mref{m4} & \mref{m5}
-& \mref{m6} & \mref{m7} & \mref{m8} & \mref{m9} & \mref{m10}
-& \mref{m11} & \mref{m12} & \mref{m13} & \mref{m14} & \mref{m15}
-& \mref{m16} & \mref{m17} & \mref{m18} & \mref{m19} & \mref{m20} \\
+& \mref{m1} & \mref{m2} & \mref{m3} & \mref{m4} 
+& \mref{m7} & \mref{m8} & \mref{m9} & \mref{m10} 
+& \mref{m12} & \mref{m13} & \mref{m14} & \mref{m15} 
+& \mref{m16} & \mref{m17} & \mref{m18} & \mref{m20} \\
 \midrule
 
 F211 &
-\xbox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+\xbox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 F212 &
-\xbox & \obox & \obox & \xbox & \xbox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+\xbox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & 
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 F213 &
-\xbox & \xbox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+\xbox & \xbox & \obox & \obox & \xbox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 F214 &
-\xbox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+\xbox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 F215 &
-\xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+\xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 F216 &
-\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 % --------------------------------------------------------------------------------
 
 F221 &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox \\
 
 F222 &
-\obox & \obox & \xbox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox \\
+\obox & \obox & \xbox & \obox & \xbox & \xbox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
 
 F223 &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox \\
 
 F224 &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox \\
 
 F225 &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
-\obox & \xbox & \xbox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
+\xbox & \xbox & \obox & \obox & \obox & \xbox & \xbox & \obox \\
 
 F226 &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox &
-\obox & \xbox & \xbox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox &
+\xbox & \xbox & \obox & \obox & \obox & \xbox & \xbox & \obox \\
 
 F227 &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox &
-\obox & \xbox & \xbox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox &
+\xbox & \xbox & \obox & \obox & \obox & \xbox & \xbox & \obox \\
 
 % --------------------------------------------------------------------------------
 
 F231 &
-\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
 
 F232 &
-\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
-\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox &
+\obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 F233 &
-\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
 
 F234 &
-\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
-\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox &
+\obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 F235 &
-\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \xbox &
-\obox & \xbox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \xbox &
+\xbox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
 
 F236 &
-\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \xbox &
-\xbox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox &
+\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox \\
 
 F237 &
-\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \xbox &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \xbox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 F238 &
-\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
-\obox & \obox & \xbox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox &
+\obox & \xbox & \obox & \obox & \obox & \xbox & \obox & \obox \\
 
 F239 &
-\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
 
 F2310 &
-\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
+
+F2311 &
+\obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 % --------------------------------------------------------------------------------
 
 F241 &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \xbox & \obox & \xbox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\xbox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
 
 F242 &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \xbox & \xbox \\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \xbox \\
 
 F243 &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox \\
 
 F244 &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox & \obox & \xbox \\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \xbox & \xbox & \obox & \obox & \xbox \\
 
 F245 &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \xbox & \xbox \\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \xbox \\
 
 \bottomrule
 \end{tabular}
@@ -996,57 +926,57 @@ F245 &
 \small
 \setlength{\tabcolsep}{3pt}
 \resizebox{\textwidth}{!}{
-\begin{tabular}{l|*{20}{c}}
+\begin{tabular}{l|*{16}{c}}
 \toprule
 \textbf{Req.} 
-& \mref{m1} & \mref{m2} & \mref{m3} & \mref{m4} & \mref{m5}
-& \mref{m6} & \mref{m7} & \mref{m8} & \mref{m9} & \mref{m10}
-& \mref{m11} & \mref{m12} & \mref{m13} & \mref{m14} & \mref{m15}
-& \mref{m16} & \mref{m17} & \mref{m18} & \mref{m19} & \mref{m20} \\
+& \mref{m1} & \mref{m2} & \mref{m3} & \mref{m4}
+& \mref{m7} & \mref{m8} & \mref{m9} & \mref{m10}
+& \mref{m12} & \mref{m13} & \mref{m14} & \mref{m15} 
+& \mref{m16} & \mref{m17} & \mref{m18} & \mref{m20} \\
 \midrule
 
 NF211 &
-\xbox & \xbox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox \\
+\xbox & \xbox & \obox & \xbox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox \\
 
 NF212 &
-\xbox & \xbox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox \\
+\xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
 
 % --------------------------------------------------------------------------------
 
 NF221 &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox &
-\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
 
 NF222 &
-\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \xbox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox \\
+\obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox &
+\xbox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
 
 NF223 &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 % --------------------------------------------------------------------------------
 
 NF231 &
 
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 NF232 &
-\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \xbox & \obox &
-\obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox \\
 
 % --------------------------------------------------------------------------------
 
 NF241 &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \xbox & \xbox & \xbox & \obox & \obox & \obox \\
 
 NF242 &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \xbox & \xbox & \xbox & \obox & \xbox & \xbox \\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \xbox & \xbox & \xbox & \obox & \xbox \\
 
 \bottomrule
 \end{tabular}
@@ -1063,50 +993,50 @@ NF242 &
 \small
 \setlength{\tabcolsep}{3pt}
 \resizebox{\textwidth}{!}{
-\begin{tabular}{l|*{20}{c}}
+\begin{tabular}{l|*{16}{c}}
 \toprule
 \textbf{Req.} 
-& \mref{m1} & \mref{m2} & \mref{m3} & \mref{m4} & \mref{m5}
-& \mref{m6} & \mref{m7} & \mref{m8} & \mref{m9} & \mref{m10}
-& \mref{m11} & \mref{m12} & \mref{m13} & \mref{m14} & \mref{m15}
-& \mref{m16} & \mref{m17} & \mref{m18} & \mref{m19} & \mref{m20} \\
+& \mref{m1} & \mref{m2} & \mref{m3} & \mref{m4}
+& \mref{m7} & \mref{m8} & \mref{m9} & \mref{m10}
+& \mref{m12} & \mref{m13} & \mref{m14} & \mref{m15}
+& \mref{m16} & \mref{m17} & \mref{m18} & \mref{m20} \\
 \midrule
 
 \acref{acInput} &
-\xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox \\
+\xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
 
 \acref{acInputConstraints} &
-\xbox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox \\
+\xbox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
 
 \acref{acVoxelSize} &
-\obox & \xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox \\
+\obox & \xbox & \xbox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
 
 \acref{acVoxelization} &
-\xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
+\xbox & \xbox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox \\
   
 \acref{acMagnetization} &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
   
 \acref{acSelection} &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox &
-\obox & \xbox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox &
+\xbox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox \\
 
 \acref{acExport} &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \xbox & \obox & \obox & \obox & \xbox \\
 
 \acref{acDataStructure} &
-\obox & \obox & \obox & \obox & \xbox & \obox & \obox & \obox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox \\
+\obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
 
 \acref{acUI} &
-\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
-\obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
+\obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox &
+\obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox \\
 
 \bottomrule
 \end{tabular}
