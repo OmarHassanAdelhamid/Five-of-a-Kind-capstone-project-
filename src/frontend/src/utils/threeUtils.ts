@@ -90,8 +90,8 @@ export const calculateVoxelSize = (
     const secondCoord = coordinates[1]
     const spacing = Math.sqrt(
       Math.pow(secondCoord[0] - firstCoord[0], 2) +
-        Math.pow(secondCoord[1] - firstCoord[1], 2) +
-        Math.pow(secondCoord[2] - firstCoord[2], 2),
+      Math.pow(secondCoord[1] - firstCoord[1], 2) +
+      Math.pow(secondCoord[2] - firstCoord[2], 2),
     )
     if (spacing > 0.001 && spacing < 10) {
       voxelSize = spacing * 0.8
@@ -136,6 +136,9 @@ export const renderVoxelCubes = (
   modelSize?: number,
   modelOriginalCenter?: THREE.Vector3 | null,
   existingCubes?: THREE.Mesh[],
+  selectedLayerZ?: number | null,
+  layerAxis: 'z' | 'x' = 'z',
+  isLayerEditingMode?: boolean,
 ): { cubes: THREE.Mesh[]; cubeToCoordMap: Map<THREE.Mesh, { coord: number[]; index: number }> } => {
   // Remove existing cubes if provided
   if (existingCubes) {
@@ -154,28 +157,87 @@ export const renderVoxelCubes = (
     return { cubes: [], cubeToCoordMap }
   }
 
-  const voxelMaterial = new THREE.MeshStandardMaterial({
-    color: 0xff0000,
-    metalness: 0.3,
-    roughness: 0.7,
-  })
-
   const voxelSize = calculateVoxelSize(coordinates, modelSize)
   const centerOffset = calculateCenterOffset(coordinates, modelOriginalCenter)
   const cubeGeometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize)
+
+  const col = layerAxis === 'x' ? 0 : 2
+  const getLayerValue = (c: number[]): number =>
+    Math.round(c[col] * 1e12) / 1e12
+
+  const layerZMap = new Map<number, number[]>()
+  coordinates.forEach((coord, index) => {
+    const v = getLayerValue(coord)
+    if (!layerZMap.has(v)) layerZMap.set(v, [])
+    layerZMap.get(v)!.push(index)
+  })
+
+  const sortedLayerZs = Array.from(layerZMap.keys()).sort((a, b) => a - b)
+
+  const isInSelectedLayer = (c: number[]): boolean => {
+    if (selectedLayerZ === null || selectedLayerZ === undefined) return false
+    return Math.abs(getLayerValue(c) - selectedLayerZ) < 1e-9
+  }
+
+  // Distinct color palette for layers - cycles through these colors
+  const layerColors = [
+    0x3b82f6, // Blue
+    0x10b981, // Green
+    0xf59e0b, // Amber
+    0xef4444, // Red
+    0x8b5cf6, // Purple
+    0xec4899, // Pink
+    0x06b6d4, // Cyan
+    0x84cc16, // Lime
+    0xf97316, // Orange
+    0x6366f1, // Indigo
+  ]
+
+  // Helper function to get color for a layer based on its index
+  const getLayerColor = (layerZ: number): number => {
+    const layerIndex = sortedLayerZs.indexOf(layerZ)
+    if (layerIndex === -1) return 0xff0000 // Default red
+
+    // Cycle through the color palette
+    return layerColors[layerIndex % layerColors.length]
+  }
+
+  // Default neutral color when layer editing is off
+  const defaultVoxelColor = 0x60a5fa; // Light blue
 
   const cubes: THREE.Mesh[] = []
   coordinates.forEach((coord, index) => {
     const [x, y, z] = coord
     const position = new THREE.Vector3(x, y, z).add(centerOffset)
-    // Create a new material instance for each cube so they can be colored independently
-    const material = voxelMaterial.clone()
+    const layerZ = getLayerValue(coord)
+    const isSelected = isInSelectedLayer(coord)
+
+    // Get base color - use layer color only if layer editing mode is enabled
+    const baseColor = isLayerEditingMode ? getLayerColor(layerZ) : defaultVoxelColor
+
+    // Create material with appropriate color
+    const material = new THREE.MeshStandardMaterial({
+      color: baseColor,
+      metalness: 0.3,
+      roughness: 0.7,
+      opacity: isSelected && isLayerEditingMode ? 1.0 : 0.6, // Selected layers are fully opaque only in editing mode
+      transparent: !(isSelected && isLayerEditingMode),
+      emissive: isSelected && isLayerEditingMode ? new THREE.Color(baseColor).multiplyScalar(0.3) : new THREE.Color(0x000000),
+      emissiveIntensity: isSelected && isLayerEditingMode ? 0.3 : 0,
+    })
+
     const cube = new THREE.Mesh(cubeGeometry.clone(), material)
     cube.position.copy(position)
     cube.castShadow = true
     cube.receiveShadow = true
     // Store user data for easy identification
-    cube.userData = { coord, index, originalCoord: [...coord] }
+    cube.userData = {
+      coord,
+      index,
+      originalCoord: [...coord],
+      isInSelectedLayer: isSelected,
+      layerZ: layerZ
+    }
     scene.add(cube)
     cubes.push(cube)
     // Store mapping for click detection
