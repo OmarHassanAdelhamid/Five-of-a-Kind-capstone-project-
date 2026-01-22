@@ -115,11 +115,14 @@ integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, 
 natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
 real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
 boolean & bool & True or False\\
+floating-point (computer-based) & float & Floating-point representation of real number\\
+integer (computer-based) & int & Computer representation of integer\\
 any type & Any & any data type is acceptable\\
 list & list[T] & an ordered collection of objects of type T\\
 set & set[T] & an unordered collection of unique objects of type T\\
 dictionary & dict[key] = value & data structure containing multiple key-value pairs\\
 tuple & tuple[T$_1$, T$_2$, \ldots] or tuple[T] & an ordered collection of values, potentially of different types\\
+three-dimensional array & array3d[type] & an ordered, three-dimensional set where each entry can be referenced via integers starting from 0\\
 void & void & indicates no return value\\
 current instance & self & a reference to the current instance of a module\\
 \bottomrule
@@ -133,6 +136,10 @@ are sequences of characters. Tuples contain a list of values, potentially of
 different types. In addition, \progname \ uses functions, which
 are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification.
+
+Finally, \progname uses some enums and refers to some derived types via other aliases for 
+ease of notation and understanding. For instance, Vector3D and Voxel are both aliases for a tuple
+with 3 real values; UIEvent, VisualUpdate, Action, and propertyName are each enums.  
 
 \section{Module Decomposition}
 
@@ -1409,8 +1416,8 @@ The ExportValidation module validates export readiness by checking export file f
 \subsubsection{Exported Constants}
 
 \begin{itemize}
-\item \texttt{MAX\_VOXELS}: $\mathbb{Z}$ = 13996800000 - Maximum number of voxels allowed
-\item \texttt{MAX\_LAYERS}: $\mathbb{Z}$ = 518400 - Maximum number of layers allowed
+\item \texttt{MAX\_VOXELS}: int = 13996800000 - Maximum number of voxels allowed
+\item \texttt{MAX\_LAYERS}: int = 518400 - Maximum number of layers allowed
 \end{itemize}
 
 \subsubsection{Exported Access Programs}
@@ -1481,8 +1488,8 @@ validateFileFormat(filePath: str) $\rightarrow$ bool
 \subsubsection{Local Functions}
 
 \begin{itemize}
-\item \texttt{countVoxels(model: ModelStructure) -> $\mathbb{Z}$}: Counts the total number of voxels in the model
-\item \texttt{countLayers(model: ModelStructure) -> $\mathbb{Z}$}: Counts the total number of layers in the model
+\item \texttt{countVoxels(model: ModelStructure) -> int}: Counts the total number of voxels in the model
+\item \texttt{countLayers(model: ModelStructure) -> int}: Counts the total number of layers in the model
 \item \texttt{checkPrinterSpecs(model: ModelStructure) -> bool}: Validates model against printer-specific constraints
 \end{itemize}
 
