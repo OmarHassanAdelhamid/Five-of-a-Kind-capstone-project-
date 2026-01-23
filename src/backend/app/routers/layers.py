@@ -3,12 +3,12 @@ Routes for layer management (Display Partitioning Module - M3).
 """
 
 from typing import Optional
-
 from fastapi import APIRouter, HTTPException
 
 from app.config import VOXEL_STORAGE_DIR
 from app.models.schemas import UpdateLayerRequest
 import app.services.project_service as pj
+import app.services.project_manager as pm
 import numpy as np
 
 router = APIRouter(prefix="/api/layers", tags=["layers"])
