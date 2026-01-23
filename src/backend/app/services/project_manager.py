@@ -24,6 +24,6 @@ def create_voxel_db(coordinates: np.array, filename: str, path: str, origin: np.
 
     return project_path
 
-def read_xyz(rows: list[tuple]) -> np.ndarray:
+def read_voxels(rows: list[tuple]) -> np.ndarray:
     return np.array(rows, dtype=float) if rows else np.empty((0, 3), dtype=float)
 
