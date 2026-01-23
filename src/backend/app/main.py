@@ -4,11 +4,13 @@
 FastAPI application entry point.
 """
 
-from pathlib import Path
-from typing import List
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.config import CORS_ORIGINS, CORS_CREDENTIALS, CORS_METHODS, CORS_HEADERS
+from app.routers import models, projects, layers
+
 from pydantic import BaseModel
 import app.services.mesh_service as ms
 import app.services.voxel_service as vx
@@ -21,10 +23,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=CORS_ORIGINS,
+    allow_credentials=CORS_CREDENTIALS,
+    allow_methods=CORS_METHODS,
+    allow_headers=CORS_HEADERS,
 )
 
 BACKEND_DIR = Path(__file__).parent.parent

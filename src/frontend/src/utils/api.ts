@@ -8,7 +8,7 @@ export interface VoxelizedData {
 
 export const fetchAvailableModels = async (): Promise<string[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/list-stl`)
+    const response = await fetch(`${API_BASE_URL}/api/models/list-stl`)
     if (!response.ok) {
       throw new Error(`Failed to fetch models (${response.status})`)
     }
@@ -116,5 +116,127 @@ export const downloadVoxelCSV = async (projectName: string): Promise<Blob> => {
   }
 
   return await response.blob()
+}
+
+export interface LayerInfo {
+  layer_value: number
+  num_voxels: number
+}
+
+export interface LayersResponse {
+  project_name: string
+  num_layers: number
+  layers: LayerInfo[]
+  axis?: 'z' | 'x' | 'y'
+}
+
+export const fetchLayers = async (
+  projectName: string,
+  voxelSize?: number,
+  axis?: 'z' | 'x' | 'y',
+): Promise<LayersResponse> => {
+  try {
+    const url = new URL(`${API_BASE_URL}/api/layers/${encodeURIComponent(projectName)}`)
+    if (voxelSize !== undefined) {
+      url.searchParams.set('voxel_size', voxelSize.toString())
+    }
+    if (axis !== undefined) {
+      url.searchParams.set('axis', axis)
+    }
+
+    const response = await fetch(url.toString())
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(errorData.detail || `Failed to fetch layers (${response.status})`)
+    }
+
+    return (await response.json()) as LayersResponse
+  } catch (error) {
+    console.error('Failed to fetch layers', error)
+    throw error
+  }
+}
+
+export interface LayerVoxel {
+  x: number
+  y: number
+  z: number
+  magnetization: number
+  angle: number
+  id: number
+}
+
+export interface LayerResponse {
+  project_name: string
+  layer_value: number
+  num_voxels: number
+  voxels: number[][] // [x, y, z, magnetization, angle, ID]
+  axis?: 'z' | 'x' | 'y'
+}
+
+export const fetchLayer = async (
+  projectName: string,
+  layerValue: number,
+  voxelSize?: number,
+  axis?: 'z' | 'x' | 'y',
+): Promise<LayerResponse> => {
+  try {
+    const url = new URL(
+      `${API_BASE_URL}/api/layers/${encodeURIComponent(projectName)}/${layerValue}`,
+    )
+    if (voxelSize !== undefined) {
+      url.searchParams.set('voxel_size', voxelSize.toString())
+    }
+    if (axis !== undefined) {
+      url.searchParams.set('axis', axis)
+    }
+
+    const response = await fetch(url.toString())
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(errorData.detail || `Failed to fetch layer (${response.status})`)
+    }
+
+    return (await response.json()) as LayerResponse
+  } catch (error) {
+    console.error('Failed to fetch layer', error)
+    throw error
+  }
+}
+
+export interface UpdateLayerRequest {
+  project_name: string
+  layer_value: number
+  voxels: number[][] // [x, y, z, magnetization, angle, ID]
+  voxel_size?: number
+  axis?: 'z' | 'x' | 'y'
+}
+
+export const updateLayer = async (
+  request: UpdateLayerRequest,
+): Promise<{ message: string; project_name: string; num_voxels: number }> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/layers/update`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(errorData.detail || `Failed to update layer (${response.status})`)
+    }
+
+    return (await response.json()) as {
+      message: string
+      project_name: string
+      num_voxels: number
+    }
+  } catch (error) {
+    console.error('Failed to update layer', error)
+    throw error
+  }
 }
 
