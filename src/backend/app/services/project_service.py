@@ -130,3 +130,25 @@ def update_layer_in_project(
         updated_data = other_voxels
     
     return updated_data
+
+def read_project_full_data(filepath: str) -> np.ndarray:
+    with open(filepath, "r") as file:
+        lines = file.readlines()
+        num_voxels = len(lines)
+        if num_voxels == 0:
+            return np.empty((0, 6))
+        
+        voxel_data = np.empty((num_voxels, 6))
+        
+        for i, line in enumerate(lines):
+            data = line.strip().split(',')
+            x = float(data[0]) if len(data) > 0 else 0.0
+            y = float(data[1]) if len(data) > 1 else 0.0
+            z = float(data[2]) if len(data) > 2 else 0.0
+            mag = float(data[3]) if len(data) > 3 else 1.0
+            angle = float(data[4]) if len(data) > 4 else 0.0
+            voxel_id = float(data[5]) if len(data) > 5 else 0.0
+            
+            voxel_data[i] = [x, y, z, mag, angle, voxel_id]
+    
+    return voxel_data

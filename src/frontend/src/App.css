@@ -576,30 +576,46 @@ footer .metadata {
   gap: 0.85rem;
 }
 
-.layer-editor-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(8, 14, 26, 0.6);
-  backdrop-filter: blur(4px);
-  z-index: 999;
-  animation: fadeIn 0.2s ease-out;
+.layer-settings-toggle {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(15, 23, 42, 0.9);
+  color: #cbd5f5;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+  z-index: 20;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(8, 47, 73, 0.3);
 }
 
-.layer-editor-popup {
-  position: fixed;
+.layer-settings-toggle:hover {
+  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(56, 189, 248, 0.5);
+  transform: scale(1.05);
+}
+
+.layer-editor-panel {
+  position: absolute;
   top: 0;
   right: 0;
-  width: min(450px, 90vw);
-  max-width: 450px;
-  height: 100vh;
+  width: min(400px, 85vw);
+  max-width: 400px;
+  height: 100%;
   background: rgba(15, 23, 42, 0.98);
   border-left: 1px solid rgba(148, 163, 184, 0.3);
   box-shadow: -4px 0 24px rgba(8, 47, 73, 0.5);
   backdrop-filter: blur(20px);
-  z-index: 1000;
+  z-index: 15;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -624,7 +640,7 @@ footer .metadata {
   }
 }
 
-.layer-editor-popup .layer-editor-header {
+.layer-editor-panel .layer-editor-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -663,7 +679,7 @@ footer .metadata {
   transform: scale(1.05);
 }
 
-.layer-editor-popup h3 {
+.layer-editor-panel h3 {
   margin: 0;
   font-size: 1rem;
   letter-spacing: 0.1em;
@@ -699,9 +715,9 @@ footer .metadata {
   opacity: 0.5;
 }
 
-.layer-editor-popup .loading-message,
-.layer-editor-popup .error-message,
-.layer-editor-popup .success-message {
+.layer-editor-panel .loading-message,
+.layer-editor-panel .error-message,
+.layer-editor-panel .success-message {
   margin: 0.75rem 1.25rem;
   font-size: 0.8rem;
   padding: 0.75rem;
@@ -726,7 +742,7 @@ footer .metadata {
   border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
-.layer-editor-popup .empty-message {
+.layer-editor-panel .empty-message {
   margin: 1rem 1.25rem;
   font-size: 0.85rem;
   color: #94a3b8;
@@ -735,14 +751,14 @@ footer .metadata {
   padding: 1rem;
 }
 
-.layer-editor-popup .layer-editor-content {
+.layer-editor-panel .layer-editor-content {
   flex: 1;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
 
-.layer-editor-popup .layers-list {
+.layer-editor-panel .layers-list {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -758,7 +774,7 @@ footer .metadata {
   font-weight: 600;
 }
 
-.layer-editor-popup .layers-scroll {
+.layer-editor-panel .layers-scroll {
   flex: 1;
   overflow-y: auto;
   display: flex;
@@ -836,7 +852,7 @@ footer .metadata {
   flex-shrink: 0;
 }
 
-.layer-editor-popup .layer-details h4 {
+.layer-editor-panel .layer-details h4 {
   margin: 0 0 0.5rem 0;
   font-size: 0.85rem;
   letter-spacing: 0.08em;
@@ -949,7 +965,7 @@ footer .metadata {
   color: #94a3b8;
 }
 
-.layer-editor-popup .voxels-scroll {
+.layer-editor-panel .voxels-scroll {
   max-height: 250px;
   overflow-y: auto;
   display: flex;
@@ -1036,8 +1052,14 @@ footer .metadata {
     gap: 0.5rem;
   }
 
-  .layer-editor {
-    min-width: 100%;
+  .layer-editor-panel {
+    width: 100%;
     max-width: 100%;
+  }
+  
+  .layer-settings-toggle {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
   }
 }

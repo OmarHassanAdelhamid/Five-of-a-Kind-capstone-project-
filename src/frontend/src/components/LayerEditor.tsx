@@ -10,7 +10,7 @@ import {
 interface LayerEditorProps {
   projectName: string;
   voxelSize?: number;
-  layerAxis?: 'z' | 'x';
+  layerAxis?: 'z' | 'x' | 'y';
   onLayerSelect?: (layerZ: number | null) => void;
   selectedLayerZ?: number | null;
   disabled?: boolean;
@@ -164,155 +164,149 @@ export const LayerEditor = ({
 
   if (!projectName.trim() || disabled) {
     return (
-      <>
-        <div className="layer-editor-backdrop" onClick={onClose} />
-        <div className="layer-editor-popup">
-          <div className="layer-editor-header">
-            <h3>Layer Editor</h3>
-            <button onClick={onClose} className="close-button" title="Close">
-              ×
-            </button>
-          </div>
-          <p className="empty-message">Select a project to view layers</p>
+      <div className="layer-editor-panel">
+        <div className="layer-editor-header">
+          <h3>Layer Editor</h3>
+          <button onClick={onClose} className="close-button" title="Close">
+            ×
+          </button>
         </div>
-      </>
+        <p className="empty-message">Select a project to view layers</p>
+      </div>
     );
   }
 
   return (
-    <>
-      <div className="layer-editor-backdrop" onClick={onClose} />
-      <div className="layer-editor-popup">
-        <div className="layer-editor-header">
-          <h3>Layer Editor</h3>
-          <div className="header-actions">
-            <button
-              onClick={loadLayers}
-              disabled={loading}
-              className="refresh-button"
-            >
-              Refresh
-            </button>
-            <button onClick={onClose} className="close-button" title="Close">
-              ×
-            </button>
-          </div>
-        </div>
-
-        <div className="layer-editor-content">
-          {loading && !layersData && (
-            <p className="loading-message">Loading layers...</p>
-          )}
-          {error && <p className="error-message">{error}</p>}
-          {message && <p className="success-message">{message}</p>}
-
-          {layersData && (
-            <>
-              <div className="layers-list">
-                <h4>Layers ({layersData.num_layers})</h4>
-                <div className="layers-scroll">
-                  {layersData.layers.length === 0 ? (
-                    <p className="empty-message">No layers found</p>
-                  ) : (
-                    layersData.layers.map((layer) => (
-                      <div
-                        key={layer.layer_value}
-                        className={`layer-item ${selectedLayerZ === layer.layer_value ? 'selected' : ''}`}
-                        onClick={() => handleLayerClick(layer.layer_value)}
-                      >
-                        <div className="layer-item-content">
-                          <span className="layer-z">
-                            {layerAxis.toUpperCase()}: {layer.layer_value.toFixed(3)}
-                          </span>
-                          <span className="layer-count">
-                            {layer.num_voxels} voxels
-                          </span>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-
-              {selectedLayerData && (
-                <div className="layer-details">
-                  <h4>
-                    Layer {layerAxis.toUpperCase()}: {selectedLayerData.layer_value.toFixed(3)} (
-                    {selectedLayerData.num_voxels} voxels)
-                  </h4>
-                  {editing && (
-                    <div className="editing-indicator">
-                      <span>✏️ Editing mode</span>
-                    </div>
-                  )}
-                  <div className="layer-actions">
-                    {!editing ? (
-                      <button
-                        onClick={() => setEditing(true)}
-                        disabled={loading}
-                        className="edit-button"
-                      >
-                        Edit Layer
-                      </button>
-                    ) : (
-                      <>
-                        <button
-                          onClick={handleSaveLayer}
-                          disabled={loading}
-                          className="save-button"
-                        >
-                          Save Changes
-                        </button>
-                        <button
-                          onClick={() => {
-                            setEditing(false);
-                            loadLayer(selectedLayerData.layer_value);
-                          }}
-                          disabled={loading}
-                          className="cancel-button"
-                        >
-                          Cancel
-                        </button>
-                      </>
-                    )}
-                  </div>
-                  <div className="voxels-list">
-                    <h5>Voxels in this layer:</h5>
-                    <div className="voxels-scroll">
-                      {selectedLayerData.voxels.length === 0 ? (
-                        <p className="empty-message">No voxels in this layer</p>
-                      ) : (
-                        selectedLayerData.voxels.map((voxel, index) => (
-                          <div key={index} className="voxel-item">
-                            <span className="voxel-coords">
-                              ({voxel[0].toFixed(3)}, {voxel[1].toFixed(3)},{' '}
-                              {voxel[2].toFixed(3)})
-                            </span>
-                            <span className="voxel-meta">
-                              M:{voxel[3].toFixed(2)} A:{voxel[4].toFixed(2)}{' '}
-                              ID:
-                              {voxel[5]}
-                            </span>
-                            {editing && (
-                              <button
-                                onClick={() => handleDeleteVoxel(index)}
-                                className="delete-voxel-button"
-                                title="Delete voxel"
-                              >
-                                ×
-                              </button>
-                            )}
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
+    <div className="layer-editor-panel">
+      <div className="layer-editor-header">
+        <h3>Layer Editor</h3>
+        <div className="header-actions">
+          <button
+            onClick={loadLayers}
+            disabled={loading}
+            className="refresh-button"
+          >
+            Refresh
+          </button>
+          <button onClick={onClose} className="close-button" title="Close">
+            ×
+          </button>
         </div>
       </div>
-    </>
+
+      <div className="layer-editor-content">
+        {loading && !layersData && (
+          <p className="loading-message">Loading layers...</p>
+        )}
+        {error && <p className="error-message">{error}</p>}
+        {message && <p className="success-message">{message}</p>}
+
+        {layersData && (
+          <>
+            <div className="layers-list">
+              <h4>Layers ({layersData.num_layers})</h4>
+              <div className="layers-scroll">
+                {layersData.layers.length === 0 ? (
+                  <p className="empty-message">No layers found</p>
+                ) : (
+                  layersData.layers.map((layer) => (
+                    <div
+                      key={layer.layer_value}
+                      className={`layer-item ${selectedLayerZ === layer.layer_value ? 'selected' : ''}`}
+                      onClick={() => handleLayerClick(layer.layer_value)}
+                    >
+                      <div className="layer-item-content">
+                        <span className="layer-z">
+                          {layerAxis.toUpperCase()}: {layer.layer_value.toFixed(3)}
+                        </span>
+                        <span className="layer-count">
+                          {layer.num_voxels} voxels
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {selectedLayerData && (
+              <div className="layer-details">
+                <h4>
+                  Layer {layerAxis.toUpperCase()}: {selectedLayerData.layer_value.toFixed(3)} (
+                  {selectedLayerData.num_voxels} voxels)
+                </h4>
+                {editing && (
+                  <div className="editing-indicator">
+                    <span>✏️ Editing mode</span>
+                  </div>
+                )}
+                <div className="layer-actions">
+                  {!editing ? (
+                    <button
+                      onClick={() => setEditing(true)}
+                      disabled={loading}
+                      className="edit-button"
+                    >
+                      Edit Layer
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        onClick={handleSaveLayer}
+                        disabled={loading}
+                        className="save-button"
+                      >
+                        Save Changes
+                      </button>
+                      <button
+                        onClick={() => {
+                          setEditing(false);
+                          loadLayer(selectedLayerData.layer_value);
+                        }}
+                        disabled={loading}
+                        className="cancel-button"
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  )}
+                </div>
+                <div className="voxels-list">
+                  <h5>Voxels in this layer:</h5>
+                  <div className="voxels-scroll">
+                    {selectedLayerData.voxels.length === 0 ? (
+                      <p className="empty-message">No voxels in this layer</p>
+                    ) : (
+                      selectedLayerData.voxels.map((voxel, index) => (
+                        <div key={index} className="voxel-item">
+                          <span className="voxel-coords">
+                            ({voxel[0].toFixed(3)}, {voxel[1].toFixed(3)},{' '}
+                            {voxel[2].toFixed(3)})
+                          </span>
+                          <span className="voxel-meta">
+                            M:{voxel[3].toFixed(2)} A:{voxel[4].toFixed(2)}{' '}
+                            ID:
+                            {voxel[5]}
+                          </span>
+                          {editing && (
+                            <button
+                              onClick={() => handleDeleteVoxel(index)}
+                              className="delete-voxel-button"
+                              title="Delete voxel"
+                            >
+                              ×
+                            </button>
+                          )}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
   );
 };

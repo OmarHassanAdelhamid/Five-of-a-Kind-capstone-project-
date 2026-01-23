@@ -6,7 +6,6 @@ import { UploadButton } from './components/UploadButton';
 import { ProjectSelector } from './components/ProjectSelector';
 import { UploadMessage } from './components/UploadMessage';
 import { Footer } from './components/Footer';
-import { LayerEditor } from './components/LayerEditor';
 import {
   fetchAvailableModels,
   fetchAvailableProjects,
@@ -43,9 +42,8 @@ function App() {
 
   // Convert Set to sorted array for dependency tracking
   const selectedVoxelIndicesArray = Array.from(selectedVoxels).sort();
-  const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
   const [isLayerEditingMode, setIsLayerEditingMode] = useState(false);
-  const [layerAxis, setLayerAxis] = useState<'z' | 'x'>('z');
+  const [layerAxis, setLayerAxis] = useState<'z' | 'x' | 'y'>('z');
 
   const fetchModels = useCallback(async (): Promise<string[]> => {
     try {
@@ -256,7 +254,13 @@ function App() {
         onStatusChange={handleStatusChange}
         selectedLayerZ={isLayerEditingMode ? selectedLayerZ : null}
         layerAxis={layerAxis}
-        onLayerSelect={setSelectedLayerZ}
+        onLayerSelect={(layerZ) => {
+          setSelectedLayerZ(layerZ);
+          // Automatically enable layer editing mode when a layer is selected
+          if (layerZ !== null && !isLayerEditingMode) {
+            setIsLayerEditingMode(true);
+          }
+        }}
         onVoxelSelect={setSelectedVoxel}
         onVoxelsSelect={(newSet) => {
           // Force a new Set reference to ensure React detects the change
@@ -266,6 +270,8 @@ function App() {
         selectedVoxelIndices={selectedVoxels}
         selectedVoxelIndicesArray={selectedVoxelIndicesArray}
         isLayerEditingMode={isLayerEditingMode}
+        projectName={projectName}
+        voxelSize={parseFloat(voxelSize) || undefined}
       />
       <section className="actions">
         <ModelSelector
@@ -343,13 +349,6 @@ function App() {
           </button>
         </div>
         <div className="layer-editing-section">
-          <button
-            onClick={() => setIsLayerEditorOpen(true)}
-            disabled={!projectName.trim() || status === 'loading'}
-            className="layer-editor-button"
-          >
-            Show Layers
-          </button>
           {projectName.trim() && (
             <div className="layer-axis-row">
               <span className="layer-axis-label">Split by:</span>
@@ -379,6 +378,19 @@ function App() {
                 />
                 <span>X</span>
               </label>
+              <label className="layer-axis-option">
+                <input
+                  type="radio"
+                  name="layerAxis"
+                  checked={layerAxis === 'y'}
+                  onChange={() => {
+                    setLayerAxis('y');
+                    setSelectedLayerZ(null);
+                  }}
+                  disabled={status === 'loading'}
+                />
+                <span>Y</span>
+              </label>
             </div>
           )}
           {projectName.trim() && (
@@ -398,26 +410,6 @@ function App() {
             </label>
           )}
         </div>
-        <LayerEditor
-          projectName={projectName}
-          voxelSize={parseFloat(voxelSize) || undefined}
-          layerAxis={layerAxis}
-          onLayerSelect={(layerZ) => {
-            setSelectedLayerZ(layerZ);
-            // Automatically enable layer editing mode when a layer is selected from the editor
-            if (layerZ !== null && !isLayerEditingMode) {
-              setIsLayerEditingMode(true);
-            }
-          }}
-          selectedLayerZ={selectedLayerZ}
-          disabled={status === 'loading' || !projectName.trim()}
-          isOpen={isLayerEditorOpen}
-          onClose={() => {
-            setIsLayerEditorOpen(false);
-            // Don't clear layer selection if layer editing mode is still enabled
-            // Only clear if user explicitly disables layer editing mode
-          }}
-        />
       </section>
       <Footer modelsCount={models.length} selectedModel={selectedModel} />
     </div>

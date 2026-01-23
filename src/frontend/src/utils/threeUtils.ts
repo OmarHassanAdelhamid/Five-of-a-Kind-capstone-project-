@@ -137,7 +137,7 @@ export const renderVoxelCubes = (
   modelOriginalCenter?: THREE.Vector3 | null,
   existingCubes?: THREE.Mesh[],
   selectedLayerZ?: number | null,
-  layerAxis: 'z' | 'x' = 'z',
+  layerAxis: 'z' | 'x' | 'y' = 'z',
   isLayerEditingMode?: boolean,
 ): { cubes: THREE.Mesh[]; cubeToCoordMap: Map<THREE.Mesh, { coord: number[]; index: number }> } => {
   // Remove existing cubes if provided
@@ -161,7 +161,7 @@ export const renderVoxelCubes = (
   const centerOffset = calculateCenterOffset(coordinates, modelOriginalCenter)
   const cubeGeometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize)
 
-  const col = layerAxis === 'x' ? 0 : 2
+  const col = layerAxis === 'x' ? 0 : layerAxis === 'y' ? 1 : 2
   const getLayerValue = (c: number[]): number =>
     Math.round(c[col] * 1e12) / 1e12
 

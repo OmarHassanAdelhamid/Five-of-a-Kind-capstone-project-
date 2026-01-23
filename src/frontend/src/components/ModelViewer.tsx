@@ -11,6 +11,7 @@ import {
 } from '../utils/threeUtils';
 import { API_BASE_URL } from '../utils/constants';
 import { StatusMessage } from './StatusMessage';
+import { LayerEditor } from './LayerEditor';
 
 //HEAVILY INFLUENCED BY STL LOADER EXAMPLE https://sbcode.net/threejs/loaders-stl/
 
@@ -19,7 +20,7 @@ interface ModelViewerProps {
   voxelCoordinates: number[][];
   onStatusChange: (status: 'loading' | 'ready' | 'error') => void;
   selectedLayerZ?: number | null;
-  layerAxis?: 'z' | 'x';
+  layerAxis?: 'z' | 'x' | 'y';
   onLayerSelect?: (layerZ: number | null) => void;
   onVoxelSelect?: (voxel: { coord: number[]; index: number } | null) => void;
   onVoxelsSelect?: (voxels: Set<number>) => void;
@@ -27,6 +28,8 @@ interface ModelViewerProps {
   selectedVoxelIndices?: Set<number>;
   selectedVoxelIndicesArray?: number[];
   isLayerEditingMode?: boolean;
+  projectName?: string;
+  voxelSize?: number;
 }
 
 export const ModelViewer = ({
@@ -42,6 +45,8 @@ export const ModelViewer = ({
   selectedVoxelIndices = new Set(),
   selectedVoxelIndicesArray = [],
   isLayerEditingMode = false,
+  projectName = '',
+  voxelSize,
 }: ModelViewerProps) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
@@ -54,7 +59,7 @@ export const ModelViewer = ({
   const selectedCubeRef = useRef<THREE.Mesh | null>(null);
   const raycasterRef = useRef<THREE.Raycaster | null>(null);
   const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
-  const layerAxisRef = useRef<'z' | 'x'>(layerAxis);
+  const layerAxisRef = useRef<'z' | 'x' | 'y'>(layerAxis);
   layerAxisRef.current = layerAxis;
   const [viewerStatus, setViewerStatus] = useState<
     'loading' | 'ready' | 'error'
@@ -64,6 +69,7 @@ export const ModelViewer = ({
     coord: number[];
     index: number;
   } | null>(null);
+  const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
 
   useEffect(() => {
     if (!selectedModel) {
@@ -300,7 +306,7 @@ export const ModelViewer = ({
           } else {
             // Single click - select layer only if layer editing mode is enabled
             if (isLayerEditingMode && onLayerSelect) {
-              const col = layerAxisRef.current === 'x' ? 0 : 2;
+              const col = layerAxisRef.current === 'x' ? 0 : layerAxisRef.current === 'y' ? 1 : 2;
               const layerValue = Math.round(coord[col] * 1e12) / 1e12;
               if (
                 selectedLayerZ !== null &&
@@ -472,7 +478,7 @@ export const ModelViewer = ({
       return;
     }
 
-    const col = layerAxis === 'x' ? 0 : 2;
+    const col = layerAxis === 'x' ? 0 : layerAxis === 'y' ? 1 : 2;
     const getLayerValue = (coord: number[]) =>
       Math.round(coord[col] * 1e12) / 1e12;
 
@@ -625,6 +631,25 @@ export const ModelViewer = ({
           ) : null}
         </div>
       )}
+      {projectName.trim() && (
+        <button
+          className="layer-settings-toggle"
+          onClick={() => setIsLayerEditorOpen(!isLayerEditorOpen)}
+          title="Toggle Layer Editor"
+        >
+          {isLayerEditorOpen ? '✕' : '⚙️'}
+        </button>
+      )}
+      <LayerEditor
+        projectName={projectName}
+        voxelSize={voxelSize}
+        layerAxis={layerAxis}
+        onLayerSelect={onLayerSelect}
+        selectedLayerZ={selectedLayerZ}
+        disabled={!projectName.trim()}
+        isOpen={isLayerEditorOpen}
+        onClose={() => setIsLayerEditorOpen(false)}
+      />
     </div>
   );
 };
