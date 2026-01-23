@@ -133,22 +133,115 @@ def update_layer_in_project(
 
 def read_project_full_data(filepath: str) -> np.ndarray:
     with open(filepath, "r") as file:
-        lines = file.readlines()
-        num_voxels = len(lines)
-        if num_voxels == 0:
-            return np.empty((0, 6))
+        first_char = file.read(1)
+        file.seek(0)
         
-        voxel_data = np.empty((num_voxels, 6))
-        
-        for i, line in enumerate(lines):
-            data = line.strip().split(',')
-            x = float(data[0]) if len(data) > 0 else 0.0
-            y = float(data[1]) if len(data) > 1 else 0.0
-            z = float(data[2]) if len(data) > 2 else 0.0
-            mag = float(data[3]) if len(data) > 3 else 1.0
-            angle = float(data[4]) if len(data) > 4 else 0.0
-            voxel_id = float(data[5]) if len(data) > 5 else 0.0
+        if first_char == '{':
+            data = json.load(file)
+            layers = data.get("layers", {})
+            voxels_list = []
             
-            voxel_data[i] = [x, y, z, mag, angle, voxel_id]
+            for layer_key, layer_data in layers.items():
+                voxels = layer_data.get("voxels", {})
+                for voxel_key, voxel in voxels.items():
+                    x = float(voxel.get("x", 0.0))
+                    y = float(voxel.get("y", 0.0))
+                    z = float(voxel.get("z", 0.0))
+                    mag = float(voxel.get("magnetization", 1.0))
+                    angle = float(voxel.get("angle", 0.0))
+                    voxel_id = float(voxel.get("id", 0.0))
+                    voxels_list.append([x, y, z, mag, angle, voxel_id])
+            
+            if len(voxels_list) == 0:
+                return np.empty((0, 6))
+            return np.array(voxels_list)
+        else:
+            lines = file.readlines()
+            num_voxels = len(lines)
+            if num_voxels == 0:
+                return np.empty((0, 6))
+            
+            voxel_data = np.empty((num_voxels, 6))
+            
+            for i, line in enumerate(lines):
+                data = line.strip().split(',')
+                x = float(data[0]) if len(data) > 0 else 0.0
+                y = float(data[1]) if len(data) > 1 else 0.0
+                z = float(data[2]) if len(data) > 2 else 0.0
+                mag = float(data[3]) if len(data) > 3 else 1.0
+                angle = float(data[4]) if len(data) > 4 else 0.0
+                voxel_id = float(data[5]) if len(data) > 5 else 0.0
+                
+                voxel_data[i] = [x, y, z, mag, angle, voxel_id]
+            
+            return voxel_data
+
+def write_project_full_data(voxel_data: np.ndarray, filepath: str, origin: np.ndarray = None, voxel_size: float = None):
+    if len(voxel_data) == 0:
+        data = {
+            "layers": {},
+            "layer_order": []
+        }
+        with open(filepath, "w") as f:
+            json.dump(data, f, indent=2, sort_keys=True)
+        return
     
-    return voxel_data
+    layers = {}
+    
+    if origin is not None and voxel_size is not None:
+        ox, oy, oz = origin
+        for voxel in voxel_data:
+            x, y, z = float(voxel[0]), float(voxel[1]), float(voxel[2])
+            mag = float(voxel[3]) if len(voxel) > 3 else 1.0
+            angle = float(voxel[4]) if len(voxel) > 4 else 0.0
+            voxel_id = float(voxel[5]) if len(voxel) > 5 else 0.0
+            
+            ix = round((x - ox) / voxel_size)
+            iy = round((y - oy) / voxel_size)
+            iz = round((z - oz) / voxel_size)
+            
+            layer_key = f"L:{iz}"
+            voxel_key = f"V:{ix},{iy},{iz}"
+            
+            if layer_key not in layers:
+                layers[layer_key] = {"voxels": {}}
+            
+            layers[layer_key]["voxels"][voxel_key] = {
+                "x": x,
+                "y": y,
+                "z": z,
+                "magnetization": mag,
+                "angle": angle,
+                "id": voxel_id
+            }
+    else:
+        for voxel in voxel_data:
+            x, y, z = float(voxel[0]), float(voxel[1]), float(voxel[2])
+            mag = float(voxel[3]) if len(voxel) > 3 else 1.0
+            angle = float(voxel[4]) if len(voxel) > 4 else 0.0
+            voxel_id = float(voxel[5]) if len(voxel) > 5 else 0.0
+            
+            iz = int(round(z))
+            layer_key = f"L:{iz}"
+            voxel_key = f"V:{x},{y},{z}"
+            
+            if layer_key not in layers:
+                layers[layer_key] = {"voxels": {}}
+            
+            layers[layer_key]["voxels"][voxel_key] = {
+                "x": x,
+                "y": y,
+                "z": z,
+                "magnetization": mag,
+                "angle": angle,
+                "id": voxel_id
+            }
+    
+    layer_order = sorted(layers.keys(), key=lambda k: int(k.split(":")[1]))
+    data = {
+        "layers": layers,
+        "layer_order": layer_order
+    }
+    
+    with open(filepath, "w") as f:
+        json.dump(data, f, indent=2, sort_keys=True)
