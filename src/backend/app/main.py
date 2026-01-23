@@ -13,6 +13,8 @@ from pydantic import BaseModel
 import app.services.mesh_service as ms
 import app.services.voxel_service as vx
 import app.services.project_service as pj
+
+import app.services.project_manager as pm
 from fastapi.responses import FileResponse
 
 app = FastAPI()
@@ -116,7 +118,7 @@ async def get_voxelized(project_name: str):
         )
     
     try:
-        coordinates = pj.read_surface(str(project_path))
+        coordinates = pm.read_surface_db(str(project_path))
         # Convert numpy array to list for JSON serialization
         coordinates_list = coordinates.tolist() if hasattr(coordinates, 'tolist') else coordinates
         
@@ -169,7 +171,8 @@ async def voxelize(request: VoxelizeRequest):
         #filepath = pj.create_project(points, project_name, str(VOXEL_STORAGE_DIR))
         
         origin = voxelized.translation
-        filepath = pj.create_json(points, project_name, str(VOXEL_STORAGE_DIR), origin, voxel_size)
+        #filepath = pj.create_json(points, project_name, str(VOXEL_STORAGE_DIR), origin, voxel_size)
+        filepath = pm.create_voxel_db(points, project_name, str(VOXEL_STORAGE_DIR), origin, voxel_size)
 
 
 
