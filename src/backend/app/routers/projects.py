@@ -11,7 +11,8 @@ from app.config import MODEL_DIR, VOXEL_STORAGE_DIR
 from app.models.schemas import VoxelizeRequest
 import app.services.mesh_service as ms
 import app.services.voxel_service as vx
-import app.services.project_service as pj
+import app.services.project_manager as pm
+import app.services.model_structure as struct
 
 router = APIRouter(prefix="/api/voxelize", tags=["projects"])
 
@@ -48,7 +49,8 @@ async def get_voxelized(project_name: str):
         )
     
     try:
-        coordinates = pj.read_surface(str(project_path))
+        rows = struct.find_surface(str(project_path))
+        coordinates = pm.read_xyz(rows)
         coordinates_list = coordinates.tolist() if hasattr(coordinates, 'tolist') else coordinates
         
         return {
@@ -123,9 +125,7 @@ async def voxelize(request: VoxelizeRequest):
 
         # save points as csv to project file with init magnetization vector and material IDs
         # FOR POC: this will be in backend/sample-project-files
-        #filepath = pj.create_project(points, project_name, str(VOXEL_STORAGE_DIR))
 
         origin = voxelized.translation
-        filepath = pj.create_json(points, project_name, str(VOXEL_STORAGE_DIR), origin, voxel_size)
-
+        filepath = pm.create_voxel_db(points, project_name, str(VOXEL_STORAGE_DIR), origin, voxel_size)
         return {"message": f"Voxelization Status of STL file ({stl_filename}): Success", "projectpath": f"{filepath}"}
