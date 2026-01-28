@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from .model_manager import VoxelDB
+from .model_structure import find_surface
 
 def create_voxel_db(coordinates: np.array, filename: str, path: str, origin: np.ndarray, voxel_size)-> str:
     project_path = os.path.join(path, filename) 

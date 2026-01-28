@@ -573,7 +573,7 @@ export const ModelViewer = ({
           }
         } else {
           // Normal mode: all voxels same opacity, no glow
-          material.opacity = 0.6;
+          material.opacity = 1;
           material.transparent = true;
           material.emissive.setHex(0x000000);
           material.emissiveIntensity = 0;

@@ -114,10 +114,7 @@ async def voxelize(request: VoxelizeRequest):
     with stl_path.open("rb") as file:
         # load passed stl file as a mesh
         mesh = ms.create_mesh(file, file_type='stl')
-
-        #TODO: scale the mesh in (x, y, z)
-
-        # voxelize the mesh and fill inside with voxels
+        
         voxelized = vx.voxelize(mesh, voxel_size)
 
         # get all coordinates of voxels (centers of each voxel)
