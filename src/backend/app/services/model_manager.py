@@ -1,5 +1,6 @@
 import sqlite3
 from typing import Iterable, Tuple, Any
+import numpy as np
 
 # likely will contains requirements of model_manager and model_structure
 
@@ -49,6 +50,27 @@ class VoxelDB:
         self.set_meta("origin_y", oy)
         self.set_meta("origin_z", oz)
         self.set_meta("voxel_size", voxel_size)
+
+
+    def get_meta(self, key: str) -> str | None:
+        self.cur.execute(
+            "SELECT value FROM meta WHERE key = ?",
+            (key,)
+        )
+        row = self.cur.fetchone()
+        return row[0] if row else None
+    
+    def get_grid_conversion(self, coordinates: np.array) -> tuple[int, int, int]:
+        ox = float(self.get_meta("origin_x"))
+        oy = float(self.get_meta("origin_y"))
+        oz = float(self.get_meta("origin_z"))
+        voxel_size = float(self.get_meta("voxel_size"))
+
+        ix = int(round((coordinates[0] - ox) / voxel_size))
+        iy = int(round((coordinates[1] - oy) / voxel_size))
+        iz = int(round((coordinates[2] - oz) / voxel_size))
+
+        return (ix, iy, iz)
 
     # to intialize all voxels in the table
     def upsert_many(self, rows: Iterable[Tuple[int, int, int, float, float, float]]) -> None:

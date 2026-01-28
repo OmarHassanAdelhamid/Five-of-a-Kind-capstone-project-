@@ -119,10 +119,15 @@ async def voxelize(request: VoxelizeRequest):
 
         # get all coordinates of voxels (centers of each voxel)
         points = vx.get_voxel_coordinates(voxelized)
+        origin = voxelized.translation
+
+        project_path = os.path.join(str(VOXEL_STORAGE_DIR), project_name) 
+
+        pm.initialize_voxel_db(project_path, origin, voxel_size)
+        pm.create_voxel_db(project_path, points)
 
         # save points as csv to project file with init magnetization vector and material IDs
         # FOR POC: this will be in backend/sample-project-files
 
-        origin = voxelized.translation
-        filepath = pm.create_voxel_db(points, project_name, str(VOXEL_STORAGE_DIR), origin, voxel_size)
-        return {"message": f"Voxelization Status of STL file ({stl_filename}): Success", "projectpath": f"{filepath}"}
+        #filepath = pm.create_voxel_db(points, project_name, str(VOXEL_STORAGE_DIR), origin, voxel_size)
+        return {"message": f"Voxelization Status of STL file ({stl_filename}): Success", "projectpath": f"{project_path}"}

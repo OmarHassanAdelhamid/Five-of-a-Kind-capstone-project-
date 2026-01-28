@@ -7,7 +7,7 @@ import numpy as np
 
 def voxelize(mesh, voxel_size: float):
     axis = "z"
-    target = 5.0
+    target = 1.0
 
     axis_to_col = {"x": 0, "y": 1, "z": 2}
     if axis not in axis_to_col:
@@ -28,11 +28,6 @@ def voxelize(mesh, voxel_size: float):
 
     grid = mesh.voxelized(pitch=voxel_size).fill(method='base')
     return grid
-
-    
-def scale_voxels(grid, scale_x: float, scale_y: float, scale_z: float):
-    #NOT IMPLEMENTED!
-    pass
 
 def get_voxel_coordinates(grid):
     return grid.points
