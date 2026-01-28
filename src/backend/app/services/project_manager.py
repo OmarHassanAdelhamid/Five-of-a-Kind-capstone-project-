@@ -2,27 +2,26 @@ import os
 import numpy as np
 from .model_manager import VoxelDB
 
-def create_voxel_db(coordinates: np.array, filename: str, path: str, origin: np.ndarray, voxel_size)-> str:
-    project_path = os.path.join(path, filename) 
+
+def initialize_voxel_db(project_path: str, origin: np.ndarray, voxel_size: float)-> None:
     ox, oy, oz = origin
+    with VoxelDB(project_path) as db:
+        db.set_grid((float(ox), float(oy), float(oz)), float(voxel_size))
+        db.commit() 
 
+def create_voxel_db(project_path: str, coordinates: np.array):
     rows = []
-    for x, y, z in coordinates:
-        ix = round((x - ox) / voxel_size)
-        iy = round((y - oy) / voxel_size)
-        iz = round((z - oz) / voxel_size)
-
-        rows.append((
-            int(ix), int(iy), int(iz),
-            float(x), float(y), float(z),
+    for coord in coordinates:
+        with VoxelDB(project_path) as db:
+            idx = db.get_grid_conversion(coord)
+            rows.append((
+            idx[0], idx[1], idx[2],
+            float(coord[0]), float(coord[1]), float(coord[2]),
         ))
 
     with VoxelDB(project_path) as db:
-        db.set_grid((float(ox), float(oy), float(oz)), float(voxel_size))
         db.upsert_many(rows)
         db.commit() 
-
-    return project_path
 
 def read_voxels(rows: list[tuple]) -> np.ndarray:
     return np.array(rows, dtype=float) if rows else np.empty((0, 3), dtype=float)

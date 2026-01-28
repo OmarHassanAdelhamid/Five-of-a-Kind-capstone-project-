@@ -37,39 +37,53 @@ FROM voxels v
 ORDER BY iz;
 """
 
-
 def find_surface(db_path: str) -> list[tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute(FIND_SURFACE)
         rows = db.cur.fetchall()
     return rows
 
+def x_directory(db_path: str) -> list[tuple]:
+    with VoxelDB(db_path) as db:
+        db.cur.execute(ALL_X_LAYERS)
+        rows = db.cur.fetchall()
+    return rows
 
-def find_x_layer(iz: int, db_path: str) -> list[tuple]:
+def y_directory(db_path: str) -> list[tuple]:
+    with VoxelDB(db_path) as db:
+        db.cur.execute(ALL_Y_LAYERS)
+        rows = db.cur.fetchall()
+    return rows
+
+def z_directory(db_path: str) -> list[tuple]:
+    with VoxelDB(db_path) as db:
+        db.cur.execute(ALL_Z_LAYERS)
+        rows = db.cur.fetchall()
+    return rows
+
+# get a list of all x layers based on their integer identifier
+def get_x_layer(iz: int, db_path: str) -> list[tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute(
         "SELECT x, y, z FROM voxels WHERE ix= ?;",
-        (iz,)
-    )
-    layer_voxels = db.cur.fetchall()
+        (iz,))
+        layer_voxels = db.cur.fetchall()
     return layer_voxels
 
-def find_y_layer(iz: int, db_path: str) -> list[tuple]:
+# get a list of all y layers based on their integer identifier
+def get_y_layer(iz: int, db_path: str) -> list[tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute(
         "SELECT x, y, z FROM voxels WHERE iy = ?;",
-        (iz,)
-    )
-    layer_voxels = db.cur.fetchall()
+        (iz,))
+        layer_voxels = db.cur.fetchall()
     return layer_voxels
 
-def find_z_layer(iz: int, db_path: str) -> list[tuple]:
+# get a list of all z layers based on their integer identifier
+def get_z_layer(iz: int, db_path: str) -> list[tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute(
         "SELECT x, y, z FROM voxels WHERE iz = ?;",
-        (iz,)
-    )
-    layer_voxels = db.cur.fetchall()
+        (iz,))
+        layer_voxels = db.cur.fetchall()
     return layer_voxels
-
-

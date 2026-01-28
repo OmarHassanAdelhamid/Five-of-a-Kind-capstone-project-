@@ -157,7 +157,8 @@ export const renderVoxelCubes = (
     return { cubes: [], cubeToCoordMap }
   }
 
-  const voxelSize = calculateVoxelSize(coordinates, modelSize)
+  // const voxelSize = calculateVoxelSize(coordinates, modelSize)
+  const voxelSize = 0.1
   const centerOffset = calculateCenterOffset(coordinates, modelOriginalCenter)
   const cubeGeometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize)
 
