@@ -4,6 +4,22 @@ import json
 from typing import Dict, List, Tuple
 from collections import defaultdict
 
+
+'''
+to replace organize_voxels_into_layers:
+use x_directory, y_directory and z_directory in model_structure
+'''
+
+'''
+to replace get_layer_info:
+use x_directory, y_directory and z_directory in model_structure
+'''
+
+'''
+to update_layer_in_project:
+use x_directory, y_directory and z_directory in model_structure
+'''
+
 def organize_voxels_into_layers(
     voxel_data: np.ndarray,
     voxel_size: float = None,

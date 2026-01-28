@@ -11,6 +11,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import CORS_ORIGINS, CORS_CREDENTIALS, CORS_METHODS, CORS_HEADERS
 from app.routers import models, projects, layers
 
+from fastapi import Request
+from fastapi.responses import PlainTextResponse
+import traceback
+
 
 app = FastAPI()
 
@@ -25,6 +29,3 @@ app.add_middleware(
 app.include_router(models.router)
 app.include_router(projects.router)
 app.include_router(layers.router)
-
-
-

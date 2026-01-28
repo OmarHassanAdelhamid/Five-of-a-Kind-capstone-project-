@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse
 
 from app.config import MODEL_DIR, VOXEL_STORAGE_DIR
 from app.models.schemas import VoxelizeRequest
+import os
 import app.services.mesh_service as ms
 import app.services.voxel_service as vx
 import app.services.project_manager as pm
@@ -50,7 +51,7 @@ async def get_voxelized(project_name: str):
     
     try:
         rows = struct.find_surface(str(project_path))
-        coordinates = pm.read_xyz(rows)
+        coordinates = pm.read_voxels(rows)
         coordinates_list = coordinates.tolist() if hasattr(coordinates, 'tolist') else coordinates
         
         return {
@@ -72,7 +73,7 @@ def download_voxel_csv(project_name: str):
     Returns:
         (FileResponse): The CSV file containing voxel coordinates.
     """
-    project_path = VOXEL_STORAGE_DIR / project_name
+    project_path = os.path.join(VOXEL_STORAGE_DIR, project_name) 
     
     if not project_path.exists():
         available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
@@ -105,7 +106,6 @@ async def voxelize(request: VoxelizeRequest):
     stl_filename = request.stl_filename
     voxel_size = request.voxel_size
     project_name = request.project_name
-    
     stl_path = MODEL_DIR / stl_filename
 
     if not stl_path.exists():
