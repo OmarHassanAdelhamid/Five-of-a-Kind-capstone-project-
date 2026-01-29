@@ -1,19 +1,22 @@
 """
-Routes for layer management (Display Partitioning Module - M3).
+Routes for layer management and voxel updates.
 """
+
 
 from typing import Optional
 from fastapi import APIRouter, HTTPException
 
 from app.config import VOXEL_STORAGE_DIR
 from app.models.schemas import UpdateLayerRequest
-import app.services.project_manager as pm
-import app.services.model_structure as ms
-import numpy as np
 
-router = APIRouter(prefix="/api/layers", tags=["layers"])
+import app.services.project_management_service as pm
+import app.services.model_tracking_service as ms
 
-@router.get("/{project_name}")
+import numpy as np #!! remove this import?
+
+router = APIRouter(prefix="/api/edit", tags=["edit"])
+
+@router.get("/{project_name}") # should remove this.
 async def get_layers(project_name: str, axis: Optional[str] = "z"):
     if axis not in ("z", "x", "y"):
         raise HTTPException(status_code=400, detail="axis must be 'z', 'x', or 'y'")

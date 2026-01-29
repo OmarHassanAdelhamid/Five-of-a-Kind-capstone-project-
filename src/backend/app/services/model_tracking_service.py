@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from .model_manager import VoxelDB     
+from model_edit_service import VoxelDB     
 
 FIND_SURFACE = """
 SELECT v.x, v.y, v.z
