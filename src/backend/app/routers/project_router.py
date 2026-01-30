@@ -17,7 +17,7 @@ from app.models.schemas import VoxelizeRequest
 import app.services.mesh_service as ms
 import app.services.voxel_service as vx
 import app.services.project_management_service as pm
-import app.services.model_tracking_service as struct
+import app.services.model_tracking_service as mt
 
 router = APIRouter(prefix="/api/project", tags=["project"])
 
@@ -54,7 +54,7 @@ async def get_surface_voxels(project_name: str):
         )
     
     try:
-        rows = struct.find_surface(str(project_path))
+        rows = mt.find_surface(str(project_path))
         coordinates = pm.read_voxels(rows)
         coordinates_list = coordinates.tolist() if hasattr(coordinates, 'tolist') else coordinates
         

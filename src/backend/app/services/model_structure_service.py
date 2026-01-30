@@ -81,12 +81,14 @@ class VoxelDB:
             list(rows))
         
     # to add a single voxel
-    def add_voxel(self, rows: Iterable[Tuple[int, int, int, float, float, float]]) -> None:
+    def add_voxel(self, ix: int, iy: int, iz: int) -> None:
+        # TODO: how to set x, y, z properly!
+
         self.cur.execute("""
             INSERT OR REPLACE INTO voxels
             (ix, iy, iz, x, y, z)
             VALUES (?, ?, ?, ?, ?, ?)""", 
-            list(rows))
+            (ix, iy, iz, x, y, z))
         
     # to remove a single voxel
     def delete_voxel(self, ix: int, iy: int, iz: int) -> None:

@@ -7,85 +7,79 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException
 
 from app.config import VOXEL_STORAGE_DIR
-from app.models.schemas import UpdateLayerRequest
+from app.models.schemas import RetrieveLayerRequest, LayerAxis, UpdateVoxelsRequest, UpdateAction
 
-import app.services.project_management_service as pm
-import app.services.model_tracking_service as ms
-
-import numpy as np #!! remove this import?
+import app.services.model_editing_service as em
+import app.services.model_tracking_service as mt
 
 router = APIRouter(prefix="/api/edit", tags=["edit"])
 
-@router.get("/{project_name}") # should remove this.
-async def get_layers(project_name: str, axis: Optional[str] = "z"):
-    if axis not in ("z", "x", "y"):
-        raise HTTPException(status_code=400, detail="axis must be 'z', 'x', or 'y'")
-    project_path = VOXEL_STORAGE_DIR / project_name
+@router.get("/retrieve")
+async def get_layer(request: RetrieveLayerRequest):
+    """
+    Handles request to retrieve all voxels within a layer, for the layer editing interface.
 
+    Args:
+        request (RetrieveLayerRequest): Request containing a layer index and which axis it refers to.
+            See doc within schemas.py for more details.
+
+    Returns:
+        (dict): Contains message reflecting the relevant voxels, and associated information passed in initially.
+    """
+    if request.axis not in (LayerAxis.Z, LayerAxis.X, LayerAxis.Y):
+        raise HTTPException(status_code=400, detail="Invalid request; axis must be 'z', 'x', or 'y'")
+
+    project_path = VOXEL_STORAGE_DIR / request.project_name
     if not project_path.exists():
         available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
         raise HTTPException(
-            status_code=404,
-            detail=f"Project '{project_name}' not found. Available projects: {available if available else 'none'}"
+            status_code=404, 
+            detail=f"Project '{request.project_name}' not found. Available projects: {available if available else 'none'}"
         )
 
     try:
-        if axis == "x":
-            layers = ms.x_directory(str(project_path))
-        elif axis == "y":
-            layers = ms.y_directory(str(project_path))
+        # Get all voxels from corresponding layer.
+        if request.axis == "x":
+            voxels = mt.get_x_layer(request.layer_index, project_path)
+        elif request.axis == "y":
+            voxels = mt.get_y_layer(request.layer_index, project_path)
         else:
-            layers = ms.z_directory(str(project_path))
-
-        layer_indices = [int(l[0]) for l in layers]
-        return {
-            "project_name": project_name,
-            "num_layers": len(layer_indices),
-            "layers": layer_indices,
-            "axis": axis,
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error reading layer: {str(e)}")
-
-@router.get("/{project_name}/{layer_value}")
-async def get_layer(project_name: str, layer_index: int, axis: Optional[str] = "z"):
-    if axis not in ("z", "x", "y"):
-        raise HTTPException(status_code=400, detail="axis must be 'z', 'x', or 'y'")
-
-    project_path = VOXEL_STORAGE_DIR / project_name
-    try:
-        if axis == "x":
-            voxels = ms.get_x_layer(layer_index, project_path)
-        elif axis == "y":
-            voxels = ms.get_y_layer(layer_index, project_path)
-        else:
-            voxels = ms.get_z_layer(layer_index, project_path)
+            voxels = mt.get_z_layer(request.layer_index, project_path)
 
         if not voxels:
+            # Invalid layer.
             raise HTTPException(
                 status_code=404,
-                detail=f"Layer at {axis.upper()}={layer_index} not found."
+                detail=f"Layer at {request.axis.upper()}={request.layer_index} not found."
             )
+        
         return {
-            "project_name": project_name,
-            "layer_index": layer_index,
+            "project_name": request.project_name,
+            "layer_index": request.layer_index,
             "num_voxels": len(voxels),
             "voxels": voxels,
-            "axis": axis,
+            "axis": request.axis,
         }
-    except HTTPException:
-        raise
+    
+    except HTTPException as httpex:
+        raise httpex
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error reading layer: {str(e)}")
 
-
-'''
-NOTE: STILL NEEDS TO BE FIXED
-
 @router.post("/update")
-async def update_layer(request: UpdateLayerRequest):
-    project_path = VOXEL_STORAGE_DIR / request.project_name
+async def update_voxels(request: UpdateVoxelsRequest):
+    """
+    Handles request to update a set of voxels within a layer.
     
+    Args:
+        request (UpdateVoxelsRequest): Request containing a set of voxels and an action to take 
+            with them. See doc within schemas.py for more details.
+
+    Returns:
+        (dict): Contains message reflecting status of update, the project name, and number of voxels updated.
+    """
+
+    project_path = VOXEL_STORAGE_DIR / request.project_name
     if not project_path.exists():
         available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
         raise HTTPException(
@@ -94,31 +88,85 @@ async def update_layer(request: UpdateLayerRequest):
         )
     
     try:
-        project_data = pj.read_project_full_data(str(project_path))
-        
-        new_layer_voxels = np.array(request.voxels)
-        
-        if len(new_layer_voxels.shape) == 1:
-            new_layer_voxels = new_layer_voxels.reshape(1, -1)
-        
-        if new_layer_voxels.shape[1] < 6:
-            padding = np.zeros((new_layer_voxels.shape[0], 6 - new_layer_voxels.shape[1]))
-            new_layer_voxels = np.hstack([new_layer_voxels, padding])
-        
-        ax = request.axis if request.axis in ("z", "x", "y") else "z"
-        updated_data = pj.update_layer_in_project(
-            project_data,
-            request.layer_value,
-            new_layer_voxels,
-            request.voxel_size,
-            axis=ax,
-        )
-        pj.write_project_full_data(updated_data, str(project_path))
+        if (request.action == UpdateAction.UPDATE):
+            if (request.materialID != None and request.magnetization == None):
+                # request is to set all voxels to the passed material.
+                em.update_voxel_materials(project_path, request.voxels, request.materialID)
+            elif (request.materialID == None and request.magnetization != None):
+                # request is to set all voxels to the passed magnetization.
+                em.update_voxel_magnetization(project_path, request.voxels, request.magnetization)
+            elif (request.materialID != None and request.magnetization != None):
+                # invalid request. only one can be updated in a single step.
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Invalid request; UpdateAction was UPDATE, but both a materialID and magnetization were passed."
+                )
+            else:
+                # invalid request. if both are None, there's nothing to update.
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Invalid request; UpdateAction was UPDATE, but neither a materialID or magnetization was passed."
+                )
+            
+        elif (request.action == UpdateAction.RESET_MATERIAL):
+            # request is to set material of all voxels to null.
+            # TODO: no model structure method for this?
+            pass
+        elif (request.action == UpdateAction.RESET_MAGNETIZATION):
+            # request is to set magnetization of all voxels to null.
+            # TODO: no model structure method for this?
+            pass
+        elif (request.action == UpdateAction.ADD):
+            # request is to add all voxels to the model.
+            em.add_voxels(project_path, request.voxels)
+        elif (request.action == UpdateAction.DELETE):
+            #request is to delete all voxels from the model.
+            em.delete_voxels(project_path, request.voxels)
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid update action code passed: {request.action}."
+            )
+
         return {
-            "message": f"Layer at {ax.upper()}={request.layer_value} updated successfully",
+            "message": f"Model updated successfully",
             "project_name": request.project_name,
-            "num_voxels": len(updated_data),
+            "num_voxels": len(request.voxels),
         }
+    
+    except HTTPException as httpex:
+        raise httpex
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error updating layer: {str(e)}")
-'''
+
+# @router.get("/{project_name}") # should remove this.
+# async def get_layers(project_name: str, axis: Optional[str] = "z"):
+#     if axis not in ("z", "x", "y"):
+#         raise HTTPException(status_code=400, detail="axis must be 'z', 'x', or 'y'")
+#     project_path = VOXEL_STORAGE_DIR / project_name
+
+#     if not project_path.exists():
+#         available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
+#         raise HTTPException(
+#             status_code=404,
+#             detail=f"Project '{project_name}' not found. Available projects: {available if available else 'none'}"
+#         )
+
+#     try:
+#         if axis == "x":
+#             layers = ms.x_directory(str(project_path))
+#         elif axis == "y":
+#             layers = ms.y_directory(str(project_path))
+#         else:
+#             layers = ms.z_directory(str(project_path))
+
+#         layer_indices = [int(l[0]) for l in layers]
+#         return {
+#             "project_name": project_name,
+#             "num_layers": len(layer_indices),
+#             "layers": layer_indices,
+#             "axis": axis,
+#         }
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Error reading layer: {str(e)}")
+
