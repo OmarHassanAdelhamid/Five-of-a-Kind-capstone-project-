@@ -5,16 +5,15 @@ FastAPI application entry point.
 """
 
 
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import CORS_ORIGINS, CORS_CREDENTIALS, CORS_METHODS, CORS_HEADERS
-from app.routers import models, projects, layers
 
 from fastapi import Request
 from fastapi.responses import PlainTextResponse
 import traceback
 
+from app.routers import stl_router, project_router, edit_router, export_router
 
 app = FastAPI()
 
@@ -26,6 +25,8 @@ app.add_middleware(
     allow_headers=CORS_HEADERS,
 )
 
-app.include_router(models.router)
-app.include_router(projects.router)
-app.include_router(layers.router)
+app.include_router(stl_router.router)
+app.include_router(project_router.router)
+app.include_router(edit_router.router)
+app.include_router(export_router.router)
+

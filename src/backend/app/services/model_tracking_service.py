@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from .model_manager import VoxelDB     
+from model_structure_service import VoxelDB     
 
 FIND_SURFACE = """
 SELECT v.x, v.y, v.z
@@ -87,3 +87,4 @@ def get_z_layer(iz: int, db_path: str) -> list[tuple]:
         (iz,))
         layer_voxels = db.cur.fetchall()
     return layer_voxels
+
