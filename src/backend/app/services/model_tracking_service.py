@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from model_structure_service import VoxelDB     
+from app.services.model_structure_service import VoxelDB     
 
 FIND_SURFACE = """
 SELECT v.x, v.y, v.z
@@ -19,21 +19,25 @@ WHERE xp.ix IS NULL
    OR zm.ix IS NULL;
 """
 
+# Returns (index, coordinate_value) pairs for each distinct layer
 ALL_X_LAYERS= """
-SELECT DISTINCT ix
+SELECT DISTINCT ix, MIN(x) as x_coord
 FROM voxels v
+GROUP BY ix
 ORDER BY ix;
 """
 
 ALL_Y_LAYERS= """
-SELECT DISTINCT iy
+SELECT DISTINCT iy, MIN(y) as y_coord
 FROM voxels v
+GROUP BY iy
 ORDER BY iy;
 """
 
 ALL_Z_LAYERS= """
-SELECT DISTINCT iz
+SELECT DISTINCT iz, MIN(z) as z_coord
 FROM voxels v
+GROUP BY iz
 ORDER BY iz;
 """
 
@@ -62,20 +66,20 @@ def z_directory(db_path: str) -> list[tuple]:
     return rows
 
 # get a list of all x layers based on their integer identifier
-def get_x_layer(iz: int, db_path: str) -> list[tuple]:
+def get_x_layer(ix: int, db_path: str) -> list[tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute(
-        "SELECT x, y, z FROM voxels WHERE ix= ?;",
-        (iz,))
+        "SELECT ix, iy, iz, x, y, z, magnetization, angle, material FROM voxels WHERE ix = ?;",
+        (ix,))
         layer_voxels = db.cur.fetchall()
     return layer_voxels
 
 # get a list of all y layers based on their integer identifier
-def get_y_layer(iz: int, db_path: str) -> list[tuple]:
+def get_y_layer(iy: int, db_path: str) -> list[tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute(
-        "SELECT x, y, z FROM voxels WHERE iy = ?;",
-        (iz,))
+        "SELECT ix, iy, iz, x, y, z, magnetization, angle, material FROM voxels WHERE iy = ?;",
+        (iy,))
         layer_voxels = db.cur.fetchall()
     return layer_voxels
 
@@ -83,7 +87,7 @@ def get_y_layer(iz: int, db_path: str) -> list[tuple]:
 def get_z_layer(iz: int, db_path: str) -> list[tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute(
-        "SELECT x, y, z FROM voxels WHERE iz = ?;",
+        "SELECT ix, iy, iz, x, y, z, magnetization, angle, material FROM voxels WHERE iz = ?;",
         (iz,))
         layer_voxels = db.cur.fetchall()
     return layer_voxels

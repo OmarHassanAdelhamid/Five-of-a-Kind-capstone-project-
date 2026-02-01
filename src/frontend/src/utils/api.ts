@@ -8,7 +8,7 @@ export interface VoxelizedData {
 
 export const fetchAvailableModels = async (): Promise<string[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/models/list-stl`)
+    const response = await fetch(`${API_BASE_URL}/api/stl/list-stl`)
     if (!response.ok) {
       throw new Error(`Failed to fetch models (${response.status})`)
     }
@@ -24,7 +24,7 @@ export const fetchAvailableModels = async (): Promise<string[]> => {
 
 export const fetchAvailableProjects = async (): Promise<string[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/voxelize/list`)
+    const response = await fetch(`${API_BASE_URL}/api/project/list`)
     if (!response.ok) {
       throw new Error(`Failed to fetch projects (${response.status})`)
     }
@@ -39,7 +39,7 @@ export const fetchAvailableProjects = async (): Promise<string[]> => {
 
 export const fetchVoxelized = async (project: string): Promise<number[][]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/voxelize/?project_name=${encodeURIComponent(project)}`)
+    const response = await fetch(`${API_BASE_URL}/api/project?project_name=${encodeURIComponent(project)}`)
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
       throw new Error(errorData.detail || `Failed to fetch voxelized data (${response.status})`)
@@ -61,7 +61,7 @@ export const uploadSTLFile = async (file: File): Promise<{ message?: string }> =
   const formData = new FormData()
   formData.append('stl_file', file)
 
-  const response = await fetch(`${API_BASE_URL}/api/upload-stl`, {
+  const response = await fetch(`${API_BASE_URL}/api/stl/upload-stl`, {
     method: 'POST',
     body: formData,
   })
@@ -91,7 +91,7 @@ export const voxelizeModel = async (
     project_name: projectName,
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/voxelize`, {
+  const response = await fetch(`${API_BASE_URL}/api/project`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ export const voxelizeModel = async (
 }
 
 export const downloadVoxelCSV = async (projectName: string): Promise<Blob> => {
-  const response = await fetch(`${API_BASE_URL}/api/voxelize/download/${encodeURIComponent(projectName)}`)
+  const response = await fetch(`${API_BASE_URL}/api/export/${encodeURIComponent(projectName)}`)
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
@@ -118,31 +118,28 @@ export const downloadVoxelCSV = async (projectName: string): Promise<Blob> => {
   return await response.blob()
 }
 
+// Layer info from backend
 export interface LayerInfo {
-  layer_value: number
-  num_voxels: number
+  index: number // Grid index
+  coordinate: number // Real coordinate value
 }
 
+// Response from /api/edit/layers/{project_name}
 export interface LayersResponse {
   project_name: string
   num_layers: number
-  layers: LayerInfo[]
+  layers: LayerInfo[] // Array of layer info with index and coordinate
   axis?: 'z' | 'x' | 'y'
 }
 
 export const fetchLayers = async (
   projectName: string,
-  voxelSize?: number,
-  axis?: 'z' | 'x' | 'y',
+  _voxelSize?: number, // Unused but kept for interface compatibility
+  axis: 'z' | 'x' | 'y' = 'z',
 ): Promise<LayersResponse> => {
   try {
-    const url = new URL(`${API_BASE_URL}/api/layers/${encodeURIComponent(projectName)}`)
-    if (voxelSize !== undefined) {
-      url.searchParams.set('voxel_size', voxelSize.toString())
-    }
-    if (axis !== undefined) {
-      url.searchParams.set('axis', axis)
-    }
+    const url = new URL(`${API_BASE_URL}/api/edit/layers/${encodeURIComponent(projectName)}`)
+    url.searchParams.set('axis', axis)
 
     const response = await fetch(url.toString())
     if (!response.ok) {
@@ -157,66 +154,206 @@ export const fetchLayers = async (
   }
 }
 
+// Voxel data structure from backend
+// Backend returns: (ix, iy, iz, x, y, z, magnetization, angle, material)
 export interface LayerVoxel {
-  x: number
-  y: number
-  z: number
+  ix: number // Grid index X
+  iy: number // Grid index Y
+  iz: number // Grid index Z
+  x: number // Real coordinate X
+  y: number // Real coordinate Y
+  z: number // Real coordinate Z
   magnetization: number
   angle: number
-  id: number
+  material: number
+  // Computed fields for 2D grid display
+  grid_x?: number
+  grid_y?: number
 }
 
+// Response from /api/edit/retrieve
 export interface LayerResponse {
   project_name: string
-  layer_value: number
+  layer_index: number
   num_voxels: number
-  voxels: number[][] // [x, y, z, magnetization, angle, ID]
+  voxels: LayerVoxel[]
   axis?: 'z' | 'x' | 'y'
+  // Computed bounds for 2D grid display
+  bounds?: {
+    grid_x_min: number
+    grid_x_max: number
+    grid_y_min: number
+    grid_y_max: number
+  }
+}
+
+// Transform raw voxel tuple from backend to LayerVoxel object
+const transformVoxel = (
+  raw: number[],
+  axis: 'z' | 'x' | 'y',
+): LayerVoxel => {
+  // Backend returns: [ix, iy, iz, x, y, z, magnetization, angle, material]
+  const [ix, iy, iz, x, y, z, magnetization, angle, material] = raw
+
+  // For 2D grid display, we need to determine which coordinates to use
+  // based on the axis (the axis coordinate is constant for the layer)
+  let grid_x: number
+  let grid_y: number
+
+  if (axis === 'z') {
+    grid_x = ix
+    grid_y = iy
+  } else if (axis === 'x') {
+    grid_x = iy
+    grid_y = iz
+  } else {
+    // axis === 'y'
+    grid_x = ix
+    grid_y = iz
+  }
+
+  return { ix, iy, iz, x, y, z, magnetization, angle, material, grid_x, grid_y }
+}
+
+// Calculate bounds from voxels for 2D grid display
+const calculateBounds = (voxels: LayerVoxel[]) => {
+  if (voxels.length === 0) {
+    return { grid_x_min: 0, grid_x_max: 1, grid_y_min: 0, grid_y_max: 1 }
+  }
+
+  const gridXs = voxels.map((v) => v.grid_x ?? 0)
+  const gridYs = voxels.map((v) => v.grid_y ?? 0)
+
+  return {
+    grid_x_min: Math.min(...gridXs),
+    grid_x_max: Math.max(...gridXs),
+    grid_y_min: Math.min(...gridYs),
+    grid_y_max: Math.max(...gridYs),
+  }
+}
+
+// Cache for layer mappings to avoid fetching layers repeatedly
+const layerMappingCache: Map<string, LayerInfo[]> = new Map()
+
+// Helper to find the closest layer index for a given coordinate
+const findClosestLayerIndex = (
+  layers: LayerInfo[],
+  targetCoordinate: number,
+): number => {
+  if (layers.length === 0) {
+    throw new Error('No layers available')
+  }
+
+  // Use a small epsilon for floating-point comparison
+  const EPSILON = 1e-9
+
+  // Find the layer with the closest coordinate value
+  let closestLayer = layers[0]
+  let closestDistance = Math.abs(layers[0].coordinate - targetCoordinate)
+
+  for (let i = 1; i < layers.length; i++) {
+    const layer = layers[i]
+    const distance = Math.abs(layer.coordinate - targetCoordinate)
+    // Use strict less than with epsilon consideration
+    if (distance < closestDistance - EPSILON) {
+      closestDistance = distance
+      closestLayer = layer
+    }
+  }
+
+  // Debug: log the match (will show in browser console)
+  console.log(`[fetchLayer] targetCoordinate: ${targetCoordinate}, matched layer index: ${closestLayer.index}, layer coordinate: ${closestLayer.coordinate}`)
+
+  return closestLayer.index
+}
+
+// Clear the layer cache (useful when project changes)
+export const clearLayerCache = () => {
+  layerMappingCache.clear()
 }
 
 export const fetchLayer = async (
   projectName: string,
-  layerValue: number,
-  voxelSize?: number,
-  axis?: 'z' | 'x' | 'y',
+  layerValue: number, // This is the real coordinate value (e.g., 0.05) or layer index
+  _voxelSize?: number, // Kept for interface compatibility
+  axis: 'z' | 'x' | 'y' = 'z',
 ): Promise<LayerResponse> => {
   try {
-    const url = new URL(
-      `${API_BASE_URL}/api/layers/${encodeURIComponent(projectName)}/${layerValue}`,
-    )
-    if (voxelSize !== undefined) {
-      url.searchParams.set('voxel_size', voxelSize.toString())
-    }
-    if (axis !== undefined) {
-      url.searchParams.set('axis', axis)
+    // Get the layer mapping for this project
+    const cacheKey = `${projectName}-${axis}`
+    let layers = layerMappingCache.get(cacheKey)
+
+    if (!layers) {
+      // Fetch layers to get the mapping
+      const layersResponse = await fetchLayers(projectName, undefined, axis)
+      layers = layersResponse.layers
+      layerMappingCache.set(cacheKey, layers)
+      console.log(`[fetchLayer] Cached layers for ${cacheKey}:`, layers)
     }
 
-    const response = await fetch(url.toString())
+    // Find the layer index that matches the coordinate
+    const layerIndex = findClosestLayerIndex(layers, layerValue)
+
+    // Use POST with JSON body for the retrieve endpoint
+    const response = await fetch(`${API_BASE_URL}/api/edit/retrieve`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        project_name: projectName,
+        layer_index: layerIndex,
+        axis: axis,
+      }),
+    })
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
       throw new Error(errorData.detail || `Failed to fetch layer (${response.status})`)
     }
 
-    return (await response.json()) as LayerResponse
+    const rawResponse = (await response.json()) as {
+      project_name: string
+      layer_index: number
+      num_voxels: number
+      voxels: number[][]
+      axis: 'z' | 'x' | 'y'
+    }
+
+    // Transform raw voxel data to LayerVoxel objects
+    const voxels = rawResponse.voxels.map((raw) => transformVoxel(raw, rawResponse.axis))
+    const bounds = calculateBounds(voxels)
+
+    return {
+      project_name: rawResponse.project_name,
+      layer_index: rawResponse.layer_index,
+      num_voxels: rawResponse.num_voxels,
+      voxels,
+      axis: rawResponse.axis,
+      bounds,
+    }
   } catch (error) {
     console.error('Failed to fetch layer', error)
     throw error
   }
 }
 
-export interface UpdateLayerRequest {
+// Update action types matching backend
+export type UpdateAction = 'update' | 'reset_material' | 'reset_magnetization' | 'add' | 'delete'
+
+export interface UpdateVoxelsRequest {
   project_name: string
-  layer_value: number
-  voxels: number[][] // [x, y, z, magnetization, angle, ID]
-  voxel_size?: number
-  axis?: 'z' | 'x' | 'y'
+  voxels: [number, number, number][] // Grid coordinates: [ix, iy, iz][]
+  action: UpdateAction
+  materialID?: number
+  magnetization?: [number, number, number]
 }
 
-export const updateLayer = async (
-  request: UpdateLayerRequest,
+export const updateVoxels = async (
+  request: UpdateVoxelsRequest,
 ): Promise<{ message: string; project_name: string; num_voxels: number }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/layers/update`, {
+    const response = await fetch(`${API_BASE_URL}/api/edit/update`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -226,7 +363,7 @@ export const updateLayer = async (
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData.detail || `Failed to update layer (${response.status})`)
+      throw new Error(errorData.detail || `Failed to update voxels (${response.status})`)
     }
 
     return (await response.json()) as {
@@ -235,7 +372,7 @@ export const updateLayer = async (
       num_voxels: number
     }
   } catch (error) {
-    console.error('Failed to update layer', error)
+    console.error('Failed to update voxels', error)
     throw error
   }
 }

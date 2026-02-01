@@ -14,7 +14,7 @@ import app.services.model_tracking_service as mt
 
 router = APIRouter(prefix="/api/edit", tags=["edit"])
 
-@router.get("/retrieve")
+@router.post("/retrieve")
 async def get_layer(request: RetrieveLayerRequest):
     """
     Handles request to retrieve all voxels within a layer, for the layer editing interface.
@@ -139,34 +139,45 @@ async def update_voxels(request: UpdateVoxelsRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error updating layer: {str(e)}")
 
-# @router.get("/{project_name}") # should remove this.
-# async def get_layers(project_name: str, axis: Optional[str] = "z"):
-#     if axis not in ("z", "x", "y"):
-#         raise HTTPException(status_code=400, detail="axis must be 'z', 'x', or 'y'")
-#     project_path = VOXEL_STORAGE_DIR / project_name
+@router.get("/layers/{project_name}")
+async def get_layers(project_name: str, axis: Optional[str] = "z"):
+    """
+    Get list of available layer indices for a project.
+    
+    Args:
+        project_name: Name of the project
+        axis: Axis to get layers for ('x', 'y', or 'z')
+    
+    Returns:
+        Dict with project_name, num_layers, layers (list of indices), and axis
+    """
+    if axis not in ("z", "x", "y"):
+        raise HTTPException(status_code=400, detail="axis must be 'z', 'x', or 'y'")
+    project_path = VOXEL_STORAGE_DIR / project_name
 
-#     if not project_path.exists():
-#         available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
-#         raise HTTPException(
-#             status_code=404,
-#             detail=f"Project '{project_name}' not found. Available projects: {available if available else 'none'}"
-#         )
+    if not project_path.exists():
+        available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
+        raise HTTPException(
+            status_code=404,
+            detail=f"Project '{project_name}' not found. Available projects: {available if available else 'none'}"
+        )
 
-#     try:
-#         if axis == "x":
-#             layers = ms.x_directory(str(project_path))
-#         elif axis == "y":
-#             layers = ms.y_directory(str(project_path))
-#         else:
-#             layers = ms.z_directory(str(project_path))
+    try:
+        if axis == "x":
+            layers = mt.x_directory(str(project_path))
+        elif axis == "y":
+            layers = mt.y_directory(str(project_path))
+        else:
+            layers = mt.z_directory(str(project_path))
 
-#         layer_indices = [int(l[0]) for l in layers]
-#         return {
-#             "project_name": project_name,
-#             "num_layers": len(layer_indices),
-#             "layers": layer_indices,
-#             "axis": axis,
-#         }
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"Error reading layer: {str(e)}")
+        # Each layer is now (index, coordinate_value)
+        layer_info = [{"index": int(l[0]), "coordinate": float(l[1])} for l in layers]
+        return {
+            "project_name": project_name,
+            "num_layers": len(layer_info),
+            "layers": layer_info,
+            "axis": axis,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading layers: {str(e)}")
 
