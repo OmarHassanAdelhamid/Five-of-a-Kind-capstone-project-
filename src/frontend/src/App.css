@@ -1063,3 +1063,243 @@ footer .metadata {
     font-size: 1.1rem;
   }
 }
+
+/* Layer 2D Grid Styles */
+.layer-2d-info {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.8rem;
+  color: #38bdf8;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.layer-2d-grid-section {
+  padding: 1.25rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.layer-2d-grid-section h5 {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  align-self: flex-start;
+}
+
+.layer-2d-grid-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.layer-2d-grid-placeholder {
+  width: 100%;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: #94a3b8;
+  font-style: italic;
+  background: rgba(15, 23, 42, 0.4);
+  border-radius: 0.5rem;
+  border: 1px dashed rgba(148, 163, 184, 0.3);
+}
+
+.layer-2d-grid-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 0.5rem 0.75rem;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  color: #e2e8f0;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Voxel Editor Section */
+.voxel-editor-section {
+  padding: 1.25rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.3);
+}
+
+.voxel-editor-section h5 {
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.selected-voxel-info {
+  margin: 0 0 1rem 0;
+  font-size: 0.8rem;
+  color: #cbd5f5;
+  padding: 0.5rem 0.75rem;
+  background: rgba(56, 189, 248, 0.1);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.no-voxel-selected {
+  color: #94a3b8;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem;
+}
+
+.voxel-editor-grid {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.editor-column h6 {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.8rem;
+  color: #cbd5f5;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Materials Column */
+.materials-column {
+  flex: 0 0 auto;
+}
+
+.material-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.material-square {
+  width: 48px;
+  height: 48px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  transition: all 0.15s ease;
+}
+
+.material-square:hover {
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.material-square.selected {
+  border-color: #facc15;
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.4);
+  transform: scale(1.1);
+}
+
+/* Angles Column */
+.angles-column {
+  flex: 1;
+}
+
+.angles-grid {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.angle-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.angle-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+.angle-squares {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.angle-square {
+  width: 44px;
+  height: 32px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 0.35rem;
+  background: rgba(15, 23, 42, 0.6);
+  color: #e2e8f0;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.angle-square:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: rgba(56, 189, 248, 0.5);
+}
+
+.angle-square.selected {
+  background: rgba(56, 189, 248, 0.3);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.angle-square.favourite {
+  background: rgba(250, 204, 21, 0.1);
+  border-color: rgba(250, 204, 21, 0.4);
+}
+
+.angle-square.favourite:hover {
+  background: rgba(250, 204, 21, 0.2);
+}
+
+/* Confirm Button */
+.voxel-editor-actions {
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: center;
+}
+
+.confirm-button {
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.9),
+    rgba(22, 163, 74, 0.8)
+  );
+  color: #0b1220;
+  border: none;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.confirm-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+}
+
+.confirm-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}

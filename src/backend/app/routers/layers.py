@@ -74,13 +74,17 @@ async def get_layer(
             )
         actual = matching_layers[0]
         layer_voxels = layers[actual]
-        voxels_list = layer_voxels.tolist() if hasattr(layer_voxels, "tolist") else layer_voxels
+
+        bounds = pj.get_layer_bounds(layer_voxels, axis)
+        voxels_list = pj.layer_voxels_to_display_voxels(layer_voxels, axis)
+
         return {
             "project_name": project_name,
             "layer_value": float(actual),
-            "num_voxels": len(layer_voxels),
-            "voxels": voxels_list,
             "axis": axis,
+            "num_voxels": len(layer_voxels),
+            "bounds": bounds,
+            "voxels": voxels_list,
         }
     except HTTPException:
         raise

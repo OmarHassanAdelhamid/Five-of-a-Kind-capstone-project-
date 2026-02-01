@@ -163,15 +163,26 @@ export interface LayerVoxel {
   z: number
   magnetization: number
   angle: number
-  id: number
+  material: number
+  grid_x: number
+  grid_y: number
+}
+
+export interface LayerBounds {
+  grid_x_min: number
+  grid_x_max: number
+  grid_y_min: number
+  grid_y_max: number
 }
 
 export interface LayerResponse {
   project_name: string
   layer_value: number
   num_voxels: number
-  voxels: number[][] // [x, y, z, magnetization, angle, ID]
+  voxels: LayerVoxel[]
   axis?: 'z' | 'x' | 'y'
+  bounds?: LayerBounds
+  in_plane_axes?: string[]
 }
 
 export const fetchLayer = async (

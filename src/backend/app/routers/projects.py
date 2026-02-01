@@ -50,7 +50,7 @@ async def get_voxelized(project_name: str):
     
     try:
         rows = struct.find_surface(str(project_path))
-        coordinates = pm.read_xyz(rows)
+        coordinates = pm.read_voxels(rows)
         coordinates_list = coordinates.tolist() if hasattr(coordinates, 'tolist') else coordinates
         
         return {

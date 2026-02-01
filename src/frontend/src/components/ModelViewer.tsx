@@ -61,6 +61,8 @@ export const ModelViewer = ({
   const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
   const layerAxisRef = useRef<'z' | 'x' | 'y'>(layerAxis);
   layerAxisRef.current = layerAxis;
+  const isLayerEditingModeRef = useRef<boolean>(isLayerEditingMode);
+  isLayerEditingModeRef.current = isLayerEditingMode;
   const [viewerStatus, setViewerStatus] = useState<
     'loading' | 'ready' | 'error'
   >('loading');
@@ -305,8 +307,13 @@ export const ModelViewer = ({
             }
           } else {
             // Single click - select layer only if layer editing mode is enabled
-            if (isLayerEditingMode && onLayerSelect) {
-              const col = layerAxisRef.current === 'x' ? 0 : layerAxisRef.current === 'y' ? 1 : 2;
+            if (isLayerEditingModeRef.current && onLayerSelect) {
+              const col =
+                layerAxisRef.current === 'x'
+                  ? 0
+                  : layerAxisRef.current === 'y'
+                    ? 1
+                    : 2;
               const layerValue = Math.round(coord[col] * 1e12) / 1e12;
               if (
                 selectedLayerZ !== null &&

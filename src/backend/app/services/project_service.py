@@ -3,6 +3,7 @@ import os
 import json
 from typing import Dict, List, Tuple
 from collections import defaultdict
+import sqlite3
 
 def organize_voxels_into_layers(
     voxel_data: np.ndarray,
@@ -54,6 +55,12 @@ def update_layer_in_project(
     return updated_data
 
 def read_project_full_data(filepath: str) -> np.ndarray:
+        # Detect SQLite before opening as text (avoids utf-8 decode error)
+    with open(filepath, "rb") as f:
+        header = f.read(16)
+    if len(header) >= 16 and header[:16] == b'SQLite format 3\x00':
+        return _read_project_from_sqlite(filepath)
+
     with open(filepath, "r") as file:
         first_char = file.read(1)
         file.seek(0)
@@ -118,3 +125,59 @@ def write_project_full_data(voxel_data: np.ndarray, filepath: str, origin: np.nd
             angle = float(voxel[4]) if len(voxel) > 4 else 0.0
             voxel_id = float(voxel[5]) if len(voxel) > 5 else 0.0
             
+
+def get_layer_bounds(layer_voxels: np.ndarray, axis: str) -> dict:
+    if len(layer_voxels) == 0:
+        return {}
+    # columns: 0=x, 1=y, 2=z
+    if axis == "z":
+        return {
+            "grid_x_min": float(np.min(layer_voxels[:, 0])),
+            "grid_x_max": float(np.max(layer_voxels[:, 0])),
+            "grid_y_min": float(np.min(layer_voxels[:, 1])),
+            "grid_y_max": float(np.max(layer_voxels[:, 1])),
+        }
+    if axis == "y":
+        return {
+            "grid_x_min": float(np.min(layer_voxels[:, 0])),
+            "grid_x_max": float(np.max(layer_voxels[:, 0])),
+            "grid_y_min": float(np.min(layer_voxels[:, 2])),
+            "grid_y_max": float(np.max(layer_voxels[:, 2])),
+        }
+    # axis == "x"
+    return {
+        "grid_x_min": float(np.min(layer_voxels[:, 1])),
+        "grid_x_max": float(np.max(layer_voxels[:, 1])),
+        "grid_y_min": float(np.min(layer_voxels[:, 2])),
+        "grid_y_max": float(np.max(layer_voxels[:, 2])),
+    }
+    if axis == "z":
+        return ["x", "y"]
+    if axis == "y":
+        return ["x", "z"]
+    return ["y", "z"]  # axis == "x"
+
+def layer_voxels_to_display_voxels(layer_voxels: np.ndarray, axis: str) -> List[dict]:
+    if len(layer_voxels) == 0:
+        return []
+    # columns: 0=x, 1=y, 2=z, 3=mag, 4=angle, 5=material
+    if axis == "z":
+        col_a, col_b = 0, 1  # grid_x = x, grid_y = y
+    elif axis == "y":
+        col_a, col_b = 0, 2  # grid_x = x, grid_y = z
+    else:
+        col_a, col_b = 1, 2  # grid_x = y, grid_y = z
+
+    out = []
+    for v in layer_voxels:
+        out.append({
+            "x": float(v[0]),
+            "y": float(v[1]),
+            "z": float(v[2]),
+            "magnetization": float(v[3]),
+            "angle": float(v[4]),
+            "material": float(v[5]),
+            "grid_x": float(v[col_a]),
+            "grid_y": float(v[col_b]),
+        })
+    return out
