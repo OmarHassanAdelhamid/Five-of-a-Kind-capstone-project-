@@ -1,6 +1,6 @@
 
 from typing import List, Tuple
-from model_structure_service import VoxelDB
+from app.services.model_structure_service import VoxelDB
 
 
 def update_voxel_materials(db_path: str, voxels: List[Tuple[int, int, int]], materialID: int):
