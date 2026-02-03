@@ -130,4 +130,8 @@ async def voxelize(request: VoxelizeRequest):
         # FOR POC: this will be in backend/sample-project-files
 
         #filepath = pm.create_voxel_db(points, project_name, str(VOXEL_STORAGE_DIR), origin, voxel_size)
-        return {"message": f"Voxelization Status of STL file ({stl_filename}): Success", "projectpath": f"{project_path}"}
+        return {
+            "message": f"Voxelization Status of STL file ({stl_filename}): Success",
+            "projectpath": f"{project_path}",
+            "voxel_size": voxel_size
+        }

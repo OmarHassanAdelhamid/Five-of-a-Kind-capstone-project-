@@ -3,7 +3,7 @@ import numpy as np
 from .model_manager import VoxelDB     
 
 FIND_SURFACE = """
-SELECT v.x, v.y, v.z
+SELECT v.ix, v.iy, v.iz
 FROM voxels v
 LEFT JOIN voxels xp ON xp.ix = v.ix + 1 AND xp.iy = v.iy     AND xp.iz = v.iz
 LEFT JOIN voxels xm ON xm.ix = v.ix - 1 AND xm.iy = v.iy     AND xm.iz = v.iz
