@@ -1607,6 +1607,41 @@ footer .metadata {
   background: rgba(250, 204, 21, 0.2);
 }
 
+.magnetization-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.magnetization-input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.magnetization-input-row label {
+  font-size: 0.8rem;
+  color: #cbd5f5;
+  font-weight: 500;
+}
+
+.magnetization-input {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(15, 23, 42, 0.6);
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  font-family: 'Courier New', monospace;
+}
+
+.magnetization-input:focus {
+  outline: none;
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
 /* Confirm Button */
 .voxel-editor-actions {
   margin-top: 1.25rem;

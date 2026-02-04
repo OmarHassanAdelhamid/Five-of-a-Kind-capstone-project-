@@ -30,13 +30,21 @@ const MATERIALS = [
   { id: 6, name: 'Material 6', color: '#8b5cf6' }, // Purple
 ];
 
-// Angle presets for each axis
-const ANGLE_PRESETS = {
-  x: [0, 45, 90, 135, 180, 270],
-  y: [0, 45, 90, 135, 180, 270],
-  z: [0, 45, 90, 135, 180, 270],
-  favourite: [0, 30, 45, 60, 90, 180],
-};
+/** Convert polar (θ, φ) + magnitude to Cartesian magnetization vector [mx, my, mz] */
+function polarToCartesian(
+  thetaDeg: number,
+  phiDeg: number,
+  magnitude: number,
+): [number, number, number] {
+  const thetaRad = (thetaDeg * Math.PI) / 180;
+  const phiRad = (phiDeg * Math.PI) / 180;
+  const sinTheta = Math.sin(thetaRad);
+  return [
+    magnitude * sinTheta * Math.cos(phiRad),
+    magnitude * sinTheta * Math.sin(phiRad),
+    magnitude * Math.cos(thetaRad),
+  ];
+}
 
 export const LayerEditor = ({
   projectName,
@@ -59,9 +67,9 @@ export const LayerEditor = ({
     null,
   );
   const [selectedMaterial, setSelectedMaterial] = useState<number>(1);
-  const [selectedAngleX, setSelectedAngleX] = useState<number>(0);
-  const [selectedAngleY, setSelectedAngleY] = useState<number>(0);
-  const [selectedAngleZ, setSelectedAngleZ] = useState<number>(0);
+  const [selectedTheta, setSelectedTheta] = useState<number>(90); // polar angle from z (0–180°)
+  const [selectedPhi, setSelectedPhi] = useState<number>(0); // azimuthal angle (0–360°)
+  const [selectedMagnitude, setSelectedMagnitude] = useState<number>(1);
   const [hasChanges, setHasChanges] = useState(false);
 
   const loadLayers = useCallback(async () => {
@@ -119,9 +127,9 @@ export const LayerEditor = ({
       if (voxel && index >= 0) {
         setSelectedVoxelIndex(index);
         setSelectedMaterial(voxel.material || 1);
-        setSelectedAngleX(0);
-        setSelectedAngleY(0);
-        setSelectedAngleZ(voxel.angle || 0);
+        setSelectedMagnitude(voxel.magnetization ?? 1);
+        setSelectedPhi(voxel.angle ?? 0);
+        setSelectedTheta(90);
         setHasChanges(false);
       } else {
         setSelectedVoxelIndex(null);
@@ -190,26 +198,25 @@ export const LayerEditor = ({
         [selectedVoxel.ix, selectedVoxel.iy, selectedVoxel.iz],
       ];
 
-      // Convert angles to magnetization vector (simplified - using Z angle for now)
-      // In a full implementation, you'd compute from X, Y, Z angles
-      const magnetization: [number, number, number] = [
-        selectedAngleX,
-        selectedAngleY,
-        selectedAngleZ,
-      ];
+      const magnetization = polarToCartesian(
+        selectedTheta,
+        selectedPhi,
+        selectedMagnitude,
+      );
 
       await updateVoxels({
         project_name: projectName,
         voxels: voxelCoords,
         action: 'update',
-        magnetization: magnetization,
+        magnetization,
       });
 
       // Update local state
       const updatedVoxels = [...selectedLayerData.voxels];
       updatedVoxels[selectedVoxelIndex] = {
         ...updatedVoxels[selectedVoxelIndex],
-        angle: selectedAngleZ,
+        magnetization: selectedMagnitude,
+        angle: selectedPhi,
       };
 
       setMessage('Magnetization updated successfully!');
@@ -225,9 +232,9 @@ export const LayerEditor = ({
   }, [
     selectedVoxelIndex,
     selectedLayerData,
-    selectedAngleX,
-    selectedAngleY,
-    selectedAngleZ,
+    selectedTheta,
+    selectedPhi,
+    selectedMagnitude,
     projectName,
   ]);
 
@@ -363,84 +370,65 @@ export const LayerEditor = ({
                   </div>
                 </div>
 
-                {/* Right Side - Magnetization Angles */}
+                {/* Right Side - Magnetization: Polar, Azimuth, Magnitude */}
                 <div className="editor-column angles-column">
-                  <h6>Magnetization Angle</h6>
-                  <div className="angles-grid">
-                    {/* X Angle */}
-                    <div className="angle-column">
-                      <span className="angle-label">X</span>
-                      <div className="angle-squares">
-                        {ANGLE_PRESETS.x.map((angle) => (
-                          <button
-                            key={angle}
-                            className={`angle-square ${selectedAngleX === angle ? 'selected' : ''}`}
-                            onClick={() => {
-                              setSelectedAngleX(angle);
-                              setHasChanges(true);
-                            }}
-                          >
-                            {angle}°
-                          </button>
-                        ))}
-                      </div>
+                  <h6>Magnetization</h6>
+                  <div className="magnetization-inputs">
+                    <div className="magnetization-input-row">
+                      <label htmlFor="theta-input">θ (polar) °</label>
+                      <input
+                        id="theta-input"
+                        type="number"
+                        min={0}
+                        max={180}
+                        step={0.1}
+                        value={selectedTheta}
+                        onChange={(e) => {
+                          const v = parseFloat(e.target.value);
+                          if (!Number.isNaN(v)) {
+                            setSelectedTheta(v);
+                            setHasChanges(true);
+                          }
+                        }}
+                        className="magnetization-input"
+                      />
                     </div>
-
-                    {/* Y Angle */}
-                    <div className="angle-column">
-                      <span className="angle-label">Y</span>
-                      <div className="angle-squares">
-                        {ANGLE_PRESETS.y.map((angle) => (
-                          <button
-                            key={angle}
-                            className={`angle-square ${selectedAngleY === angle ? 'selected' : ''}`}
-                            onClick={() => {
-                              setSelectedAngleY(angle);
-                              setHasChanges(true);
-                            }}
-                          >
-                            {angle}°
-                          </button>
-                        ))}
-                      </div>
+                    <div className="magnetization-input-row">
+                      <label htmlFor="phi-input">φ (azimuth) °</label>
+                      <input
+                        id="phi-input"
+                        type="number"
+                        min={0}
+                        max={360}
+                        step={0.1}
+                        value={selectedPhi}
+                        onChange={(e) => {
+                          const v = parseFloat(e.target.value);
+                          if (!Number.isNaN(v)) {
+                            setSelectedPhi(v);
+                            setHasChanges(true);
+                          }
+                        }}
+                        className="magnetization-input"
+                      />
                     </div>
-
-                    {/* Z Angle */}
-                    <div className="angle-column">
-                      <span className="angle-label">Z</span>
-                      <div className="angle-squares">
-                        {ANGLE_PRESETS.z.map((angle) => (
-                          <button
-                            key={angle}
-                            className={`angle-square ${selectedAngleZ === angle ? 'selected' : ''}`}
-                            onClick={() => {
-                              setSelectedAngleZ(angle);
-                              setHasChanges(true);
-                            }}
-                          >
-                            {angle}°
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Favourite Angles */}
-                    <div className="angle-column">
-                      <span className="angle-label">★</span>
-                      <div className="angle-squares">
-                        {ANGLE_PRESETS.favourite.map((angle) => (
-                          <button
-                            key={angle}
-                            className={`angle-square favourite`}
-                            onClick={() => {
-                              setSelectedAngleZ(angle);
-                              setHasChanges(true);
-                            }}
-                          >
-                            {angle}°
-                          </button>
-                        ))}
-                      </div>
+                    <div className="magnetization-input-row">
+                      <label htmlFor="magnitude-input">|M| (magnitude)</label>
+                      <input
+                        id="magnitude-input"
+                        type="number"
+                        min={0}
+                        step={0.1}
+                        value={selectedMagnitude}
+                        onChange={(e) => {
+                          const v = parseFloat(e.target.value);
+                          if (!Number.isNaN(v) && v >= 0) {
+                            setSelectedMagnitude(v);
+                            setHasChanges(true);
+                          }
+                        }}
+                        className="magnetization-input"
+                      />
                     </div>
                   </div>
                 </div>
