@@ -1,5 +1,5 @@
 import pytest
-from src.backend.app.services.history_manager import HistoryManager, EmptyHistoryError  # noqa: E402
+from backend.app.services.history_management_service import HistoryManager, EmptyHistoryError  # noqa: E402
 
 def test_initialization_stacks_empty() -> None:
     manager = HistoryManager()
