@@ -316,7 +316,7 @@ export const LayerEditor = ({
           <h5>2D View</h5>
           <Layer2DGrid
             layerData={selectedLayerData}
-            width={520}
+            width={500}
             height={400}
             onVoxelSelect={handleVoxelSelect}
             selectedVoxelIndex={selectedVoxelIndex}

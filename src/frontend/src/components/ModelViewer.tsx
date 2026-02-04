@@ -641,15 +641,13 @@ export const ModelViewer = ({
           ) : null}
         </div>
       )}
-      {projectName.trim() && (
-        <button
-          className="layer-settings-toggle"
-          onClick={() => setIsLayerEditorOpen(!isLayerEditorOpen)}
-          title="Toggle Layer Editor"
-        >
-          {isLayerEditorOpen ? '✕' : '⚙️'}
-        </button>
-      )}
+      <button
+        className={`layer-editor-tab ${isLayerEditorOpen ? 'open' : ''}`}
+        onClick={() => setIsLayerEditorOpen(!isLayerEditorOpen)}
+        title={isLayerEditorOpen ? 'Close Layer Editor' : 'Open Layer Editor'}
+      >
+        <span className="layer-editor-tab-text">Layer Editor</span>
+      </button>
       <LayerEditor
         projectName={projectName}
         voxelSize={voxelSize}
