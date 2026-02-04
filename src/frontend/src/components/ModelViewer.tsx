@@ -101,7 +101,7 @@ export const ModelViewer = ({
     const loader = new STLLoader();
 
     loader.load(
-      `${API_BASE_URL}/api/models/${encodeURIComponent(selectedModel)}`,
+      `${API_BASE_URL}/api/stl/${encodeURIComponent(selectedModel)}`,
       (geometry: THREE.BufferGeometry) => {
         if (!isMounted) return;
 
