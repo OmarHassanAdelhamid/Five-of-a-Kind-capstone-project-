@@ -90,7 +90,7 @@ async def update_voxels(request: UpdateVoxelsRequest):
     
     try:
         if (request.action == UpdateAction.UPDATE):
-            old_voxels = mt.get_full_voxels(request.voxels) # record voxel state pre-update
+            old_voxels = mt.get_full_voxels(str(project_path), request.voxels)  # record voxel state pre-update
 
             if (request.materialID != None and request.magnetization == None):
                 # request is to set all voxels to the passed material.
@@ -111,8 +111,8 @@ async def update_voxels(request: UpdateVoxelsRequest):
                     detail=f"Invalid request; UpdateAction was UPDATE, but neither a materialID or magnetization was passed."
                 )
             
-            new_voxels = mt.get_full_voxels(request.voxels) # record voxel state post-update
-            hm.record_change(ModelDelta(old_voxels, new_voxels)) # submit modeldelta to history management.
+            new_voxels = mt.get_full_voxels(str(project_path), request.voxels)  # record voxel state post-update
+            hm.record_change(ModelDelta(old_voxels=old_voxels, new_voxels=new_voxels))
             
         elif (request.action == UpdateAction.RESET_MATERIAL):
             # request is to set material of all voxels to null.

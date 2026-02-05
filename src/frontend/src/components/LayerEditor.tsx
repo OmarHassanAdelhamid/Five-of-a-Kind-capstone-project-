@@ -30,22 +30,6 @@ const MATERIALS = [
   { id: 6, name: 'Material 6', color: '#8b5cf6' }, // Purple
 ];
 
-/** Convert polar (θ, φ) + magnitude to Cartesian magnetization vector [mx, my, mz] */
-function polarToCartesian(
-  thetaDeg: number,
-  phiDeg: number,
-  magnitude: number,
-): [number, number, number] {
-  const thetaRad = (thetaDeg * Math.PI) / 180;
-  const phiRad = (phiDeg * Math.PI) / 180;
-  const sinTheta = Math.sin(thetaRad);
-  return [
-    magnitude * sinTheta * Math.cos(phiRad),
-    magnitude * sinTheta * Math.sin(phiRad),
-    magnitude * Math.cos(thetaRad),
-  ];
-}
-
 export const LayerEditor = ({
   projectName,
   voxelSize,
@@ -63,12 +47,12 @@ export const LayerEditor = ({
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  const [selectedVoxelIndex, setSelectedVoxelIndex] = useState<number | null>(
-    null,
+  const [selectedVoxelIndices, setSelectedVoxelIndices] = useState<Set<number>>(
+    new Set(),
   );
   const [selectedMaterial, setSelectedMaterial] = useState<number>(1);
-  const [selectedTheta, setSelectedTheta] = useState<number>(90); // polar angle from z (0–180°)
-  const [selectedPhi, setSelectedPhi] = useState<number>(0); // azimuthal angle (0–360°)
+  const [selectedTheta, setSelectedTheta] = useState<number>(90);
+  const [selectedPhi, setSelectedPhi] = useState<number>(0);
   const [selectedMagnitude, setSelectedMagnitude] = useState<number>(1);
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -121,40 +105,54 @@ export const LayerEditor = ({
     [projectName, voxelSize, layerAxis, disabled, onLayerSelect],
   );
 
-  // When a voxel is selected from the 2D grid
   const handleVoxelSelect = useCallback(
     (voxel: LayerVoxel | null, index: number) => {
       if (voxel && index >= 0) {
-        setSelectedVoxelIndex(index);
+        setSelectedVoxelIndices(new Set([index]));
         setSelectedMaterial(voxel.material || 1);
         setSelectedMagnitude(voxel.magnetization ?? 1);
-        setSelectedPhi(voxel.angle ?? 0);
-        setSelectedTheta(90);
+        setSelectedPhi(voxel.azimuthAngle ?? 0);
+        setSelectedTheta(voxel.polarAngle ?? 90);
         setHasChanges(false);
       } else {
-        setSelectedVoxelIndex(null);
+        setSelectedVoxelIndices(new Set());
       }
     },
     [],
   );
 
-  // Apply changes to the selected voxel - update material
-  const handleConfirmMaterial = useCallback(async () => {
-    if (selectedVoxelIndex === null || !selectedLayerData) return;
+  const handleVoxelsSelect = useCallback(
+    (voxels: LayerVoxel[], indices: number[]) => {
+      if (indices.length > 0) {
+        setSelectedVoxelIndices(new Set(indices));
+        const first = voxels[0];
+        setSelectedMaterial(first.material || 1);
+        setSelectedMagnitude(first.magnetization ?? 1);
+        setSelectedPhi(first.azimuthAngle ?? 0);
+        setSelectedTheta(first.polarAngle ?? 90);
+        setHasChanges(indices.length > 1);
+      } else {
+        setSelectedVoxelIndices(new Set());
+      }
+    },
+    [],
+  );
 
-    const selectedVoxel = selectedLayerData.voxels[selectedVoxelIndex];
-    if (!selectedVoxel) return;
+  const handleConfirmMaterial = useCallback(async () => {
+    if (selectedVoxelIndices.size === 0 || !selectedLayerData) return;
+
+    const voxelCoords: [number, number, number][] = Array.from(
+      selectedVoxelIndices,
+    ).map((idx) => {
+      const v = selectedLayerData.voxels[idx];
+      return [v.ix, v.iy, v.iz] as [number, number, number];
+    });
 
     setLoading(true);
     setError(null);
     setMessage(null);
 
     try {
-      // Use grid coordinates (ix, iy, iz) for the update
-      const voxelCoords: [number, number, number][] = [
-        [selectedVoxel.ix, selectedVoxel.iy, selectedVoxel.iz],
-      ];
-
       await updateVoxels({
         project_name: projectName,
         voxels: voxelCoords,
@@ -162,15 +160,19 @@ export const LayerEditor = ({
         materialID: selectedMaterial,
       });
 
-      // Update local state
       const updatedVoxels = [...selectedLayerData.voxels];
-      updatedVoxels[selectedVoxelIndex] = {
-        ...updatedVoxels[selectedVoxelIndex],
-        material: selectedMaterial,
-      };
+      for (const idx of selectedVoxelIndices) {
+        if (updatedVoxels[idx]) {
+          updatedVoxels[idx] = {
+            ...updatedVoxels[idx],
+            material: selectedMaterial,
+          };
+        }
+      }
 
-      setMessage('Material updated successfully!');
+      setMessage(`Material updated for ${selectedVoxelIndices.size} voxel(s)!`);
       setSelectedLayerData({ ...selectedLayerData, voxels: updatedVoxels });
+      setSelectedVoxelIndices(new Set());
       setHasChanges(false);
     } catch (err) {
       setError(
@@ -179,31 +181,30 @@ export const LayerEditor = ({
     } finally {
       setLoading(false);
     }
-  }, [selectedVoxelIndex, selectedLayerData, selectedMaterial, projectName]);
+  }, [selectedVoxelIndices, selectedLayerData, selectedMaterial, projectName]);
 
-  // Apply changes to the selected voxel - update magnetization/angle
   const handleConfirmMagnetization = useCallback(async () => {
-    if (selectedVoxelIndex === null || !selectedLayerData) return;
+    if (selectedVoxelIndices.size === 0 || !selectedLayerData) return;
 
-    const selectedVoxel = selectedLayerData.voxels[selectedVoxelIndex];
-    if (!selectedVoxel) return;
+    const voxelCoords: [number, number, number][] = Array.from(
+      selectedVoxelIndices,
+    ).map((idx) => {
+      const v = selectedLayerData.voxels[idx];
+      return [v.ix, v.iy, v.iz] as [number, number, number];
+    });
+
+    // Backend expects polar: [magnitude, polar (θ), azimuth (φ)]
+    const magnetization: [number, number, number] = [
+      selectedMagnitude,
+      selectedTheta,
+      selectedPhi,
+    ];
 
     setLoading(true);
     setError(null);
     setMessage(null);
 
     try {
-      // Use grid coordinates (ix, iy, iz) for the update
-      const voxelCoords: [number, number, number][] = [
-        [selectedVoxel.ix, selectedVoxel.iy, selectedVoxel.iz],
-      ];
-
-      const magnetization = polarToCartesian(
-        selectedTheta,
-        selectedPhi,
-        selectedMagnitude,
-      );
-
       await updateVoxels({
         project_name: projectName,
         voxels: voxelCoords,
@@ -211,16 +212,23 @@ export const LayerEditor = ({
         magnetization,
       });
 
-      // Update local state
       const updatedVoxels = [...selectedLayerData.voxels];
-      updatedVoxels[selectedVoxelIndex] = {
-        ...updatedVoxels[selectedVoxelIndex],
-        magnetization: selectedMagnitude,
-        angle: selectedPhi,
-      };
+      for (const idx of selectedVoxelIndices) {
+        if (updatedVoxels[idx]) {
+          updatedVoxels[idx] = {
+            ...updatedVoxels[idx],
+            magnetization: selectedMagnitude,
+            polarAngle: selectedTheta,
+            azimuthAngle: selectedPhi,
+          };
+        }
+      }
 
-      setMessage('Magnetization updated successfully!');
+      setMessage(
+        `Magnetization updated for ${selectedVoxelIndices.size} voxel(s)!`,
+      );
       setSelectedLayerData({ ...selectedLayerData, voxels: updatedVoxels });
+      setSelectedVoxelIndices(new Set());
       setHasChanges(false);
     } catch (err) {
       setError(
@@ -230,7 +238,7 @@ export const LayerEditor = ({
       setLoading(false);
     }
   }, [
-    selectedVoxelIndex,
+    selectedVoxelIndices,
     selectedLayerData,
     selectedTheta,
     selectedPhi,
@@ -272,6 +280,13 @@ export const LayerEditor = ({
     }
   }, [projectName, disabled, layerAxis, loadLayers]);
 
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
   if (!isOpen) return null;
 
   if (!projectName.trim() || disabled) {
@@ -288,9 +303,10 @@ export const LayerEditor = ({
     );
   }
 
+  const selectedIndicesArray = Array.from(selectedVoxelIndices);
   const selectedVoxel =
-    selectedVoxelIndex !== null && selectedLayerData
-      ? selectedLayerData.voxels[selectedVoxelIndex]
+    selectedIndicesArray.length === 1 && selectedLayerData
+      ? selectedLayerData.voxels[selectedIndicesArray[0]]
       : null;
 
   return (
@@ -325,8 +341,12 @@ export const LayerEditor = ({
             layerData={selectedLayerData}
             width={500}
             height={400}
+            materialColors={Object.fromEntries(
+              MATERIALS.map((m) => [m.id, m.color]),
+            )}
             onVoxelSelect={handleVoxelSelect}
-            selectedVoxelIndex={selectedVoxelIndex}
+            onVoxelsSelect={handleVoxelsSelect}
+            selectedVoxelIndices={selectedVoxelIndices}
           />
           {selectedLayerData && (
             <p className="layer-2d-info">
@@ -340,16 +360,21 @@ export const LayerEditor = ({
         <div className="voxel-editor-section">
           <h5>Voxel Properties</h5>
 
-          {selectedVoxel ? (
+          {selectedVoxelIndices.size > 0 ? (
             <>
               <p className="selected-voxel-info">
-                Selected: Voxel #{selectedVoxelIndex} at (
-                {selectedVoxel.x.toFixed(2)}, {selectedVoxel.y.toFixed(2)},{' '}
-                {selectedVoxel.z.toFixed(2)})
+                {selectedVoxelIndices.size === 1 && selectedVoxel ? (
+                  <>
+                    Selected: Voxel #{selectedIndicesArray[0]} at (
+                    {selectedVoxel.x.toFixed(2)}, {selectedVoxel.y.toFixed(2)},{' '}
+                    {selectedVoxel.z.toFixed(2)})
+                  </>
+                ) : (
+                  <>Selected: {selectedVoxelIndices.size} voxels</>
+                )}
               </p>
 
               <div className="voxel-editor-grid">
-                {/* Left Column - Materials */}
                 <div className="editor-column materials-column">
                   <h6>Material</h6>
                   <div className="material-grid">
@@ -370,7 +395,6 @@ export const LayerEditor = ({
                   </div>
                 </div>
 
-                {/* Right Side - Magnetization: Polar, Azimuth, Magnitude */}
                 <div className="editor-column angles-column">
                   <h6>Magnetization</h6>
                   <div className="magnetization-inputs">
@@ -454,7 +478,7 @@ export const LayerEditor = ({
             </>
           ) : (
             <p className="no-voxel-selected">
-              Click on a voxel in the 2D view to edit its properties
+              Click or use lasso to select voxels in the 2D view
             </p>
           )}
         </div>

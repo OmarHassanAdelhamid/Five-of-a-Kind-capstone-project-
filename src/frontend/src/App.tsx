@@ -100,35 +100,34 @@ function App() {
     [],
   );
 
+
   const handleModelChange = useCallback((model: string) => {
     setSelectedModel(model);
   }, []);
 
-  const handleLoadVoxels = useCallback(
-    async (project?: string) => {
-      const projectToLoad = project || projectName;
-      if (!projectToLoad.trim()) {
-        return;
-      }
+  const handleLoadVoxels = useCallback(async (project?: string) => {
+    const projectToLoad = project || projectName;
+    if (!projectToLoad.trim()) {
+      return;
+    }
 
-      try {
-        setStatus('loading');
-        setSelectedLayerZ(null); // Clear layer selection when loading new project
-        setSelectedVoxel(null); // Clear voxel selection when loading new project
-        setSelectedVoxels(new Set()); // Clear multiple voxel selections
-        const coordinates = await fetchVoxels(projectToLoad);
-        if (coordinates.length > 0) {
-          setVoxelCoordinates(coordinates);
-          setStatus('ready');
-        } else {
-          setStatus('error');
-        }
-      } catch (error) {
+    try {
+      setStatus('loading');
+      setSelectedLayerZ(null); // Clear layer selection when loading new project
+      setSelectedVoxel(null); // Clear voxel selection when loading new project
+      setSelectedVoxels(new Set()); // Clear multiple voxel selections
+      const coordinates = await fetchVoxels(projectToLoad);
+      if (coordinates.length > 0) {
+        setVoxelCoordinates(coordinates);
+        setStatus('ready');
+      } else {
         setStatus('error');
       }
-    },
-    [projectName, fetchVoxels],
-  );
+    } catch (error) {
+      setStatus('error');
+    }
+  }, [projectName, fetchVoxels]);
+
 
   const handleDownloadCSV = useCallback(async () => {
     if (!projectName.trim()) {
@@ -164,31 +163,28 @@ function App() {
     }
   }, []);
 
-  const handleUploadFile = useCallback(
-    async (file: File) => {
-      if (!file.name.toLowerCase().endsWith('.stl')) {
-        alert('Please select a file with the .stl extension.');
-        return;
-      }
+  const handleUploadFile = useCallback(async (file: File) => {
+    if (!file.name.toLowerCase().endsWith('.stl')) {
+      alert('Please select a file with the .stl extension.');
+      return;
+    }
 
-      try {
-        await uploadSTLFile(file);
-        const modelList = await fetchModels();
-        const nextModel = modelList.at(-1) ?? null;
-        if (nextModel) {
-          setSelectedModel(nextModel);
-        }
-      } catch (error) {
-        console.error('Failed to upload STL file', error);
-        alert(
-          error instanceof Error
-            ? error.message
-            : 'Failed to upload STL file. Please try again.',
-        );
+    try {
+      await uploadSTLFile(file);
+      const modelList = await fetchModels();
+      const nextModel = modelList.at(-1) ?? null;
+      if (nextModel) {
+        setSelectedModel(nextModel);
       }
-    },
-    [fetchModels],
-  );
+    } catch (error) {
+      console.error('Failed to upload STL file', error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : 'Failed to upload STL file. Please try again.',
+      );
+    }
+  }, [fetchModels]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -204,44 +200,43 @@ function App() {
     setIsNewProjectDialogOpen(true);
   }, [selectedModel]);
 
-  const handleNewProjectConfirm = useCallback(
-    async (projectName: string) => {
-      if (!selectedModel) {
-        return;
-      }
+  const handleNewProjectConfirm = useCallback(async (projectName: string) => {
+    if (!selectedModel) {
+      return;
+    }
 
-      try {
-        // Make POST call to create/voxelize the project
-        const defaultVoxelSize = parseFloat(voxelSize) || 0.1;
-        await voxelizeModel(selectedModel, defaultVoxelSize, projectName);
+    try {
+      // Make POST call to create/voxelize the project
+      const defaultVoxelSize = parseFloat(voxelSize) || 0.1;
+      await voxelizeModel(
+        selectedModel,
+        defaultVoxelSize,
+        projectName,
+      );
+      
+      // Refresh project list
+      const projectList = await fetchAvailableProjects();
+      setAvailableProjects(projectList);
+      
+      // Set the new project as current and load voxels
+      setProjectName(projectName);
+      handleLoadVoxels(projectName);
+      
+    } catch (error) {
+      console.error('Failed to create project', error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : 'Failed to create project. Please try again.',
+      );
+    }
+  }, [selectedModel, voxelSize, handleLoadVoxels]);
 
-        // Refresh project list
-        const projectList = await fetchAvailableProjects();
-        setAvailableProjects(projectList);
-
-        // Set the new project as current and load voxels
-        setProjectName(projectName);
-        handleLoadVoxels(projectName);
-      } catch (error) {
-        console.error('Failed to create project', error);
-        alert(
-          error instanceof Error
-            ? error.message
-            : 'Failed to create project. Please try again.',
-        );
-      }
-    },
-    [selectedModel, voxelSize, handleLoadVoxels],
-  );
-
-  const handleOpenProjectSelect = useCallback(
-    (selectedProjectName: string) => {
-      setProjectName(selectedProjectName);
-      // Load voxels for the selected project
-      handleLoadVoxels(selectedProjectName);
-    },
-    [handleLoadVoxels],
-  );
+  const handleOpenProjectSelect = useCallback((selectedProjectName: string) => {
+    setProjectName(selectedProjectName);
+    // Load voxels for the selected project
+    handleLoadVoxels(selectedProjectName);
+  }, [handleLoadVoxels]);
 
   const handleSave = useCallback(async () => {
     if (projectName.trim()) {
@@ -252,10 +247,7 @@ function App() {
   }, [projectName, handleDownloadCSV]);
 
   const handleSaveAs = useCallback(async () => {
-    const newName = prompt(
-      'Enter new project name:',
-      projectName || 'new-project',
-    );
+    const newName = prompt('Enter new project name:', projectName || 'new-project');
     if (newName && newName.trim()) {
       try {
         const projectToSave = projectName || newName;
@@ -276,26 +268,14 @@ function App() {
   }, [projectName, handleDownloadCSV]);
 
   // Edit menu handlers (disabled as per previous requirements)
-  const handleUndo = useCallback(() => {
-    /* no-op */
-  }, []);
-  const handleRedo = useCallback(() => {
-    /* no-op */
-  }, []);
-  const handleCopy = useCallback(() => {
-    /* no-op */
-  }, []);
-  const handleCut = useCallback(() => {
-    /* no-op */
-  }, []);
-  const handlePaste = useCallback(() => {
-    /* no-op */
-  }, []);
+  const handleUndo = useCallback(() => { /* no-op */ }, []);
+  const handleRedo = useCallback(() => { /* no-op */ }, []);
+  const handleCopy = useCallback(() => { /* no-op */ }, []);
+  const handleCut = useCallback(() => { /* no-op */ }, []);
+  const handlePaste = useCallback(() => { /* no-op */ }, []);
 
   const handlePreferences = useCallback(() => {
-    alert(
-      'Preferences dialog would open here.\nOptions: colors of interface, etc.',
-    );
+    alert('Preferences dialog would open here.\nOptions: colors of interface, etc.');
   }, []);
 
   const handleOpenPartitionMenu = useCallback(() => {
@@ -383,9 +363,9 @@ function App() {
         availableProjects={
           selectedModel
             ? availableProjects.filter((project) =>
-                project
-                  .toLowerCase()
-                  .includes(selectedModel.replace('.stl', '').toLowerCase()),
+                project.toLowerCase().includes(
+                  selectedModel.replace('.stl', '').toLowerCase()
+                )
               )
             : []
         }
