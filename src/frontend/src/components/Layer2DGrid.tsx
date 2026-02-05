@@ -12,6 +12,10 @@ interface Layer2DGridProps {
   onVoxelSelect?: (voxel: LayerVoxel | null, index: number) => void;
   onVoxelsSelect?: (voxels: LayerVoxel[], indices: number[]) => void;
   selectedVoxelIndices?: Set<number>;
+  onLayerUp?: () => void;
+  onLayerDown?: () => void;
+  canGoUp?: boolean;
+  canGoDown?: boolean;
 }
 
 function isPointInPolygon(px: number, py: number, polygon: { x: number; y: number }[]): boolean {
@@ -41,6 +45,10 @@ export const Layer2DGrid = ({
   onVoxelSelect,
   onVoxelsSelect,
   selectedVoxelIndices = new Set(),
+  onLayerUp,
+  onLayerDown,
+  canGoUp = false,
+  canGoDown = false,
 }: Layer2DGridProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -291,30 +299,54 @@ export const Layer2DGrid = ({
           Lasso
         </button>
       </div>
-      <canvas
-        ref={canvasRef}
-        className="layer-2d-grid-canvas"
-        width={width}
-        height={height}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-        onClick={handleClick}
-        style={{
-          display: 'block',
-          borderRadius: '8px',
-          cursor: selectionMode === 'lasso' ? 'crosshair' : 'pointer',
-        }}
-      />
-      {hoveredIndex !== null && voxelPositionsRef.current[hoveredIndex] && (
-        <div className="layer-2d-grid-tooltip">
-          Voxel #{hoveredIndex} - (
-          {voxelPositionsRef.current[hoveredIndex].voxel.x.toFixed(2)},
-          {voxelPositionsRef.current[hoveredIndex].voxel.y.toFixed(2)},
-          {voxelPositionsRef.current[hoveredIndex].voxel.z.toFixed(2)})
-        </div>
-      )}
+      <div className="layer-2d-grid-canvas-container">
+        {(onLayerUp != null || onLayerDown != null) && (
+          <div className="layer-2d-grid-nav-buttons">
+            <button
+              type="button"
+              className="layer-nav-btn"
+              onClick={onLayerUp}
+              disabled={!canGoUp}
+              title="Higher layer"
+            >
+              ↑
+            </button>
+            <button
+              type="button"
+              className="layer-nav-btn"
+              onClick={onLayerDown}
+              disabled={!canGoDown}
+              title="Lower layer"
+            >
+              ↓
+            </button>
+          </div>
+        )}
+        <canvas
+          ref={canvasRef}
+          className="layer-2d-grid-canvas"
+          width={width}
+          height={height}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          onClick={handleClick}
+          style={{
+            display: 'block',
+            borderRadius: '8px',
+            cursor: selectionMode === 'lasso' ? 'crosshair' : 'pointer',
+          }}
+        />
+        {hoveredIndex !== null && voxelPositionsRef.current[hoveredIndex] && (
+          <div className="layer-2d-grid-tooltip">
+            Voxel #{hoveredIndex} - (
+            {voxelPositionsRef.current[hoveredIndex].voxel.x.toFixed(2)},
+            {voxelPositionsRef.current[hoveredIndex].voxel.y.toFixed(2)},
+            {voxelPositionsRef.current[hoveredIndex].voxel.z.toFixed(2)})
+          </div>
+        )}
+      </div>
     </div>
   );
 };
