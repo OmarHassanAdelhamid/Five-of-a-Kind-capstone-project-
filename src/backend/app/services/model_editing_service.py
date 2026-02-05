@@ -13,6 +13,11 @@ def update_voxel_magnetization(db_path: str, voxels: List[Tuple[int, int, int]],
         for voxel in voxels:
             db.set_magnetization(voxel[0], voxel[1], voxel[2], 
                                  magnetization[0], magnetization[1], magnetization[2])
+        
+def update_voxel_properties(db_path: str, voxels: List[Tuple[int, int, int, int, float, float, float]]):
+    with VoxelDB(db_path) as db:
+        for voxel in voxels:
+            db.set_properties(voxel[0], voxel[1], voxel[2], voxel[3], voxel[4], voxel[5], voxel[6])
 
 def add_voxels(db_path: str, voxels: List[Tuple[int, int, int]]):
     with VoxelDB(db_path) as db:

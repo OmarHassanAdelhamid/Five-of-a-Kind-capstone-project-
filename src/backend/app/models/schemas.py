@@ -12,6 +12,13 @@ class UpdateAction(str, Enum):
     ADD = "add"
     DELETE = "delete"
 
+class HistoryAction(str, Enum):
+    """
+    Enum used to represent possible actions to model history.
+    """
+    UNDO = "undo"
+    REDO = "redo"
+
 class LayerAxis(str, Enum):
     """
     Enum used to represent each axis.
@@ -66,4 +73,26 @@ class UpdateVoxelsRequest(BaseModel):
     action: UpdateAction
     materialID: Optional[int] = None
     magnetization: Optional[Tuple[float, float, float]] = None
+
+class UpdateHistoryRequest(BaseModel):
+    """
+    Datatype to represent a request to undo or redo a model change.
+
+    Args: 
+        project_name (str): name of the file the voxel database is saved in.
+        action (HistoryAction): the action to be taken (undo or redo).
+    """
+    project_name: str
+    action: HistoryAction
+
+class ModelDelta(BaseModel):
+    """
+    Datatype to represent a change to a model.
+
+    Args:
+        old_voxels (List[Tuple[int, int, int, int, int, float, float]]): set of voxels; what they were previously.
+        new_voxels (List[Tuple[int, int, int, int, int, float, float]]): set of voxels; their new state.
+    """
+    old_voxels: List[Tuple[int, int, int, int, float, float, float]]
+    new_voxels: List[Tuple[int, int, int, int, float, float, float]]
 
