@@ -133,7 +133,7 @@ export const calculateCenterOffset = (
 export const renderVoxelCubes = (
   scene: THREE.Scene,
   coordinates: number[][],
-  modelSize?: number,
+  _modelSize?: number, // Unused but kept for API compatibility
   modelOriginalCenter?: THREE.Vector3 | null,
   existingCubes?: THREE.Mesh[],
   selectedLayerZ?: number | null,
