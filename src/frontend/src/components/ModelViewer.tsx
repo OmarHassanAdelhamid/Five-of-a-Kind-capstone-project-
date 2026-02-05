@@ -12,6 +12,7 @@ import {
 import { API_BASE_URL } from '../utils/constants';
 import { StatusMessage } from './StatusMessage';
 import { LayerEditor } from './LayerEditor';
+import { PartitionsPanel } from './PartitionsPanel';
 
 //HEAVILY INFLUENCED BY STL LOADER EXAMPLE https://sbcode.net/threejs/loaders-stl/
 
@@ -72,6 +73,7 @@ export const ModelViewer = ({
     index: number;
   } | null>(null);
   const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
+  const [isPartitionsPanelOpen, setIsPartitionsPanelOpen] = useState(false);
 
   useEffect(() => {
     if (!selectedModel) {
@@ -641,15 +643,24 @@ export const ModelViewer = ({
           ) : null}
         </div>
       )}
-      {projectName.trim() && (
-        <button
-          className="layer-settings-toggle"
-          onClick={() => setIsLayerEditorOpen(!isLayerEditorOpen)}
-          title="Toggle Layer Editor"
-        >
-          {isLayerEditorOpen ? '✕' : '⚙️'}
-        </button>
-      )}
+      <button
+        className={`partitions-tab ${isPartitionsPanelOpen ? 'open' : ''}`}
+        onClick={() => setIsPartitionsPanelOpen(!isPartitionsPanelOpen)}
+        title={isPartitionsPanelOpen ? 'Close Partitions' : 'Open Partitions'}
+      >
+        <span className="partitions-tab-text">Partitions</span>
+      </button>
+      <PartitionsPanel
+        isOpen={isPartitionsPanelOpen}
+        onClose={() => setIsPartitionsPanelOpen(false)}
+      />
+      <button
+        className={`layer-editor-tab ${isLayerEditorOpen ? 'open' : ''}`}
+        onClick={() => setIsLayerEditorOpen(!isLayerEditorOpen)}
+        title={isLayerEditorOpen ? 'Close Layer Editor' : 'Open Layer Editor'}
+      >
+        <span className="layer-editor-tab-text">Layer Editor</span>
+      </button>
       <LayerEditor
         projectName={projectName}
         voxelSize={voxelSize}

@@ -107,7 +107,8 @@ def get_full_voxels(db_path: str, voxels: List[Tuple[int, int, int]]) -> List[Tu
     with VoxelDB(db_path) as db:
         full_voxels = []
         for voxel in voxels:
-            properties = db.get_properties(voxel[0], voxel[1], voxel[2])
-            full_voxels.append[voxel + properties]
+            rows = db.get_properties(voxel[0], voxel[1], voxel[2])
+            props = rows[0] if rows else (0, 0.0, 0.0, 0.0)
+            full_voxels.append(tuple(voxel) + props)
     return full_voxels
 

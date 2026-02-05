@@ -418,6 +418,8 @@ function App() {
         onStatusChange={handleStatusChange}
         selectedLayerZ={isLayerEditingMode ? selectedLayerZ : null}
         layerAxis={layerAxis}
+        projectName={projectName}
+        voxelSize={parseFloat(voxelSize) || 0.1}
         onLayerSelect={(layerZ) => {
           setSelectedLayerZ(layerZ);
           // Automatically enable layer editing mode when a layer is selected

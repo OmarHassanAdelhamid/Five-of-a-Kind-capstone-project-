@@ -36,7 +36,25 @@ class VoxelDB:
         """)
 
         self.cur.execute("CREATE INDEX IF NOT EXISTS idx_voxels_iz ON voxels(iz);")
+        self._migrate_magnetization_columns()
         self.conn.commit()
+
+    def _migrate_magnetization_columns(self) -> None:
+        """Add magnetization columns to existing databases that lack them."""
+        self.cur.execute("PRAGMA table_info(voxels)")
+        columns = {row[1] for row in self.cur.fetchall()}
+        if "magnet_magnitude" not in columns:
+            self.cur.execute(
+                "ALTER TABLE voxels ADD COLUMN magnet_magnitude REAL NOT NULL DEFAULT 0.0"
+            )
+        if "magnet_polar" not in columns:
+            self.cur.execute(
+                "ALTER TABLE voxels ADD COLUMN magnet_polar REAL NOT NULL DEFAULT 0.0"
+            )
+        if "magnet_azimuth" not in columns:
+            self.cur.execute(
+                "ALTER TABLE voxels ADD COLUMN magnet_azimuth REAL NOT NULL DEFAULT 0.0"
+            )
         
     # helpers to handle structure metadata 
     def set_meta(self, key: str, value: Any) -> None:
