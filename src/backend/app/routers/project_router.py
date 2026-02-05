@@ -1,24 +1,28 @@
 """
-Routes for project management and voxelization (Project Manager Module - M4, Voxel Slicing Module - M2).
+Routes for project management and voxelization.
 """
+
+## save project should be in this file. 
+## also -> possibly split this file into voxel related and project related? unsure.
 
 from typing import List
 
 from fastapi import APIRouter, HTTPException
-from fastapi.responses import FileResponse
+
+import os
 
 from app.config import MODEL_DIR, VOXEL_STORAGE_DIR
 from app.models.schemas import VoxelizeRequest
-import os
+
 import app.services.mesh_service as ms
 import app.services.voxel_service as vx
-import app.services.project_manager as pm
-import app.services.model_structure as struct
+import app.services.project_management_service as pm
+import app.services.model_tracking_service as mt
 
-router = APIRouter(prefix="/api/voxelize", tags=["projects"])
+router = APIRouter(prefix="/api/project", tags=["project"])
 
 @router.get("/list")
-def list_voxelized_projects() -> dict[str, List[str]]:
+def list_projects() -> dict[str, List[str]]:
     """
     Lists all available voxelized project files.
 
@@ -30,9 +34,9 @@ def list_voxelized_projects() -> dict[str, List[str]]:
 
 
 @router.get("")
-async def get_voxelized(project_name: str):
+async def get_surface_voxels(project_name: str):
     """
-    Handles request to retrieve voxelized project coordinates.
+    Handles request to retrieve surface voxels of a project for rendering.
 
     Args:
         project_name (str): The name of the project file to read.
@@ -50,7 +54,7 @@ async def get_voxelized(project_name: str):
         )
     
     try:
-        rows = struct.find_surface(str(project_path))
+        rows = mt.find_surface(str(project_path))
         coordinates = pm.read_voxels(rows)
         coordinates_list = coordinates.tolist() if hasattr(coordinates, 'tolist') else coordinates
         
@@ -62,35 +66,8 @@ async def get_voxelized(project_name: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error reading project: {str(e)}")
 
-@router.get("/download/{project_name}")
-def download_voxel_csv(project_name: str):
-    """
-    Handles request to download a voxelized project file as CSV.
-
-    Args:
-        project_name (str): The name of the project file to download.
-
-    Returns:
-        (FileResponse): The CSV file containing voxel coordinates.
-    """
-    project_path = os.path.join(VOXEL_STORAGE_DIR, project_name) 
-    
-    if not project_path.exists():
-        available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
-        raise HTTPException(
-            status_code=404, 
-            detail=f"Project '{project_name}' not found. Available projects: {available if available else 'none'}"
-        )
-    
-    return FileResponse(
-        path=project_path,
-        media_type="text/csv",
-        filename=f"{project_name}.csv",
-    )
-
-
 @router.post("")
-async def voxelize(request: VoxelizeRequest):
+async def voxelize_stl(request: VoxelizeRequest):
     """
     Handles request to voxelize an STL file.
 

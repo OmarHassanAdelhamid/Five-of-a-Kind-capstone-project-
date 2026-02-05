@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from .model_manager import VoxelDB
+from app.services.model_structure_service import VoxelDB
 
 
 def initialize_voxel_db(project_path: str, origin: np.ndarray, voxel_size: float)-> None:
