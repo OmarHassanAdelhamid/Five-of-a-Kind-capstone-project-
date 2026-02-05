@@ -1,6 +1,7 @@
 import os
 import numpy as np
-from app.services.model_structure_service import VoxelDB     
+from app.services.model_structure_service import VoxelDB
+from typing import List, Tuple   
 
 FIND_SURFACE = """
 SELECT v.x, v.y, v.z
@@ -41,54 +42,72 @@ GROUP BY iz
 ORDER BY iz;
 """
 
-def find_surface(db_path: str) -> list[tuple]:
+def find_surface(db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute(FIND_SURFACE)
         rows = db.cur.fetchall()
     return rows
 
-def x_directory(db_path: str) -> list[tuple]:
+def x_directory(db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute(ALL_X_LAYERS)
         rows = db.cur.fetchall()
     return rows
 
-def y_directory(db_path: str) -> list[tuple]:
+def y_directory(db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute(ALL_Y_LAYERS)
         rows = db.cur.fetchall()
     return rows
 
-def z_directory(db_path: str) -> list[tuple]:
+def z_directory(db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute(ALL_Z_LAYERS)
         rows = db.cur.fetchall()
     return rows
 
 # get a list of all x layers based on their integer identifier
-def get_x_layer(ix: int, db_path: str) -> list[tuple]:
+def get_x_layer(ix: int, db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
-        db.cur.execute(
-        "SELECT ix, iy, iz, x, y, z, magnetization, angle, material FROM voxels WHERE ix = ?;",
-        (ix,))
+        db.cur.execute("""
+            SELECT ix, iy, iz, x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth 
+            FROM voxels 
+            WHERE ix = ?;""",
+            (ix,)
+        )
         layer_voxels = db.cur.fetchall()
     return layer_voxels
 
 # get a list of all y layers based on their integer identifier
-def get_y_layer(iy: int, db_path: str) -> list[tuple]:
+def get_y_layer(iy: int, db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
-        db.cur.execute(
-        "SELECT ix, iy, iz, x, y, z, magnetization, angle, material FROM voxels WHERE iy = ?;",
-        (iy,))
+        db.cur.execute("""
+            SELECT ix, iy, iz, x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth 
+            FROM voxels 
+            WHERE iy = ?;""",
+            (iy,)
+        )
         layer_voxels = db.cur.fetchall()
     return layer_voxels
 
 # get a list of all z layers based on their integer identifier
-def get_z_layer(iz: int, db_path: str) -> list[tuple]:
+def get_z_layer(iz: int, db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
-        db.cur.execute(
-        "SELECT ix, iy, iz, x, y, z, magnetization, angle, material FROM voxels WHERE iz = ?;",
-        (iz,))
+        db.cur.execute("""
+            SELECT ix, iy, iz, x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth 
+            FROM voxels 
+            WHERE iz = ?;""",
+            (iz,)
+        )
         layer_voxels = db.cur.fetchall()
     return layer_voxels
+
+# get voxels with their properties given their integer identifiers
+def get_full_voxels(db_path: str, voxels: List[Tuple[int, int, int]]) -> List[Tuple]:
+    with VoxelDB(db_path) as db:
+        full_voxels = []
+        for voxel in voxels:
+            properties = db.get_properties(voxel[0], voxel[1], voxel[2])
+            full_voxels.append[voxel + properties]
+    return full_voxels
 

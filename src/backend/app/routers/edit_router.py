@@ -7,10 +7,11 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException
 
 from app.config import VOXEL_STORAGE_DIR
-from app.models.schemas import RetrieveLayerRequest, LayerAxis, UpdateVoxelsRequest, UpdateAction
+from app.models.schemas import RetrieveLayerRequest, LayerAxis, UpdateVoxelsRequest, UpdateAction, HistoryAction, ModelDelta, UpdateHistoryRequest
 
 import app.services.model_editing_service as em
 import app.services.model_tracking_service as mt
+import app.services.history_management_service as hm
 
 router = APIRouter(prefix="/api/edit", tags=["edit"])
 
@@ -89,6 +90,8 @@ async def update_voxels(request: UpdateVoxelsRequest):
     
     try:
         if (request.action == UpdateAction.UPDATE):
+            old_voxels = mt.get_full_voxels(request.voxels) # record voxel state pre-update
+
             if (request.materialID != None and request.magnetization == None):
                 # request is to set all voxels to the passed material.
                 em.update_voxel_materials(project_path, request.voxels, request.materialID)
@@ -108,6 +111,9 @@ async def update_voxels(request: UpdateVoxelsRequest):
                     detail=f"Invalid request; UpdateAction was UPDATE, but neither a materialID or magnetization was passed."
                 )
             
+            new_voxels = mt.get_full_voxels(request.voxels) # record voxel state post-update
+            hm.record_change(ModelDelta(old_voxels, new_voxels)) # submit modeldelta to history management.
+            
         elif (request.action == UpdateAction.RESET_MATERIAL):
             # request is to set material of all voxels to null.
             # TODO: no model structure method for this?
@@ -116,6 +122,7 @@ async def update_voxels(request: UpdateVoxelsRequest):
             # request is to set magnetization of all voxels to null.
             # TODO: no model structure method for this?
             pass
+        #! move add/delete to a separate route.
         elif (request.action == UpdateAction.ADD):
             # request is to add all voxels to the model.
             em.add_voxels(project_path, request.voxels)
@@ -138,6 +145,55 @@ async def update_voxels(request: UpdateVoxelsRequest):
         raise httpex
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error updating layer: {str(e)}")
+
+@router.post("/history")
+async def update_history(request: UpdateHistoryRequest):
+    """
+    Handles request to undo or redo a change to the model.
+
+    Args:
+        request (UpdateHistoryRequest): Request containing the model name, and an action indicating undo or redo.
+
+    Returns:
+        (dict): Contains message reflecting execution success, and the statuses of both the undo and redo stacks.
+    """
+
+    project_path = VOXEL_STORAGE_DIR / request.project_name
+    if not project_path.exists():
+        available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
+        raise HTTPException(
+            status_code=404, 
+            detail=f"Project '{request.project_name}' not found. Available projects: {available if available else 'none'}"
+        )
+    
+    try:
+        if (request.action == HistoryAction.UNDO):
+            # Get top of undo stack; voxels become old_voxels.
+            change = hm.undo_request()
+            em.update_voxel_properties(change.old_voxels)
+        elif (request.action == HistoryAction.REDO):
+            # Get top of redo stack; voxels become new_voxels.
+            change = hm.redo_request()
+            em.update_voxel_properties(change.new_voxels)
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid history action code passed: {request.action}."
+            )
+        
+        return {
+            "message": f"{request.action} executed successfully",
+            "undo_empty": str(hm.is_undo_empty()),
+            "redo_empty": str(hm.is_redo_empty())
+        }
+
+    except hm.EmptyHistoryException as hist_ex:
+        raise HTTPException(status_code=400, detail=f"Bad history request: {str(hist_ex)}")
+    except HTTPException as httpex:
+        raise httpex
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error executing history request: {str(e)}")
+
 
 @router.get("/layers/{project_name}")
 async def get_layers(project_name: str, axis: Optional[str] = "z"):
