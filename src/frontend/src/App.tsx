@@ -1,11 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import './App.css';
 import { ModelViewer } from './components/ModelViewer';
-import { ModelSelector } from './components/ModelSelector';
-import { UploadButton } from './components/UploadButton';
-import { ProjectSelector } from './components/ProjectSelector';
-import { UploadMessage } from './components/UploadMessage';
-import { Footer } from './components/Footer';
+import { MenuBar } from './components/MenuBar';
+import { NewProjectDialog } from './components/NewProjectDialog';
 import {
   fetchAvailableModels,
   fetchAvailableProjects,
@@ -16,23 +13,13 @@ import {
 } from './utils/api';
 
 function App() {
-  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>(
-    'loading',
-  );
-  const [uploadState, setUploadState] = useState<
-    'idle' | 'uploading' | 'success' | 'error'
-  >('idle');
-  const [uploadMessage, setUploadMessage] = useState<string | null>(null);
+  const [, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [models, setModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [projectName, setProjectName] = useState<string>('');
   const [availableProjects, setAvailableProjects] = useState<string[]>([]);
   const [voxelCoordinates, setVoxelCoordinates] = useState<number[][]>([]);
-  const [voxelizeState, setVoxelizeState] = useState<
-    'idle' | 'voxelizing' | 'success' | 'error'
-  >('idle');
-  const [voxelizeMessage, setVoxelizeMessage] = useState<string | null>(null);
-  const [voxelSize, setVoxelSize] = useState<string>('0.1');
+  const [voxelSize] = useState<string>('0.1');
   const [selectedLayerZ, setSelectedLayerZ] = useState<number | null>(null);
   const [selectedVoxel, setSelectedVoxel] = useState<{
     coord: number[];
@@ -43,7 +30,8 @@ function App() {
   // Convert Set to sorted array for dependency tracking
   const selectedVoxelIndicesArray = Array.from(selectedVoxels).sort();
   const [isLayerEditingMode, setIsLayerEditingMode] = useState(false);
-  const [layerAxis, setLayerAxis] = useState<'z' | 'x' | 'y'>('z');
+  const [layerAxis] = useState<'z' | 'x' | 'y'>('z');
+  const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
 
   const fetchModels = useCallback(async (): Promise<string[]> => {
     try {
@@ -112,51 +100,14 @@ function App() {
     [],
   );
 
-  const handleUpload = useCallback(
-    async (file: File) => {
-      if (!file.name.toLowerCase().endsWith('.stl')) {
-        setUploadState('error');
-        setUploadMessage('Please select a file with the .stl extension.');
-        return;
-      }
-
-      setUploadState('uploading');
-      setUploadMessage(`Uploading ${file.name} ...`);
-
-      try {
-        const data = await uploadSTLFile(file);
-        setUploadState('success');
-        setUploadMessage(data.message ?? 'Upload complete.');
-
-        try {
-          const modelList = await fetchModels();
-          const nextModel = modelList.at(-1) ?? null;
-
-          if (nextModel) {
-            setSelectedModel(nextModel);
-          }
-        } catch {
-          setStatus('error');
-        }
-      } catch (error) {
-        console.error('Failed to upload STL file', error);
-        setUploadState('error');
-        setUploadMessage(
-          error instanceof Error
-            ? error.message
-            : 'Failed to upload STL file. Please try again.',
-        );
-      }
-    },
-    [fetchModels],
-  );
 
   const handleModelChange = useCallback((model: string) => {
     setSelectedModel(model);
   }, []);
 
-  const handleLoadVoxels = useCallback(async () => {
-    if (!projectName.trim()) {
+  const handleLoadVoxels = useCallback(async (project?: string) => {
+    const projectToLoad = project || projectName;
+    if (!projectToLoad.trim()) {
       return;
     }
 
@@ -165,7 +116,7 @@ function App() {
       setSelectedLayerZ(null); // Clear layer selection when loading new project
       setSelectedVoxel(null); // Clear voxel selection when loading new project
       setSelectedVoxels(new Set()); // Clear multiple voxel selections
-      const coordinates = await fetchVoxels(projectName);
+      const coordinates = await fetchVoxels(projectToLoad);
       if (coordinates.length > 0) {
         setVoxelCoordinates(coordinates);
         setStatus('ready');
@@ -177,52 +128,10 @@ function App() {
     }
   }, [projectName, fetchVoxels]);
 
-  const handleVoxelize = useCallback(async () => {
-    if (!selectedModel) {
-      setVoxelizeState('error');
-      setVoxelizeMessage('Please select a model first.');
-      return;
-    }
-
-    const size = parseFloat(voxelSize);
-    if (isNaN(size) || size <= 0) {
-      setVoxelizeState('error');
-      setVoxelizeMessage('Please enter a valid voxel size (greater than 0).');
-      return;
-    }
-
-    const defaultProjectName = selectedModel.replace('.stl', '') + '-voxels';
-    setVoxelizeState('voxelizing');
-    setVoxelizeMessage(`Voxelizing ${selectedModel}...`);
-
-    try {
-      const result = await voxelizeModel(
-        selectedModel,
-        size,
-        defaultProjectName,
-      );
-      setVoxelizeState('success');
-      setVoxelizeMessage(result.message || 'Voxelization complete!');
-
-      // Refresh project list
-      await fetchProjects();
-
-      // Optionally load the new voxels
-      setProjectName(defaultProjectName);
-    } catch (error) {
-      console.error('Failed to voxelize model', error);
-      setVoxelizeState('error');
-      setVoxelizeMessage(
-        error instanceof Error
-          ? error.message
-          : 'Failed to voxelize model. Please try again.',
-      );
-    }
-  }, [selectedModel, voxelSize, fetchProjects]);
 
   const handleDownloadCSV = useCallback(async () => {
     if (!projectName.trim()) {
-      setVoxelizeMessage('Please select a project to download.');
+      alert('Please select a project to download.');
       return;
     }
 
@@ -238,7 +147,7 @@ function App() {
       document.body.removeChild(a);
     } catch (error) {
       console.error('Failed to download CSV', error);
-      setVoxelizeMessage(
+      alert(
         error instanceof Error
           ? error.message
           : 'Failed to download CSV. Please try again.',
@@ -246,8 +155,263 @@ function App() {
     }
   }, [projectName]);
 
+  // Menu handlers
+  const handleOpenFile = useCallback(() => {
+    const uploadInput = document.getElementById('stl-upload-input');
+    if (uploadInput) {
+      uploadInput.click();
+    }
+  }, []);
+
+  const handleUploadFile = useCallback(async (file: File) => {
+    if (!file.name.toLowerCase().endsWith('.stl')) {
+      alert('Please select a file with the .stl extension.');
+      return;
+    }
+
+    try {
+      await uploadSTLFile(file);
+      const modelList = await fetchModels();
+      const nextModel = modelList.at(-1) ?? null;
+      if (nextModel) {
+        setSelectedModel(nextModel);
+      }
+    } catch (error) {
+      console.error('Failed to upload STL file', error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : 'Failed to upload STL file. Please try again.',
+      );
+    }
+  }, [fetchModels]);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUploadFileClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  const handleNewProject = useCallback(() => {
+    if (!selectedModel) {
+      alert('Please select an STL model first.');
+      return;
+    }
+    setIsNewProjectDialogOpen(true);
+  }, [selectedModel]);
+
+  const handleNewProjectConfirm = useCallback(async (projectName: string) => {
+    if (!selectedModel) {
+      return;
+    }
+
+    try {
+      // Make POST call to create/voxelize the project
+      const defaultVoxelSize = parseFloat(voxelSize) || 0.1;
+      await voxelizeModel(
+        selectedModel,
+        defaultVoxelSize,
+        projectName,
+      );
+      
+      // Refresh project list
+      const projectList = await fetchAvailableProjects();
+      setAvailableProjects(projectList);
+      
+      // Set the new project as current and load voxels
+      setProjectName(projectName);
+      handleLoadVoxels(projectName);
+      
+    } catch (error) {
+      console.error('Failed to create project', error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : 'Failed to create project. Please try again.',
+      );
+    }
+  }, [selectedModel, voxelSize, handleLoadVoxels]);
+
+  const handleOpenProjectSelect = useCallback((selectedProjectName: string) => {
+    setProjectName(selectedProjectName);
+    // Load voxels for the selected project
+    handleLoadVoxels(selectedProjectName);
+  }, [handleLoadVoxels]);
+
+  const handleSave = useCallback(async () => {
+    if (projectName.trim()) {
+      await handleDownloadCSV();
+    } else {
+      alert('No project to save. Please create or load a project first.');
+    }
+  }, [projectName, handleDownloadCSV]);
+
+  const handleSaveAs = useCallback(async () => {
+    const newName = prompt('Enter new project name:', projectName || 'new-project');
+    if (newName && newName.trim()) {
+      try {
+        const projectToSave = projectName || newName;
+        const blob = await downloadVoxelCSV(projectToSave);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${newName}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        alert(`Project saved as ${newName}.csv`);
+      } catch (error) {
+        alert('Failed to save project. Please try again.');
+      }
+    }
+  }, [projectName, handleDownloadCSV]);
+
+  // Edit menu handlers (disabled as per previous requirements)
+  const handleUndo = useCallback(() => { /* no-op */ }, []);
+  const handleRedo = useCallback(() => { /* no-op */ }, []);
+  const handleCopy = useCallback(() => { /* no-op */ }, []);
+  const handleCut = useCallback(() => { /* no-op */ }, []);
+  const handlePaste = useCallback(() => { /* no-op */ }, []);
+
+  const handlePreferences = useCallback(() => {
+    alert('Preferences dialog would open here.\nOptions: colors of interface, etc.');
+  }, []);
+
+  const handleOpenPartitionMenu = useCallback(() => {
+    alert('Partition Menu functionality not yet implemented.');
+  }, []);
+
+  const handleOpenLayerMenu = useCallback(() => {
+    if (projectName.trim()) {
+      setIsLayerEditingMode(true);
+    } else {
+      alert('Please select a project to open the Layer Editor.');
+    }
+  }, [projectName]);
+
+  const handleHighlightAll = useCallback(() => {
+    if (voxelCoordinates.length > 0) {
+      setSelectedVoxels(new Set(voxelCoordinates.map((_, i) => i)));
+    }
+  }, [voxelCoordinates]);
+
+  const handleSelectAll = useCallback(() => {
+    handleHighlightAll();
+  }, [handleHighlightAll]);
+
+  const handleResetSelected = useCallback(() => {
+    setSelectedVoxels(new Set());
+    setSelectedVoxel(null);
+  }, []);
+
+  const handleViewManual = useCallback(() => {
+    window.open('/docs', '_blank');
+  }, []);
+
+  const handleLicense = useCallback(() => {
+    alert('License information would be displayed here.');
+  }, []);
+
+  const handlePrivacy = useCallback(() => {
+    alert('Privacy statement would be displayed here.');
+  }, []);
+
+  const handleAbout = useCallback(() => {
+    alert('Voxel Editor v1.0\nA 3D voxel editing application.');
+  }, []);
+
+  const handleCredits = useCallback(() => {
+    alert('Credits:\nDeveloped by Five-of-a-Kind team.');
+  }, []);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const ctrlKey = isMac ? e.metaKey : e.ctrlKey;
+
+      if (ctrlKey) {
+        switch (e.key.toLowerCase()) {
+          case 's':
+            e.preventDefault();
+            handleSave();
+            break;
+          case 'a':
+            e.preventDefault();
+            handleSelectAll();
+            break;
+          // Undo, Redo, Cut, Copy, Paste shortcuts are intentionally not handled
+          // as per previous requirements to disable them.
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleSave, handleSelectAll]);
+
   return (
     <div className="app">
+      <MenuBar
+        onOpenFile={handleOpenFile}
+        onOpenFileSelect={handleModelChange}
+        availableModels={models}
+        onUploadFile={handleUploadFileClick}
+        onNewProject={handleNewProject}
+        onOpenProjectSelect={handleOpenProjectSelect}
+        availableProjects={
+          selectedModel
+            ? availableProjects.filter((project) =>
+                project.toLowerCase().includes(
+                  selectedModel.replace('.stl', '').toLowerCase()
+                )
+              )
+            : []
+        }
+        selectedModel={selectedModel}
+        onSave={handleSave}
+        onSaveAs={handleSaveAs}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
+        canUndo={false}
+        canRedo={false}
+        onCut={handleCut}
+        onCopy={handleCopy}
+        onPaste={handlePaste}
+        canPaste={false}
+        onPreferences={handlePreferences}
+        onOpenPartitionMenu={handleOpenPartitionMenu}
+        onOpenLayerMenu={handleOpenLayerMenu}
+        onHighlightAll={handleHighlightAll}
+        onSelectAll={handleSelectAll}
+        onResetSelected={handleResetSelected}
+        onViewManual={handleViewManual}
+        onLicense={handleLicense}
+        onPrivacy={handlePrivacy}
+        onAbout={handleAbout}
+        onCredits={handleCredits}
+      />
+      <input
+        ref={fileInputRef}
+        id="stl-upload-input"
+        type="file"
+        accept=".stl"
+        style={{ display: 'none' }}
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            handleUploadFile(file);
+          }
+          e.target.value = '';
+        }}
+      />
+      <NewProjectDialog
+        isOpen={isNewProjectDialogOpen}
+        stlFileName={selectedModel || ''}
+        onClose={() => setIsNewProjectDialogOpen(false)}
+        onConfirm={handleNewProjectConfirm}
+      />
       <ModelViewer
         selectedModel={selectedModel}
         voxelCoordinates={voxelCoordinates}
@@ -270,148 +434,7 @@ function App() {
         selectedVoxelIndices={selectedVoxels}
         selectedVoxelIndicesArray={selectedVoxelIndicesArray}
         isLayerEditingMode={isLayerEditingMode}
-        projectName={projectName}
-        voxelSize={parseFloat(voxelSize) || undefined}
       />
-      <section className="actions">
-        <ModelSelector
-          models={models}
-          selectedModel={selectedModel}
-          onModelChange={handleModelChange}
-          disabled={status === 'loading'}
-        />
-        <UploadButton uploadState={uploadState} onUpload={handleUpload} />
-        <UploadMessage uploadState={uploadState} message={uploadMessage} />
-        {models.length === 0 && (
-          <p className="empty-copy">
-            No STL models available yet. Upload one to begin.
-          </p>
-        )}
-        <ProjectSelector
-          availableProjects={availableProjects}
-          projectName={projectName}
-          onProjectNameChange={setProjectName}
-          onLoadVoxels={handleLoadVoxels}
-          disabled={status === 'loading'}
-          voxelCount={voxelCoordinates.length}
-        />
-        <div className="voxelize-section">
-          <h3>Voxelize Model</h3>
-          <div className="voxelize-controls">
-            <label htmlFor="voxel-size">
-              Voxel Size:
-              <input
-                id="voxel-size"
-                type="number"
-                step="0.01"
-                min="0.01"
-                value={voxelSize}
-                onChange={(e) => setVoxelSize(e.target.value)}
-                disabled={
-                  !selectedModel ||
-                  status === 'loading' ||
-                  voxelizeState === 'voxelizing'
-                }
-                style={{ marginLeft: '8px', width: '80px' }}
-              />
-            </label>
-            <button
-              onClick={handleVoxelize}
-              disabled={
-                !selectedModel ||
-                status === 'loading' ||
-                voxelizeState === 'voxelizing'
-              }
-              className="voxelize-button"
-            >
-              {voxelizeState === 'voxelizing'
-                ? 'Voxelizing...'
-                : 'Voxelize Current Model'}
-            </button>
-          </div>
-          {voxelizeMessage && (
-            <p
-              className={
-                voxelizeState === 'error' ? 'error-message' : 'success-message'
-              }
-            >
-              {voxelizeMessage}
-            </p>
-          )}
-        </div>
-        <div className="download-section">
-          <button
-            onClick={handleDownloadCSV}
-            disabled={!projectName.trim() || status === 'loading'}
-            className="download-button"
-          >
-            Download CSV
-          </button>
-        </div>
-        <div className="layer-editing-section">
-          {projectName.trim() && (
-            <div className="layer-axis-row">
-              <span className="layer-axis-label">Split by:</span>
-              <label className="layer-axis-option">
-                <input
-                  type="radio"
-                  name="layerAxis"
-                  checked={layerAxis === 'z'}
-                  onChange={() => {
-                    setLayerAxis('z');
-                    setSelectedLayerZ(null);
-                  }}
-                  disabled={status === 'loading'}
-                />
-                <span>Z</span>
-              </label>
-              <label className="layer-axis-option">
-                <input
-                  type="radio"
-                  name="layerAxis"
-                  checked={layerAxis === 'x'}
-                  onChange={() => {
-                    setLayerAxis('x');
-                    setSelectedLayerZ(null);
-                  }}
-                  disabled={status === 'loading'}
-                />
-                <span>X</span>
-              </label>
-              <label className="layer-axis-option">
-                <input
-                  type="radio"
-                  name="layerAxis"
-                  checked={layerAxis === 'y'}
-                  onChange={() => {
-                    setLayerAxis('y');
-                    setSelectedLayerZ(null);
-                  }}
-                  disabled={status === 'loading'}
-                />
-                <span>Y</span>
-              </label>
-            </div>
-          )}
-          {projectName.trim() && (
-            <label className="layer-editing-toggle">
-              <input
-                type="checkbox"
-                checked={isLayerEditingMode}
-                onChange={(e) => {
-                  setIsLayerEditingMode(e.target.checked);
-                  if (!e.target.checked) {
-                    setSelectedLayerZ(null);
-                  }
-                }}
-                disabled={status === 'loading'}
-              />
-              <span>Enable Layer Editing</span>
-            </label>
-          )}
-        </div>
-      </section>
-      <Footer modelsCount={models.length} selectedModel={selectedModel} />
     </div>
   );
 }

@@ -24,6 +24,7 @@ export const UploadButton = ({ uploadState, onUpload }: UploadButtonProps) => {
   return (
     <label className={`upload-button ${uploadState}`}>
       <input
+        id="stl-upload-input"
         type="file"
         accept=".stl"
         onChange={handleChange}

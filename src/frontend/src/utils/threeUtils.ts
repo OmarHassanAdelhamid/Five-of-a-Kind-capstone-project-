@@ -133,7 +133,7 @@ export const calculateCenterOffset = (
 export const renderVoxelCubes = (
   scene: THREE.Scene,
   coordinates: number[][],
-  modelSize?: number,
+  _modelSize?: number, // Unused but kept for API compatibility
   modelOriginalCenter?: THREE.Vector3 | null,
   existingCubes?: THREE.Mesh[],
   selectedLayerZ?: number | null,
@@ -158,7 +158,7 @@ export const renderVoxelCubes = (
   }
 
   // const voxelSize = calculateVoxelSize(coordinates, modelSize)
-  const voxelSize = 0.1
+  const voxelSize = 1
   const centerOffset = calculateCenterOffset(coordinates, modelOriginalCenter)
   const cubeGeometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize)
 

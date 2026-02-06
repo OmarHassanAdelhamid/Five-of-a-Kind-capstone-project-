@@ -5,8 +5,7 @@ Routes for file export.
 
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
-
-import os
+from pathlib import Path
 
 from app.config import VOXEL_STORAGE_DIR
 
@@ -24,7 +23,7 @@ def download_voxel_csv(project_name: str):
     Returns:
         (FileResponse): The CSV file containing voxel coordinates.
     """
-    project_path = os.path.join(VOXEL_STORAGE_DIR, project_name) 
+    project_path = VOXEL_STORAGE_DIR / project_name
     
     if not project_path.exists():
         available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
@@ -34,7 +33,7 @@ def download_voxel_csv(project_name: str):
         )
     
     return FileResponse(
-        path=project_path,
+        path=str(project_path),
         media_type="text/csv",
         filename=f"{project_name}.csv",
     )

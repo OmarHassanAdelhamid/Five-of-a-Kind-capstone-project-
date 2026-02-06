@@ -20,6 +20,9 @@ class VoxelDB:
             x  REAL NOT NULL,
             y  REAL NOT NULL,
             z  REAL NOT NULL,
+            cx INTEGER NOT NULL DEFAULT 0,
+            cy INTEGER NOT NULL DEFAULT 0,
+            cz INTEGER NOT NULL DEFAULT 0,
             magnetization REAL NOT NULL DEFAULT 0.0,
             angle REAL NOT NULL DEFAULT 0.0,
             material INTEGER NOT NULL DEFAULT 1,
@@ -51,7 +54,6 @@ class VoxelDB:
         self.set_meta("origin_z", oz)
         self.set_meta("voxel_size", voxel_size)
 
-
     def get_meta(self, key: str) -> str | None:
         self.cur.execute(
             "SELECT value FROM meta WHERE key = ?",
@@ -71,6 +73,29 @@ class VoxelDB:
         iz = int(round((coordinates[2] - oz) / voxel_size))
 
         return (ix, iy, iz)
+    
+
+    # shift ix, iy, iz to center structure
+    def centre_structure(self) -> None:
+
+        # queries to find the centered of the span for an offset that will properly center the structure
+        self.cur.execute("""
+            SELECT
+                (MAX(ix) + MIN(ix)) / 2,
+                (MAX(iy) + MIN(iy)) / 2,
+                (MAX(iz) + MIN(iz)) / 2
+            FROM voxels;
+        """)
+        cx, cy, cz = self.cur.fetchone()
+
+        # shift all voxel coordinates to center the structure
+        self.cur.execute("""
+            UPDATE voxels
+            SET
+                ix = ix - ?,
+                iy = iy - ?,
+                iz = iz - ?;
+        """, (round(cx), round(cy), round(cz)))
 
     # to intialize all voxels in the table
     def upsert_many(self, rows: Iterable[Tuple[int, int, int, float, float, float]]) -> None:
@@ -81,7 +106,7 @@ class VoxelDB:
             list(rows))
         
     # to add a single voxel
-    def add_voxel(self, ix: int, iy: int, iz: int) -> None:
+    def add_voxel(self, ix: int, iy: int, iz: int, x: float, y: float, z: float) -> None:
         # TODO: how to set x, y, z properly!
 
         self.cur.execute("""
