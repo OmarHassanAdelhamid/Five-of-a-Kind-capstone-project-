@@ -17,7 +17,7 @@ export const StatusMessage = ({
     status === 'loading'
       ? selectedModel
         ? `Loading ${selectedModel}…`
-        : 'Loading STL model…'
+        : 'Loading project…'
       : message
 
   return (

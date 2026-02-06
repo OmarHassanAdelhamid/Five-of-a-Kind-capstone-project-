@@ -103,6 +103,11 @@ function App() {
 
   const handleModelChange = useCallback((model: string) => {
     setSelectedModel(model);
+    setProjectName('');
+    setVoxelCoordinates([]);
+    setSelectedLayerZ(null);
+    setSelectedVoxel(null);
+    setSelectedVoxels(new Set());
   }, []);
 
   const handleLoadVoxels = useCallback(async (project?: string) => {
@@ -113,6 +118,7 @@ function App() {
 
     try {
       setStatus('loading');
+      setSelectedModel(null); // Clear STL model when loading project - show voxels only
       setSelectedLayerZ(null); // Clear layer selection when loading new project
       setSelectedVoxel(null); // Clear voxel selection when loading new project
       setSelectedVoxels(new Set()); // Clear multiple voxel selections
@@ -367,7 +373,7 @@ function App() {
                   selectedModel.replace('.stl', '').toLowerCase()
                 )
               )
-            : []
+            : availableProjects
         }
         selectedModel={selectedModel}
         onSave={handleSave}
