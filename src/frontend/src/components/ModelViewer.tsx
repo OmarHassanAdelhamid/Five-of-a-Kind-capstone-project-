@@ -4,6 +4,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import {
   createScene,
   setupCameraForGeometry,
+  setupCameraForVoxels,
   createModelMaterial,
   renderVoxelCubes,
   disposeScene,
@@ -12,6 +13,7 @@ import {
 import { API_BASE_URL } from '../utils/constants';
 import { StatusMessage } from './StatusMessage';
 import { LayerEditor } from './LayerEditor';
+import { PartitionsPanel } from './PartitionsPanel';
 
 //HEAVILY INFLUENCED BY STL LOADER EXAMPLE https://sbcode.net/threejs/loaders-stl/
 
@@ -63,6 +65,18 @@ export const ModelViewer = ({
   layerAxisRef.current = layerAxis;
   const isLayerEditingModeRef = useRef<boolean>(isLayerEditingMode);
   isLayerEditingModeRef.current = isLayerEditingMode;
+  const selectedVoxelIndicesRef = useRef<Set<number>>(selectedVoxelIndices);
+  selectedVoxelIndicesRef.current = selectedVoxelIndices;
+  const onLayerSelectRef = useRef(onLayerSelect);
+  onLayerSelectRef.current = onLayerSelect;
+  const onVoxelSelectRef = useRef(onVoxelSelect);
+  onVoxelSelectRef.current = onVoxelSelect;
+  const onVoxelsSelectRef = useRef(onVoxelsSelect);
+  onVoxelsSelectRef.current = onVoxelsSelect;
+  const selectedLayerZRef = useRef(selectedLayerZ);
+  selectedLayerZRef.current = selectedLayerZ;
+  const selectedVoxelIndexRef = useRef(selectedVoxelIndex);
+  selectedVoxelIndexRef.current = selectedVoxelIndex;
   const [viewerStatus, setViewerStatus] = useState<
     'loading' | 'ready' | 'error'
   >('loading');
@@ -72,6 +86,7 @@ export const ModelViewer = ({
     index: number;
   } | null>(null);
   const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
+  const [isPartitionsPanelOpen, setIsPartitionsPanelOpen] = useState(false);
 
   useEffect(() => {
     if (!selectedModel) {
@@ -262,7 +277,9 @@ export const ModelViewer = ({
             // Multi-voxel selection mode
             // Create a new Set from the current selection to avoid mutation issues
             // Use Array.from to ensure we get a fresh copy
-            const currentSelected = new Set(Array.from(selectedVoxelIndices));
+            const currentSelected = new Set(
+              Array.from(selectedVoxelIndicesRef.current),
+            );
 
             if (currentSelected.has(voxelInfo.index)) {
               // Deselect if already selected
@@ -315,12 +332,16 @@ export const ModelViewer = ({
                     ? 1
                     : 2;
               const layerValue = Math.round(coord[col] * 1e12) / 1e12;
-              console.log(`[ModelViewer] Click on voxel - coord: ${coord}, col: ${col}, layerValue: ${layerValue}, selectedLayerZ: ${selectedLayerZ}`);
+              console.log(
+                `[ModelViewer] Click on voxel - coord: ${coord}, col: ${col}, layerValue: ${layerValue}, selectedLayerZ: ${selectedLayerZ}`,
+              );
               if (
                 selectedLayerZ !== null &&
                 Math.abs(selectedLayerZ - layerValue) < 1e-9
               ) {
-                console.log(`[ModelViewer] Deselecting layer (same layer clicked)`);
+                console.log(
+                  `[ModelViewer] Deselecting layer (same layer clicked)`,
+                );
                 onLayerSelect(null);
               } else {
                 console.log(`[ModelViewer] Selecting layer: ${layerValue}`);
@@ -426,6 +447,293 @@ export const ModelViewer = ({
       if (modelRef.current) {
         modelRef.current.rotation.y += 0.003;
       }
+      if (sceneRef.current) {
+        sceneRef.current.controls.update();
+        sceneRef.current.renderer.render(
+          sceneRef.current.scene,
+          sceneRef.current.camera,
+        );
+      }
+    };
+
+    animate();
+
+    return () => {
+      isMounted = false;
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      window.removeEventListener('resize', handleResize);
+
+      if (sceneRef.current && sceneRef.current.renderer) {
+        sceneRef.current.renderer.domElement.removeEventListener(
+          'click',
+          handleClick,
+        );
+        sceneRef.current.renderer.domElement.removeEventListener(
+          'dblclick',
+          handleDoubleClick,
+        );
+        disposeScene(
+          sceneRef.current.scene,
+          sceneRef.current.renderer,
+          sceneRef.current.controls,
+          cubesRef.current,
+        );
+      }
+
+      if (
+        sceneRef.current &&
+        mountElement.contains(sceneRef.current.renderer.domElement)
+      ) {
+        mountElement.removeChild(sceneRef.current.renderer.domElement);
+      }
+
+      sceneRef.current = null;
+      modelRef.current = null;
+      cubesRef.current = [];
+      cubeToCoordMapRef.current.clear();
+      selectedCubeRef.current = null;
+      raycasterRef.current = null;
+      setSelectedVoxel(null);
+    };
+  }, [selectedModel, voxelCoordinates, onStatusChange]);
+
+  useEffect(() => {
+    if (selectedModel || voxelCoordinates.length === 0) {
+      return;
+    }
+
+    setViewerStatus('loading');
+    setViewerMessage(null);
+    setSelectedVoxel(null);
+    selectedCubeRef.current = null;
+    onStatusChange('loading');
+    const mountElement = mountRef.current;
+    if (!mountElement) {
+      return;
+    }
+
+    let isMounted = true;
+
+    const { clientWidth: width, clientHeight: height } = mountElement;
+    const sceneSetup = createScene(width, height);
+    sceneRef.current = sceneSetup;
+    mountElement.appendChild(sceneSetup.renderer.domElement);
+
+    const raycaster = new THREE.Raycaster();
+    raycasterRef.current = raycaster;
+
+    setupCameraForVoxels(
+      sceneSetup.camera,
+      sceneSetup.controls,
+      voxelCoordinates,
+      sceneSetup.grid,
+    );
+
+    const { cubes, cubeToCoordMap } = renderVoxelCubes(
+      sceneSetup.scene,
+      voxelCoordinates,
+      undefined,
+      undefined,
+      cubesRef.current,
+      isLayerEditingMode ? selectedLayerZ : null,
+      layerAxis,
+      isLayerEditingMode,
+    );
+    cubesRef.current = cubes;
+    cubeToCoordMapRef.current = cubeToCoordMap;
+
+    if (isMounted) {
+      setViewerStatus('ready');
+      onStatusChange('ready');
+    }
+
+    const handleResize = () => {
+      if (!mountRef.current || !sceneRef.current) return;
+      const { clientWidth, clientHeight } = mountRef.current;
+      sceneRef.current.camera.aspect = clientWidth / clientHeight;
+      sceneRef.current.camera.updateProjectionMatrix();
+      sceneRef.current.renderer.setSize(clientWidth, clientHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    const handleClick = (event: MouseEvent) => {
+      if (
+        !sceneRef.current ||
+        !raycasterRef.current ||
+        cubesRef.current.length === 0
+      )
+        return;
+
+      const rect = sceneSetup.renderer.domElement.getBoundingClientRect();
+      mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycasterRef.current.setFromCamera(
+        mouseRef.current,
+        sceneRef.current.camera,
+      );
+      const intersects = raycasterRef.current.intersectObjects(
+        cubesRef.current,
+        false,
+      );
+
+      if (intersects.length > 0) {
+        const clickedCube = intersects[0].object as THREE.Mesh;
+
+        const voxelInfo = cubeToCoordMapRef.current.get(clickedCube);
+        if (voxelInfo) {
+          const coord = voxelInfo.coord;
+          const isModifierPressed = event.ctrlKey || event.metaKey;
+
+          if (isModifierPressed) {
+            const currentSelected = new Set(
+              Array.from(selectedVoxelIndicesRef.current),
+            );
+
+            if (currentSelected.has(voxelInfo.index)) {
+              currentSelected.delete(voxelInfo.index);
+            } else {
+              currentSelected.add(voxelInfo.index);
+            }
+
+            if (onVoxelsSelectRef.current) {
+              onVoxelsSelectRef.current(new Set(Array.from(currentSelected)));
+            }
+
+            if (onVoxelSelectRef.current) {
+              if (currentSelected.size > 0) {
+                if (currentSelected.has(voxelInfo.index)) {
+                  onVoxelSelectRef.current?.(voxelInfo);
+                  setSelectedVoxel(voxelInfo);
+                } else if (currentSelected.size > 0) {
+                  const lastIndex = Array.from(currentSelected).pop();
+                  if (lastIndex !== undefined) {
+                    const lastVoxel = Array.from(
+                      cubeToCoordMapRef.current.values(),
+                    ).find((v) => v.index === lastIndex);
+                    if (lastVoxel) {
+                      onVoxelSelectRef.current?.(lastVoxel);
+                      setSelectedVoxel(lastVoxel);
+                    }
+                  }
+                }
+              } else {
+                onVoxelSelectRef.current?.(null);
+                setSelectedVoxel(null);
+              }
+            }
+          } else {
+            if (isLayerEditingModeRef.current && onLayerSelectRef.current) {
+              const col =
+                layerAxisRef.current === 'x'
+                  ? 0
+                  : layerAxisRef.current === 'y'
+                    ? 1
+                    : 2;
+              const layerValue = Math.round(coord[col] * 1e12) / 1e12;
+              if (
+                selectedLayerZRef.current !== null &&
+                Math.abs(selectedLayerZRef.current - layerValue) < 1e-9
+              ) {
+                onLayerSelectRef.current(null);
+              } else {
+                onLayerSelectRef.current(layerValue);
+              }
+            }
+
+            if (onVoxelsSelectRef.current && !event.ctrlKey && !event.metaKey) {
+              onVoxelsSelectRef.current(new Set());
+            }
+
+            if (onVoxelSelectRef.current && !event.ctrlKey && !event.metaKey) {
+              onVoxelSelectRef.current(voxelInfo);
+              setSelectedVoxel(voxelInfo);
+            }
+          }
+
+          selectedCubeRef.current = clickedCube;
+        }
+      } else {
+        if (onLayerSelectRef.current) {
+          onLayerSelectRef.current(null);
+        }
+        if (onVoxelSelectRef.current) {
+          onVoxelSelectRef.current(null);
+        }
+        if (onVoxelsSelectRef.current) {
+          onVoxelsSelectRef.current(new Set());
+        }
+        if (selectedCubeRef.current) {
+          selectedCubeRef.current = null;
+          setSelectedVoxel(null);
+        }
+      }
+    };
+
+    let clickTimeout: number | null = null;
+    const handleDoubleClick = (event: MouseEvent) => {
+      if (clickTimeout) {
+        clearTimeout(clickTimeout);
+        clickTimeout = null;
+      }
+
+      if (
+        !sceneRef.current ||
+        !raycasterRef.current ||
+        cubesRef.current.length === 0
+      )
+        return;
+
+      const rect = sceneSetup.renderer.domElement.getBoundingClientRect();
+      mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycasterRef.current.setFromCamera(
+        mouseRef.current,
+        sceneRef.current.camera,
+      );
+      const intersects = raycasterRef.current.intersectObjects(
+        cubesRef.current,
+        false,
+      );
+
+      if (intersects.length > 0 && onVoxelSelectRef.current) {
+        const clickedCube = intersects[0].object as THREE.Mesh;
+        const voxelInfo = cubeToCoordMapRef.current.get(clickedCube);
+
+        if (voxelInfo) {
+          if (
+            selectedVoxelIndexRef.current !== null &&
+            selectedVoxelIndexRef.current === voxelInfo.index
+          ) {
+            onVoxelSelectRef.current(null);
+            setSelectedVoxel(null);
+            if (onVoxelsSelectRef.current) {
+              onVoxelsSelectRef.current(new Set());
+            }
+          } else {
+            onVoxelSelectRef.current(voxelInfo);
+            setSelectedVoxel(voxelInfo);
+            if (onVoxelsSelectRef.current) {
+              onVoxelsSelectRef.current(new Set([voxelInfo.index]));
+            }
+          }
+          selectedCubeRef.current = clickedCube;
+        }
+      }
+    };
+
+    sceneSetup.renderer.domElement.addEventListener('click', handleClick);
+    sceneSetup.renderer.domElement.addEventListener(
+      'dblclick',
+      handleDoubleClick,
+    );
+
+    const animate = () => {
+      animationFrameRef.current = requestAnimationFrame(animate);
       if (sceneRef.current) {
         sceneRef.current.controls.update();
         sceneRef.current.renderer.render(
@@ -641,15 +949,24 @@ export const ModelViewer = ({
           ) : null}
         </div>
       )}
-      {projectName.trim() && (
-        <button
-          className="layer-settings-toggle"
-          onClick={() => setIsLayerEditorOpen(!isLayerEditorOpen)}
-          title="Toggle Layer Editor"
-        >
-          {isLayerEditorOpen ? '✕' : '⚙️'}
-        </button>
-      )}
+      <button
+        className={`partitions-tab ${isPartitionsPanelOpen ? 'open' : ''}`}
+        onClick={() => setIsPartitionsPanelOpen(!isPartitionsPanelOpen)}
+        title={isPartitionsPanelOpen ? 'Close Partitions' : 'Open Partitions'}
+      >
+        <span className="partitions-tab-text">Partitions</span>
+      </button>
+      <PartitionsPanel
+        isOpen={isPartitionsPanelOpen}
+        onClose={() => setIsPartitionsPanelOpen(false)}
+      />
+      <button
+        className={`layer-editor-tab ${isLayerEditorOpen ? 'open' : ''}`}
+        onClick={() => setIsLayerEditorOpen(!isLayerEditorOpen)}
+        title={isLayerEditorOpen ? 'Close Layer Editor' : 'Open Layer Editor'}
+      >
+        <span className="layer-editor-tab-text">Layer Editor</span>
+      </button>
       <LayerEditor
         projectName={projectName}
         voxelSize={voxelSize}

@@ -155,7 +155,7 @@ export const fetchLayers = async (
 }
 
 // Voxel data structure from backend
-// Backend returns: (ix, iy, iz, x, y, z, magnetization, angle, material)
+// Backend returns: (ix, iy, iz, x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth)
 export interface LayerVoxel {
   ix: number // Grid index X
   iy: number // Grid index Y
@@ -163,9 +163,10 @@ export interface LayerVoxel {
   x: number // Real coordinate X
   y: number // Real coordinate Y
   z: number // Real coordinate Z
-  magnetization: number
-  angle: number
   material: number
+  magnetization: number // magnet_magnitude
+  polarAngle: number // magnet_polar (θ), degrees
+  azimuthAngle: number // magnet_azimuth (φ), degrees
   // Computed fields for 2D grid display
   grid_x?: number
   grid_y?: number
@@ -192,8 +193,8 @@ const transformVoxel = (
   raw: number[],
   axis: 'z' | 'x' | 'y',
 ): LayerVoxel => {
-  // Backend returns: [ix, iy, iz, x, y, z, magnetization, angle, material]
-  const [ix, iy, iz, x, y, z, magnetization, angle, material] = raw
+  // Backend returns: [ix, iy, iz, x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth]
+  const [ix, iy, iz, x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth] = raw
 
   // For 2D grid display, we need to determine which coordinates to use
   // based on the axis (the axis coordinate is constant for the layer)
@@ -212,7 +213,20 @@ const transformVoxel = (
     grid_y = iz
   }
 
-  return { ix, iy, iz, x, y, z, magnetization, angle, material, grid_x, grid_y }
+  return {
+    ix,
+    iy,
+    iz,
+    x,
+    y,
+    z,
+    material,
+    magnetization: magnet_magnitude,
+    polarAngle: magnet_polar,
+    azimuthAngle: magnet_azimuth,
+    grid_x,
+    grid_y,
+  }
 }
 
 // Calculate bounds from voxels for 2D grid display

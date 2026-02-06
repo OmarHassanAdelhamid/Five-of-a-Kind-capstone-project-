@@ -18,6 +18,7 @@ import app.services.mesh_service as ms
 import app.services.voxel_service as vx
 import app.services.project_management_service as pm
 import app.services.model_tracking_service as mt
+import app.services.history_management_service as hm
 
 router = APIRouter(prefix="/api/project", tags=["project"])
 
@@ -58,6 +59,8 @@ async def get_surface_voxels(project_name: str):
         coordinates = pm.read_voxels(rows)
         coordinates_list = coordinates.tolist() if hasattr(coordinates, 'tolist') else coordinates
         
+        hm.clear_history() # when we switch projects, clear undo/redo history.
+
         return {
             "project_name": project_name,
             "coordinates": coordinates_list,

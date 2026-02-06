@@ -67,6 +67,36 @@ export const setupCameraForGeometry = (
   grid.position.y = -radius * 0.8
 }
 
+export const setupCameraForVoxels = (
+  camera: THREE.PerspectiveCamera,
+  controls: OrbitControls,
+  coordinates: number[][],
+  grid: THREE.GridHelper,
+): void => {
+  const box = new THREE.Box3()
+  coordinates.forEach((coord) => {
+    box.expandByPoint(new THREE.Vector3(coord[0], coord[1], coord[2]))
+  })
+  const size = new THREE.Vector3()
+  box.getSize(size)
+  const radius = Math.max(size.x, size.y, size.z) * 0.5
+  const distance = Math.max(radius * 2.5, 3)
+
+  camera.position.set(distance, distance, distance)
+  camera.near = Math.max(radius / 100, 0.01)
+  camera.far = Math.max(radius * 20, 100)
+  camera.updateProjectionMatrix()
+
+  controls.target.set(0, 0, 0)
+  controls.minDistance = Math.max(radius * 0.2, 0.5)
+  controls.maxDistance = Math.max(radius * 10, distance * 1.5)
+  controls.update()
+
+  const gridScale = Math.max(radius * 2.5, 12)
+  grid.scale.setScalar(gridScale / 12)
+  grid.position.y = -radius * 0.8
+}
+
 export const createModelMaterial = (): THREE.MeshStandardMaterial => {
   return new THREE.MeshStandardMaterial({
     color: 0x93c5fd,
@@ -158,7 +188,7 @@ export const renderVoxelCubes = (
   }
 
   // const voxelSize = calculateVoxelSize(coordinates, modelSize)
-  const voxelSize = 1
+  const voxelSize = 0.1
   const centerOffset = calculateCenterOffset(coordinates, modelOriginalCenter)
   const cubeGeometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize)
 

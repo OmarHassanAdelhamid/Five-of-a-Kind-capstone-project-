@@ -23,9 +23,10 @@ class VoxelDB:
             cx INTEGER NOT NULL DEFAULT 0,
             cy INTEGER NOT NULL DEFAULT 0,
             cz INTEGER NOT NULL DEFAULT 0,
-            magnetization REAL NOT NULL DEFAULT 0.0,
-            angle REAL NOT NULL DEFAULT 0.0,
             material INTEGER NOT NULL DEFAULT 1,
+            magnet_magnitude REAL NOT NULL DEFAULT 0.0,
+            magnet_polar REAL NOT NULL DEFAULT 0.0,
+            magnet_azimuth REAL NOT NULL DEFAULT 0.0,
             PRIMARY KEY (ix, iy, iz)
         );
         """)
@@ -38,7 +39,25 @@ class VoxelDB:
         """)
 
         self.cur.execute("CREATE INDEX IF NOT EXISTS idx_voxels_iz ON voxels(iz);")
+        self._migrate_magnetization_columns()
         self.conn.commit()
+
+    def _migrate_magnetization_columns(self) -> None:
+        """Add magnetization columns to existing databases that lack them."""
+        self.cur.execute("PRAGMA table_info(voxels)")
+        columns = {row[1] for row in self.cur.fetchall()}
+        if "magnet_magnitude" not in columns:
+            self.cur.execute(
+                "ALTER TABLE voxels ADD COLUMN magnet_magnitude REAL NOT NULL DEFAULT 0.0"
+            )
+        if "magnet_polar" not in columns:
+            self.cur.execute(
+                "ALTER TABLE voxels ADD COLUMN magnet_polar REAL NOT NULL DEFAULT 0.0"
+            )
+        if "magnet_azimuth" not in columns:
+            self.cur.execute(
+                "ALTER TABLE voxels ADD COLUMN magnet_azimuth REAL NOT NULL DEFAULT 0.0"
+            )
         
     # helpers to handle structure metadata 
     def set_meta(self, key: str, value: Any) -> None:
@@ -62,7 +81,7 @@ class VoxelDB:
         row = self.cur.fetchone()
         return row[0] if row else None
     
-    def get_grid_conversion(self, coordinates: np.array) -> tuple[int, int, int]:
+    def get_grid_conversion(self, coordinates: np.array) -> Tuple[int, int, int]:
         ox = float(self.get_meta("origin_x"))
         oy = float(self.get_meta("origin_y"))
         oz = float(self.get_meta("origin_z"))
@@ -103,7 +122,8 @@ class VoxelDB:
             INSERT OR REPLACE INTO voxels
             (ix, iy, iz, x, y, z)
             VALUES (?, ?, ?, ?, ?, ?)""", 
-            list(rows))
+            list(rows)
+        )
         
     # to add a single voxel
     def add_voxel(self, ix: int, iy: int, iz: int, x: float, y: float, z: float) -> None:
@@ -113,28 +133,51 @@ class VoxelDB:
             INSERT OR REPLACE INTO voxels
             (ix, iy, iz, x, y, z)
             VALUES (?, ?, ?, ?, ?, ?)""", 
-            (ix, iy, iz, x, y, z))
+            (ix, iy, iz, x, y, z)
+        )
         
     # to remove a single voxel
     def delete_voxel(self, ix: int, iy: int, iz: int) -> None:
-        self.cur.execute(
-        "DELETE FROM voxels WHERE ix = ? AND iy = ? AND iz = ?",
-        (ix, iy, iz))   
+        self.cur.execute("""
+            DELETE FROM voxels 
+            WHERE ix = ? AND iy = ? AND iz = ?""",
+            (ix, iy, iz)
+        )   
 
     # to set a specific magnetization (and angle) value for a voxel
-    def set_magnetization(self, ix: int, iy: int, iz: int, mag_value: float) -> None:
+    def set_magnetization(self, ix: int, iy: int, iz: int, magnet_mag: float, mag_polar: float, mag_azi: float) -> None:
         self.cur.execute("""
-        UPDATE voxels
-        SET magnetization = ?, angle = ?,
-        WHERE ix = ? AND iy = ? AND iz = ?""", 
-        (mag_value, ix, iy, iz)) 
+            UPDATE voxels
+            SET magnet_magnitude = ?, magnet_polar = ?, magnet_azimuth = ?
+            WHERE ix = ? AND iy = ? AND iz = ?""", 
+            (magnet_mag, mag_polar, mag_azi, ix, iy, iz)
+        ) 
 
     def set_material(self, ix: int, iy: int, iz: int, material_val: int) -> None:
         self.cur.execute("""
-        UPDATE voxels
-        SET material = ?
-        WHERE ix = ? AND iy = ? AND iz = ?""", 
-        (material_val, ix, iy, iz)) 
+            UPDATE voxels
+            SET material = ?
+            WHERE ix = ? AND iy = ? AND iz = ?""", 
+            (material_val, ix, iy, iz)
+        )
+
+    def get_properties(self, ix: int, iy: int, iz: int) -> Tuple[int, float, float, float]:
+        self.cur.execute("""
+            SELECT material, magnet_magnitude, magnet_polar, magnet_azimuth
+            FROM voxels
+            WHERE ix = ? AND iy = ? AND iz = ?""",
+            (ix, iy, iz)
+        )
+        return self.cur.fetchall()
+    
+    def set_properties(self, ix: int, iy: int, iz: int, material_val: int, magnet_mag: float, mag_polar: float, mag_azi: float) -> None:
+        self.cur.execute("""
+            UPDATE voxels
+            SET material = ?, magnet_magnitude = ?, magnet_polar = ?, magnet_azimuth = ?
+            WHERE ix = ? AND iy = ? AND iz = ?""",
+            (material_val, magnet_mag, mag_polar, mag_azi, ix, iy, iz)
+        )
+
     
     # additional helpers
     def commit(self) -> None: # closes database, but file still exists

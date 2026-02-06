@@ -30,14 +30,6 @@ const MATERIALS = [
   { id: 6, name: 'Material 6', color: '#8b5cf6' }, // Purple
 ];
 
-// Angle presets for each axis
-const ANGLE_PRESETS = {
-  x: [0, 45, 90, 135, 180, 270],
-  y: [0, 45, 90, 135, 180, 270],
-  z: [0, 45, 90, 135, 180, 270],
-  favourite: [0, 30, 45, 60, 90, 180],
-};
-
 export const LayerEditor = ({
   projectName,
   voxelSize,
@@ -55,13 +47,16 @@ export const LayerEditor = ({
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  const [selectedVoxelIndex, setSelectedVoxelIndex] = useState<number | null>(
-    null,
+  const [selectedVoxelIndices, setSelectedVoxelIndices] = useState<Set<number>>(
+    new Set(),
   );
   const [selectedMaterial, setSelectedMaterial] = useState<number>(1);
-  const [selectedAngleX, setSelectedAngleX] = useState<number>(0);
-  const [selectedAngleY, setSelectedAngleY] = useState<number>(0);
-  const [selectedAngleZ, setSelectedAngleZ] = useState<number>(0);
+  const [selectedTheta, setSelectedTheta] = useState<number>(90);
+  const [selectedPhi, setSelectedPhi] = useState<number>(0);
+  const [selectedMagnitude, setSelectedMagnitude] = useState<number>(1);
+  const [displayTheta, setDisplayTheta] = useState<string>('90');
+  const [displayPhi, setDisplayPhi] = useState<string>('0');
+  const [displayMagnitude, setDisplayMagnitude] = useState<string>('1');
   const [hasChanges, setHasChanges] = useState(false);
 
   const loadLayers = useCallback(async () => {
@@ -113,40 +108,71 @@ export const LayerEditor = ({
     [projectName, voxelSize, layerAxis, disabled, onLayerSelect],
   );
 
-  // When a voxel is selected from the 2D grid
-  const handleVoxelSelect = useCallback(
-    (voxel: LayerVoxel | null, index: number) => {
-      if (voxel && index >= 0) {
-        setSelectedVoxelIndex(index);
-        setSelectedMaterial(voxel.material || 1);
-        setSelectedAngleX(0);
-        setSelectedAngleY(0);
-        setSelectedAngleZ(voxel.angle || 0);
-        setHasChanges(false);
-      } else {
-        setSelectedVoxelIndex(null);
-      }
+  const syncMagnetizationDisplay = useCallback(
+    (theta: number, phi: number, magnitude: number) => {
+      setDisplayTheta(String(theta));
+      setDisplayPhi(String(phi));
+      setDisplayMagnitude(String(magnitude));
     },
     [],
   );
 
-  // Apply changes to the selected voxel - update material
-  const handleConfirmMaterial = useCallback(async () => {
-    if (selectedVoxelIndex === null || !selectedLayerData) return;
+  const handleVoxelSelect = useCallback(
+    (voxel: LayerVoxel | null, index: number) => {
+      if (voxel && index >= 0) {
+        setSelectedVoxelIndices(new Set([index]));
+        setSelectedMaterial(voxel.material || 1);
+        const mag = voxel.magnetization ?? 1;
+        const phi = voxel.azimuthAngle ?? 0;
+        const theta = voxel.polarAngle ?? 90;
+        setSelectedMagnitude(mag);
+        setSelectedPhi(phi);
+        setSelectedTheta(theta);
+        syncMagnetizationDisplay(theta, phi, mag);
+        setHasChanges(false);
+      } else {
+        setSelectedVoxelIndices(new Set());
+      }
+    },
+    [syncMagnetizationDisplay],
+  );
 
-    const selectedVoxel = selectedLayerData.voxels[selectedVoxelIndex];
-    if (!selectedVoxel) return;
+  const handleVoxelsSelect = useCallback(
+    (voxels: LayerVoxel[], indices: number[]) => {
+      if (indices.length > 0) {
+        setSelectedVoxelIndices(new Set(indices));
+        const first = voxels[0];
+        setSelectedMaterial(first.material || 1);
+        const mag = first.magnetization ?? 1;
+        const phi = first.azimuthAngle ?? 0;
+        const theta = first.polarAngle ?? 90;
+        setSelectedMagnitude(mag);
+        setSelectedPhi(phi);
+        setSelectedTheta(theta);
+        syncMagnetizationDisplay(theta, phi, mag);
+        setHasChanges(indices.length > 1);
+      } else {
+        setSelectedVoxelIndices(new Set());
+      }
+    },
+    [syncMagnetizationDisplay],
+  );
+
+  const handleConfirmMaterial = useCallback(async () => {
+    if (selectedVoxelIndices.size === 0 || !selectedLayerData) return;
+
+    const voxelCoords: [number, number, number][] = Array.from(
+      selectedVoxelIndices,
+    ).map((idx) => {
+      const v = selectedLayerData.voxels[idx];
+      return [v.ix, v.iy, v.iz] as [number, number, number];
+    });
 
     setLoading(true);
     setError(null);
     setMessage(null);
 
     try {
-      // Use grid coordinates (ix, iy, iz) for the update
-      const voxelCoords: [number, number, number][] = [
-        [selectedVoxel.ix, selectedVoxel.iy, selectedVoxel.iz],
-      ];
-
       await updateVoxels({
         project_name: projectName,
         voxels: voxelCoords,
@@ -154,15 +180,19 @@ export const LayerEditor = ({
         materialID: selectedMaterial,
       });
 
-      // Update local state
       const updatedVoxels = [...selectedLayerData.voxels];
-      updatedVoxels[selectedVoxelIndex] = {
-        ...updatedVoxels[selectedVoxelIndex],
-        material: selectedMaterial,
-      };
+      for (const idx of selectedVoxelIndices) {
+        if (updatedVoxels[idx]) {
+          updatedVoxels[idx] = {
+            ...updatedVoxels[idx],
+            material: selectedMaterial,
+          };
+        }
+      }
 
-      setMessage('Material updated successfully!');
+      setMessage(`Material updated for ${selectedVoxelIndices.size} voxel(s)!`);
       setSelectedLayerData({ ...selectedLayerData, voxels: updatedVoxels });
+      setSelectedVoxelIndices(new Set());
       setHasChanges(false);
     } catch (err) {
       setError(
@@ -171,49 +201,59 @@ export const LayerEditor = ({
     } finally {
       setLoading(false);
     }
-  }, [selectedVoxelIndex, selectedLayerData, selectedMaterial, projectName]);
+  }, [selectedVoxelIndices, selectedLayerData, selectedMaterial, projectName]);
 
-  // Apply changes to the selected voxel - update magnetization/angle
   const handleConfirmMagnetization = useCallback(async () => {
-    if (selectedVoxelIndex === null || !selectedLayerData) return;
+    if (selectedVoxelIndices.size === 0 || !selectedLayerData) return;
 
-    const selectedVoxel = selectedLayerData.voxels[selectedVoxelIndex];
-    if (!selectedVoxel) return;
+    const voxelCoords: [number, number, number][] = Array.from(
+      selectedVoxelIndices,
+    ).map((idx) => {
+      const v = selectedLayerData.voxels[idx];
+      return [v.ix, v.iy, v.iz] as [number, number, number];
+    });
+
+    const theta = parseFloat(displayTheta);
+    const phi = parseFloat(displayPhi);
+    const magnitude = parseFloat(displayMagnitude);
+
+    // Backend expects polar: [magnitude, polar (θ), azimuth (φ)]
+    const magnetization: [number, number, number] = [
+      Number.isNaN(magnitude) ? selectedMagnitude : magnitude,
+      Number.isNaN(theta) ? selectedTheta : theta,
+      Number.isNaN(phi) ? selectedPhi : phi,
+    ];
 
     setLoading(true);
     setError(null);
     setMessage(null);
 
     try {
-      // Use grid coordinates (ix, iy, iz) for the update
-      const voxelCoords: [number, number, number][] = [
-        [selectedVoxel.ix, selectedVoxel.iy, selectedVoxel.iz],
-      ];
-
-      // Convert angles to magnetization vector (simplified - using Z angle for now)
-      // In a full implementation, you'd compute from X, Y, Z angles
-      const magnetization: [number, number, number] = [
-        selectedAngleX,
-        selectedAngleY,
-        selectedAngleZ,
-      ];
-
       await updateVoxels({
         project_name: projectName,
         voxels: voxelCoords,
         action: 'update',
-        magnetization: magnetization,
+        magnetization,
       });
 
-      // Update local state
+      const [mag, theta, phi] = magnetization;
       const updatedVoxels = [...selectedLayerData.voxels];
-      updatedVoxels[selectedVoxelIndex] = {
-        ...updatedVoxels[selectedVoxelIndex],
-        angle: selectedAngleZ,
-      };
+      for (const idx of selectedVoxelIndices) {
+        if (updatedVoxels[idx]) {
+          updatedVoxels[idx] = {
+            ...updatedVoxels[idx],
+            magnetization: mag,
+            polarAngle: theta,
+            azimuthAngle: phi,
+          };
+        }
+      }
 
-      setMessage('Magnetization updated successfully!');
+      setMessage(
+        `Magnetization updated for ${selectedVoxelIndices.size} voxel(s)!`,
+      );
       setSelectedLayerData({ ...selectedLayerData, voxels: updatedVoxels });
+      setSelectedVoxelIndices(new Set());
       setHasChanges(false);
     } catch (err) {
       setError(
@@ -223,11 +263,14 @@ export const LayerEditor = ({
       setLoading(false);
     }
   }, [
-    selectedVoxelIndex,
+    selectedVoxelIndices,
     selectedLayerData,
-    selectedAngleX,
-    selectedAngleY,
-    selectedAngleZ,
+    selectedTheta,
+    selectedPhi,
+    selectedMagnitude,
+    displayTheta,
+    displayPhi,
+    displayMagnitude,
     projectName,
   ]);
 
@@ -265,6 +308,13 @@ export const LayerEditor = ({
     }
   }, [projectName, disabled, layerAxis, loadLayers]);
 
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
   if (!isOpen) return null;
 
   if (!projectName.trim() || disabled) {
@@ -281,9 +331,10 @@ export const LayerEditor = ({
     );
   }
 
+  const selectedIndicesArray = Array.from(selectedVoxelIndices);
   const selectedVoxel =
-    selectedVoxelIndex !== null && selectedLayerData
-      ? selectedLayerData.voxels[selectedVoxelIndex]
+    selectedIndicesArray.length === 1 && selectedLayerData
+      ? selectedLayerData.voxels[selectedIndicesArray[0]]
       : null;
 
   return (
@@ -314,13 +365,39 @@ export const LayerEditor = ({
         {/* 2D View Section */}
         <div className="layer-2d-grid-section">
           <h5>2D View</h5>
-          <Layer2DGrid
-            layerData={selectedLayerData}
-            width={520}
-            height={400}
-            onVoxelSelect={handleVoxelSelect}
-            selectedVoxelIndex={selectedVoxelIndex}
-          />
+          {(() => {
+            const layers = layersData?.layers ?? [];
+            const currentIdx =
+              selectedLayerData != null
+                ? layers.findIndex(
+                    (l) => l.index === selectedLayerData.layer_index,
+                  )
+                : -1;
+            const canGoUp =
+              currentIdx >= 0 && currentIdx < layers.length - 1;
+            const canGoDown = currentIdx > 0;
+            return (
+              <Layer2DGrid
+                layerData={selectedLayerData}
+                width={500}
+                height={400}
+                materialColors={Object.fromEntries(
+                  MATERIALS.map((m) => [m.id, m.color]),
+                )}
+                onVoxelSelect={handleVoxelSelect}
+                onVoxelsSelect={handleVoxelsSelect}
+                selectedVoxelIndices={selectedVoxelIndices}
+                onLayerUp={() => {
+                  if (canGoUp) loadLayer(layers[currentIdx + 1].coordinate);
+                }}
+                onLayerDown={() => {
+                  if (canGoDown) loadLayer(layers[currentIdx - 1].coordinate);
+                }}
+                canGoUp={canGoUp}
+                canGoDown={canGoDown}
+              />
+            );
+          })()}
           {selectedLayerData && (
             <p className="layer-2d-info">
               Layer {layerAxis.toUpperCase()}={selectedLayerData.layer_index} (
@@ -333,16 +410,21 @@ export const LayerEditor = ({
         <div className="voxel-editor-section">
           <h5>Voxel Properties</h5>
 
-          {selectedVoxel ? (
+          {selectedVoxelIndices.size > 0 ? (
             <>
               <p className="selected-voxel-info">
-                Selected: Voxel #{selectedVoxelIndex} at (
-                {selectedVoxel.x.toFixed(2)}, {selectedVoxel.y.toFixed(2)},{' '}
-                {selectedVoxel.z.toFixed(2)})
+                {selectedVoxelIndices.size === 1 && selectedVoxel ? (
+                  <>
+                    Selected: Voxel #{selectedIndicesArray[0]} at (
+                    {selectedVoxel.x.toFixed(2)}, {selectedVoxel.y.toFixed(2)},{' '}
+                    {selectedVoxel.z.toFixed(2)})
+                  </>
+                ) : (
+                  <>Selected: {selectedVoxelIndices.size} voxels</>
+                )}
               </p>
 
               <div className="voxel-editor-grid">
-                {/* Left Column - Materials */}
                 <div className="editor-column materials-column">
                   <h6>Material</h6>
                   <div className="material-grid">
@@ -363,84 +445,61 @@ export const LayerEditor = ({
                   </div>
                 </div>
 
-                {/* Right Side - Magnetization Angles */}
                 <div className="editor-column angles-column">
-                  <h6>Magnetization Angle</h6>
-                  <div className="angles-grid">
-                    {/* X Angle */}
-                    <div className="angle-column">
-                      <span className="angle-label">X</span>
-                      <div className="angle-squares">
-                        {ANGLE_PRESETS.x.map((angle) => (
-                          <button
-                            key={angle}
-                            className={`angle-square ${selectedAngleX === angle ? 'selected' : ''}`}
-                            onClick={() => {
-                              setSelectedAngleX(angle);
-                              setHasChanges(true);
-                            }}
-                          >
-                            {angle}°
-                          </button>
-                        ))}
-                      </div>
+                  <h6>Magnetization</h6>
+                  <div className="magnetization-inputs">
+                    <div className="magnetization-input-row">
+                      <label htmlFor="theta-input">θ (polar) °</label>
+                      <input
+                        id="theta-input"
+                        type="number"
+                        min={0}
+                        max={180}
+                        step={0.1}
+                        value={displayTheta}
+                        onChange={(e) => {
+                          setDisplayTheta(e.target.value);
+                          const v = parseFloat(e.target.value);
+                          if (!Number.isNaN(v)) setSelectedTheta(v);
+                          setHasChanges(true);
+                        }}
+                        className="magnetization-input"
+                      />
                     </div>
-
-                    {/* Y Angle */}
-                    <div className="angle-column">
-                      <span className="angle-label">Y</span>
-                      <div className="angle-squares">
-                        {ANGLE_PRESETS.y.map((angle) => (
-                          <button
-                            key={angle}
-                            className={`angle-square ${selectedAngleY === angle ? 'selected' : ''}`}
-                            onClick={() => {
-                              setSelectedAngleY(angle);
-                              setHasChanges(true);
-                            }}
-                          >
-                            {angle}°
-                          </button>
-                        ))}
-                      </div>
+                    <div className="magnetization-input-row">
+                      <label htmlFor="phi-input">φ (azimuth) °</label>
+                      <input
+                        id="phi-input"
+                        type="number"
+                        min={0}
+                        max={360}
+                        step={0.1}
+                        value={displayPhi}
+                        onChange={(e) => {
+                          setDisplayPhi(e.target.value);
+                          const v = parseFloat(e.target.value);
+                          if (!Number.isNaN(v)) setSelectedPhi(v);
+                          setHasChanges(true);
+                        }}
+                        className="magnetization-input"
+                      />
                     </div>
-
-                    {/* Z Angle */}
-                    <div className="angle-column">
-                      <span className="angle-label">Z</span>
-                      <div className="angle-squares">
-                        {ANGLE_PRESETS.z.map((angle) => (
-                          <button
-                            key={angle}
-                            className={`angle-square ${selectedAngleZ === angle ? 'selected' : ''}`}
-                            onClick={() => {
-                              setSelectedAngleZ(angle);
-                              setHasChanges(true);
-                            }}
-                          >
-                            {angle}°
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Favourite Angles */}
-                    <div className="angle-column">
-                      <span className="angle-label">★</span>
-                      <div className="angle-squares">
-                        {ANGLE_PRESETS.favourite.map((angle) => (
-                          <button
-                            key={angle}
-                            className={`angle-square favourite`}
-                            onClick={() => {
-                              setSelectedAngleZ(angle);
-                              setHasChanges(true);
-                            }}
-                          >
-                            {angle}°
-                          </button>
-                        ))}
-                      </div>
+                    <div className="magnetization-input-row">
+                      <label htmlFor="magnitude-input">|M| (magnitude)</label>
+                      <input
+                        id="magnitude-input"
+                        type="number"
+                        min={0}
+                        step={0.1}
+                        value={displayMagnitude}
+                        onChange={(e) => {
+                          setDisplayMagnitude(e.target.value);
+                          const v = parseFloat(e.target.value);
+                          if (!Number.isNaN(v) && v >= 0) setSelectedMagnitude(v);
+                          setHasChanges(true);
+                        }}
+                        className="magnetization-input"
+                      />
                     </div>
                   </div>
                 </div>
@@ -466,7 +525,7 @@ export const LayerEditor = ({
             </>
           ) : (
             <p className="no-voxel-selected">
-              Click on a voxel in the 2D view to edit its properties
+              Click or use lasso to select voxels in the 2D view
             </p>
           )}
         </div>
