@@ -28,6 +28,10 @@ def get_partitions(db_path: str, partition_size: int) -> None:
 
 
     base_dir = os.path.dirname(db_path)
+    name = os.path.basename(db_path)
+    out_dir = os.path.join(base_dir, f"{name}_dir")
+    os.makedirs(out_dir, exist_ok=True)
+
     count = 1
 
     half = partition_size//2
@@ -46,16 +50,16 @@ def get_partitions(db_path: str, partition_size: int) -> None:
     y_hi = ((max_iy // half) + 1) * half
     z_hi = ((max_iz // half) + 1) * half
 
-    print("lwo & high:", x_lo, x_hi)
-    print("lwo & high:", y_lo, y_hi)
-    print("lwo & high:", z_lo, z_hi)
+    print("low & high:", x_lo, x_hi)
+    print("low & high:", y_lo, y_hi)
+    print("low & high:", z_lo, z_hi)
 
     for i in range (x_lo, x_hi, partition_size):
         for j in range (y_lo, y_hi, partition_size):
             for k in range (z_lo, z_hi, partition_size):
                 voxel_range = (i, i+partition_size, j, j+partition_size, k, k+partition_size)
                 #new_path = os.path.join(base_dir, f"partition_{count}.db")
-                new_path = os.path.join(base_dir, f"sphere-partition{count}.db")
+                new_path = os.path.join(out_dir, f"partition{count}.db")
                 shutil.copy2(db_path, new_path)
                 remove_outside_range(new_path, voxel_range)
 
