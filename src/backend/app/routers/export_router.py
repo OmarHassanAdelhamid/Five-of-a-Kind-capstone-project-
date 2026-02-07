@@ -3,20 +3,20 @@ Routes for file export.
 """
 
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, BackgroundTasks, HTTPException
 from fastapi.responses import FileResponse
 
 import tempfile
+import os
 
 from app.config import VOXEL_STORAGE_DIR
-from app.models.schemas import ExportRequest
 import app.services.export_service as es
 
 router = APIRouter(prefix="/api/export")
 
 #!! will need to be altered to support partitioning!
 @router.get("")
-def export_project_csv(request: ExportRequest):
+def export_project_csv(project_name: str, export_name: str, background_tasks: BackgroundTasks):
     """
     Handles request to download a voxelized project file as CSV.
 
@@ -26,30 +26,41 @@ def export_project_csv(request: ExportRequest):
     Returns:
         (FileResponse): The CSV file containing voxel coordinates.
     """
-    project_path = VOXEL_STORAGE_DIR / request.project_name
+    project_path = VOXEL_STORAGE_DIR / project_name
     if not project_path.exists():
         available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
         raise HTTPException(
             status_code=404, 
-            detail=f"Project '{request.project_name}' not found. Available projects: {available if available else 'none'}"
+            detail=f"Project '{project_name}' not found. Available projects: {available if available else 'none'}"
         )
     
     try:
-        tempfile.tempdir(VOXEL_STORAGE_DIR / "temp")
-        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".csv")
+        temp_dir = tempfile.mkdtemp()
+        temp_csv = os.path.join(temp_dir, f"{export_name}.csv")
 
-        success = es.write_csv(project_path, temp_file)
+        success = es.write_csv(project_path, temp_csv)
+        if (not success): # needed property missing in voxel db.
+            raise HTTPException(status_code=400, 
+                                detail=f"File requested to export incomplete: {project_name}")
 
-        if (success): # validated successfully
-            return FileResponse(
-                path=temp_file.name, #!!!
-                media_type="text/csv",
-                filename=f"{request.export_name}.csv",
-            )
-        else: # needed property missing in file.
-            raise HTTPException(status_code=400, detail=f"File requested to export incomplete: {request.project_name}")
+        # remove temp dir/file within it once the file is returned to the user.
+        background_tasks.add_task(_cleanup, temp_csv)
+        background_tasks.add_task(os.rmdir, temp_dir)
+
+        return FileResponse(
+            path=temp_csv,
+            media_type="text/csv",
+            filename=f"{export_name}.csv",
+        )
+            
     except HTTPException as httpex:
         raise httpex
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error exporting as CSV: {str(e)}")
+
+def _cleanup(path: str):
+    """
+    """
+    if os.path.exists(path):
+        os.remove(path)
 

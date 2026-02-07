@@ -107,31 +107,16 @@ export const voxelizeModel = async (
   return (await response.json()) as { message?: string; projectpath?: string }
 }
 
-// 
-export interface ExportRequest {
-  project_name: string
-  export_name: string
-}
-
-export const downloadVoxelCSV = async (
-  request: ExportRequest,
-): Promise<{project_name: string; export_name: string}> => { // <- this is wrong :)
+export const downloadVoxelCSV = async (projectName: string, exportName: string): Promise<Blob> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/export`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(request),
-    })
+    const response = await fetch(`${API_BASE_URL}/api/export?project_name=${projectName}&export_name=${exportName}`)
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
       throw new Error(errorData.detail || `Failed to download CSV (${response.status})`)
     }
 
-    return await response.json() // TODO :) needs to accept FileResponse from backend.
-
+    return await response.blob()
 
   } catch (error) {
     console.log("Failed to export model", error)

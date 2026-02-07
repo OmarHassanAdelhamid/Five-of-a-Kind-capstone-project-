@@ -85,12 +85,6 @@ class UpdateHistoryRequest(BaseModel):
     project_name: str
     action: HistoryAction
 
-class ExportRequest(BaseModel):
-    """
-    """
-    project_name: str
-    export_name: str
-
 class ModelDelta(BaseModel):
     """
     Datatype to represent a change to a model.
