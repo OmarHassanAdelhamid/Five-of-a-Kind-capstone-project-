@@ -50,6 +50,7 @@ class RetrieveLayerRequest(BaseModel):
         axix (Optional[LayerAxis]): the axis the layer to be returned is parallel to. Defaults to Z.
     """
     project_name: str
+    partition_name: str
     layer_index: int
     axis: Optional[LayerAxis] = LayerAxis.Z
 
@@ -69,6 +70,7 @@ class UpdateVoxelsRequest(BaseModel):
         If both have a value or neither do, the request is considered invalid!
     """
     project_name: str
+    partition_name: str
     voxels: List[Tuple[int, int, int]]
     action: UpdateAction
     materialID: Optional[int] = None
@@ -83,6 +85,7 @@ class UpdateHistoryRequest(BaseModel):
         action (HistoryAction): the action to be taken (undo or redo).
     """
     project_name: str
+    partition_name: str
     action: HistoryAction
 
 class ModelDelta(BaseModel):

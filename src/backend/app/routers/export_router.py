@@ -9,12 +9,11 @@ from fastapi.responses import FileResponse
 import tempfile
 import os
 
-from app.config import VOXEL_STORAGE_DIR
+from app.config import PROJECT_STORAGE_DIR
 import app.services.export_service as es
 
 router = APIRouter(prefix="/api/export")
 
-#!! will need to be altered to support partitioning!
 @router.get("")
 def export_project_csv(project_name: str, export_name: str, background_tasks: BackgroundTasks):
     """
@@ -26,9 +25,10 @@ def export_project_csv(project_name: str, export_name: str, background_tasks: Ba
     Returns:
         (FileResponse): The CSV file containing voxel coordinates.
     """
-    project_path = VOXEL_STORAGE_DIR / project_name
+    project_path = PROJECT_STORAGE_DIR / project_name
+
     if not project_path.exists():
-        available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
+        available = [p.name for p in PROJECT_STORAGE_DIR.iterdir() if p.is_dir()]
         raise HTTPException(
             status_code=404, 
             detail=f"Project '{project_name}' not found. Available projects: {available if available else 'none'}"
@@ -38,6 +38,7 @@ def export_project_csv(project_name: str, export_name: str, background_tasks: Ba
         temp_dir = tempfile.mkdtemp()
         temp_csv = os.path.join(temp_dir, f"{export_name}.csv")
 
+        # pass project directory of partitions to exporter.
         success = es.write_csv(project_path, temp_csv)
         if (not success): # needed property missing in voxel db.
             raise HTTPException(status_code=400, 

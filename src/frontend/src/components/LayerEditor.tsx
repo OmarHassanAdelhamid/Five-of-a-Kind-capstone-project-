@@ -274,6 +274,16 @@ export const LayerEditor = ({
     projectName,
   ]);
 
+  const handleRefresh = useCallback(() => {
+    if (
+      externalSelectedLayerZ !== undefined &&
+      externalSelectedLayerZ !== null
+    ) {
+      loadLayer(externalSelectedLayerZ);
+    }
+    loadLayers();
+  }, [externalSelectedLayerZ, loadLayer, loadLayers]);
+
   // Combined confirm that updates material (backend only supports one at a time)
   const handleConfirm = useCallback(async () => {
     // For now, just update material since backend requires separate calls
@@ -343,7 +353,7 @@ export const LayerEditor = ({
         <h3>Layer Editor</h3>
         <div className="header-actions">
           <button
-            onClick={loadLayers}
+            onClick={handleRefresh}
             disabled={loading}
             className="refresh-button"
           >
@@ -373,8 +383,7 @@ export const LayerEditor = ({
                     (l) => l.index === selectedLayerData.layer_index,
                   )
                 : -1;
-            const canGoUp =
-              currentIdx >= 0 && currentIdx < layers.length - 1;
+            const canGoUp = currentIdx >= 0 && currentIdx < layers.length - 1;
             const canGoDown = currentIdx > 0;
             return (
               <Layer2DGrid
@@ -495,7 +504,8 @@ export const LayerEditor = ({
                         onChange={(e) => {
                           setDisplayMagnitude(e.target.value);
                           const v = parseFloat(e.target.value);
-                          if (!Number.isNaN(v) && v >= 0) setSelectedMagnitude(v);
+                          if (!Number.isNaN(v) && v >= 0)
+                            setSelectedMagnitude(v);
                           setHasChanges(true);
                         }}
                         className="magnetization-input"

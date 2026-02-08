@@ -24,7 +24,14 @@ def create_voxel_db(project_path: str, coordinates: np.array):
         db.upsert_many(rows)
         db.centre_structure()
         db.commit() 
-    pm.get_partitions(project_path, 6)
+    '''
+    Note: get_partitions should only be called if the total number of voxels in
+    a db is > some maximum value. will need to be experimentally determined.
+
+    Alternatively, could be done within partition_manager itself; if it detects #voxels
+    is small, it only makes one db / leaves it untouched.
+    '''
+    pm.get_partitions(project_path, 11) 
 
 def read_voxels(rows: list[tuple]) -> np.ndarray:
     return np.array(rows, dtype=float) if rows else np.empty((0, 3), dtype=float)
