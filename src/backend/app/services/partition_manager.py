@@ -3,7 +3,6 @@ import os
 from app.services.model_structure_service import VoxelDB    
 from collections import deque
 
-PARTITIONS: list[str] = [] #! is there a reason this variable is not local scope?
 
 '''
 get partitions, adjust integer coordinates to center the main structure, and note offset that is being used to centre structure
@@ -11,7 +10,7 @@ voxel_ref determines how partitions show be offset from the center
 '''
 # adjust integer coordinates to center the main structure
 def get_partitions(db_path: str, partition_size: int) -> None:
-    PARTITIONS.clear()
+    partitions = []
     with VoxelDB(db_path) as db:
         db.cur.execute("""
             SELECT
@@ -26,14 +25,9 @@ def get_partitions(db_path: str, partition_size: int) -> None:
     print("iy:", min_iy, max_iy, "span:", max_iy - min_iy)
     print("iz:", min_iz, max_iz, "span:", max_iz - min_iz)
 
-    # TODO: change this to not make the new directory!
+
     base_dir = os.path.dirname(db_path)
-    name = os.path.basename(db_path)
-    out_dir = os.path.join(base_dir, f"{name}_dir")
-    os.makedirs(out_dir, exist_ok=True)
-
     count = 1
-
     half = partition_size//2
 
     '''
@@ -58,8 +52,7 @@ def get_partitions(db_path: str, partition_size: int) -> None:
         for j in range (y_lo, y_hi, partition_size):
             for k in range (z_lo, z_hi, partition_size):
                 voxel_range = (i, i+partition_size, j, j+partition_size, k, k+partition_size)
-                #new_path = os.path.join(base_dir, f"partition_{count}.db")
-                new_path = os.path.join(out_dir, f"partition{count}.db")
+                new_path = os.path.join(base_dir, f"partition{count}.db")
                 shutil.copy2(db_path, new_path)
                 remove_outside_range(new_path, voxel_range)
 
@@ -69,7 +62,7 @@ def get_partitions(db_path: str, partition_size: int) -> None:
                     nonempty = db.cur.fetchone() is not None
 
                 if nonempty:
-                    PARTITIONS.append(new_path)
+                    partitions.append(new_path)
                     count += 1
                 else:
                     os.remove(new_path)

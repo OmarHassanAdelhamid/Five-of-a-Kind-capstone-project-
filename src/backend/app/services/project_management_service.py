@@ -31,7 +31,7 @@ def create_voxel_db(project_path: str, coordinates: np.array):
     Alternatively, could be done within partition_manager itself; if it detects #voxels
     is small, it only makes one db / leaves it untouched.
     '''
-    pm.get_partitions(project_path, 6) 
+    pm.get_partitions(project_path, 11) 
 
 def read_voxels(rows: list[tuple]) -> np.ndarray:
     return np.array(rows, dtype=float) if rows else np.empty((0, 3), dtype=float)

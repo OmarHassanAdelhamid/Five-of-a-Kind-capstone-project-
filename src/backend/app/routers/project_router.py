@@ -130,14 +130,16 @@ async def voxelize_stl(request: VoxelizeRequest):
         # get all coordinates of voxels (centers of each voxel)
         points = vx.get_voxel_coordinates(voxelized)
         origin = voxelized.translation
-
-        # create folder named after the project, and an initial partition.
-        # still saves to a location within the server.
-        project_folder = PROJECT_STORAGE_DIR / project_name
-        project_file_path = project_folder / project_name
+        
+        project_folder = os.path.join(PROJECT_STORAGE_DIR, f"{project_name}-dir")
+        os.makedirs(project_folder, exist_ok=True)
+        project_file_path = os.path.join(project_folder, f"{project_name}")
 
         pm.initialize_voxel_db(project_file_path, origin, voxel_size)
         pm.create_voxel_db(project_file_path, points)
+
+        if os.path.exists(project_file_path):
+            os.remove(project_file_path)
 
         return {
             "message": f"Voxelization Status of STL file ({stl_filename}): Success",
