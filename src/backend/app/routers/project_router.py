@@ -11,7 +11,7 @@ from fastapi import APIRouter, HTTPException
 
 import os
 
-from app.config import MODEL_DIR, VOXEL_STORAGE_DIR
+from app.config import STL_STORAGE_DIR, PROJECT_STORAGE_DIR
 from app.models.schemas import VoxelizeRequest
 
 import app.services.mesh_service as ms
@@ -25,37 +25,67 @@ router = APIRouter(prefix="/api/project", tags=["project"])
 @router.get("/list")
 def list_projects() -> dict[str, List[str]]:
     """
-    Lists all available voxelized project files.
+    Lists all available voxelized project folders.
 
     Returns:
-        (dict): Contains list of available project filenames.
+        (dict): Contains list of available project folders.
     """
-    projects = sorted(p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file())
+    projects = sorted(p.name for p in PROJECT_STORAGE_DIR.iterdir() if p.is_dir())
     return {"projects": projects}
 
-
-@router.get("")
-async def get_surface_voxels(project_name: str):
+@router.get("/partitions")
+def list_partitions(project_name: str):
     """
-    Handles request to retrieve surface voxels of a project for rendering.
-
-    Args:
-        project_name (str): The name of the project file to read.
-
-    Returns:
-        (dict): Contains the coordinates array and metadata.
+    Lists all partitions within a project folder.
     """
-    project_path = VOXEL_STORAGE_DIR / project_name
-    
+    project_path = PROJECT_STORAGE_DIR / project_name
+
     if not project_path.exists():
-        available = [p.name for p in VOXEL_STORAGE_DIR.iterdir() if p.is_file()]
+        available = [p.name for p in PROJECT_STORAGE_DIR.iterdir() if p.is_dir()]
         raise HTTPException(
             status_code=404, 
             detail=f"Project '{project_name}' not found. Available projects: {available if available else 'none'}"
         )
     
+    partitions = sorted(p.name for p in project_path.iterdir() if p.is_file())
+    return {
+        "project_name": project_name,
+        "partitions": partitions
+    }
+
+
+@router.get("")
+async def get_surface_voxels(project_name: str, partition_name: str):
+    """
+    Handles request to retrieve surface voxels of a partition within a project for rendering.
+
+    Args:
+        project_name (str): The name of the project to read a partition from.
+        partition_name (str): The name of the partition.
+
+    Returns:
+        (dict): Contains the coordinates array and metadata.
+    """
+    project_path = PROJECT_STORAGE_DIR / project_name
+
+    if not project_path.exists():
+        available = [p.name for p in PROJECT_STORAGE_DIR.iterdir() if p.is_dir()]
+        raise HTTPException(
+            status_code=404, 
+            detail=f"Project '{project_name}' not found. Available projects: {available if available else 'none'}"
+        )
+    
+    partition_path = project_path / partition_name
+
+    if not partition_path.exists():
+        available = [p.name for p in project_path.iterdir() if p.is_file()]
+        raise HTTPException(
+            status_code=404,
+            detail=f"Partition '{partition_name}' not found within project '{project_name}'. Available partitions: {available if available else 'none'}"
+        )
+    
     try:
-        rows = mt.find_surface(str(project_path))
+        rows = mt.find_surface(str(partition_path))
         coordinates = pm.read_voxels(rows)
         coordinates_list = coordinates.tolist() if hasattr(coordinates, 'tolist') else coordinates
         
@@ -63,6 +93,7 @@ async def get_surface_voxels(project_name: str):
 
         return {
             "project_name": project_name,
+            "partition_name": partition_name,
             "coordinates": coordinates_list,
             "num_voxels": len(coordinates_list) if coordinates_list is not None else 0
         }
@@ -86,32 +117,30 @@ async def voxelize_stl(request: VoxelizeRequest):
     stl_filename = request.stl_filename
     voxel_size = request.voxel_size
     project_name = request.project_name
-    stl_path = MODEL_DIR / stl_filename
+    stl_path = STL_STORAGE_DIR / stl_filename
 
     if not stl_path.exists():
         raise HTTPException(status_code=404, detail=f"Filename {stl_filename} not found on server!")
 
     with stl_path.open("rb") as file:
-        # load passed stl file as a mesh
+        # load passed stl file as a mesh and voxelize it
         mesh = ms.create_mesh(file, file_type='stl')
-        
         voxelized = vx.voxelize(mesh, voxel_size)
 
         # get all coordinates of voxels (centers of each voxel)
         points = vx.get_voxel_coordinates(voxelized)
         origin = voxelized.translation
 
-        project_path = os.path.join(str(VOXEL_STORAGE_DIR), project_name) 
+        # create folder named after the project, and an initial partition.
+        # still saves to a location within the server.
+        project_folder = PROJECT_STORAGE_DIR / project_name
+        project_file_path = project_folder / project_name
 
-        pm.initialize_voxel_db(project_path, origin, voxel_size)
-        pm.create_voxel_db(project_path, points)
+        pm.initialize_voxel_db(project_file_path, origin, voxel_size)
+        pm.create_voxel_db(project_file_path, points)
 
-        # save points as csv to project file with init magnetization vector and material IDs
-        # FOR POC: this will be in backend/sample-project-files
-
-        #filepath = pm.create_voxel_db(points, project_name, str(VOXEL_STORAGE_DIR), origin, voxel_size)
         return {
             "message": f"Voxelization Status of STL file ({stl_filename}): Success",
-            "projectpath": f"{project_path}",
+            "project_folder": f"{project_folder}",
             "voxel_size": voxel_size
         }
