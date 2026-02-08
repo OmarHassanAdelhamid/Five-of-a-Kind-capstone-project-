@@ -6,9 +6,10 @@ import {
   setupCameraForGeometry,
   setupCameraForVoxels,
   createModelMaterial,
-  renderVoxelCubes,
+  renderVoxelInstanced,
   disposeScene,
   type SceneSetup,
+  type VoxelData,
 } from '../utils/threeUtils';
 import { API_BASE_URL } from '../utils/constants';
 import { StatusMessage } from './StatusMessage';
@@ -54,11 +55,9 @@ export const ModelViewer = ({
   const animationFrameRef = useRef<number | null>(null);
   const sceneRef = useRef<SceneSetup | null>(null);
   const modelRef = useRef<THREE.Mesh | null>(null);
-  const cubesRef = useRef<THREE.Mesh[]>([]);
-  const cubeToCoordMapRef = useRef<
-    Map<THREE.Mesh, { coord: number[]; index: number }>
-  >(new Map());
-  const selectedCubeRef = useRef<THREE.Mesh | null>(null);
+  const instancedMeshRef = useRef<THREE.InstancedMesh | null>(null);
+  const instanceIdMapRef = useRef<Map<number, VoxelData>>(new Map());
+  const selectedCubeRef = useRef<number | null>(null);
   const raycasterRef = useRef<THREE.Raycaster | null>(null);
   const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
   const layerAxisRef = useRef<'z' | 'x' | 'y'>(layerAxis);
@@ -88,6 +87,10 @@ export const ModelViewer = ({
   const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
   const [isPartitionsPanelOpen, setIsPartitionsPanelOpen] = useState(false);
 
+  const COLOR_DEFAULT = 0x60a5fa;
+  const COLOR_LAYER_SELECTED = 0xf59e0b;
+  const COLOR_VOXEL_SELECTED = 0xef4444;
+
   useEffect(() => {
     if (!selectedModel) {
       return;
@@ -95,7 +98,7 @@ export const ModelViewer = ({
 
     setViewerStatus('loading');
     setViewerMessage(null);
-    setSelectedVoxel(null); // Clear selection when model changes
+    setSelectedVoxel(null);
     selectedCubeRef.current = null;
     onStatusChange('loading');
     const mountElement = mountRef.current;
@@ -133,91 +136,35 @@ export const ModelViewer = ({
         geometry.computeBoundingSphere();
         geometry.computeBoundingBox();
 
-        const boundingBox = geometry.boundingBox;
-        if (boundingBox) {
-          const size = new THREE.Vector3();
-          boundingBox.getSize(size);
-          const modelSize = Math.max(size.x, size.y, size.z);
+        setupCameraForGeometry(
+          sceneSetup.camera,
+          sceneSetup.controls,
+          geometry,
+          sceneSetup.grid,
+        );
 
-          setupCameraForGeometry(
-            sceneSetup.camera,
-            sceneSetup.controls,
-            geometry,
-            sceneSetup.grid,
+        const material = createModelMaterial();
+        const model = new THREE.Mesh(geometry, material);
+        model.castShadow = true;
+        model.receiveShadow = true;
+        sceneSetup.scene.add(model);
+        modelRef.current = model;
+
+        if (voxelCoordinates.length > 0) {
+          const { mesh, instanceIdMap } = renderVoxelInstanced(
+            sceneSetup.scene,
+            voxelCoordinates,
+            originalCenter,
+            instancedMeshRef.current,
           );
-
-          const material = createModelMaterial();
-          const model = new THREE.Mesh(geometry, material);
-          model.castShadow = true;
-          model.receiveShadow = true;
-          sceneSetup.scene.add(model);
-          modelRef.current = model;
-
-          if (voxelCoordinates.length > 0) {
-            const { cubes, cubeToCoordMap } = renderVoxelCubes(
-              sceneSetup.scene,
-              voxelCoordinates,
-              modelSize,
-              originalCenter,
-              cubesRef.current,
-              isLayerEditingMode ? selectedLayerZ : null,
-              layerAxis,
-              isLayerEditingMode,
-            );
-            cubesRef.current = cubes;
-            cubeToCoordMapRef.current = cubeToCoordMap;
-            // Reset selection when voxels change
-            selectedCubeRef.current = null;
-            setSelectedVoxel(null);
-          } else {
-            // No voxels - clear selection
-            selectedCubeRef.current = null;
-            setSelectedVoxel(null);
-          }
-
-          setViewerStatus('ready');
-          onStatusChange('ready');
-        } else {
-          const radius = geometry.boundingSphere?.radius ?? 1;
-          setupCameraForGeometry(
-            sceneSetup.camera,
-            sceneSetup.controls,
-            geometry,
-            sceneSetup.grid,
-          );
-
-          const material = createModelMaterial();
-          const model = new THREE.Mesh(geometry, material);
-          model.castShadow = true;
-          model.receiveShadow = true;
-          sceneSetup.scene.add(model);
-          modelRef.current = model;
-
-          if (voxelCoordinates.length > 0) {
-            const { cubes, cubeToCoordMap } = renderVoxelCubes(
-              sceneSetup.scene,
-              voxelCoordinates,
-              radius * 2,
-              undefined,
-              cubesRef.current,
-              isLayerEditingMode ? selectedLayerZ : null,
-              layerAxis,
-              isLayerEditingMode,
-            );
-            cubesRef.current = cubes;
-            cubeToCoordMapRef.current = cubeToCoordMap;
-            // Reset selection when voxels change
-            selectedCubeRef.current = null;
-            setSelectedVoxel(null);
-          } else {
-            // No voxels - clear selection
-            selectedCubeRef.current = null;
-            setSelectedVoxel(null);
-          }
-
-          setViewerStatus('ready');
-          onStatusChange('ready');
+          instancedMeshRef.current = mesh;
+          instanceIdMapRef.current = instanceIdMap;
+          selectedCubeRef.current = null;
+          setSelectedVoxel(null);
         }
+
+        setViewerStatus('ready');
+        onStatusChange('ready');
       },
       undefined,
       (error: unknown) => {
@@ -245,7 +192,7 @@ export const ModelViewer = ({
       if (
         !sceneRef.current ||
         !raycasterRef.current ||
-        cubesRef.current.length === 0
+        !instancedMeshRef.current
       )
         return;
 
@@ -257,74 +204,64 @@ export const ModelViewer = ({
         mouseRef.current,
         sceneRef.current.camera,
       );
-      const intersects = raycasterRef.current.intersectObjects(
-        cubesRef.current,
+
+      const intersects = raycasterRef.current.intersectObject(
+        instancedMeshRef.current,
         false,
       );
 
       if (intersects.length > 0) {
-        const clickedCube = intersects[0].object as THREE.Mesh;
+        const instanceId = intersects[0].instanceId;
+        if (instanceId === undefined) return;
 
-        // Get the voxel coordinate
-        const voxelInfo = cubeToCoordMapRef.current.get(clickedCube);
+        const voxelInfo = instanceIdMapRef.current.get(instanceId);
+
         if (voxelInfo) {
           const coord = voxelInfo.coord;
-
-          // Check if modifier key is pressed (Ctrl/Cmd) for multiple voxel selection
           const isModifierPressed = event.ctrlKey || event.metaKey;
 
           if (isModifierPressed) {
-            // Multi-voxel selection mode
-            // Create a new Set from the current selection to avoid mutation issues
-            // Use Array.from to ensure we get a fresh copy
             const currentSelected = new Set(
               Array.from(selectedVoxelIndicesRef.current),
             );
 
             if (currentSelected.has(voxelInfo.index)) {
-              // Deselect if already selected
               currentSelected.delete(voxelInfo.index);
             } else {
-              // Add to selection
               currentSelected.add(voxelInfo.index);
             }
 
-            // Update the parent state with the new Set
-            // Create a completely new Set to ensure React detects the change
-            if (onVoxelsSelect) {
-              onVoxelsSelect(new Set(Array.from(currentSelected)));
+            if (onVoxelsSelectRef.current) {
+              onVoxelsSelectRef.current(new Set(Array.from(currentSelected)));
             }
 
             // Always update single voxel selection to the last clicked voxel
             // This helps with display and ensures we track the most recent selection
-            if (onVoxelSelect) {
-              if (currentSelected.size > 0) {
-                // Set to the currently clicked voxel (or the last one if deselecting)
-                if (currentSelected.has(voxelInfo.index)) {
-                  onVoxelSelect(voxelInfo);
-                  setSelectedVoxel(voxelInfo);
-                } else if (currentSelected.size > 0) {
-                  // If we deselected, pick the last remaining one
-                  const lastIndex = Array.from(currentSelected).pop();
-                  if (lastIndex !== undefined) {
-                    const lastVoxel = Array.from(
-                      cubeToCoordMapRef.current.values(),
-                    ).find((v) => v.index === lastIndex);
-                    if (lastVoxel) {
-                      onVoxelSelect(lastVoxel);
-                      setSelectedVoxel(lastVoxel);
-                    }
+            if (onVoxelSelectRef.current) {
+              if (currentSelected.has(voxelInfo.index)) {
+                onVoxelSelectRef.current(voxelInfo);
+                setSelectedVoxel(voxelInfo);
+              } else if (currentSelected.size > 0) {
+                const lastIndex = Array.from(currentSelected).pop();
+                let lastVoxel = null;
+                for (const v of instanceIdMapRef.current.values()) {
+                  if (v.index === lastIndex) {
+                    lastVoxel = v;
+                    break;
                   }
                 }
+                if (lastVoxel) {
+                  onVoxelSelectRef.current(lastVoxel);
+                  setSelectedVoxel(lastVoxel);
+                }
               } else {
-                // No selections left
-                onVoxelSelect(null);
+                onVoxelSelectRef.current(null);
                 setSelectedVoxel(null);
               }
             }
           } else {
             // Single click - select layer only if layer editing mode is enabled
-            if (isLayerEditingModeRef.current && onLayerSelect) {
+            if (isLayerEditingModeRef.current && onLayerSelectRef.current) {
               const col =
                 layerAxisRef.current === 'x'
                   ? 0
@@ -332,67 +269,42 @@ export const ModelViewer = ({
                     ? 1
                     : 2;
               const layerValue = Math.round(coord[col] * 1e12) / 1e12;
-              console.log(
-                `[ModelViewer] Click on voxel - coord: ${coord}, col: ${col}, layerValue: ${layerValue}, selectedLayerZ: ${selectedLayerZ}`,
-              );
+
               if (
-                selectedLayerZ !== null &&
-                Math.abs(selectedLayerZ - layerValue) < 1e-9
+                selectedLayerZRef.current !== null &&
+                Math.abs(selectedLayerZRef.current - layerValue) < 1e-9
               ) {
-                console.log(
-                  `[ModelViewer] Deselecting layer (same layer clicked)`,
-                );
-                onLayerSelect(null);
+                onLayerSelectRef.current(null);
               } else {
-                console.log(`[ModelViewer] Selecting layer: ${layerValue}`);
-                onLayerSelect(layerValue);
+                onLayerSelectRef.current(layerValue);
               }
             }
 
-            // Clear multi-selection on regular click (unless Ctrl is held)
-            if (onVoxelsSelect && !event.ctrlKey && !event.metaKey) {
-              onVoxelsSelect(new Set());
+            if (onVoxelsSelectRef.current && !event.ctrlKey && !event.metaKey) {
+              onVoxelsSelectRef.current(new Set());
             }
 
-            // Update single voxel selection (only if not in multi-select mode)
-            if (onVoxelSelect && !event.ctrlKey && !event.metaKey) {
-              onVoxelSelect(voxelInfo);
+            if (onVoxelSelectRef.current && !event.ctrlKey && !event.metaKey) {
+              onVoxelSelectRef.current(voxelInfo);
               setSelectedVoxel(voxelInfo);
             }
           }
+          selectedCubeRef.current = instanceId;
         }
-
-        selectedCubeRef.current = clickedCube;
       } else {
-        // Clicked on empty space - deselect layer and voxels
-        if (onLayerSelect) {
-          onLayerSelect(null);
-        }
-        if (onVoxelSelect) {
-          onVoxelSelect(null);
-        }
-        if (onVoxelsSelect) {
-          onVoxelsSelect(new Set());
-        }
-        if (selectedCubeRef.current) {
-          selectedCubeRef.current = null;
-          setSelectedVoxel(null);
-        }
+        if (onLayerSelectRef.current) onLayerSelectRef.current(null);
+        if (onVoxelSelectRef.current) onVoxelSelectRef.current(null);
+        if (onVoxelsSelectRef.current) onVoxelsSelectRef.current(new Set());
+        selectedCubeRef.current = null;
+        setSelectedVoxel(null);
       }
     };
 
-    // Handle double-click for individual voxel selection (legacy support)
-    let clickTimeout: number | null = null;
     const handleDoubleClick = (event: MouseEvent) => {
-      if (clickTimeout) {
-        clearTimeout(clickTimeout);
-        clickTimeout = null;
-      }
-
       if (
         !sceneRef.current ||
         !raycasterRef.current ||
-        cubesRef.current.length === 0
+        !instancedMeshRef.current
       )
         return;
 
@@ -404,34 +316,29 @@ export const ModelViewer = ({
         mouseRef.current,
         sceneRef.current.camera,
       );
-      const intersects = raycasterRef.current.intersectObjects(
-        cubesRef.current,
+      const intersects = raycasterRef.current.intersectObject(
+        instancedMeshRef.current,
         false,
       );
 
-      if (intersects.length > 0 && onVoxelSelect) {
-        const clickedCube = intersects[0].object as THREE.Mesh;
-        const voxelInfo = cubeToCoordMapRef.current.get(clickedCube);
-
+      if (
+        intersects.length > 0 &&
+        intersects[0].instanceId !== undefined &&
+        onVoxelSelectRef.current
+      ) {
+        const instanceId = intersects[0].instanceId;
+        const voxelInfo = instanceIdMapRef.current.get(instanceId);
         if (voxelInfo) {
-          if (
-            selectedVoxelIndex !== null &&
-            selectedVoxelIndex === voxelInfo.index
-          ) {
-            // Toggle: deselect if double-clicking the same voxel
-            onVoxelSelect(null);
+          if (selectedVoxelIndexRef.current === voxelInfo.index) {
+            onVoxelSelectRef.current(null);
             setSelectedVoxel(null);
-            if (onVoxelsSelect) {
-              onVoxelsSelect(new Set());
-            }
+            if (onVoxelsSelectRef.current) onVoxelsSelectRef.current(new Set());
           } else {
-            onVoxelSelect(voxelInfo);
+            onVoxelSelectRef.current(voxelInfo);
             setSelectedVoxel(voxelInfo);
-            if (onVoxelsSelect) {
-              onVoxelsSelect(new Set([voxelInfo.index]));
-            }
+            if (onVoxelsSelectRef.current)
+              onVoxelsSelectRef.current(new Set([voxelInfo.index]));
           }
-          selectedCubeRef.current = clickedCube;
         }
       }
     };
@@ -478,7 +385,7 @@ export const ModelViewer = ({
           sceneRef.current.scene,
           sceneRef.current.renderer,
           sceneRef.current.controls,
-          cubesRef.current,
+          instancedMeshRef.current,
         );
       }
 
@@ -491,8 +398,8 @@ export const ModelViewer = ({
 
       sceneRef.current = null;
       modelRef.current = null;
-      cubesRef.current = [];
-      cubeToCoordMapRef.current.clear();
+      instancedMeshRef.current = null;
+      instanceIdMapRef.current.clear();
       selectedCubeRef.current = null;
       raycasterRef.current = null;
       setSelectedVoxel(null);
@@ -507,15 +414,11 @@ export const ModelViewer = ({
     setViewerStatus('loading');
     setViewerMessage(null);
     setSelectedVoxel(null);
-    selectedCubeRef.current = null;
     onStatusChange('loading');
     const mountElement = mountRef.current;
-    if (!mountElement) {
-      return;
-    }
+    if (!mountElement) return;
 
     let isMounted = true;
-
     const { clientWidth: width, clientHeight: height } = mountElement;
     const sceneSetup = createScene(width, height);
     sceneRef.current = sceneSetup;
@@ -531,18 +434,14 @@ export const ModelViewer = ({
       sceneSetup.grid,
     );
 
-    const { cubes, cubeToCoordMap } = renderVoxelCubes(
+    const { mesh, instanceIdMap } = renderVoxelInstanced(
       sceneSetup.scene,
       voxelCoordinates,
       undefined,
-      undefined,
-      cubesRef.current,
-      isLayerEditingMode ? selectedLayerZ : null,
-      layerAxis,
-      isLayerEditingMode,
+      instancedMeshRef.current,
     );
-    cubesRef.current = cubes;
-    cubeToCoordMapRef.current = cubeToCoordMap;
+    instancedMeshRef.current = mesh;
+    instanceIdMapRef.current = instanceIdMap;
 
     if (isMounted) {
       setViewerStatus('ready');
@@ -556,14 +455,13 @@ export const ModelViewer = ({
       sceneRef.current.camera.updateProjectionMatrix();
       sceneRef.current.renderer.setSize(clientWidth, clientHeight);
     };
-
     window.addEventListener('resize', handleResize);
 
     const handleClick = (event: MouseEvent) => {
       if (
         !sceneRef.current ||
         !raycasterRef.current ||
-        cubesRef.current.length === 0
+        !instancedMeshRef.current
       )
         return;
 
@@ -575,15 +473,18 @@ export const ModelViewer = ({
         mouseRef.current,
         sceneRef.current.camera,
       );
-      const intersects = raycasterRef.current.intersectObjects(
-        cubesRef.current,
+
+      const intersects = raycasterRef.current.intersectObject(
+        instancedMeshRef.current,
         false,
       );
 
       if (intersects.length > 0) {
-        const clickedCube = intersects[0].object as THREE.Mesh;
+        const instanceId = intersects[0].instanceId;
+        if (instanceId === undefined) return;
 
-        const voxelInfo = cubeToCoordMapRef.current.get(clickedCube);
+        const voxelInfo = instanceIdMapRef.current.get(instanceId);
+
         if (voxelInfo) {
           const coord = voxelInfo.coord;
           const isModifierPressed = event.ctrlKey || event.metaKey;
@@ -604,24 +505,24 @@ export const ModelViewer = ({
             }
 
             if (onVoxelSelectRef.current) {
-              if (currentSelected.size > 0) {
-                if (currentSelected.has(voxelInfo.index)) {
-                  onVoxelSelectRef.current?.(voxelInfo);
-                  setSelectedVoxel(voxelInfo);
-                } else if (currentSelected.size > 0) {
-                  const lastIndex = Array.from(currentSelected).pop();
-                  if (lastIndex !== undefined) {
-                    const lastVoxel = Array.from(
-                      cubeToCoordMapRef.current.values(),
-                    ).find((v) => v.index === lastIndex);
-                    if (lastVoxel) {
-                      onVoxelSelectRef.current?.(lastVoxel);
-                      setSelectedVoxel(lastVoxel);
-                    }
+              if (currentSelected.has(voxelInfo.index)) {
+                onVoxelSelectRef.current(voxelInfo);
+                setSelectedVoxel(voxelInfo);
+              } else if (currentSelected.size > 0) {
+                const lastIndex = Array.from(currentSelected).pop();
+                let lastVoxel = null;
+                for (const v of instanceIdMapRef.current.values()) {
+                  if (v.index === lastIndex) {
+                    lastVoxel = v;
+                    break;
                   }
                 }
+                if (lastVoxel) {
+                  onVoxelSelectRef.current(lastVoxel);
+                  setSelectedVoxel(lastVoxel);
+                }
               } else {
-                onVoxelSelectRef.current?.(null);
+                onVoxelSelectRef.current(null);
                 setSelectedVoxel(null);
               }
             }
@@ -634,6 +535,7 @@ export const ModelViewer = ({
                     ? 1
                     : 2;
               const layerValue = Math.round(coord[col] * 1e12) / 1e12;
+
               if (
                 selectedLayerZRef.current !== null &&
                 Math.abs(selectedLayerZRef.current - layerValue) < 1e-9
@@ -653,37 +555,22 @@ export const ModelViewer = ({
               setSelectedVoxel(voxelInfo);
             }
           }
-
-          selectedCubeRef.current = clickedCube;
+          selectedCubeRef.current = instanceId;
         }
       } else {
-        if (onLayerSelectRef.current) {
-          onLayerSelectRef.current(null);
-        }
-        if (onVoxelSelectRef.current) {
-          onVoxelSelectRef.current(null);
-        }
-        if (onVoxelsSelectRef.current) {
-          onVoxelsSelectRef.current(new Set());
-        }
-        if (selectedCubeRef.current) {
-          selectedCubeRef.current = null;
-          setSelectedVoxel(null);
-        }
+        if (onLayerSelectRef.current) onLayerSelectRef.current(null);
+        if (onVoxelSelectRef.current) onVoxelSelectRef.current(null);
+        if (onVoxelsSelectRef.current) onVoxelsSelectRef.current(new Set());
+        selectedCubeRef.current = null;
+        setSelectedVoxel(null);
       }
     };
 
-    let clickTimeout: number | null = null;
     const handleDoubleClick = (event: MouseEvent) => {
-      if (clickTimeout) {
-        clearTimeout(clickTimeout);
-        clickTimeout = null;
-      }
-
       if (
         !sceneRef.current ||
         !raycasterRef.current ||
-        cubesRef.current.length === 0
+        !instancedMeshRef.current
       )
         return;
 
@@ -695,33 +582,29 @@ export const ModelViewer = ({
         mouseRef.current,
         sceneRef.current.camera,
       );
-      const intersects = raycasterRef.current.intersectObjects(
-        cubesRef.current,
+      const intersects = raycasterRef.current.intersectObject(
+        instancedMeshRef.current,
         false,
       );
 
-      if (intersects.length > 0 && onVoxelSelectRef.current) {
-        const clickedCube = intersects[0].object as THREE.Mesh;
-        const voxelInfo = cubeToCoordMapRef.current.get(clickedCube);
-
+      if (
+        intersects.length > 0 &&
+        intersects[0].instanceId !== undefined &&
+        onVoxelSelectRef.current
+      ) {
+        const instanceId = intersects[0].instanceId;
+        const voxelInfo = instanceIdMapRef.current.get(instanceId);
         if (voxelInfo) {
-          if (
-            selectedVoxelIndexRef.current !== null &&
-            selectedVoxelIndexRef.current === voxelInfo.index
-          ) {
+          if (selectedVoxelIndexRef.current === voxelInfo.index) {
             onVoxelSelectRef.current(null);
             setSelectedVoxel(null);
-            if (onVoxelsSelectRef.current) {
-              onVoxelsSelectRef.current(new Set());
-            }
+            if (onVoxelsSelectRef.current) onVoxelsSelectRef.current(new Set());
           } else {
             onVoxelSelectRef.current(voxelInfo);
             setSelectedVoxel(voxelInfo);
-            if (onVoxelsSelectRef.current) {
+            if (onVoxelsSelectRef.current)
               onVoxelsSelectRef.current(new Set([voxelInfo.index]));
-            }
           }
-          selectedCubeRef.current = clickedCube;
         }
       }
     };
@@ -742,16 +625,12 @@ export const ModelViewer = ({
         );
       }
     };
-
     animate();
 
     return () => {
       isMounted = false;
-      if (animationFrameRef.current !== null) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      cancelAnimationFrame(animationFrameRef.current!);
       window.removeEventListener('resize', handleResize);
-
       if (sceneRef.current && sceneRef.current.renderer) {
         sceneRef.current.renderer.domElement.removeEventListener(
           'click',
@@ -765,146 +644,72 @@ export const ModelViewer = ({
           sceneRef.current.scene,
           sceneRef.current.renderer,
           sceneRef.current.controls,
-          cubesRef.current,
+          instancedMeshRef.current,
         );
       }
-
-      if (
-        sceneRef.current &&
-        mountElement.contains(sceneRef.current.renderer.domElement)
-      ) {
+      if (mountElement && sceneRef.current)
         mountElement.removeChild(sceneRef.current.renderer.domElement);
-      }
-
       sceneRef.current = null;
-      modelRef.current = null;
-      cubesRef.current = [];
-      cubeToCoordMapRef.current.clear();
+      instancedMeshRef.current = null;
+      instanceIdMapRef.current.clear();
       selectedCubeRef.current = null;
       raycasterRef.current = null;
       setSelectedVoxel(null);
     };
   }, [selectedModel, voxelCoordinates, onStatusChange]);
 
-  // Separate effect to update voxel colors when layer or voxel selection changes
   useEffect(() => {
-    if (
-      !sceneRef.current ||
-      cubesRef.current.length === 0 ||
-      voxelCoordinates.length === 0
-    ) {
+    if (!instancedMeshRef.current || instanceIdMapRef.current.size === 0)
       return;
-    }
 
+    const mesh = instancedMeshRef.current;
     const col = layerAxis === 'x' ? 0 : layerAxis === 'y' ? 1 : 2;
     const getLayerValue = (coord: number[]) =>
       Math.round(coord[col] * 1e12) / 1e12;
 
-    const isInSelectedLayer = (coord: number[]): boolean => {
-      if (
-        !isLayerEditingMode ||
-        selectedLayerZ === null ||
-        selectedLayerZ === undefined
-      )
-        return false;
-      return Math.abs(getLayerValue(coord) - selectedLayerZ) < 1e-9;
-    };
+    const dummyColor = new THREE.Color();
 
-    const layerZSet = new Set<number>();
-    cubesRef.current.forEach((cube) => {
-      layerZSet.add(getLayerValue(cube.userData.coord as number[]));
-    });
+    for (let i = 0; i < mesh.count; i++) {
+      const data = instanceIdMapRef.current.get(i);
+      if (!data) continue;
 
-    const sortedLayerZs = Array.from(layerZSet).sort((a, b) => a - b);
+      const layerValue = getLayerValue(data.coord);
 
-    // Distinct color palette for layers - cycles through these colors
-    const layerColors = [
-      0x3b82f6, // Blue
-      0x10b981, // Green
-      0xf59e0b, // Amber
-      0xef4444, // Red
-      0x8b5cf6, // Purple
-      0xec4899, // Pink
-      0x06b6d4, // Cyan
-      0x84cc16, // Lime
-      0xf97316, // Orange
-      0x6366f1, // Indigo
-    ];
-
-    // Helper function to get color for a layer based on its index
-    const getLayerColor = (layerZ: number): number => {
-      const layerIndex = sortedLayerZs.indexOf(layerZ);
-      if (layerIndex === -1) return 0xff0000; // Default red
-
-      // Cycle through the color palette
-      return layerColors[layerIndex % layerColors.length];
-    };
-
-    // Default neutral color when layer editing is off
-    const defaultVoxelColor = 0x60a5fa; // Light blue
-
-    // Update colors of existing cubes
-    cubesRef.current.forEach((cube) => {
-      const material = cube.material as THREE.MeshStandardMaterial;
-      const coord = cube.userData.coord as number[];
-      const layerZ = getLayerValue(coord);
-      const isSelected = isInSelectedLayer(coord);
-
-      // Get base color - use layer color only if layer editing mode is enabled
-      const baseColor = isLayerEditingMode
-        ? getLayerColor(layerZ)
-        : defaultVoxelColor;
-
-      // Check if this is a selected voxel (single or multiple)
-      // Use both the Set and the array to ensure we catch all selections
       const isSelectedVoxel =
-        (selectedVoxelIndex !== null &&
-          cube.userData.index === selectedVoxelIndex) ||
-        selectedVoxelIndices.has(cube.userData.index) ||
+        (selectedVoxelIndex !== null && data.index === selectedVoxelIndex) ||
+        selectedVoxelIndices.has(data.index) ||
         (selectedVoxelIndicesArray &&
-          selectedVoxelIndicesArray.includes(cube.userData.index));
+          selectedVoxelIndicesArray.includes(data.index));
 
-      // Update material properties
+      // Check Layer
+      const isSelectedLayer =
+        isLayerEditingMode &&
+        selectedLayerZ !== null &&
+        selectedLayerZ !== undefined &&
+        Math.abs(selectedLayerZ - layerValue) < 1e-9;
+
       if (isSelectedVoxel) {
-        // Highlight selected voxel(s) with yellow glow - always highlight selected voxels
-        material.color.setHex(0xffff00); // Yellow for selected voxel
-        material.opacity = 1.0;
-        material.transparent = false;
-        material.emissive.setHex(0xffff00);
-        material.emissiveIntensity = 0.6;
+        dummyColor.setHex(COLOR_VOXEL_SELECTED);
+      } else if (isSelectedLayer) {
+        dummyColor.setHex(COLOR_LAYER_SELECTED);
       } else {
-        // Use base color (layer color if editing mode, neutral if not)
-        material.color.setHex(baseColor);
-
-        if (isLayerEditingMode) {
-          // Layer editing mode: highlight selected layers
-          material.opacity = isSelected ? 1.0 : 0.6;
-          material.transparent = !isSelected;
-
-          if (isSelected) {
-            // Make selected layer glow
-            material.emissive.setHex(baseColor);
-            material.emissiveIntensity = 0.4;
-          } else {
-            material.emissive.setHex(0x000000);
-            material.emissiveIntensity = 0;
-          }
-        } else {
-          // Normal mode: all voxels same opacity, no glow
-          material.opacity = 1;
-          material.transparent = true;
-          material.emissive.setHex(0x000000);
-          material.emissiveIntensity = 0;
-        }
+        dummyColor.setHex(COLOR_DEFAULT);
       }
-    });
+
+      mesh.setColorAt(i, dummyColor);
+    }
+
+    if (mesh.instanceColor) {
+      mesh.instanceColor.needsUpdate = true;
+    }
   }, [
     selectedLayerZ,
     selectedVoxelIndex,
     layerAxis,
-    voxelCoordinates,
     isLayerEditingMode,
-    selectedVoxelIndicesArray.join(','),
+    selectedVoxelIndicesArray,
+    selectedVoxelIndices,
+    voxelCoordinates,
   ]);
 
   return (

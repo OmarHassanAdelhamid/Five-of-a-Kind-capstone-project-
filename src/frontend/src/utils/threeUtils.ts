@@ -9,6 +9,12 @@ export interface SceneSetup {
   grid: THREE.GridHelper
 }
 
+export interface VoxelData {
+  coord: number[]
+  index: number
+  originalCoord: number[]
+}
+
 export const createScene = (width: number, height: number): SceneSetup => {
   const scene = new THREE.Scene()
   scene.background = new THREE.Color('#0f172a')
@@ -160,143 +166,113 @@ export const calculateCenterOffset = (
   return voxelCenterPoint.clone().negate()
 }
 
-export const renderVoxelCubes = (
+/**
+ * Renders voxels using THREE.InstancedMesh for performance.
+ */
+export const renderVoxelInstanced = (
   scene: THREE.Scene,
   coordinates: number[][],
-  _modelSize?: number, // Unused but kept for API compatibility
   modelOriginalCenter?: THREE.Vector3 | null,
-  existingCubes?: THREE.Mesh[],
-  selectedLayerZ?: number | null,
-  layerAxis: 'z' | 'x' | 'y' = 'z',
-  isLayerEditingMode?: boolean,
-): { cubes: THREE.Mesh[]; cubeToCoordMap: Map<THREE.Mesh, { coord: number[]; index: number }> } => {
-  // Remove existing cubes if provided
-  if (existingCubes) {
-    existingCubes.forEach((cube) => {
-      scene.remove(cube)
-      cube.geometry.dispose()
-      if (cube.material instanceof THREE.Material) {
-        cube.material.dispose()
-      }
-    })
+  existingMesh?: THREE.InstancedMesh | null,
+): { 
+  mesh: THREE.InstancedMesh; 
+  instanceIdMap: Map<number, VoxelData> 
+} => {
+  if (existingMesh) {
+    scene.remove(existingMesh)
+    existingMesh.geometry.dispose()
+    if (existingMesh.material instanceof THREE.Material) {
+      existingMesh.material.dispose()
+    }
   }
 
-  const cubeToCoordMap = new Map<THREE.Mesh, { coord: number[]; index: number }>()
+  const instanceIdMap = new Map<number, VoxelData>()
 
   if (coordinates.length === 0) {
-    return { cubes: [], cubeToCoordMap }
+    const emptyGeo = new THREE.BoxGeometry(0.1, 0.1, 0.1)
+    const emptyMat = new THREE.MeshStandardMaterial()
+    const emptyMesh = new THREE.InstancedMesh(emptyGeo, emptyMat, 0)
+    return { mesh: emptyMesh, instanceIdMap }
   }
 
-  // const voxelSize = calculateVoxelSize(coordinates, modelSize)
-  const voxelSize = 0.1
+  const voxelSize = 0.1 // Can be changed to a variable if needed
   const centerOffset = calculateCenterOffset(coordinates, modelOriginalCenter)
-  const cubeGeometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize)
-
-  const col = layerAxis === 'x' ? 0 : layerAxis === 'y' ? 1 : 2
-  const getLayerValue = (c: number[]): number =>
-    Math.round(c[col] * 1e12) / 1e12
-
-  const layerZMap = new Map<number, number[]>()
-  coordinates.forEach((coord, index) => {
-    const v = getLayerValue(coord)
-    if (!layerZMap.has(v)) layerZMap.set(v, [])
-    layerZMap.get(v)!.push(index)
+  
+  const geometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize)
+  const material = new THREE.MeshStandardMaterial({
+    color: 0xffffff, 
+    metalness: 0.2,
+    roughness: 0.5,
   })
 
-  const sortedLayerZs = Array.from(layerZMap.keys()).sort((a, b) => a - b)
+  const count = coordinates.length
+  const mesh = new THREE.InstancedMesh(geometry, material, count)
+  mesh.instanceMatrix.setUsage(THREE.StaticDrawUsage)
+  mesh.castShadow = true
+  mesh.receiveShadow = true
 
-  const isInSelectedLayer = (c: number[]): boolean => {
-    if (selectedLayerZ === null || selectedLayerZ === undefined) return false
-    return Math.abs(getLayerValue(c) - selectedLayerZ) < 1e-9
-  }
+  const dummy = new THREE.Object3D()
+  const color = new THREE.Color()
+  const defaultColor = 0x60a5fa 
 
-  // Distinct color palette for layers - cycles through these colors
-  const layerColors = [
-    0x3b82f6, // Blue
-    0x10b981, // Green
-    0xf59e0b, // Amber
-    0xef4444, // Red
-    0x8b5cf6, // Purple
-    0xec4899, // Pink
-    0x06b6d4, // Cyan
-    0x84cc16, // Lime
-    0xf97316, // Orange
-    0x6366f1, // Indigo
-  ]
-
-  // Helper function to get color for a layer based on its index
-  const getLayerColor = (layerZ: number): number => {
-    const layerIndex = sortedLayerZs.indexOf(layerZ)
-    if (layerIndex === -1) return 0xff0000 // Default red
-
-    // Cycle through the color palette
-    return layerColors[layerIndex % layerColors.length]
-  }
-
-  // Default neutral color when layer editing is off
-  const defaultVoxelColor = 0x60a5fa; // Light blue
-
-  const cubes: THREE.Mesh[] = []
   coordinates.forEach((coord, index) => {
     const [x, y, z] = coord
-    const position = new THREE.Vector3(x, y, z).add(centerOffset)
-    const layerZ = getLayerValue(coord)
-    const isSelected = isInSelectedLayer(coord)
+    
+    // Set Position
+    dummy.position.set(x, y, z).add(centerOffset)
+    dummy.updateMatrix()
+    mesh.setMatrixAt(index, dummy.matrix)
 
-    // Get base color - use layer color only if layer editing mode is enabled
-    const baseColor = isLayerEditingMode ? getLayerColor(layerZ) : defaultVoxelColor
+    // Set Initial Color
+    color.setHex(defaultColor)
+    mesh.setColorAt(index, color)
 
-    // Create material with appropriate color
-    const material = new THREE.MeshStandardMaterial({
-      color: baseColor,
-      metalness: 0.3,
-      roughness: 0.7,
-      opacity: isSelected && isLayerEditingMode ? 1.0 : 0.6, // Selected layers are fully opaque only in editing mode
-      transparent: !(isSelected && isLayerEditingMode),
-      emissive: isSelected && isLayerEditingMode ? new THREE.Color(baseColor).multiplyScalar(0.3) : new THREE.Color(0x000000),
-      emissiveIntensity: isSelected && isLayerEditingMode ? 0.3 : 0,
-    })
-
-    const cube = new THREE.Mesh(cubeGeometry.clone(), material)
-    cube.position.copy(position)
-    cube.castShadow = true
-    cube.receiveShadow = true
-    // Store user data for easy identification
-    cube.userData = {
+    // Map instance ID (index) to data
+    instanceIdMap.set(index, {
       coord,
-      index,
-      originalCoord: [...coord],
-      isInSelectedLayer: isSelected,
-      layerZ: layerZ
-    }
-    scene.add(cube)
-    cubes.push(cube)
-    // Store mapping for click detection
-    cubeToCoordMap.set(cube, { coord, index })
+      index, // This is the original index in the coordinates array
+      originalCoord: [...coord]
+    })
   })
 
-  return { cubes, cubeToCoordMap }
+  mesh.instanceMatrix.needsUpdate = true
+  mesh.instanceColor!.needsUpdate = true
+  mesh.computeBoundingSphere()
+  
+  scene.add(mesh)
+
+  return { mesh, instanceIdMap }
 }
 
 export const disposeScene = (
   scene: THREE.Scene,
   renderer: THREE.WebGLRenderer,
   controls: OrbitControls,
-  cubes: THREE.Mesh[],
+  objectsToDispose: (THREE.Mesh | THREE.InstancedMesh)[] | THREE.Mesh | THREE.InstancedMesh | null,
 ): void => {
-  cubes.forEach((cube) => {
-    scene.remove(cube)
-    cube.geometry.dispose()
-    if (cube.material instanceof THREE.Material) {
-      cube.material.dispose()
+  
+  const toDispose = Array.isArray(objectsToDispose) 
+    ? objectsToDispose 
+    : objectsToDispose 
+      ? [objectsToDispose] 
+      : []
+
+  toDispose.forEach((obj) => {
+    scene.remove(obj)
+    obj.geometry.dispose()
+    if (obj.material instanceof THREE.Material) {
+      obj.material.dispose()
+    } else if (Array.isArray(obj.material)) {
+      obj.material.forEach(m => m.dispose())
     }
   })
 
   controls.dispose()
   renderer.dispose()
+  
   scene.traverse((object: THREE.Object3D) => {
-    if ((object as THREE.Mesh).isMesh) {
-      const mesh = object as THREE.Mesh
+    if ((object as THREE.Mesh).isMesh || (object as THREE.InstancedMesh).isInstancedMesh) {
+      const mesh = object as THREE.Mesh | THREE.InstancedMesh
       mesh.geometry.dispose()
       const material = mesh.material
       if (Array.isArray(material)) {
@@ -307,4 +283,3 @@ export const disposeScene = (
     }
   })
 }
-
