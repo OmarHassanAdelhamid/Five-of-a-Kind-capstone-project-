@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from app.services.model_structure_service import VoxelDB
+import app.services.partition_manager as pm
 
 
 def initialize_voxel_db(project_path: str, origin: np.ndarray, voxel_size: float)-> None:
@@ -21,7 +22,9 @@ def create_voxel_db(project_path: str, coordinates: np.array):
 
     with VoxelDB(project_path) as db:
         db.upsert_many(rows)
+        db.centre_structure()
         db.commit() 
+    pm.get_partitions(project_path, 6)
 
 def read_voxels(rows: list[tuple]) -> np.ndarray:
     return np.array(rows, dtype=float) if rows else np.empty((0, 3), dtype=float)

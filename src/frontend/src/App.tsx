@@ -144,7 +144,7 @@ function App() {
     }
 
     try {
-      const blob = await downloadVoxelCSV(projectName);
+      const blob = await downloadVoxelCSV(projectName, projectName); // eventually change so that user can input export name?
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -266,7 +266,7 @@ function App() {
     if (newName && newName.trim()) {
       try {
         const projectToSave = projectName || newName;
-        const blob = await downloadVoxelCSV(projectToSave);
+        const blob = await downloadVoxelCSV(projectName, projectToSave);
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -277,7 +277,7 @@ function App() {
         document.body.removeChild(a);
         alert(`Project saved as ${newName}.csv`);
       } catch (error) {
-        alert('Failed to save project. Please try again.');
+        alert(`Failed to save project. Please try again. ${error}`);
       }
     }
   }, [projectName, handleDownloadCSV]);

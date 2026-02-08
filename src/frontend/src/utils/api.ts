@@ -118,19 +118,24 @@ export const voxelizeModel = async (
   return (await response.json()) as { message?: string; projectpath?: string };
 };
 
-export const downloadVoxelCSV = async (projectName: string): Promise<Blob> => {
-  const response = await fetch(
-    `${API_BASE_URL}/api/export/${encodeURIComponent(projectName)}`,
-  );
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      errorData.detail || `Failed to download CSV (${response.status})`,
+export const downloadVoxelCSV = async (projectName: string, exportName: string): Promise<Blob> => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/api/export?project_name=${encodeURIComponent(projectName)}&export_name=${encodeURIComponent(exportName)}`,
     );
-  }
 
-  return await response.blob();
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.detail || `Failed to download CSV (${response.status})`,
+      );
+    }
+
+    return await response.blob();
+  } catch (error) {
+    console.log("Failed to export model", error);
+    throw error;
+  }
 };
 
 // Layer info from backend
