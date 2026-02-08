@@ -11,6 +11,7 @@ import { Layer2DGrid } from '../components/Layer2DGrid';
 
 interface LayerEditorProps {
   projectName: string;
+  partitionName: string | null;
   voxelSize?: number;
   layerAxis?: 'z' | 'x' | 'y';
   onLayerSelect?: (layerZ: number | null) => void;
@@ -32,6 +33,7 @@ const MATERIALS = [
 
 export const LayerEditor = ({
   projectName,
+  partitionName,
   voxelSize,
   layerAxis = 'z',
   onLayerSelect,
@@ -60,11 +62,11 @@ export const LayerEditor = ({
   const [hasChanges, setHasChanges] = useState(false);
 
   const loadLayers = useCallback(async () => {
-    if (!projectName.trim() || disabled) return;
+    if (!projectName.trim() || !partitionName || disabled) return;
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchLayers(projectName, voxelSize, layerAxis);
+      const data = await fetchLayers(projectName, partitionName, layerAxis, voxelSize);
       setLayersData(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load layers');
@@ -72,14 +74,14 @@ export const LayerEditor = ({
     } finally {
       setLoading(false);
     }
-  }, [projectName, voxelSize, layerAxis, disabled]);
+  }, [projectName, partitionName, voxelSize, layerAxis, disabled]);
 
   const loadLayer = useCallback(
     async (layerZ: number) => {
       console.log(`[LayerEditor] loadLayer called with layerZ: ${layerZ}`);
-      if (!projectName.trim() || disabled) {
+      if (!projectName.trim() || !partitionName || disabled) {
         console.log(
-          `[LayerEditor] loadLayer skipped - projectName empty or disabled`,
+          `[LayerEditor] loadLayer skipped - projectName/partitionName empty or disabled`,
         );
         return;
       }
@@ -88,9 +90,10 @@ export const LayerEditor = ({
       try {
         const data = await fetchLayer(
           projectName,
+          partitionName,
           layerZ,
-          voxelSize,
           layerAxis,
+          voxelSize,
         );
         console.log(
           `[LayerEditor] fetchLayer returned layer_index: ${data.layer_index}`,
@@ -173,8 +176,13 @@ export const LayerEditor = ({
     setMessage(null);
 
     try {
+      if (!partitionName) {
+        setError('No partition selected');
+        return;
+      }
       await updateVoxels({
         project_name: projectName,
+        partition_name: partitionName,
         voxels: voxelCoords,
         action: 'update',
         materialID: selectedMaterial,
@@ -229,8 +237,13 @@ export const LayerEditor = ({
     setMessage(null);
 
     try {
+      if (!partitionName) {
+        setError('No partition selected');
+        return;
+      }
       await updateVoxels({
         project_name: projectName,
+        partition_name: partitionName,
         voxels: voxelCoords,
         action: 'update',
         magnetization,
