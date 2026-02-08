@@ -12,7 +12,7 @@ def write_csv(project_path: str, file_to_write: str) -> bool:
     """
     with open(file_to_write, mode="w", newline="", encoding="utf-8") as file:
         partitions = [p for p in project_path.iterdir() if p.is_file()]
-        all_voxels = None
+        all_voxels = []
 
         for partition_path in partitions:
             with VoxelDB(partition_path) as db:
