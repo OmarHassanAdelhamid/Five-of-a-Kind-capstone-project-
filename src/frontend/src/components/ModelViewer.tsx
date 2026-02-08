@@ -231,15 +231,15 @@ export const ModelViewer = ({
               currentSelected.add(voxelInfo.index);
             }
 
-            if (onVoxelsSelect) {
-              onVoxelsSelect(new Set(Array.from(currentSelected)));
+            if (onVoxelsSelectRef.current) {
+              onVoxelsSelectRef.current(new Set(Array.from(currentSelected)));
             }
 
             // Always update single voxel selection to the last clicked voxel
             // This helps with display and ensures we track the most recent selection
-            if (onVoxelSelect) {
+            if (onVoxelSelectRef.current) {
               if (currentSelected.has(voxelInfo.index)) {
-                onVoxelSelect(voxelInfo);
+                onVoxelSelectRef.current(voxelInfo);
                 setSelectedVoxel(voxelInfo);
               } else if (currentSelected.size > 0) {
                 const lastIndex = Array.from(currentSelected).pop();
@@ -251,17 +251,17 @@ export const ModelViewer = ({
                   }
                 }
                 if (lastVoxel) {
-                  onVoxelSelect(lastVoxel);
+                  onVoxelSelectRef.current(lastVoxel);
                   setSelectedVoxel(lastVoxel);
                 }
               } else {
-                onVoxelSelect(null);
+                onVoxelSelectRef.current(null);
                 setSelectedVoxel(null);
               }
             }
           } else {
             // Single click - select layer only if layer editing mode is enabled
-            if (isLayerEditingModeRef.current && onLayerSelect) {
+            if (isLayerEditingModeRef.current && onLayerSelectRef.current) {
               const col =
                 layerAxisRef.current === 'x'
                   ? 0
@@ -274,27 +274,27 @@ export const ModelViewer = ({
                 selectedLayerZRef.current !== null &&
                 Math.abs(selectedLayerZRef.current - layerValue) < 1e-9
               ) {
-                onLayerSelect(null);
+                onLayerSelectRef.current(null);
               } else {
-                onLayerSelect(layerValue);
+                onLayerSelectRef.current(layerValue);
               }
             }
 
-            if (onVoxelsSelect && !event.ctrlKey && !event.metaKey) {
-              onVoxelsSelect(new Set());
+            if (onVoxelsSelectRef.current && !event.ctrlKey && !event.metaKey) {
+              onVoxelsSelectRef.current(new Set());
             }
 
-            if (onVoxelSelect && !event.ctrlKey && !event.metaKey) {
-              onVoxelSelect(voxelInfo);
+            if (onVoxelSelectRef.current && !event.ctrlKey && !event.metaKey) {
+              onVoxelSelectRef.current(voxelInfo);
               setSelectedVoxel(voxelInfo);
             }
           }
           selectedCubeRef.current = instanceId;
         }
       } else {
-        if (onLayerSelect) onLayerSelect(null);
-        if (onVoxelSelect) onVoxelSelect(null);
-        if (onVoxelsSelect) onVoxelsSelect(new Set());
+        if (onLayerSelectRef.current) onLayerSelectRef.current(null);
+        if (onVoxelSelectRef.current) onVoxelSelectRef.current(null);
+        if (onVoxelsSelectRef.current) onVoxelsSelectRef.current(new Set());
         selectedCubeRef.current = null;
         setSelectedVoxel(null);
       }
@@ -324,19 +324,20 @@ export const ModelViewer = ({
       if (
         intersects.length > 0 &&
         intersects[0].instanceId !== undefined &&
-        onVoxelSelect
+        onVoxelSelectRef.current
       ) {
         const instanceId = intersects[0].instanceId;
         const voxelInfo = instanceIdMapRef.current.get(instanceId);
         if (voxelInfo) {
-          if (selectedVoxelIndex === voxelInfo.index) {
-            onVoxelSelect(null);
+          if (selectedVoxelIndexRef.current === voxelInfo.index) {
+            onVoxelSelectRef.current(null);
             setSelectedVoxel(null);
-            if (onVoxelsSelect) onVoxelsSelect(new Set());
+            if (onVoxelsSelectRef.current) onVoxelsSelectRef.current(new Set());
           } else {
-            onVoxelSelect(voxelInfo);
+            onVoxelSelectRef.current(voxelInfo);
             setSelectedVoxel(voxelInfo);
-            if (onVoxelsSelect) onVoxelsSelect(new Set([voxelInfo.index]));
+            if (onVoxelsSelectRef.current)
+              onVoxelsSelectRef.current(new Set([voxelInfo.index]));
           }
         }
       }
@@ -499,13 +500,13 @@ export const ModelViewer = ({
               currentSelected.add(voxelInfo.index);
             }
 
-            if (onVoxelsSelect) {
-              onVoxelsSelect(new Set(Array.from(currentSelected)));
+            if (onVoxelsSelectRef.current) {
+              onVoxelsSelectRef.current(new Set(Array.from(currentSelected)));
             }
 
-            if (onVoxelSelect) {
+            if (onVoxelSelectRef.current) {
               if (currentSelected.has(voxelInfo.index)) {
-                onVoxelSelect(voxelInfo);
+                onVoxelSelectRef.current(voxelInfo);
                 setSelectedVoxel(voxelInfo);
               } else if (currentSelected.size > 0) {
                 const lastIndex = Array.from(currentSelected).pop();
@@ -517,16 +518,16 @@ export const ModelViewer = ({
                   }
                 }
                 if (lastVoxel) {
-                  onVoxelSelect(lastVoxel);
+                  onVoxelSelectRef.current(lastVoxel);
                   setSelectedVoxel(lastVoxel);
                 }
               } else {
-                onVoxelSelect(null);
+                onVoxelSelectRef.current(null);
                 setSelectedVoxel(null);
               }
             }
           } else {
-            if (isLayerEditingModeRef.current && onLayerSelect) {
+            if (isLayerEditingModeRef.current && onLayerSelectRef.current) {
               const col =
                 layerAxisRef.current === 'x'
                   ? 0
@@ -539,27 +540,27 @@ export const ModelViewer = ({
                 selectedLayerZRef.current !== null &&
                 Math.abs(selectedLayerZRef.current - layerValue) < 1e-9
               ) {
-                onLayerSelect(null);
+                onLayerSelectRef.current(null);
               } else {
-                onLayerSelect(layerValue);
+                onLayerSelectRef.current(layerValue);
               }
             }
 
-            if (onVoxelsSelect && !event.ctrlKey && !event.metaKey) {
-              onVoxelsSelect(new Set());
+            if (onVoxelsSelectRef.current && !event.ctrlKey && !event.metaKey) {
+              onVoxelsSelectRef.current(new Set());
             }
 
-            if (onVoxelSelect && !event.ctrlKey && !event.metaKey) {
-              onVoxelSelect(voxelInfo);
+            if (onVoxelSelectRef.current && !event.ctrlKey && !event.metaKey) {
+              onVoxelSelectRef.current(voxelInfo);
               setSelectedVoxel(voxelInfo);
             }
           }
           selectedCubeRef.current = instanceId;
         }
       } else {
-        if (onLayerSelect) onLayerSelect(null);
-        if (onVoxelSelect) onVoxelSelect(null);
-        if (onVoxelsSelect) onVoxelsSelect(new Set());
+        if (onLayerSelectRef.current) onLayerSelectRef.current(null);
+        if (onVoxelSelectRef.current) onVoxelSelectRef.current(null);
+        if (onVoxelsSelectRef.current) onVoxelsSelectRef.current(new Set());
         selectedCubeRef.current = null;
         setSelectedVoxel(null);
       }
@@ -589,19 +590,20 @@ export const ModelViewer = ({
       if (
         intersects.length > 0 &&
         intersects[0].instanceId !== undefined &&
-        onVoxelSelect
+        onVoxelSelectRef.current
       ) {
         const instanceId = intersects[0].instanceId;
         const voxelInfo = instanceIdMapRef.current.get(instanceId);
         if (voxelInfo) {
-          if (selectedVoxelIndex === voxelInfo.index) {
-            onVoxelSelect(null);
+          if (selectedVoxelIndexRef.current === voxelInfo.index) {
+            onVoxelSelectRef.current(null);
             setSelectedVoxel(null);
-            if (onVoxelsSelect) onVoxelsSelect(new Set());
+            if (onVoxelsSelectRef.current) onVoxelsSelectRef.current(new Set());
           } else {
-            onVoxelSelect(voxelInfo);
+            onVoxelSelectRef.current(voxelInfo);
             setSelectedVoxel(voxelInfo);
-            if (onVoxelsSelect) onVoxelsSelect(new Set([voxelInfo.index]));
+            if (onVoxelsSelectRef.current)
+              onVoxelsSelectRef.current(new Set([voxelInfo.index]));
           }
         }
       }

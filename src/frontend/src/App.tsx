@@ -130,7 +130,7 @@ function App() {
         } else {
           setStatus('error');
         }
-      } catch (error) {
+      } catch {
         setStatus('error');
       }
     },
@@ -280,7 +280,7 @@ function App() {
         alert(`Failed to save project. Please try again. ${error}`);
       }
     }
-  }, [projectName, handleDownloadCSV]);
+  }, [projectName]);
 
   // Edit menu handlers (disabled as per previous requirements)
   const handleUndo = useCallback(async () => {
