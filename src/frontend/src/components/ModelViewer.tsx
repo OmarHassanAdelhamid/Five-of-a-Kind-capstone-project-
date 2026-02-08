@@ -32,6 +32,8 @@ interface ModelViewerProps {
   selectedVoxelIndicesArray?: number[];
   isLayerEditingMode?: boolean;
   projectName?: string;
+  selectedPartition?: string | null;
+  onPartitionSelect?: (partitionName: string) => void;
   voxelSize?: number;
 }
 
@@ -49,6 +51,8 @@ export const ModelViewer = ({
   selectedVoxelIndicesArray = [],
   isLayerEditingMode = false,
   projectName = '',
+  selectedPartition = null,
+  onPartitionSelect,
   voxelSize,
 }: ModelViewerProps) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
@@ -764,6 +768,9 @@ export const ModelViewer = ({
       <PartitionsPanel
         isOpen={isPartitionsPanelOpen}
         onClose={() => setIsPartitionsPanelOpen(false)}
+        projectName={projectName || null}
+        selectedPartition={selectedPartition}
+        onPartitionSelect={onPartitionSelect || (() => {})}
       />
       <button
         className={`layer-editor-tab ${isLayerEditorOpen ? 'open' : ''}`}
@@ -774,11 +781,12 @@ export const ModelViewer = ({
       </button>
       <LayerEditor
         projectName={projectName}
+        partitionName={selectedPartition}
         voxelSize={voxelSize}
         layerAxis={layerAxis}
         onLayerSelect={onLayerSelect}
         selectedLayerZ={selectedLayerZ}
-        disabled={!projectName.trim()}
+        disabled={!projectName.trim() || !selectedPartition}
         isOpen={isLayerEditorOpen}
         onClose={() => setIsLayerEditorOpen(false)}
       />

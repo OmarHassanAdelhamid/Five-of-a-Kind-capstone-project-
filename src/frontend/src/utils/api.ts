@@ -39,10 +39,33 @@ export const fetchAvailableProjects = async (): Promise<string[]> => {
   }
 };
 
-export const fetchVoxelized = async (project: string): Promise<number[][]> => {
+export const fetchPartitions = async (projectName: string): Promise<string[]> => {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/api/project?project_name=${encodeURIComponent(project)}`,
+      `${API_BASE_URL}/api/project/partitions?project_name=${encodeURIComponent(projectName)}`,
+    );
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.detail || `Failed to fetch partitions (${response.status})`,
+      );
+    }
+
+    const data = (await response.json()) as { partitions?: string[] };
+    return data.partitions ?? [];
+  } catch (error) {
+    console.error('Failed to fetch partitions', error);
+    return [];
+  }
+};
+
+export const fetchVoxelized = async (project: string, partitionName: string): Promise<number[][]> => {
+  try {
+    if (!partitionName) {
+      throw new Error('Partition name is required');
+    }
+    const response = await fetch(
+      `${API_BASE_URL}/api/project?project_name=${encodeURIComponent(project)}&partition_name=${encodeURIComponent(partitionName)}`,
     );
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -154,14 +177,19 @@ export interface LayersResponse {
 
 export const fetchLayers = async (
   projectName: string,
-  _voxelSize?: number, // Unused but kept for interface compatibility
+  partitionName: string,
   axis: 'z' | 'x' | 'y' = 'z',
+  _voxelSize?: number, // Unused but kept for interface compatibility
 ): Promise<LayersResponse> => {
   try {
+    if (!partitionName) {
+      throw new Error('Partition name is required');
+    }
     const url = new URL(
       `${API_BASE_URL}/api/edit/layers/${encodeURIComponent(projectName)}`,
     );
     url.searchParams.set('axis', axis);
+    url.searchParams.set('partition_name', partitionName);
 
     const response = await fetch(url.toString());
     if (!response.ok) {
@@ -322,18 +350,23 @@ export const clearLayerCache = () => {
 
 export const fetchLayer = async (
   projectName: string,
+  partitionName: string,
   layerValue: number, // This is the real coordinate value (e.g., 0.05) or layer index
-  _voxelSize?: number, // Kept for interface compatibility
   axis: 'z' | 'x' | 'y' = 'z',
+  _voxelSize?: number, // Kept for interface compatibility
 ): Promise<LayerResponse> => {
   try {
+    if (!partitionName) {
+      throw new Error('Partition name is required');
+    }
+    
     // Get the layer mapping for this project
-    const cacheKey = `${projectName}-${axis}`;
+    const cacheKey = `${projectName}-${partitionName}-${axis}`;
     let layers = layerMappingCache.get(cacheKey);
 
     if (!layers) {
       // Fetch layers to get the mapping
-      const layersResponse = await fetchLayers(projectName, undefined, axis);
+      const layersResponse = await fetchLayers(projectName, partitionName, axis);
       layers = layersResponse.layers;
       layerMappingCache.set(cacheKey, layers);
       console.log(`[fetchLayer] Cached layers for ${cacheKey}:`, layers);
@@ -350,6 +383,7 @@ export const fetchLayer = async (
       },
       body: JSON.stringify({
         project_name: projectName,
+        partition_name: partitionName,
         layer_index: layerIndex,
         axis: axis,
       }),
@@ -400,6 +434,7 @@ export type UpdateAction =
 
 export interface UpdateVoxelsRequest {
   project_name: string;
+  partition_name: string;
   voxels: [number, number, number][]; // Grid coordinates: [ix, iy, iz][]
   action: UpdateAction;
   materialID?: number;
@@ -410,6 +445,10 @@ export const updateVoxels = async (
   request: UpdateVoxelsRequest,
 ): Promise<{ message: string; project_name: string; num_voxels: number }> => {
   try {
+    if (!request.partition_name) {
+      throw new Error('Partition name is required');
+    }
+    
     const response = await fetch(`${API_BASE_URL}/api/edit/update`, {
       method: 'POST',
       headers: {

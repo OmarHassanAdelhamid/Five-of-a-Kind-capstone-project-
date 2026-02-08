@@ -18,6 +18,7 @@ function App() {
   const [models, setModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [projectName, setProjectName] = useState<string>('');
+  const [selectedPartition, setSelectedPartition] = useState<string | null>(null);
   const [availableProjects, setAvailableProjects] = useState<string[]>([]);
   const [voxelCoordinates, setVoxelCoordinates] = useState<number[][]>([]);
   const [voxelSize] = useState<string>('0.1');
@@ -58,9 +59,9 @@ function App() {
     }
   }, []);
 
-  const fetchVoxels = useCallback(async (project: string) => {
+  const fetchVoxels = useCallback(async (project: string, partition: string) => {
     try {
-      const coordinates = await fetchVoxelized(project);
+      const coordinates = await fetchVoxelized(project, partition);
       setVoxelCoordinates(coordinates);
       return coordinates;
     } catch (error) {
@@ -111,9 +112,10 @@ function App() {
   }, []);
 
   const handleLoadVoxels = useCallback(
-    async (project?: string) => {
+    async (project?: string, partition?: string) => {
       const projectToLoad = project || projectName;
-      if (!projectToLoad.trim()) {
+      const partitionToLoad = partition || selectedPartition;
+      if (!projectToLoad.trim() || !partitionToLoad) {
         return;
       }
 
@@ -123,7 +125,7 @@ function App() {
         setSelectedLayerZ(null); // Clear layer selection when loading new project
         setSelectedVoxel(null); // Clear voxel selection when loading new project
         setSelectedVoxels(new Set()); // Clear multiple voxel selections
-        const coordinates = await fetchVoxels(projectToLoad);
+        const coordinates = await fetchVoxels(projectToLoad, partitionToLoad);
         if (coordinates.length > 0) {
           setVoxelCoordinates(coordinates);
           setStatus('ready');
@@ -134,7 +136,7 @@ function App() {
         setStatus('error');
       }
     },
-    [projectName, fetchVoxels],
+    [projectName, selectedPartition, fetchVoxels],
   );
 
   const handleDownloadCSV = useCallback(async () => {
@@ -244,10 +246,20 @@ function App() {
   const handleOpenProjectSelect = useCallback(
     (selectedProjectName: string) => {
       setProjectName(selectedProjectName);
-      // Load voxels for the selected project
-      handleLoadVoxels(selectedProjectName);
+      setSelectedPartition(null); // Clear partition selection when project changes
+      // Don't load voxels until a partition is selected
     },
-    [handleLoadVoxels],
+    [],
+  );
+
+  const handlePartitionSelect = useCallback(
+    (partitionName: string) => {
+      setSelectedPartition(partitionName);
+      if (projectName) {
+        handleLoadVoxels(projectName, partitionName);
+      }
+    },
+    [projectName, handleLoadVoxels],
   );
 
   const handleSave = useCallback(async () => {
@@ -486,6 +498,8 @@ function App() {
         selectedLayerZ={isLayerEditingMode ? selectedLayerZ : null}
         layerAxis={layerAxis}
         projectName={projectName}
+        selectedPartition={selectedPartition}
+        onPartitionSelect={handlePartitionSelect}
         voxelSize={parseFloat(voxelSize) || 0.1}
         onLayerSelect={(layerZ) => {
           setSelectedLayerZ(layerZ);

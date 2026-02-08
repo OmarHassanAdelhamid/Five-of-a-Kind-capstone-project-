@@ -17,9 +17,11 @@ from app.routers import stl_router, project_router, edit_router, export_router
 
 app = FastAPI()
 
+# Allow all localhost origins in development using regex
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
+    allow_origin_regex=r"http://(localhost|127\.0\.0\.1):.*",  # Allow any localhost port
     allow_credentials=CORS_CREDENTIALS,
     allow_methods=CORS_METHODS,
     allow_headers=CORS_HEADERS,
