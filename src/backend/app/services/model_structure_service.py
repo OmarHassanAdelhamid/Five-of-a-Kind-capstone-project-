@@ -101,7 +101,7 @@ class VoxelDB:
         self.cur.execute("""
             SELECT
                 (MAX(ix) + MIN(ix)) / 2,
-                (MAX(iy) + MIN(iy)) / 2,git fetch origin
+                (MAX(iy) + MIN(iy)) / 2,
                 (MAX(iz) + MIN(iz)) / 2
             FROM voxels;
         """)
