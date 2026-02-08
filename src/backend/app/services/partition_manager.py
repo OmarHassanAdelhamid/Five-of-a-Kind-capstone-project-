@@ -3,7 +3,7 @@ import os
 from app.services.model_structure_service import VoxelDB    
 from collections import deque
 
-PARTITIONS: list[str] = []
+PARTITIONS: list[str] = [] #! is there a reason this variable is not local scope?
 
 '''
 get partitions, adjust integer coordinates to center the main structure, and note offset that is being used to centre structure
@@ -26,7 +26,7 @@ def get_partitions(db_path: str, partition_size: int) -> None:
     print("iy:", min_iy, max_iy, "span:", max_iy - min_iy)
     print("iz:", min_iz, max_iz, "span:", max_iz - min_iz)
 
-
+    # TODO: change this to not make the new directory!
     base_dir = os.path.dirname(db_path)
     name = os.path.basename(db_path)
     out_dir = os.path.join(base_dir, f"{name}_dir")
