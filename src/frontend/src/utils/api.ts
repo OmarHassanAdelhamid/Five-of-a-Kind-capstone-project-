@@ -477,6 +477,7 @@ export const updateVoxels = async (
 
 export interface UpdateHistoryRequest {
   project_name: string;
+  partition_name: string;
   action: 'undo' | 'redo';
 }
 export const updateHistory = async (

@@ -18,7 +18,7 @@ function App() {
   const [models, setModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [projectName, setProjectName] = useState<string>('');
-  const [selectedPartition, setSelectedPartition] = useState<string | null>(null);
+  const [selectedPartition, setSelectedPartition] = useState<string>('');
   const [availableProjects, setAvailableProjects] = useState<string[]>([]);
   const [voxelCoordinates, setVoxelCoordinates] = useState<number[][]>([]);
   const [voxelSize] = useState<string>('0.1');
@@ -246,7 +246,7 @@ function App() {
   const handleOpenProjectSelect = useCallback(
     (selectedProjectName: string) => {
       setProjectName(selectedProjectName);
-      setSelectedPartition(null); // Clear partition selection when project changes
+      setSelectedPartition(''); // Clear partition selection when project changes
       // Don't load voxels until a partition is selected
     },
     [],
@@ -306,6 +306,7 @@ function App() {
     try {
       const updatedCoordinates = await updateHistory({
         project_name: projectName,
+        partition_name: selectedPartition,
         action: 'undo',
       });
       console.log('Undo successful, updated coordinates:', updatedCoordinates);
@@ -329,6 +330,7 @@ function App() {
     try {
       const updatedCoordinates = await updateHistory({
         project_name: projectName,
+        partition_name: selectedPartition,
         action: 'redo',
       });
       console.log('Redo successful, updated coordinates:', updatedCoordinates);
