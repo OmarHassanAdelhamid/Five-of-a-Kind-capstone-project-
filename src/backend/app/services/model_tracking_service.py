@@ -5,9 +5,9 @@ from typing import List, Tuple
 
 FIND_SURFACE = """
 SELECT 
-    v.ix * 0.1 AS x,
-    v.iy * 0.1 AS y,
-    v.iz * 0.1 AS z
+    v.x,
+    v.y,
+    v.z
 FROM voxels v
 LEFT JOIN voxels xp ON xp.ix = v.ix + 1 AND xp.iy = v.iy     AND xp.iz = v.iz
 LEFT JOIN voxels xm ON xm.ix = v.ix - 1 AND xm.iy = v.iy     AND xm.iz = v.iz
