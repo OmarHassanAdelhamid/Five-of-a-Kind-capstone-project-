@@ -204,7 +204,7 @@ async def update_history(request: UpdateHistoryRequest):
             print(f"Received undo request for project '{request.project_name}'. Checking undo stack...")
             change = hm.undo_request()
             print(f"Undoing change: {change}")
-            em.update_voxel_properties(str(partition_path),change.old_voxels)
+            em.update_voxel_properties(str(partition_path), change.old_voxels)
             print(f"Undo applied successfully.")
         elif (request.action == HistoryAction.REDO):
             # Get top of redo stack; voxels become new_voxels.
