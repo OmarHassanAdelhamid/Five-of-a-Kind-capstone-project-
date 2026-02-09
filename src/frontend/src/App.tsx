@@ -302,10 +302,15 @@ function App() {
       alert('Please select a project to undo changes.');
       return;
     }
+    if (!selectedPartition) {
+      alert('Please select a partition to undo changes.');
+      return;
+    }
 
     try {
       const updatedCoordinates = await updateHistory({
         project_name: projectName,
+        partition_name: selectedPartition,
         action: 'undo',
       });
       console.log('Undo successful, updated coordinates:', updatedCoordinates);
@@ -317,7 +322,7 @@ function App() {
           : 'Failed to undo changes. Please try again.',
       );
     }
-  }, [projectName]);
+  }, [projectName, selectedPartition]);
   const handleRedo = useCallback(async () => {
     console.log('Redo action triggered');
     console.log('Current project name:', projectName);
@@ -325,10 +330,15 @@ function App() {
       alert('Please select a project to redo changes.');
       return;
     }
+    if (!selectedPartition) {
+      alert('Please select a partition to redo changes.');
+      return;
+    }
 
     try {
       const updatedCoordinates = await updateHistory({
         project_name: projectName,
+        partition_name: selectedPartition,
         action: 'redo',
       });
       console.log('Redo successful, updated coordinates:', updatedCoordinates);
@@ -340,7 +350,7 @@ function App() {
           : 'Failed to redo changes. Please try again.',
       );
     }
-  }, [projectName]);
+  }, [projectName, selectedPartition]);
   const handleCopy = useCallback(() => {
     /* no-op */
   }, []);
