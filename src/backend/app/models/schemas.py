@@ -95,6 +95,9 @@ class ModelDelta(BaseModel):
     Args:
         old_voxels (List[Tuple[int, int, int, int, int, float, float]]): set of voxels; what they were previously.
         new_voxels (List[Tuple[int, int, int, int, int, float, float]]): set of voxels; their new state.
+    
+    Notes: 
+        An empty list here is interpreted as either an addition (old = []) or deletion (new = []).
     """
     old_voxels: List[Tuple[int, int, int, int, float, float, float]]
     new_voxels: List[Tuple[int, int, int, int, float, float, float]]
