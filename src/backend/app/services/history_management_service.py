@@ -20,6 +20,8 @@ redo_stack: List[ModelDelta] = []
 
 def record_change(delta: ModelDelta) -> None:
     """Record a new model change and clear redo history."""
+    # TODO: add check for both old and new being == []!
+
     history_stack.append(delta)
     if len(history_stack) > MAX_HISTORY_SIZE:
         history_stack.pop(0)
