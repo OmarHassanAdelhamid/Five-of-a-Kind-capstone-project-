@@ -57,3 +57,15 @@ def clear_history() -> None:
     """Clear both undo and redo history stacks."""
     history_stack.clear()
     redo_stack.clear()
+
+def _return_history_stack() -> List[ModelDelta]:
+    """For testing purposes only."""
+    return history_stack
+
+def _return_redo_stack() -> List[ModelDelta]:
+    """For testing purposes only."""
+    return redo_stack
+
+def _return_max_history() -> int:
+    """For testing purposes only."""
+    return MAX_HISTORY_SIZE
