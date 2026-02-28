@@ -32,6 +32,7 @@ function App() {
   // Convert Set to sorted array for dependency tracking
   const selectedVoxelIndicesArray = Array.from(selectedVoxels).sort();
   const [isLayerEditingMode, setIsLayerEditingMode] = useState(false);
+  const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
   const [layerAxis] = useState<'z' | 'x' | 'y'>('z');
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
 
@@ -374,6 +375,7 @@ function App() {
   const handleOpenLayerMenu = useCallback(() => {
     if (projectName.trim()) {
       setIsLayerEditingMode(true);
+      setIsLayerEditorOpen(true);
     } else {
       alert('Please select a project to open the Layer Editor.');
     }
@@ -511,10 +513,11 @@ function App() {
         selectedPartition={selectedPartition}
         onPartitionSelect={handlePartitionSelect}
         voxelSize={parseFloat(voxelSize) || 0.1}
+        isLayerEditorOpen={isLayerEditorOpen}
+        onLayerEditorOpenChange={setIsLayerEditorOpen}
         onLayerSelect={(layerZ) => {
           setSelectedLayerZ(layerZ);
-          // Automatically enable layer editing mode when a layer is selected
-          if (layerZ !== null && !isLayerEditingMode) {
+          if (layerZ !== null) {
             setIsLayerEditingMode(true);
           }
         }}

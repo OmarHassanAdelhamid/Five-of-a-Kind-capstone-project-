@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   fetchLayers,
   fetchLayer,
@@ -60,6 +60,7 @@ export const LayerEditor = ({
   const [displayPhi, setDisplayPhi] = useState<string>('0');
   const [displayMagnitude, setDisplayMagnitude] = useState<string>('1');
   const [hasChanges, setHasChanges] = useState(false);
+  const didAutoSelectFirstLayerRef = useRef(false);
 
   const loadLayers = useCallback(async () => {
     if (!projectName.trim() || !partitionName || disabled) return;
@@ -330,6 +331,38 @@ export const LayerEditor = ({
       setSelectedLayerData(null);
     }
   }, [projectName, disabled, layerAxis, loadLayers]);
+
+  // When opened with no layer selected (e.g. from context menu), select first layer
+  useEffect(() => {
+    if (!isOpen) {
+      didAutoSelectFirstLayerRef.current = false;
+      return;
+    }
+    if (
+      externalSelectedLayerZ === null &&
+      layersData?.layers?.length &&
+      !didAutoSelectFirstLayerRef.current &&
+      projectName.trim() &&
+      partitionName &&
+      !disabled
+    ) {
+      const first = layersData.layers[0];
+      if (first != null) {
+        didAutoSelectFirstLayerRef.current = true;
+        onLayerSelect?.(first.coordinate);
+        loadLayer(first.coordinate);
+      }
+    }
+  }, [
+    isOpen,
+    externalSelectedLayerZ,
+    layersData,
+    projectName,
+    partitionName,
+    disabled,
+    onLayerSelect,
+    loadLayer,
+  ]);
 
   useEffect(() => {
     if (message) {

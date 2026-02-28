@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import {
@@ -35,6 +35,8 @@ interface ModelViewerProps {
   selectedPartition?: string | null;
   onPartitionSelect?: (partitionName: string) => void;
   voxelSize?: number;
+  isLayerEditorOpen?: boolean;
+  onLayerEditorOpenChange?: (open: boolean) => void;
 }
 
 export const ModelViewer = ({
@@ -54,6 +56,8 @@ export const ModelViewer = ({
   selectedPartition = null,
   onPartitionSelect,
   voxelSize,
+  isLayerEditorOpen: isLayerEditorOpenProp,
+  onLayerEditorOpenChange,
 }: ModelViewerProps) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
@@ -88,7 +92,20 @@ export const ModelViewer = ({
     coord: number[];
     index: number;
   } | null>(null);
-  const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
+  const [isLayerEditorOpenLocal, setIsLayerEditorOpenLocal] = useState(false);
+  const onLayerEditorOpenChangeRef = useRef(onLayerEditorOpenChange);
+  onLayerEditorOpenChangeRef.current = onLayerEditorOpenChange;
+  const isLayerEditorOpen =
+    isLayerEditorOpenProp !== undefined
+      ? isLayerEditorOpenProp
+      : isLayerEditorOpenLocal;
+  const setIsLayerEditorOpen = useCallback((open: boolean) => {
+    if (onLayerEditorOpenChangeRef.current) {
+      onLayerEditorOpenChangeRef.current(open);
+    } else {
+      setIsLayerEditorOpenLocal(open);
+    }
+  }, []);
   const [isPartitionsPanelOpen, setIsPartitionsPanelOpen] = useState(false);
 
   const COLOR_DEFAULT = 0x60a5fa;
@@ -264,8 +281,8 @@ export const ModelViewer = ({
               }
             }
           } else {
-            // Single click - select layer only if layer editing mode is enabled
-            if (isLayerEditingModeRef.current && onLayerSelectRef.current) {
+            // Single click - select layer (opens layer editor and enables layer mode in App)
+            if (onLayerSelectRef.current) {
               const col =
                 layerAxisRef.current === 'x'
                   ? 0
@@ -281,6 +298,7 @@ export const ModelViewer = ({
                 onLayerSelectRef.current(null);
               } else {
                 onLayerSelectRef.current(layerValue);
+                onLayerEditorOpenChangeRef.current?.(true);
               }
             }
 
@@ -531,7 +549,7 @@ export const ModelViewer = ({
               }
             }
           } else {
-            if (isLayerEditingModeRef.current && onLayerSelectRef.current) {
+            if (onLayerSelectRef.current) {
               const col =
                 layerAxisRef.current === 'x'
                   ? 0
@@ -547,6 +565,7 @@ export const ModelViewer = ({
                 onLayerSelectRef.current(null);
               } else {
                 onLayerSelectRef.current(layerValue);
+                onLayerEditorOpenChangeRef.current?.(true);
               }
             }
 
@@ -725,9 +744,9 @@ export const ModelViewer = ({
       />
       <div className="viewer-instructions">
         <p className="instruction-text">
-          {isLayerEditingMode ? (
+          {voxelCoordinates.length > 0 ? (
             <>
-              <strong>Click</strong> to select layer •{' '}
+              <strong>Click</strong> to select layer (opens Layer Editor) •{' '}
               <strong>Ctrl/Cmd+Click</strong> to select multiple voxels
             </>
           ) : (
