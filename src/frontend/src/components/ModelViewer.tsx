@@ -122,6 +122,11 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(funct
   }, []);
   const [isPartitionsPanelOpen, setIsPartitionsPanelOpen] = useState(false);
 
+  // Only one of layer editor or partitions panel can be open at once
+  useEffect(() => {
+    if (isLayerEditorOpen) setIsPartitionsPanelOpen(false);
+  }, [isLayerEditorOpen]);
+
   const COLOR_DEFAULT = 0x60a5fa;
   const COLOR_LAYER_SELECTED = 0xf59e0b;
   const COLOR_VOXEL_SELECTED = 0xef4444;
@@ -793,7 +798,11 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(funct
       )}
       <button
         className={`partitions-tab ${isPartitionsPanelOpen ? 'open' : ''}`}
-        onClick={() => setIsPartitionsPanelOpen(!isPartitionsPanelOpen)}
+        onClick={() => {
+          const nextOpen = !isPartitionsPanelOpen;
+          if (nextOpen) setIsLayerEditorOpen(false);
+          setIsPartitionsPanelOpen(nextOpen);
+        }}
         title={isPartitionsPanelOpen ? 'Close Partitions' : 'Open Partitions'}
       >
         <span className="partitions-tab-text">Partitions</span>
@@ -807,7 +816,11 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(funct
       />
       <button
         className={`layer-editor-tab ${isLayerEditorOpen ? 'open' : ''}`}
-        onClick={() => setIsLayerEditorOpen(!isLayerEditorOpen)}
+        onClick={() => {
+          const nextOpen = !isLayerEditorOpen;
+          if (nextOpen) setIsPartitionsPanelOpen(false);
+          setIsLayerEditorOpen(nextOpen);
+        }}
         title={isLayerEditorOpen ? 'Close Layer Editor' : 'Open Layer Editor'}
       >
         <span className="layer-editor-tab-text">Layer Editor</span>
