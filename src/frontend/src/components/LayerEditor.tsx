@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import {
   fetchLayers,
   fetchLayer,
@@ -6,8 +6,15 @@ import {
   type LayersResponse,
   type LayerResponse,
   type LayerVoxel,
+  type VoxelPropertiesClipboard,
 } from '../utils/api';
 import { Layer2DGrid } from '../components/Layer2DGrid';
+
+export interface LayerEditorHandle {
+  getSelectionProperties: () => VoxelPropertiesClipboard | null;
+  applyPaste: (props: VoxelPropertiesClipboard) => Promise<void>;
+  selectAllInLayer: () => void;
+}
 
 interface LayerEditorProps {
   projectName: string;
@@ -31,7 +38,7 @@ const MATERIALS = [
   { id: 6, name: 'Material 6', color: '#8b5cf6' }, // Purple
 ];
 
-export const LayerEditor = ({
+export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(function LayerEditor({
   projectName,
   partitionName,
   voxelSize,
@@ -41,7 +48,7 @@ export const LayerEditor = ({
   disabled = false,
   isOpen,
   onClose,
-}: LayerEditorProps) => {
+}, ref) {
   const [layersData, setLayersData] = useState<LayersResponse | null>(null);
   const [selectedLayerData, setSelectedLayerData] =
     useState<LayerResponse | null>(null);
@@ -371,6 +378,98 @@ export const LayerEditor = ({
     }
   }, [message]);
 
+  const selectAllInLayer = useCallback(() => {
+    if (selectedLayerData && selectedLayerData.voxels.length > 0) {
+      setSelectedVoxelIndices(
+        new Set(selectedLayerData.voxels.map((_, i) => i)),
+      );
+    }
+  }, [selectedLayerData]);
+
+  const getSelectionProperties = useCallback((): VoxelPropertiesClipboard | null => {
+    if (selectedVoxelIndices.size === 0 || !selectedLayerData) return null;
+    const firstIdx = Array.from(selectedVoxelIndices)[0];
+    const v = selectedLayerData.voxels[firstIdx];
+    if (!v) return null;
+    return {
+      material: v.material ?? 1,
+      magnetization: v.magnetization ?? 1,
+      polarAngle: v.polarAngle ?? 90,
+      azimuthAngle: v.azimuthAngle ?? 0,
+    };
+  }, [selectedVoxelIndices, selectedLayerData]);
+
+  const applyPaste = useCallback(
+    async (props: VoxelPropertiesClipboard) => {
+      if (selectedVoxelIndices.size === 0 || !selectedLayerData || !partitionName) return;
+      const voxelCoords: [number, number, number][] = Array.from(
+        selectedVoxelIndices,
+      ).map((idx) => {
+        const v = selectedLayerData.voxels[idx];
+        return [v.ix, v.iy, v.iz] as [number, number, number];
+      });
+      setLoading(true);
+      setError(null);
+      setMessage(null);
+      try {
+        await updateVoxels({
+          project_name: projectName,
+          partition_name: partitionName,
+          voxels: voxelCoords,
+          action: 'update',
+          materialID: props.material,
+        });
+        await updateVoxels({
+          project_name: projectName,
+          partition_name: partitionName,
+          voxels: voxelCoords,
+          action: 'update',
+          magnetization: [
+            props.magnetization,
+            props.polarAngle,
+            props.azimuthAngle,
+          ],
+        });
+        const updatedVoxels = [...selectedLayerData.voxels];
+        for (const idx of selectedVoxelIndices) {
+          if (updatedVoxels[idx]) {
+            updatedVoxels[idx] = {
+              ...updatedVoxels[idx],
+              material: props.material,
+              magnetization: props.magnetization,
+              polarAngle: props.polarAngle,
+              azimuthAngle: props.azimuthAngle,
+            };
+          }
+        }
+        setSelectedLayerData({ ...selectedLayerData, voxels: updatedVoxels });
+        setMessage(`Pasted properties to ${selectedVoxelIndices.size} voxel(s).`);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : 'Failed to paste properties',
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [
+      selectedVoxelIndices,
+      selectedLayerData,
+      projectName,
+      partitionName,
+    ],
+  );
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      getSelectionProperties,
+      applyPaste,
+      selectAllInLayer,
+    }),
+    [getSelectionProperties, applyPaste, selectAllInLayer],
+  );
+
   if (!isOpen) return null;
 
   if (!projectName.trim() || disabled) {
@@ -588,4 +687,4 @@ export const LayerEditor = ({
       </div>
     </div>
   );
-};
+});

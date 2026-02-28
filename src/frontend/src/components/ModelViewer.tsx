@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import {
@@ -13,7 +13,7 @@ import {
 } from '../utils/threeUtils';
 import { API_BASE_URL } from '../utils/constants';
 import { StatusMessage } from './StatusMessage';
-import { LayerEditor } from './LayerEditor';
+import { LayerEditor, type LayerEditorHandle } from './LayerEditor';
 import { PartitionsPanel } from './PartitionsPanel';
 
 //HEAVILY INFLUENCED BY STL LOADER EXAMPLE https://sbcode.net/threejs/loaders-stl/
@@ -39,7 +39,7 @@ interface ModelViewerProps {
   onLayerEditorOpenChange?: (open: boolean) => void;
 }
 
-export const ModelViewer = ({
+export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(function ModelViewer({
   selectedModel,
   voxelCoordinates,
   onStatusChange,
@@ -58,8 +58,9 @@ export const ModelViewer = ({
   voxelSize,
   isLayerEditorOpen: isLayerEditorOpenProp,
   onLayerEditorOpenChange,
-}: ModelViewerProps) => {
+}, ref) {
   const mountRef = useRef<HTMLDivElement | null>(null);
+  const layerEditorRef = useRef<LayerEditorHandle | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const sceneRef = useRef<SceneSetup | null>(null);
   const modelRef = useRef<THREE.Mesh | null>(null);
@@ -95,6 +96,19 @@ export const ModelViewer = ({
   const [isLayerEditorOpenLocal, setIsLayerEditorOpenLocal] = useState(false);
   const onLayerEditorOpenChangeRef = useRef(onLayerEditorOpenChange);
   onLayerEditorOpenChangeRef.current = onLayerEditorOpenChange;
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      getSelectionProperties: () =>
+        layerEditorRef.current?.getSelectionProperties() ?? null,
+      applyPaste: (props) =>
+        layerEditorRef.current?.applyPaste(props) ?? Promise.resolve(),
+      selectAllInLayer: () => layerEditorRef.current?.selectAllInLayer(),
+    }),
+    [],
+  );
+
   const isLayerEditorOpen =
     isLayerEditorOpenProp !== undefined
       ? isLayerEditorOpenProp
@@ -799,6 +813,7 @@ export const ModelViewer = ({
         <span className="layer-editor-tab-text">Layer Editor</span>
       </button>
       <LayerEditor
+        ref={layerEditorRef}
         projectName={projectName}
         partitionName={selectedPartition}
         voxelSize={voxelSize}
@@ -811,4 +826,4 @@ export const ModelViewer = ({
       />
     </div>
   );
-};
+});
