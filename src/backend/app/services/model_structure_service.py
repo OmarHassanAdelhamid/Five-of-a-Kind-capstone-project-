@@ -9,9 +9,9 @@ class VoxelDB:
         self.db_path = db_path
         self.conn = sqlite3.connect(db_path)
         self.cur = self.conn.cursor()
-        self._init_schema()
 
-    def _init_schema(self) -> None:
+    def init_schema(self, default_material: int, default_magnetization: Tuple[float, float, float]) -> None:
+        d_mm, d_mp, d_ma = default_magnetization
         self.cur.execute("""
         CREATE TABLE IF NOT EXISTS voxels (
             ix INTEGER NOT NULL,
@@ -23,13 +23,13 @@ class VoxelDB:
             cx INTEGER NOT NULL DEFAULT 0,
             cy INTEGER NOT NULL DEFAULT 0,
             cz INTEGER NOT NULL DEFAULT 0,
-            material INTEGER NOT NULL DEFAULT 1,
-            magnet_magnitude REAL NOT NULL DEFAULT 0.0,
-            magnet_polar REAL NOT NULL DEFAULT 0.0,
-            magnet_azimuth REAL NOT NULL DEFAULT 0.0,
+            material INTEGER NOT NULL DEFAULT ?,
+            magnet_magnitude REAL NOT NULL DEFAULT ?,
+            magnet_polar REAL NOT NULL DEFAULT ?,
+            magnet_azimuth REAL NOT NULL DEFAULT ?,
             PRIMARY KEY (ix, iy, iz)
         );
-        """)
+        """, (default_material, d_mm, d_mp, d_ma))
 
         self.cur.execute("""
         CREATE TABLE IF NOT EXISTS meta (
@@ -39,7 +39,7 @@ class VoxelDB:
         """)
 
         self.cur.execute("CREATE INDEX IF NOT EXISTS idx_voxels_iz ON voxels(iz);")
-        self._migrate_magnetization_columns()
+        self._migrate_magnetization_columns() # for legacy dbs.
         self.conn.commit()
 
     def _migrate_magnetization_columns(self) -> None:
@@ -178,8 +178,32 @@ class VoxelDB:
             (material_val, magnet_mag, mag_polar, mag_azi, ix, iy, iz)
         )
 
-    
+    def reset_material(self, ix: int, iy: int, iz: int) -> None:
+        self.cur.execute("""
+            UPDATE voxels
+            SET material = ?
+            WHERE ix = ? AND iy = ? AND iz = ?""",
+            (self._get_default_property("material"), ix, iy, iz)
+        )
+
+    def reset_magnetization(self, ix: int, iy: int, iz: int) -> None:
+        self.cur.execute("""
+            UPDATE voxels
+            SET magnet_magnitude = ?, magnet_polar = ?, magnet_azimuth = ?
+            WHERE ix = ? AND iy = ? AND iz = ?""",
+            (self._get_default_property("magnet_magnitude"), 
+             self._get_default_property("magnet_polar"), 
+             self._get_default_property("magnet_azimuth"),  ix, iy, iz)
+        )
+
     # additional helpers
+    def _get_default_property(self, property_name: str):
+        # helper to return default values for each column.
+        self.cur.execute("PRAGMA table_info(voxels)")
+        for col in self.cur.fetchall():
+            if col[1] == property_name:
+                return col[4] # default value is listed in col[4]
+
     def commit(self) -> None: # closes database, but file still exists
         self.conn.commit()
 

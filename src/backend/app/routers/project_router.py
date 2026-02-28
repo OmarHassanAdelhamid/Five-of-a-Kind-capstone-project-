@@ -116,6 +116,8 @@ async def voxelize_stl(request: VoxelizeRequest):
     """
     stl_filename = request.stl_filename
     voxel_size = request.voxel_size
+    default_material = request.default_material
+    default_magnet = request.default_magnet
     project_name = request.project_name
     stl_path = STL_STORAGE_DIR / stl_filename
 

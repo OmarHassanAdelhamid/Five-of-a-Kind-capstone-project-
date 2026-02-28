@@ -29,3 +29,13 @@ def delete_voxels(db_path: str, voxels: List[Tuple[int, int, int]]):
         for voxel in voxels:
             db.delete_voxel(voxel[0], voxel[1], voxel[2])
 
+def reset_voxel_materials(db_path: str, voxels: List[Tuple[int, int, int]]):
+    with VoxelDB(db_path) as db:
+        for voxel in voxels:
+            db.reset_material(voxel[0], voxel[1], voxel[2])
+
+def reset_voxel_magnetizations(db_path: str, voxels: List[Tuple[int, int, int]]):
+    with VoxelDB(db_path) as db:
+        for voxel in voxels:
+            db.reset_magnetization(voxel[0], voxel[1], voxel[2])
+
