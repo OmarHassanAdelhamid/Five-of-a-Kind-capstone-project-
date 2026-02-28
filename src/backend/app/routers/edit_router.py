@@ -135,14 +135,20 @@ async def update_voxels(request: UpdateVoxelsRequest):
             new_voxels = mt.get_full_voxels(str(partition_path), request.voxels)  # record voxel state post-update
             hm.record_change(ModelDelta(old_voxels=old_voxels, new_voxels=new_voxels))
             
-        # elif (request.action == UpdateAction.RESET_MATERIAL):
-        #     # request is to set material of all voxels to null.
-        #     # TODO: no model structure method for this?
-        #     pass
-        # elif (request.action == UpdateAction.RESET_MAGNETIZATION):
-        #     # request is to set magnetization of all voxels to null.
-        #     # TODO: no model structure method for this?
-        #     pass
+        elif (request.action == UpdateAction.RESET_MATERIAL):
+            # request is to set material of all voxels to default.
+            old_voxels = mt.get_full_voxels(str(partition_path), request.voxels)
+            em.reset_voxel_materials(partition_path, request.voxels)
+            new_voxels = mt.get_full_voxels(str(partition_path), request.voxels)
+            hm.record_change(ModelDelta(old_voxels=old_voxels, new_voxels=new_voxels))
+
+        elif (request.action == UpdateAction.RESET_MAGNETIZATION):
+            # request is to set magnetization of all voxels to default.
+            old_voxels = mt.get_full_voxels(str(partition_path), request.voxels)
+            em.reset_voxel_magnetizations(partition_path, request.voxels)
+            new_voxels = mt.get_full_voxels(str(partition_path), request.voxels)
+            hm.record_change(ModelDelta(old_voxels=old_voxels, new_voxels=new_voxels))
+
         elif (request.action == UpdateAction.ADD):
             # request is to add all voxels to the model.
             em.add_voxels(partition_path, request.voxels)

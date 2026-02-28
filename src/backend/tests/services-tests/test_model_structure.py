@@ -127,17 +127,8 @@ def test_get_properties_of_non_existent_voxel() -> None:
     pass
 
 @pytest.mark.dependency(depends=["init-db"])
-def test_get_properties_of_voxel_with_no_assigned_properties() -> None:
-    pass
-
-@pytest.mark.dependency(depends=["init-db"])
-def test_get_properties_of_incomplete_voxel() -> None:
-    pass
-
-@pytest.mark.dependency(depends=["init-db"])
 def test_set_properties_on_existing_voxel() -> None:
     with VoxelDB(TEST_PATH / TEST_FILE) as db:
-        # using the voxel that has been edited in previous tests.
         voxel = (3, 3, 3)
         properties = (4, 1.5, 1.9, 2.8)
         db.set_properties(*voxel, *properties)
