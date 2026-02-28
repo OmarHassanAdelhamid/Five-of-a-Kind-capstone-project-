@@ -6,6 +6,7 @@ import { NewProjectDialog } from './components/NewProjectDialog';
 import {
   fetchAvailableModels,
   fetchAvailableProjects,
+  fetchPartitions,
   fetchVoxelized,
   uploadSTLFile,
   voxelizeModel,
@@ -233,9 +234,14 @@ function App() {
         const projectList = await fetchAvailableProjects();
         setAvailableProjects(projectList);
 
-        // Set the new project as current and load voxels
         setProjectName(projectName);
-        handleLoadVoxels(projectName);
+        const parts = await fetchPartitions(projectName);
+        if (parts.length > 0) {
+          setSelectedPartition(parts[0]);
+          handleLoadVoxels(projectName, parts[0]);
+        } else {
+          setSelectedPartition(null);
+        }
       } catch (error) {
         console.error('Failed to create project', error);
         alert(
@@ -251,10 +257,16 @@ function App() {
   const handleOpenProjectSelect = useCallback(
     (selectedProjectName: string) => {
       setProjectName(selectedProjectName);
-      setSelectedPartition(null); // Clear partition selection when project changes
-      // Don't load voxels until a partition is selected
+      setSelectedPartition(null);
+      fetchPartitions(selectedProjectName).then((parts) => {
+        if (parts.length > 0) {
+          const first = parts[0];
+          setSelectedPartition(first);
+          handleLoadVoxels(selectedProjectName, first);
+        }
+      });
     },
-    [],
+    [handleLoadVoxels],
   );
 
   const handlePartitionSelect = useCallback(
