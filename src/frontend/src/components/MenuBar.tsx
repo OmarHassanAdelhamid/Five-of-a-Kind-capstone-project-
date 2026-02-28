@@ -12,6 +12,7 @@ interface MenuBarProps {
   selectedModel?: string | null;
   onSave?: () => void;
   onSaveAs?: () => void;
+  onExport?: () => void;
   onUndo?: () => void;
   onRedo?: () => void;
   onCut?: () => void;
@@ -31,6 +32,7 @@ interface MenuBarProps {
   canUndo?: boolean;
   canRedo?: boolean;
   canPaste?: boolean;
+  canCopy?: boolean;
 }
 
 interface MenuItemConfig {
@@ -59,6 +61,7 @@ export const MenuBar = ({
   selectedModel = null,
   onSave,
   onSaveAs,
+  onExport,
   onUndo,
   onRedo,
   onCut,
@@ -78,6 +81,7 @@ export const MenuBar = ({
   canUndo = false,
   canRedo = false,
   canPaste = false,
+  canCopy = false,
 }: MenuBarProps) => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [openFileSubmenu, setOpenFileSubmenu] = useState(false);
@@ -184,6 +188,7 @@ export const MenuBar = ({
         },
         { label: 'Save...', handler: onSave, shortcut: 'Ctrl S' },
         { label: 'Save as...', handler: onSaveAs, shortcut: null },
+        { label: 'Export...', handler: onExport, shortcut: 'Ctrl E' },
       ],
     },
     {
@@ -192,7 +197,7 @@ export const MenuBar = ({
         { label: 'Undo', handler: onUndo, shortcut: 'Ctrl Z', disabled: !canUndo },
         { label: 'Redo', handler: onRedo, shortcut: 'Ctrl Y', disabled: !canRedo },
         { label: 'Cut', handler: onCut, shortcut: 'Ctrl X', disabled: true },
-        { label: 'Copy', handler: onCopy, shortcut: 'Ctrl C', disabled: true },
+        { label: 'Copy', handler: onCopy, shortcut: 'Ctrl C', disabled: !canCopy },
         { label: 'Paste', handler: onPaste, shortcut: 'Ctrl V', disabled: !canPaste },
         { label: 'Preferences', handler: onPreferences, shortcut: null, subNote: 'eg. colors of interface.' },
       ],

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import {
@@ -13,7 +13,7 @@ import {
 } from '../utils/threeUtils';
 import { API_BASE_URL } from '../utils/constants';
 import { StatusMessage } from './StatusMessage';
-import { LayerEditor } from './LayerEditor';
+import { LayerEditor, type LayerEditorHandle } from './LayerEditor';
 import { PartitionsPanel } from './PartitionsPanel';
 
 //HEAVILY INFLUENCED BY STL LOADER EXAMPLE https://sbcode.net/threejs/loaders-stl/
@@ -35,9 +35,11 @@ interface ModelViewerProps {
   selectedPartition?: string | null;
   onPartitionSelect?: (partitionName: string) => void;
   voxelSize?: number;
+  isLayerEditorOpen?: boolean;
+  onLayerEditorOpenChange?: (open: boolean) => void;
 }
 
-export const ModelViewer = ({
+export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(function ModelViewer({
   selectedModel,
   voxelCoordinates,
   onStatusChange,
@@ -54,8 +56,11 @@ export const ModelViewer = ({
   selectedPartition = null,
   onPartitionSelect,
   voxelSize,
-}: ModelViewerProps) => {
+  isLayerEditorOpen: isLayerEditorOpenProp,
+  onLayerEditorOpenChange,
+}, ref) {
   const mountRef = useRef<HTMLDivElement | null>(null);
+  const layerEditorRef = useRef<LayerEditorHandle | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const sceneRef = useRef<SceneSetup | null>(null);
   const modelRef = useRef<THREE.Mesh | null>(null);
@@ -88,8 +93,39 @@ export const ModelViewer = ({
     coord: number[];
     index: number;
   } | null>(null);
-  const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
+  const [isLayerEditorOpenLocal, setIsLayerEditorOpenLocal] = useState(false);
+  const onLayerEditorOpenChangeRef = useRef(onLayerEditorOpenChange);
+  onLayerEditorOpenChangeRef.current = onLayerEditorOpenChange;
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      getSelectionProperties: () =>
+        layerEditorRef.current?.getSelectionProperties() ?? null,
+      applyPaste: (props) =>
+        layerEditorRef.current?.applyPaste(props) ?? Promise.resolve(),
+      selectAllInLayer: () => layerEditorRef.current?.selectAllInLayer(),
+    }),
+    [],
+  );
+
+  const isLayerEditorOpen =
+    isLayerEditorOpenProp !== undefined
+      ? isLayerEditorOpenProp
+      : isLayerEditorOpenLocal;
+  const setIsLayerEditorOpen = useCallback((open: boolean) => {
+    if (onLayerEditorOpenChangeRef.current) {
+      onLayerEditorOpenChangeRef.current(open);
+    } else {
+      setIsLayerEditorOpenLocal(open);
+    }
+  }, []);
   const [isPartitionsPanelOpen, setIsPartitionsPanelOpen] = useState(false);
+
+  // Only one of layer editor or partitions panel can be open at once
+  useEffect(() => {
+    if (isLayerEditorOpen) setIsPartitionsPanelOpen(false);
+  }, [isLayerEditorOpen]);
 
   const COLOR_DEFAULT = 0x60a5fa;
   const COLOR_LAYER_SELECTED = 0xf59e0b;
@@ -264,8 +300,8 @@ export const ModelViewer = ({
               }
             }
           } else {
-            // Single click - select layer only if layer editing mode is enabled
-            if (isLayerEditingModeRef.current && onLayerSelectRef.current) {
+            // Single click - select layer (opens layer editor and enables layer mode in App)
+            if (onLayerSelectRef.current) {
               const col =
                 layerAxisRef.current === 'x'
                   ? 0
@@ -281,6 +317,7 @@ export const ModelViewer = ({
                 onLayerSelectRef.current(null);
               } else {
                 onLayerSelectRef.current(layerValue);
+                onLayerEditorOpenChangeRef.current?.(true);
               }
             }
 
@@ -531,7 +568,7 @@ export const ModelViewer = ({
               }
             }
           } else {
-            if (isLayerEditingModeRef.current && onLayerSelectRef.current) {
+            if (onLayerSelectRef.current) {
               const col =
                 layerAxisRef.current === 'x'
                   ? 0
@@ -547,6 +584,7 @@ export const ModelViewer = ({
                 onLayerSelectRef.current(null);
               } else {
                 onLayerSelectRef.current(layerValue);
+                onLayerEditorOpenChangeRef.current?.(true);
               }
             }
 
@@ -725,9 +763,9 @@ export const ModelViewer = ({
       />
       <div className="viewer-instructions">
         <p className="instruction-text">
-          {isLayerEditingMode ? (
+          {voxelCoordinates.length > 0 ? (
             <>
-              <strong>Click</strong> to select layer •{' '}
+              <strong>Click</strong> to select layer (opens Layer Editor) •{' '}
               <strong>Ctrl/Cmd+Click</strong> to select multiple voxels
             </>
           ) : (
@@ -760,7 +798,11 @@ export const ModelViewer = ({
       )}
       <button
         className={`partitions-tab ${isPartitionsPanelOpen ? 'open' : ''}`}
-        onClick={() => setIsPartitionsPanelOpen(!isPartitionsPanelOpen)}
+        onClick={() => {
+          const nextOpen = !isPartitionsPanelOpen;
+          if (nextOpen) setIsLayerEditorOpen(false);
+          setIsPartitionsPanelOpen(nextOpen);
+        }}
         title={isPartitionsPanelOpen ? 'Close Partitions' : 'Open Partitions'}
       >
         <span className="partitions-tab-text">Partitions</span>
@@ -774,12 +816,17 @@ export const ModelViewer = ({
       />
       <button
         className={`layer-editor-tab ${isLayerEditorOpen ? 'open' : ''}`}
-        onClick={() => setIsLayerEditorOpen(!isLayerEditorOpen)}
+        onClick={() => {
+          const nextOpen = !isLayerEditorOpen;
+          if (nextOpen) setIsPartitionsPanelOpen(false);
+          setIsLayerEditorOpen(nextOpen);
+        }}
         title={isLayerEditorOpen ? 'Close Layer Editor' : 'Open Layer Editor'}
       >
         <span className="layer-editor-tab-text">Layer Editor</span>
       </button>
       <LayerEditor
+        ref={layerEditorRef}
         projectName={projectName}
         partitionName={selectedPartition}
         voxelSize={voxelSize}
@@ -792,4 +839,4 @@ export const ModelViewer = ({
       />
     </div>
   );
-};
+});
