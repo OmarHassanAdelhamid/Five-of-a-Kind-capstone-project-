@@ -12,7 +12,7 @@ class VoxelDB:
 
     def init_schema(self, default_material: int, default_magnetization: Tuple[float, float, float]) -> None:
         d_mm, d_mp, d_ma = default_magnetization
-        self.cur.execute("""
+        self.cur.execute(f"""
         CREATE TABLE IF NOT EXISTS voxels (
             ix INTEGER NOT NULL,
             iy INTEGER NOT NULL,
@@ -23,13 +23,13 @@ class VoxelDB:
             cx INTEGER NOT NULL DEFAULT 0,
             cy INTEGER NOT NULL DEFAULT 0,
             cz INTEGER NOT NULL DEFAULT 0,
-            material INTEGER NOT NULL DEFAULT ?,
-            magnet_magnitude REAL NOT NULL DEFAULT ?,
-            magnet_polar REAL NOT NULL DEFAULT ?,
-            magnet_azimuth REAL NOT NULL DEFAULT ?,
+            material INTEGER NOT NULL DEFAULT {default_material},
+            magnet_magnitude REAL NOT NULL DEFAULT {d_mm},
+            magnet_polar REAL NOT NULL DEFAULT {d_mp},
+            magnet_azimuth REAL NOT NULL DEFAULT {d_ma},
             PRIMARY KEY (ix, iy, iz)
         );
-        """, (default_material, d_mm, d_mp, d_ma))
+        """)
 
         self.cur.execute("""
         CREATE TABLE IF NOT EXISTS meta (
@@ -126,14 +126,18 @@ class VoxelDB:
         )
         
     # to add a single voxel
-    def add_voxel(self, ix: int, iy: int, iz: int, x: float, y: float, z: float) -> None:
-        # TODO: how to set x, y, z properly!
+    def add_voxel(self, ix: int, iy: int, iz: int) -> None:
+        # ! review this.
+        ox = float(self.get_meta("origin_x"))
+        oy = float(self.get_meta("origin_y"))
+        oz = float(self.get_meta("origin_z"))
+        voxel_size = float(self.get_meta("voxel_size"))
 
         self.cur.execute("""
             INSERT OR REPLACE INTO voxels
             (ix, iy, iz, x, y, z)
             VALUES (?, ?, ?, ?, ?, ?)""", 
-            (ix, iy, iz, x, y, z)
+            (ix, iy, iz, ix*voxel_size + ox, iy*voxel_size + oy, iz*voxel_size + oz) #!
         )
         
     # to remove a single voxel
