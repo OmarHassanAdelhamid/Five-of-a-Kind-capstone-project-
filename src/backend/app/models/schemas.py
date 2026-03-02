@@ -34,10 +34,16 @@ class VoxelizeRequest(BaseModel):
     Args:
         stl_filename (str): filename of the stl to be voxelized.
         voxel_size (float): size of the voxel relative to 1 unit.
+        default_material (Optional[int]): default value of material across partitions. 
+            if not provided, defaults to 1.
+        default_magnet (Optional[Tuple[float, float, float]]): default value of magnetization across 
+            partitions. if not provided, defaults to [0, 0, 0].
         project_name (str): name of the file the voxel database should be created in.
     """
     stl_filename: str
     voxel_size: float
+    default_material: Optional[int] = 1
+    default_magnet: Optional[Tuple[float, float, float]] = [0.0, 0.0, 0.0]
     project_name: str
 
 class RetrieveLayerRequest(BaseModel):
@@ -95,6 +101,9 @@ class ModelDelta(BaseModel):
     Args:
         old_voxels (List[Tuple[int, int, int, int, int, float, float]]): set of voxels; what they were previously.
         new_voxels (List[Tuple[int, int, int, int, int, float, float]]): set of voxels; their new state.
+    
+    Notes: 
+        An empty list here is interpreted as either an addition (old = []) or deletion (new = []).
     """
     old_voxels: List[Tuple[int, int, int, int, float, float, float]]
     new_voxels: List[Tuple[int, int, int, int, float, float, float]]

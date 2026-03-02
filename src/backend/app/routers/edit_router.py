@@ -135,21 +135,30 @@ async def update_voxels(request: UpdateVoxelsRequest):
             new_voxels = mt.get_full_voxels(str(partition_path), request.voxels)  # record voxel state post-update
             hm.record_change(ModelDelta(old_voxels=old_voxels, new_voxels=new_voxels))
             
-        # elif (request.action == UpdateAction.RESET_MATERIAL):
-        #     # request is to set material of all voxels to null.
-        #     # TODO: no model structure method for this?
-        #     pass
-        # elif (request.action == UpdateAction.RESET_MAGNETIZATION):
-        #     # request is to set magnetization of all voxels to null.
-        #     # TODO: no model structure method for this?
-        #     pass
-        # #! move add/delete to a separate route.
-        # elif (request.action == UpdateAction.ADD):
-        #     # request is to add all voxels to the model.
-        #     em.add_voxels(partition_path, request.voxels)
-        # elif (request.action == UpdateAction.DELETE):
-        #     #request is to delete all voxels from the model.
-        #     em.delete_voxels(partition_path, request.voxels)
+        elif (request.action == UpdateAction.RESET_MATERIAL):
+            # request is to set material of all voxels to default.
+            old_voxels = mt.get_full_voxels(str(partition_path), request.voxels)
+            em.reset_voxel_materials(partition_path, request.voxels)
+            new_voxels = mt.get_full_voxels(str(partition_path), request.voxels)
+            hm.record_change(ModelDelta(old_voxels=old_voxels, new_voxels=new_voxels))
+
+        elif (request.action == UpdateAction.RESET_MAGNETIZATION):
+            # request is to set magnetization of all voxels to default.
+            old_voxels = mt.get_full_voxels(str(partition_path), request.voxels)
+            em.reset_voxel_magnetizations(partition_path, request.voxels)
+            new_voxels = mt.get_full_voxels(str(partition_path), request.voxels)
+            hm.record_change(ModelDelta(old_voxels=old_voxels, new_voxels=new_voxels))
+
+        elif (request.action == UpdateAction.ADD):
+            # request is to add all voxels to the model.
+            em.add_voxels(partition_path, request.voxels)
+            new_voxels = mt.get_full_voxels(str(partition_path), request.voxels) # get full voxels after their addition.
+            hm.record_change(ModelDelta(old_voxels=[], new_voxels=new_voxels))
+        elif (request.action == UpdateAction.DELETE):
+            #request is to delete all voxels from the model.
+            old_voxels = mt.get_full_voxels(str(partition_path), request.voxels) # get full voxels prior to their deletion.
+            hm.record_change(ModelDelta(old_voxels=old_voxels, new_voxels=[]))
+            em.delete_voxels(partition_path, request.voxels)
         else:
             raise HTTPException(
                 status_code=400,
@@ -204,12 +213,39 @@ async def update_history(request: UpdateHistoryRequest):
             print(f"Received undo request for project '{request.project_name}'. Checking undo stack...")
             change = hm.undo_request()
             print(f"Undoing change: {change}")
-            em.update_voxel_properties(str(partition_path),change.old_voxels)
+
+            # check if either list is empty (eg. addition or deletion)
+            if (change.old_voxels == []):
+                # change was an addition, therefore to undo we delete.
+                em.delete_voxels(str(partition_path), change.new_voxels)
+            elif (change.new_voxels == []):
+                # change was a deletion, therefore to undo we add.
+                # also need to update their properties as well.
+                em.add_voxels(str(partition_path), change.old_voxels)
+                em.update_voxel_properties(str(partition_path), change.old_voxels)
+            else:
+                # both are non-empty - update voxel properties to old.
+                em.update_voxel_properties(str(partition_path), change.old_voxels)
+
             print(f"Undo applied successfully.")
         elif (request.action == HistoryAction.REDO):
             # Get top of redo stack; voxels become new_voxels.
+            print(f"Received redo request for project '{request.project_name}'. Checking redo stack...")
             change = hm.redo_request()
-            em.update_voxel_properties(str(partition_path), change.new_voxels)
+            print(f"Redoing change: {change}")
+
+            # check if either list is empty (eg. addition or deletion)
+            if (change.old_voxels == []):
+                # change was an addition, therefore to redo we add.
+                em.add_voxels(str(partition_path), change.new_voxels)
+            elif (change.new_voxels == []):
+                # change was a deletion, therefore to redo we delete.
+                em.delete_voxels(str(partition_path), change.old_voxels)
+            else:
+                # both are non-empty - update voxel properties to new.
+                em.update_voxel_properties(str(partition_path), change.new_voxels)
+
+            print(f"Redo applied successfully.")
         else:
             raise HTTPException(
                 status_code=400,
