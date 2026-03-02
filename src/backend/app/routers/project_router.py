@@ -116,6 +116,8 @@ async def voxelize_stl(request: VoxelizeRequest):
     """
     stl_filename = request.stl_filename
     voxel_size = request.voxel_size
+    default_material = request.default_material
+    default_magnet = request.default_magnet
     project_name = request.project_name
     stl_path = STL_STORAGE_DIR / stl_filename
 
@@ -135,7 +137,7 @@ async def voxelize_stl(request: VoxelizeRequest):
         os.makedirs(project_folder, exist_ok=True)
         project_file_path = os.path.join(project_folder, f"{project_name}")
 
-        pm.initialize_voxel_db(project_file_path, origin, voxel_size)
+        pm.initialize_voxel_db(project_file_path, origin, voxel_size, default_material, default_magnet)
         pm.create_voxel_db(project_file_path, points)
 
         if os.path.exists(project_file_path):
