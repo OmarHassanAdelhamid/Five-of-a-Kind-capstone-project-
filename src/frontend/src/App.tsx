@@ -21,7 +21,9 @@ function App() {
   const [models, setModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [projectName, setProjectName] = useState<string>('');
-  const [selectedPartition, setSelectedPartition] = useState<string | null>(null);
+  const [selectedPartition, setSelectedPartition] = useState<string | null>(
+    null,
+  );
   const [availableProjects, setAvailableProjects] = useState<string[]>([]);
   const [voxelCoordinates, setVoxelCoordinates] = useState<number[][]>([]);
   const [voxelSize] = useState<string>('0.1');
@@ -67,17 +69,20 @@ function App() {
     }
   }, []);
 
-  const fetchVoxels = useCallback(async (project: string, partition: string) => {
-    try {
-      const coordinates = await fetchVoxelized(project, partition);
-      setVoxelCoordinates(coordinates);
-      return coordinates;
-    } catch (error) {
-      console.error('Failed to fetch voxelized coordinates', error);
-      setVoxelCoordinates([]);
-      throw error;
-    }
-  }, []);
+  const fetchVoxels = useCallback(
+    async (project: string, partition: string) => {
+      try {
+        const coordinates = await fetchVoxelized(project, partition);
+        setVoxelCoordinates(coordinates);
+        return coordinates;
+      } catch (error) {
+        console.error('Failed to fetch voxelized coordinates', error);
+        setVoxelCoordinates([]);
+        throw error;
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     const initialiseModels = async () => {
@@ -146,6 +151,18 @@ function App() {
     },
     [projectName, selectedPartition, fetchVoxels],
   );
+
+  // Refresh model after adding/removing voxels in layer editor
+  const handleRefreshVoxels = useCallback(async () => {
+    if (!projectName.trim() || !selectedPartition) return;
+    try {
+      const coordinates = await fetchVoxelized(projectName, selectedPartition);
+      setVoxelCoordinates(coordinates);
+      setStatus('ready');
+    } catch {
+      setStatus('error');
+    }
+  }, [projectName, selectedPartition]);
 
   const handleDownloadCSV = useCallback(async () => {
     if (!projectName.trim()) {
@@ -561,6 +578,7 @@ function App() {
         voxelSize={parseFloat(voxelSize) || 0.1}
         isLayerEditorOpen={isLayerEditorOpen}
         onLayerEditorOpenChange={setIsLayerEditorOpen}
+        onVoxelsChanged={handleRefreshVoxels}
         onLayerSelect={(layerZ) => {
           setSelectedLayerZ(layerZ);
           if (layerZ !== null) {
