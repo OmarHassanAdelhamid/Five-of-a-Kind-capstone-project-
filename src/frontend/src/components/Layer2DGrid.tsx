@@ -2,8 +2,24 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import type { LayerResponse, LayerVoxel } from '../utils/api';
 
 type CellHit =
-  | { type: 'voxel'; index: number; voxel: LayerVoxel; x: number; y: number; w: number; h: number }
-  | { type: 'empty'; gridX: number; gridY: number; x: number; y: number; w: number; h: number };
+  | {
+      type: 'voxel';
+      index: number;
+      voxel: LayerVoxel;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+    }
+  | {
+      type: 'empty';
+      gridX: number;
+      gridY: number;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+    };
 
 interface Layer2DGridProps {
   layerData: LayerResponse | null;
@@ -25,7 +41,11 @@ interface Layer2DGridProps {
   canGoDown?: boolean;
 }
 
-function isPointInPolygon(px: number, py: number, polygon: { x: number; y: number }[]): boolean {
+function isPointInPolygon(
+  px: number,
+  py: number,
+  polygon: { x: number; y: number }[],
+): boolean {
   if (polygon.length < 3) return false;
   let inside = false;
   const n = polygon.length;
@@ -63,18 +83,37 @@ export const Layer2DGrid = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const zoomContainerRef = useRef<HTMLDivElement | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [hoveredEmpty, setHoveredEmpty] = useState<{ gridX: number; gridY: number } | null>(null);
-  const [selectionMode, setSelectionMode] = useState<'click' | 'lasso'>('click');
+  const [hoveredEmpty, setHoveredEmpty] = useState<{
+    gridX: number;
+    gridY: number;
+  } | null>(null);
+  const [selectionMode, setSelectionMode] = useState<'click' | 'lasso'>(
+    'click',
+  );
   const [lassoPath, setLassoPath] = useState<{ x: number; y: number }[]>([]);
   const [isDrawingLasso, setIsDrawingLasso] = useState(false);
   const [zoom, setZoom] = useState(1);
   const lassoPathRef = useRef<{ x: number; y: number }[]>([]);
 
   const voxelPositionsRef = useRef<
-    Array<{ x: number; y: number; w: number; h: number; voxel: LayerVoxel; index: number }>
+    Array<{
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      voxel: LayerVoxel;
+      index: number;
+    }>
   >([]);
   const emptyCellPositionsRef = useRef<
-    Array<{ x: number; y: number; w: number; h: number; gridX: number; gridY: number }>
+    Array<{
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      gridX: number;
+      gridY: number;
+    }>
   >([]);
 
   const getCanvasCoords = useCallback((clientX: number, clientY: number) => {
@@ -106,10 +145,9 @@ export const Layer2DGrid = ({
     const centerY = (bounds.grid_y_min + bounds.grid_y_max) / 2;
     const halfSpanX = (bounds.grid_x_max - bounds.grid_x_min) / 2 + 0.5;
     const halfSpanY = (bounds.grid_y_max - bounds.grid_y_min) / 2 + 0.5;
-    const expansionFactor =
-      editVoxelsMode
-        ? Math.min(4, Math.max(1, 1 / zoom))
-        : 1;
+    const expansionFactor = editVoxelsMode
+      ? Math.min(4, Math.max(1, 1 / zoom))
+      : 1;
     const expandedMinX = Math.floor(centerX - halfSpanX * expansionFactor);
     const expandedMaxX = Math.ceil(centerX + halfSpanX * expansionFactor);
     const expandedMinY = Math.floor(centerY - halfSpanY * expansionFactor);
@@ -196,7 +234,8 @@ export const Layer2DGrid = ({
 
       const materialId = v.material ?? 1;
       const materialColor = materialColors[materialId] ?? cellColor;
-      const isSelected = selectedVoxelIndices.size > 0 && selectedVoxelIndices.has(i);
+      const isSelected =
+        selectedVoxelIndices.size > 0 && selectedVoxelIndices.has(i);
       let fillColor = isSelected ? selectedCellColor : materialColor;
       if (hoveredIndex === i && !isSelected) fillColor = materialColor;
 
@@ -257,7 +296,12 @@ export const Layer2DGrid = ({
     if (!coords) return null;
     const { x, y } = coords;
     for (const pos of voxelPositionsRef.current) {
-      if (x >= pos.x && x <= pos.x + pos.w && y >= pos.y && y <= pos.y + pos.h) {
+      if (
+        x >= pos.x &&
+        x <= pos.x + pos.w &&
+        y >= pos.y &&
+        y <= pos.y + pos.h
+      ) {
         return pos;
       }
       const centerX = pos.x + pos.w / 2;
@@ -268,12 +312,20 @@ export const Layer2DGrid = ({
     return null;
   };
 
-  const getCellAtPosition = (clientX: number, clientY: number): CellHit | null => {
+  const getCellAtPosition = (
+    clientX: number,
+    clientY: number,
+  ): CellHit | null => {
     const coords = getCanvasCoords(clientX, clientY);
     if (!coords) return null;
     const { x, y } = coords;
     for (const pos of voxelPositionsRef.current) {
-      if (x >= pos.x && x <= pos.x + pos.w && y >= pos.y && y <= pos.y + pos.h) {
+      if (
+        x >= pos.x &&
+        x <= pos.x + pos.w &&
+        y >= pos.y &&
+        y <= pos.y + pos.h
+      ) {
         return {
           type: 'voxel',
           index: pos.index,
@@ -287,7 +339,12 @@ export const Layer2DGrid = ({
     }
     if (editVoxelsMode) {
       for (const pos of emptyCellPositionsRef.current) {
-        if (x >= pos.x && x <= pos.x + pos.w && y >= pos.y && y <= pos.y + pos.h) {
+        if (
+          x >= pos.x &&
+          x <= pos.x + pos.w &&
+          y >= pos.y &&
+          y <= pos.y + pos.h
+        ) {
           return {
             type: 'empty',
             gridX: pos.gridX,
@@ -409,22 +466,20 @@ export const Layer2DGrid = ({
     }
   };
 
-  const handleWheel = useCallback(
-    (e: React.WheelEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setZoom((z) => {
-        const delta = e.deltaY > 0 ? -0.1 : 0.1;
-        return Math.min(4, Math.max(0.25, z + delta));
-      });
-    },
-    [],
-  );
+  const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setZoom((z) => {
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      return Math.min(4, Math.max(0.25, z + delta));
+    });
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      if (target?.closest?.('input, textarea, [contenteditable="true"]')) return;
+      if (target?.closest?.('input, textarea, [contenteditable="true"]'))
+        return;
       if (e.key === '=' || e.key === '+') {
         e.preventDefault();
         setZoom((z) => Math.min(4, z + 0.25));
@@ -496,7 +551,6 @@ export const Layer2DGrid = ({
             transformOrigin: '50% 50%',
           }}
           onWheel={handleWheel}
-          title="Scroll to zoom • + / − to zoom in/out"
         >
           <canvas
             ref={canvasRef}
@@ -520,7 +574,6 @@ export const Layer2DGrid = ({
             }}
           />
         </div>
-        <p className="layer-2d-grid-zoom-hint">Scroll or + / − to zoom</p>
         {hoveredIndex !== null && voxelPositionsRef.current[hoveredIndex] && (
           <div className="layer-2d-grid-tooltip">
             Voxel #{hoveredIndex} (
@@ -532,7 +585,8 @@ export const Layer2DGrid = ({
         )}
         {editVoxelsMode && hoveredEmpty && (
           <div className="layer-2d-grid-tooltip">
-            Empty cell ({hoveredEmpty.gridX}, {hoveredEmpty.gridY}) • Right-click to add voxel
+            Empty cell ({hoveredEmpty.gridX}, {hoveredEmpty.gridY}) •
+            Right-click to add voxel
           </div>
         )}
       </div>
