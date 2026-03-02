@@ -114,6 +114,13 @@ def test_get_properties_of_existing_voxel() -> None:
         prop_retrieved = db.get_properties(*voxel)[0]
         assert prop_retrieved == properties
 
+@pytest.mark.dependency(depends=["init-db"])
+def test_get_properties_of_non_existent_voxel() -> None:
+    with pytest.raises(ValueError):
+        with VoxelDB(TEST_PATH / TEST_FILE) as db:
+            voxel = (6, 6, 6)
+            prop_retrieved = db.get_properties(*voxel)
+
 @pytest.mark.dependency(depends=["init-db"], name="set_prop")
 def test_set_properties_on_existing_voxel() -> None:
     with VoxelDB(TEST_PATH / TEST_FILE) as db:

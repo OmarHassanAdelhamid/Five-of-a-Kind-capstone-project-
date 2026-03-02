@@ -172,7 +172,9 @@ class VoxelDB:
             WHERE ix = ? AND iy = ? AND iz = ?""",
             (ix, iy, iz)
         )
-        return self.cur.fetchall()
+        properties = self.cur.fetchall()
+        if properties == []: raise ValueError("Properties requested of non-existent voxel.")
+        else: return properties
     
     def set_properties(self, ix: int, iy: int, iz: int, material_val: int, magnet_mag: float, mag_polar: float, mag_azi: float) -> None:
         self.cur.execute("""
