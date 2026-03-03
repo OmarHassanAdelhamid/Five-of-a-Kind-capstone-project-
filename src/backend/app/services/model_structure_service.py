@@ -127,17 +127,30 @@ class VoxelDB:
         
     # to add a single voxel
     def add_voxel(self, ix: int, iy: int, iz: int) -> None:
-        # ! review this.
-        ox = float(self.get_meta("origin_x"))
-        oy = float(self.get_meta("origin_y"))
-        oz = float(self.get_meta("origin_z"))
-        voxel_size = float(self.get_meta("voxel_size"))
+        voxel_size = float(self.get_meta("voxel_size") or 0.1)
+        self.cur.execute(
+            "SELECT ix, iy, iz, x, y, z FROM voxels LIMIT 1"
+        )
+        row = self.cur.fetchone()
+        if row is not None:
+            (ix0, iy0, iz0, x0, y0, z0) = row
+            ox = float(x0) - ix0 * voxel_size
+            oy = float(y0) - iy0 * voxel_size
+            oz = float(z0) - iz0 * voxel_size
+        else:
+            ox = float(self.get_meta("origin_x") or 0)
+            oy = float(self.get_meta("origin_y") or 0)
+            oz = float(self.get_meta("origin_z") or 0)
+
+        x = ix * voxel_size + ox
+        y = iy * voxel_size + oy
+        z = iz * voxel_size + oz
 
         self.cur.execute("""
             INSERT OR REPLACE INTO voxels
             (ix, iy, iz, x, y, z)
-            VALUES (?, ?, ?, ?, ?, ?)""", 
-            (ix, iy, iz, ix*voxel_size + ox, iy*voxel_size + oy, iz*voxel_size + oz) #!
+            VALUES (?, ?, ?, ?, ?, ?)""",
+            (ix, iy, iz, x, y, z)
         )
         
     # to remove a single voxel
