@@ -79,12 +79,17 @@ export const setupCameraForVoxels = (
   coordinates: number[][],
   grid: THREE.GridHelper,
 ): void => {
+  const sceneScale = computeSceneScale(coordinates, 6)
   const box = new THREE.Box3()
   coordinates.forEach((coord) => {
-    box.expandByPoint(new THREE.Vector3(coord[0], coord[1], coord[2]))
+    box.expandByPoint(
+      new THREE.Vector3(coord[0], coord[1], coord[2]).multiplyScalar(sceneScale),
+    )
   })
+
   const size = new THREE.Vector3()
   box.getSize(size)
+
   const radius = Math.max(size.x, size.y, size.z) * 0.5
   const distance = Math.max(radius * 2.5, 3)
 
@@ -113,40 +118,19 @@ export const createModelMaterial = (): THREE.MeshStandardMaterial => {
   })
 }
 
-export const calculateVoxelSize = (
-  coordinates: number[][],
-  modelSize?: number,
-): number => {
-  let voxelSize: number
+const computeSceneScale = (coordinates: number[][], targetSize = 6): number => {
+  const box = new THREE.Box3()
+  coordinates.forEach((c) => box.expandByPoint(new THREE.Vector3(c[0], c[1], c[2])))
 
-  if (modelSize && modelSize > 0) {
-    voxelSize = modelSize * 0.05
-  } else if (coordinates.length > 1) {
-    const firstCoord = coordinates[0]
-    const secondCoord = coordinates[1]
-    const spacing = Math.sqrt(
-      Math.pow(secondCoord[0] - firstCoord[0], 2) +
-      Math.pow(secondCoord[1] - firstCoord[1], 2) +
-      Math.pow(secondCoord[2] - firstCoord[2], 2),
-    )
-    if (spacing > 0.001 && spacing < 10) {
-      voxelSize = spacing * 0.8
-    } else {
-      voxelSize = 0.1
-    }
-  } else {
-    voxelSize = 0.1
-  }
+  const size = new THREE.Vector3()
+  box.getSize(size)
 
-  if (modelSize) {
-    voxelSize = Math.max(voxelSize, modelSize * 0.005)
-    voxelSize = Math.min(voxelSize, modelSize * 0.05)
-  } else {
-    voxelSize = Math.max(voxelSize, 0.01)
-    voxelSize = Math.min(voxelSize, 1.0)
-  }
+  const maxDim = Math.max(size.x, size.y, size.z)
 
-  return voxelSize
+  // Avoid divide-by-zero if all coords identical
+  if (!Number.isFinite(maxDim) || maxDim <= 0) return 1
+
+  return targetSize / maxDim
 }
 
 export const calculateCenterOffset = (
@@ -172,6 +156,7 @@ export const calculateCenterOffset = (
 export const renderVoxelInstanced = (
   scene: THREE.Scene,
   coordinates: number[][],
+  voxelSize: number,
   modelOriginalCenter?: THREE.Vector3 | null,
   existingMesh?: THREE.InstancedMesh | null,
 ): { 
@@ -195,10 +180,52 @@ export const renderVoxelInstanced = (
     return { mesh: emptyMesh, instanceIdMap }
   }
 
-  const voxelSize = 0.1 // Can be changed to a variable if needed
+  const TARGET_SCENE_SIZE = 6
+  const sceneScale = computeSceneScale(coordinates, TARGET_SCENE_SIZE)
   const centerOffset = calculateCenterOffset(coordinates, modelOriginalCenter)
+  const scaledCenterOffset = centerOffset.clone().multiplyScalar(sceneScale)  
   
-  const geometry = new THREE.BoxGeometry(voxelSize, voxelSize, voxelSize)
+  if (!Number.isFinite(voxelSize) || voxelSize <= 0) {
+    console.error('Invalid voxelSize received from backend:', voxelSize, {
+      type: typeof voxelSize,
+      coordinatesLen: coordinates?.length,
+      firstCoord: coordinates?.[0],
+    })
+    throw new Error(`Invalid voxelSize received from backend: ${String(voxelSize)}`)
+  }
+
+  // Estimate voxel pitch (center-to-center) along axes
+let pitch = voxelSize;
+
+const SAMPLES = Math.min(coordinates.length, 200);
+let best = Infinity;
+
+for (let i = 0; i < SAMPLES; i++) {
+  const a = coordinates[i];
+  for (let j = i + 1; j < SAMPLES; j++) {
+    const b = coordinates[j];
+
+    const dx = Math.abs(b[0] - a[0]);
+    const dy = Math.abs(b[1] - a[1]);
+    const dz = Math.abs(b[2] - a[2]);
+
+    const EPS = 1e-12;
+    const candidates: number[] = [];
+    if (dx > EPS && dy < EPS && dz < EPS) candidates.push(dx);
+    if (dy > EPS && dx < EPS && dz < EPS) candidates.push(dy);
+    if (dz > EPS && dx < EPS && dy < EPS) candidates.push(dz);
+
+    for (const c of candidates) {
+      if (Number.isFinite(c) && c > EPS && c < best) best = c;
+    }
+  }
+}
+
+if (best !== Infinity) pitch = best;
+  
+  const size = pitch * sceneScale
+  const geometry = new THREE.BoxGeometry(size, size, size)
+
   const material = new THREE.MeshStandardMaterial({
     color: 0xffffff, 
     metalness: 0.2,
@@ -219,7 +246,9 @@ export const renderVoxelInstanced = (
     const [x, y, z] = coord
     
     // Set Position
-    dummy.position.set(x, y, z).add(centerOffset)
+    dummy.position
+      .set(x * sceneScale, y * sceneScale, z * sceneScale)
+      .add(scaledCenterOffset)
     dummy.updateMatrix()
     mesh.setMatrixAt(index, dummy.matrix)
 

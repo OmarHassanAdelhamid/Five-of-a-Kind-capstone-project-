@@ -1,4 +1,4 @@
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Literal
 from pydantic import BaseModel
 from enum import Enum
 
@@ -39,6 +39,9 @@ class VoxelizeRequest(BaseModel):
     stl_filename: str
     voxel_size: float
     project_name: str
+    model_units: Literal["nm", "mm", "cm"]
+    voxel_units: Literal["nm", "mm", "cm"]
+    default_material: str
 
 class RetrieveLayerRequest(BaseModel):
     """

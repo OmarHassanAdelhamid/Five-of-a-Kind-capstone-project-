@@ -1,5 +1,8 @@
 import { API_BASE_URL } from './constants';
 
+
+export type UnitOption = 'nm' | 'mm' | 'cm'
+
 export interface VoxelizedData {
   project_name?: string;
   coordinates?: number[][];
@@ -107,21 +110,38 @@ export const uploadSTLFile = async (
 };
 
 export interface VoxelizeRequest {
-  stl_filename: string;
+  stl_filename: string
+  voxel_size: number
+  project_name: string
+  model_units: UnitOption
+  voxel_units: UnitOption
+  default_material: string
+}
+
+export interface VoxelizeResponse {
+  message: string;
+  project_folder: string;
   voxel_size: number;
-  project_name: string;
 }
 
 export const voxelizeModel = async (
-  stlFilename: string,
-  voxelSize: number,
-  projectName: string,
-): Promise<{ message?: string; projectpath?: string }> => {
+  payload: {
+    stlFilename: string
+    voxelSize: number
+    projectName: string
+    modelUnits: 'nm' | 'mm' | 'cm'
+    voxelUnits: 'nm' | 'mm' | 'cm'
+    defaultMaterial: string
+  }
+): Promise<VoxelizeResponse> => {
   const requestBody: VoxelizeRequest = {
-    stl_filename: stlFilename,
-    voxel_size: voxelSize,
-    project_name: projectName,
-  };
+    stl_filename: payload.stlFilename,
+    voxel_size: payload.voxelSize,
+    project_name: payload.projectName,
+    model_units: payload.modelUnits,
+    voxel_units: payload.voxelUnits,
+    default_material: payload.defaultMaterial,
+  }
 
   const response = await fetch(`${API_BASE_URL}/api/project`, {
     method: 'POST',
@@ -138,7 +158,7 @@ export const voxelizeModel = async (
     );
   }
 
-  return (await response.json()) as { message?: string; projectpath?: string };
+  return (await response.json()) as VoxelizeResponse;
 };
 
 export const downloadVoxelCSV = async (projectName: string, exportName: string): Promise<Blob> => {

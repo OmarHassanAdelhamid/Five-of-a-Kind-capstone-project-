@@ -21,7 +21,7 @@ function App() {
   const [selectedPartition, setSelectedPartition] = useState<string | null>(null);
   const [availableProjects, setAvailableProjects] = useState<string[]>([]);
   const [voxelCoordinates, setVoxelCoordinates] = useState<number[][]>([]);
-  const [voxelSize] = useState<string>('0.1');
+  const [voxelSize, setVoxelSize] = useState<number>(0.1);
   const [selectedLayerZ, setSelectedLayerZ] = useState<number | null>(null);
   const [selectedVoxel, setSelectedVoxel] = useState<{
     coord: number[];
@@ -214,15 +214,30 @@ function App() {
   }, [selectedModel]);
 
   const handleNewProjectConfirm = useCallback(
-    async (projectName: string) => {
+    async (payload: {
+      projectName: string
+      modelUnits: 'nm' | 'mm' | 'cm'
+      voxelSize: number
+      voxelUnits: 'nm' | 'mm' | 'cm'
+      defaultMaterial: string
+    }) => {
       if (!selectedModel) {
         return;
       }
 
+      const { projectName, modelUnits, voxelSize, voxelUnits, defaultMaterial } = payload
+
       try {
         // Make POST call to create/voxelize the project
-        const defaultVoxelSize = parseFloat(voxelSize) || 0.1;
-        await voxelizeModel(selectedModel, defaultVoxelSize, projectName);
+        const res = await voxelizeModel({
+          stlFilename: selectedModel,
+          projectName,
+          voxelSize,
+          voxelUnits,
+          modelUnits,
+          defaultMaterial,
+        })
+        setVoxelSize(res.voxel_size);
 
         // Refresh project list
         const projectList = await fetchAvailableProjects();
@@ -240,7 +255,7 @@ function App() {
         );
       }
     },
-    [selectedModel, voxelSize, handleLoadVoxels],
+    [selectedModel, handleLoadVoxels],
   );
 
   const handleOpenProjectSelect = useCallback(
@@ -500,7 +515,7 @@ function App() {
         projectName={projectName}
         selectedPartition={selectedPartition}
         onPartitionSelect={handlePartitionSelect}
-        voxelSize={parseFloat(voxelSize) || 0.1}
+        voxelSize={voxelSize}
         onLayerSelect={(layerZ) => {
           setSelectedLayerZ(layerZ);
           // Automatically enable layer editing mode when a layer is selected

@@ -34,7 +34,7 @@ interface ModelViewerProps {
   projectName?: string;
   selectedPartition?: string | null;
   onPartitionSelect?: (partitionName: string) => void;
-  voxelSize?: number;
+  voxelSize: number;
 }
 
 export const ModelViewer = ({
@@ -158,6 +158,7 @@ export const ModelViewer = ({
           const { mesh, instanceIdMap } = renderVoxelInstanced(
             sceneSetup.scene,
             voxelCoordinates,
+            voxelSize,
             originalCenter,
             instancedMeshRef.current,
           );
@@ -441,6 +442,7 @@ export const ModelViewer = ({
     const { mesh, instanceIdMap } = renderVoxelInstanced(
       sceneSetup.scene,
       voxelCoordinates,
+      voxelSize,
       undefined,
       instancedMeshRef.current,
     );

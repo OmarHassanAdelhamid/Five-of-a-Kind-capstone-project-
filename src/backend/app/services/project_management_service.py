@@ -1,8 +1,22 @@
 import os
 import numpy as np
+import trimesh
 from app.services.model_structure_service import VoxelDB
 import app.services.partition_manager as pm
 
+def set_user_req(mesh, ref_stl, ref_vox, vox_len)->None:
+    # convert everything into mm
+    if ref_stl == "nm":
+        mesh.apply_scale(1e-6)
+    elif ref_stl == "cm":
+        mesh.apply_scale(10.0)
+
+    if ref_vox == "nm":
+        vox_len *= 1e-6
+    elif ref_vox == "cm":
+        vox_len *= 10.0
+
+    return mesh, vox_len
 
 def initialize_voxel_db(project_path: str, origin: np.ndarray, voxel_size: float)-> None:
     ox, oy, oz = origin
