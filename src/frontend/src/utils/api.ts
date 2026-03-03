@@ -226,6 +226,14 @@ export const fetchLayers = async (
   }
 };
 
+// Copied voxel properties for clipboard (material + magnetization)
+export interface VoxelPropertiesClipboard {
+  material: number;
+  magnetization: number;
+  polarAngle: number;
+  azimuthAngle: number;
+}
+
 // Voxel data structure from backend
 // Backend returns: (ix, iy, iz, x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth)
 export interface LayerVoxel {
@@ -497,6 +505,7 @@ export const updateVoxels = async (
 
 export interface UpdateHistoryRequest {
   project_name: string;
+  partition_name: string;
   action: 'undo' | 'redo';
 }
 export const updateHistory = async (

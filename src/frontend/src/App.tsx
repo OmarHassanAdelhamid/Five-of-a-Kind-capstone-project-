@@ -6,19 +6,24 @@ import { NewProjectDialog } from './components/NewProjectDialog';
 import {
   fetchAvailableModels,
   fetchAvailableProjects,
+  fetchPartitions,
   fetchVoxelized,
   uploadSTLFile,
   voxelizeModel,
   downloadVoxelCSV,
   updateHistory,
+  type VoxelPropertiesClipboard,
 } from './utils/api';
+import type { LayerEditorHandle } from './components/LayerEditor';
 
 function App() {
   const [, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [models, setModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [projectName, setProjectName] = useState<string>('');
-  const [selectedPartition, setSelectedPartition] = useState<string | null>(null);
+  const [selectedPartition, setSelectedPartition] = useState<string | null>(
+    null,
+  );
   const [availableProjects, setAvailableProjects] = useState<string[]>([]);
   const [voxelCoordinates, setVoxelCoordinates] = useState<number[][]>([]);
   const [voxelSize, setVoxelSize] = useState<number>(0.1);
@@ -32,8 +37,13 @@ function App() {
   // Convert Set to sorted array for dependency tracking
   const selectedVoxelIndicesArray = Array.from(selectedVoxels).sort();
   const [isLayerEditingMode, setIsLayerEditingMode] = useState(false);
+  const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
   const [layerAxis] = useState<'z' | 'x' | 'y'>('z');
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
+  const [copiedVoxelProperties, setCopiedVoxelProperties] =
+    useState<VoxelPropertiesClipboard | null>(null);
+  const modelViewerRef = useRef<LayerEditorHandle | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchModels = useCallback(async (): Promise<string[]> => {
     try {
@@ -59,17 +69,20 @@ function App() {
     }
   }, []);
 
-  const fetchVoxels = useCallback(async (project: string, partition: string) => {
-    try {
-      const coordinates = await fetchVoxelized(project, partition);
-      setVoxelCoordinates(coordinates);
-      return coordinates;
-    } catch (error) {
-      console.error('Failed to fetch voxelized coordinates', error);
-      setVoxelCoordinates([]);
-      throw error;
-    }
-  }, []);
+  const fetchVoxels = useCallback(
+    async (project: string, partition: string) => {
+      try {
+        const coordinates = await fetchVoxelized(project, partition);
+        setVoxelCoordinates(coordinates);
+        return coordinates;
+      } catch (error) {
+        console.error('Failed to fetch voxelized coordinates', error);
+        setVoxelCoordinates([]);
+        throw error;
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     const initialiseModels = async () => {
@@ -139,6 +152,18 @@ function App() {
     [projectName, selectedPartition, fetchVoxels],
   );
 
+  // Refresh model after adding/removing voxels in layer editor
+  const handleRefreshVoxels = useCallback(async () => {
+    if (!projectName.trim() || !selectedPartition) return;
+    try {
+      const coordinates = await fetchVoxelized(projectName, selectedPartition);
+      setVoxelCoordinates(coordinates);
+      setStatus('ready');
+    } catch {
+      setStatus('error');
+    }
+  }, [projectName, selectedPartition]);
+
   const handleDownloadCSV = useCallback(async () => {
     if (!projectName.trim()) {
       alert('Please select a project to download.');
@@ -199,8 +224,6 @@ function App() {
     [fetchModels],
   );
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   const handleUploadFileClick = useCallback(() => {
     fileInputRef.current?.click();
   }, []);
@@ -243,9 +266,14 @@ function App() {
         const projectList = await fetchAvailableProjects();
         setAvailableProjects(projectList);
 
-        // Set the new project as current and load voxels
         setProjectName(projectName);
-        handleLoadVoxels(projectName);
+        const parts = await fetchPartitions(projectName);
+        if (parts.length > 0) {
+          setSelectedPartition(parts[0]);
+          handleLoadVoxels(projectName, parts[0]);
+        } else {
+          setSelectedPartition(null);
+        }
       } catch (error) {
         console.error('Failed to create project', error);
         alert(
@@ -261,10 +289,16 @@ function App() {
   const handleOpenProjectSelect = useCallback(
     (selectedProjectName: string) => {
       setProjectName(selectedProjectName);
-      setSelectedPartition(null); // Clear partition selection when project changes
-      // Don't load voxels until a partition is selected
+      setSelectedPartition(null);
+      fetchPartitions(selectedProjectName).then((parts) => {
+        if (parts.length > 0) {
+          const first = parts[0];
+          setSelectedPartition(first);
+          handleLoadVoxels(selectedProjectName, first);
+        }
+      });
     },
-    [],
+    [handleLoadVoxels],
   );
 
   const handlePartitionSelect = useCallback(
@@ -283,6 +317,14 @@ function App() {
     } else {
       alert('No project to save. Please create or load a project first.');
     }
+  }, [projectName, handleDownloadCSV]);
+
+  const handleExport = useCallback(async () => {
+    if (!projectName.trim()) {
+      alert('Please select a project to export.');
+      return;
+    }
+    await handleDownloadCSV();
   }, [projectName, handleDownloadCSV]);
 
   const handleSaveAs = useCallback(async () => {
@@ -317,10 +359,15 @@ function App() {
       alert('Please select a project to undo changes.');
       return;
     }
+    if (!selectedPartition) {
+      alert('Please select a partition to undo changes.');
+      return;
+    }
 
     try {
       const updatedCoordinates = await updateHistory({
         project_name: projectName,
+        partition_name: selectedPartition,
         action: 'undo',
       });
       console.log('Undo successful, updated coordinates:', updatedCoordinates);
@@ -332,7 +379,7 @@ function App() {
           : 'Failed to undo changes. Please try again.',
       );
     }
-  }, [projectName]);
+  }, [projectName, selectedPartition]);
   const handleRedo = useCallback(async () => {
     console.log('Redo action triggered');
     console.log('Current project name:', projectName);
@@ -340,10 +387,15 @@ function App() {
       alert('Please select a project to redo changes.');
       return;
     }
+    if (!selectedPartition) {
+      alert('Please select a partition to redo changes.');
+      return;
+    }
 
     try {
       const updatedCoordinates = await updateHistory({
         project_name: projectName,
+        partition_name: selectedPartition,
         action: 'redo',
       });
       console.log('Redo successful, updated coordinates:', updatedCoordinates);
@@ -355,16 +407,21 @@ function App() {
           : 'Failed to redo changes. Please try again.',
       );
     }
-  }, [projectName]);
+  }, [projectName, selectedPartition]);
   const handleCopy = useCallback(() => {
-    /* no-op */
-  }, []);
+    if (isLayerEditorOpen) {
+      const props = modelViewerRef.current?.getSelectionProperties() ?? null;
+      if (props) setCopiedVoxelProperties(props);
+    }
+  }, [isLayerEditorOpen]);
   const handleCut = useCallback(() => {
     /* no-op */
   }, []);
-  const handlePaste = useCallback(() => {
-    /* no-op */
-  }, []);
+  const handlePaste = useCallback(async () => {
+    if (isLayerEditorOpen && copiedVoxelProperties) {
+      await modelViewerRef.current?.applyPaste(copiedVoxelProperties);
+    }
+  }, [isLayerEditorOpen, copiedVoxelProperties]);
 
   const handlePreferences = useCallback(() => {
     alert(
@@ -379,6 +436,7 @@ function App() {
   const handleOpenLayerMenu = useCallback(() => {
     if (projectName.trim()) {
       setIsLayerEditingMode(true);
+      setIsLayerEditorOpen(true);
     } else {
       alert('Please select a project to open the Layer Editor.');
     }
@@ -391,8 +449,12 @@ function App() {
   }, [voxelCoordinates]);
 
   const handleSelectAll = useCallback(() => {
-    handleHighlightAll();
-  }, [handleHighlightAll]);
+    if (isLayerEditorOpen) {
+      modelViewerRef.current?.selectAllInLayer();
+    } else {
+      handleHighlightAll();
+    }
+  }, [handleHighlightAll, isLayerEditorOpen]);
 
   const handleResetSelected = useCallback(() => {
     setSelectedVoxels(new Set());
@@ -431,19 +493,29 @@ function App() {
             e.preventDefault();
             handleSave();
             break;
+          case 'e':
+            e.preventDefault();
+            handleExport();
+            break;
           case 'a':
             e.preventDefault();
             handleSelectAll();
             break;
-          // Undo, Redo, Cut, Copy, Paste shortcuts are intentionally not handled
-          // as per previous requirements to disable them.
+          case 'c':
+            e.preventDefault();
+            handleCopy();
+            break;
+          case 'v':
+            e.preventDefault();
+            handlePaste();
+            break;
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleSave, handleSelectAll]);
+  }, [handleSave, handleExport, handleSelectAll, handleCopy, handlePaste]);
 
   return (
     <div className="app">
@@ -466,6 +538,7 @@ function App() {
         selectedModel={selectedModel}
         onSave={handleSave}
         onSaveAs={handleSaveAs}
+        onExport={handleExport}
         onUndo={handleUndo}
         onRedo={handleRedo}
         canUndo={true}
@@ -473,7 +546,8 @@ function App() {
         onCut={handleCut}
         onCopy={handleCopy}
         onPaste={handlePaste}
-        canPaste={false}
+        canPaste={isLayerEditorOpen && !!copiedVoxelProperties}
+        canCopy={isLayerEditorOpen}
         onPreferences={handlePreferences}
         onOpenPartitionMenu={handleOpenPartitionMenu}
         onOpenLayerMenu={handleOpenLayerMenu}
@@ -507,6 +581,7 @@ function App() {
         onConfirm={handleNewProjectConfirm}
       />
       <ModelViewer
+        ref={modelViewerRef}
         selectedModel={selectedModel}
         voxelCoordinates={voxelCoordinates}
         onStatusChange={handleStatusChange}
@@ -516,10 +591,12 @@ function App() {
         selectedPartition={selectedPartition}
         onPartitionSelect={handlePartitionSelect}
         voxelSize={voxelSize}
+        isLayerEditorOpen={isLayerEditorOpen}
+        onLayerEditorOpenChange={setIsLayerEditorOpen}
+        onVoxelsChanged={handleRefreshVoxels}
         onLayerSelect={(layerZ) => {
           setSelectedLayerZ(layerZ);
-          // Automatically enable layer editing mode when a layer is selected
-          if (layerZ !== null && !isLayerEditingMode) {
+          if (layerZ !== null) {
             setIsLayerEditingMode(true);
           }
         }}

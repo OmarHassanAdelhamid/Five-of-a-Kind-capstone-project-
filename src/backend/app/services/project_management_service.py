@@ -1,4 +1,5 @@
 import os
+from typing import Tuple
 import numpy as np
 import trimesh
 from app.services.model_structure_service import VoxelDB
@@ -18,9 +19,12 @@ def set_user_req(mesh, ref_stl, ref_vox, vox_len)->None:
 
     return mesh, vox_len
 
-def initialize_voxel_db(project_path: str, origin: np.ndarray, voxel_size: float)-> None:
+def initialize_voxel_db(project_path: str, origin: np.ndarray, voxel_size: float, 
+                        default_material: int, default_magnetization: Tuple[float, float, float])-> None:
     ox, oy, oz = origin
     with VoxelDB(project_path) as db:
+        # initialize defaults, set grid + voxel size metadata.
+        db.init_schema(default_material, default_magnetization)
         db.set_grid((float(ox), float(oy), float(oz)), float(voxel_size))
         db.commit() 
 
