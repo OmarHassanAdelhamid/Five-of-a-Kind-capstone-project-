@@ -32,7 +32,7 @@ def get_partitions(db_path: str, partition_size: int) -> None:
 
     '''
     NOTE:
-    if we would liek to add padding around the structure as a safety net 
+    if we would like to add padding around the structure as a safety net 
     for how many voxels can be added around the structure, adjust the lo and
     hi values, like below:
     x_lo = ((min_ix // half) - ADDED VALUE) * half

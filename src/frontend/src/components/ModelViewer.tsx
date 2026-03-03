@@ -41,7 +41,7 @@ interface ModelViewerProps {
   projectName?: string;
   selectedPartition?: string | null;
   onPartitionSelect?: (partitionName: string) => void;
-  voxelSize?: number;
+  voxelSize: number;
   isLayerEditorOpen?: boolean;
   onLayerEditorOpenChange?: (open: boolean) => void;
   onVoxelsChanged?: () => void | Promise<void>;
@@ -77,6 +77,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
     const animationFrameRef = useRef<number | null>(null);
     const sceneRef = useRef<SceneSetup | null>(null);
     const modelRef = useRef<THREE.Mesh | null>(null);
+    const modelOriginalCenterRef = useRef<THREE.Vector3 | null>(null);
     const instancedMeshRef = useRef<THREE.InstancedMesh | null>(null);
     const instanceIdMapRef = useRef<Map<number, VoxelData>>(new Map());
     const selectedCubeRef = useRef<number | null>(null);
@@ -207,7 +208,8 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
             const { mesh, instanceIdMap } = renderVoxelInstanced(
               sceneSetup.scene,
               voxelCoordinates,
-              originalCenter,
+              voxelSize,
+              modelOriginalCenterRef.current,
               instancedMeshRef.current,
             );
             instancedMeshRef.current = mesh;
@@ -358,6 +360,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
           if (onLayerSelectRef.current) onLayerSelectRef.current(null);
           if (onVoxelSelectRef.current) onVoxelSelectRef.current(null);
           if (onVoxelsSelectRef.current) onVoxelsSelectRef.current(new Set());
+
           selectedCubeRef.current = null;
           setSelectedVoxel(null);
         }
@@ -495,8 +498,9 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
         const { mesh, instanceIdMap } = renderVoxelInstanced(
           existingScene.scene,
           voxelCoordinates,
+          voxelSize,
           undefined,
-          null,
+          instancedMeshRef.current, 
         );
         instancedMeshRef.current = mesh;
         instanceIdMapRef.current = instanceIdMap;
@@ -533,6 +537,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
       const { mesh, instanceIdMap } = renderVoxelInstanced(
         sceneSetup.scene,
         voxelCoordinates,
+        voxelSize,
         undefined,
         instancedMeshRef.current,
       );
@@ -591,6 +596,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
                 Array.from(selectedVoxelIndicesRef.current),
               );
 
+
               if (currentSelected.has(voxelInfo.index)) {
                 currentSelected.delete(voxelInfo.index);
               } else {
@@ -602,25 +608,38 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
               }
 
               if (onVoxelSelectRef.current) {
+
                 if (currentSelected.has(voxelInfo.index)) {
-                  onVoxelSelectRef.current(voxelInfo);
-                  setSelectedVoxel(voxelInfo);
-                } else if (currentSelected.size > 0) {
-                  const lastIndex = Array.from(currentSelected).pop();
-                  let lastVoxel = null;
-                  for (const v of instanceIdMapRef.current.values()) {
-                    if (v.index === lastIndex) {
-                      lastVoxel = v;
-                      break;
-                    }
-                  }
-                  if (lastVoxel) {
-                    onVoxelSelectRef.current(lastVoxel);
-                    setSelectedVoxel(lastVoxel);
-                  }
+                  currentSelected.delete(voxelInfo.index);
                 } else {
-                  onVoxelSelectRef.current(null);
-                  setSelectedVoxel(null);
+                  currentSelected.add(voxelInfo.index);
+                }
+
+                if (onVoxelsSelectRef.current) {
+                  onVoxelsSelectRef.current(new Set(Array.from(currentSelected)));
+                }
+
+                if (onVoxelSelectRef.current) {
+                  if (currentSelected.has(voxelInfo.index)) {
+                    onVoxelSelectRef.current(voxelInfo);
+                    setSelectedVoxel(voxelInfo);
+                  } else if (currentSelected.size > 0) {
+                    const lastIndex = Array.from(currentSelected).pop();
+                    let lastVoxel = null;
+                    for (const v of instanceIdMapRef.current.values()) {
+                      if (v.index === lastIndex) {
+                        lastVoxel = v;
+                        break;
+                      }
+                    }
+                    if (lastVoxel) {
+                      onVoxelSelectRef.current(lastVoxel);
+                      setSelectedVoxel(lastVoxel);
+                    }
+                  } else {
+                    onVoxelSelectRef.current(null);
+                    setSelectedVoxel(null);
+                  }
                 }
               }
             } else {
@@ -662,7 +681,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
               }
             }
             selectedCubeRef.current = instanceId;
-          }
+          } //vi
         } else {
           if (onLayerSelectRef.current) onLayerSelectRef.current(null);
           if (onVoxelSelectRef.current) onVoxelSelectRef.current(null);

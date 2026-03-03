@@ -301,6 +301,18 @@ body,
   color: rgba(148, 163, 184, 0.7);
 }
 
+.dialog-hint-white {
+  margin-top: 8px;
+  font-size: 12px;
+  color: white;
+}
+
+.dialog-error {
+  margin-top: 8px;
+  font-size: 10px;
+  color: #B22222;
+}
+
 .dialog-hint strong {
   color: #38bdf8;
 }
@@ -331,6 +343,21 @@ body,
 
 .dialog-button-cancel:hover {
   background: rgba(148, 163, 184, 0.3);
+}
+
+.dialog-button-small {
+  padding: 6px 12px;       /* match Cancel exactly */
+  border-radius: 6px;      /* match Cancel */
+  font-size: 0.8rem;
+  width: 70px;
+  border: none;
+  margin: 2px;;
+}
+
+.dialog-button-blue {
+  background-color: #38bdf8;   /* your modal blue */
+  color: white;
+  border: none;
 }
 
 .dialog-button-confirm {
@@ -2028,6 +2055,19 @@ footer .metadata {
   opacity: 0.45;
   cursor: not-allowed;
   transform: none;
+}
+
+.radio-row {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.radio-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
 }
 
 @media (max-width: 480px) {

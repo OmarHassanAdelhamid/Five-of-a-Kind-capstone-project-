@@ -119,6 +119,9 @@ async def voxelize_stl(request: VoxelizeRequest):
     default_material = request.default_material
     default_magnet = request.default_magnet
     project_name = request.project_name
+    model_units = request.model_units
+    voxel_units = request.voxel_units
+    default_material = request.default_material
     stl_path = STL_STORAGE_DIR / stl_filename
 
     if not stl_path.exists():
@@ -127,6 +130,9 @@ async def voxelize_stl(request: VoxelizeRequest):
     with stl_path.open("rb") as file:
         # load passed stl file as a mesh and voxelize it
         mesh = ms.create_mesh(file, file_type='stl')
+        model_dim = mesh.extents
+
+        mesh, voxel_size = pm.set_user_req(mesh, model_units, voxel_units, voxel_size)
         voxelized = vx.voxelize(mesh, voxel_size)
 
         # get all coordinates of voxels (centers of each voxel)
