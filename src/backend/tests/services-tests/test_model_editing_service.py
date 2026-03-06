@@ -2,7 +2,6 @@ import pytest
 from pathlib import Path
 from app.services.model_structure_service import VoxelDB
 import app.services.model_editing_service as em
-import pprint
 
 TEST_VOXELS = [(0, 0, 0, 0.0, 0.0, 0.0),
                (1, 1, 1, 1.0, 1.0, 1.0),

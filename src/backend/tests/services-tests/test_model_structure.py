@@ -39,7 +39,7 @@ def test_create_initial_db() -> None:
         rows = db.cur.fetchall()
         assert rows == TEST_VOXELS
 
-# TODO: tests for origin metadata
+# TODO: test for get_grid_conversion, centre_structure
 
 @pytest.mark.dependency(depends=["init-db"], name="add")
 def test_add_new_voxel() -> None:
@@ -147,6 +147,4 @@ def test_reset_magnetization_on_existing_voxel() -> None:
         db.reset_magnetization(*voxel)
         prop_retrieved = db.get_properties(*voxel)[0]
         assert prop_retrieved[0] == 4
-        assert prop_retrieved[1:4] == DEFAULT_MAGNET
-
-# TODO: cases where voxel does not exist.
+        assert prop_retrieved[1:4] == DEFAULT_MAGNET  
