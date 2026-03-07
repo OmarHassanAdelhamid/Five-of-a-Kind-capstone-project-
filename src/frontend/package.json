@@ -10,8 +10,7 @@
     "format": "prettier --write .",
     "preview": "vite preview",
     "test": "jest",
-    "test:coverage": "jest --coverage",
-    "postinstall": "patch-package"
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "react": "^19.1.1",
@@ -39,14 +38,11 @@
     "globals": "^16.4.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "picomatch": "2.3.1",
     "prettier": "^3.6.2",
-    "patch-package": "^8.0.0",
     "ts-jest": "^29.4.6",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.3",
     "vite": "^7.1.7"
-  },
-  "overrides": {
-    "picomatch": "2.3.1"
   }
 }

@@ -56,8 +56,10 @@ module.exports = {
     '^three$': '<rootDir>/src/__mocks__/three.cjs',
     '^three/examples/jsm/controls/OrbitControls$': '<rootDir>/src/__mocks__/orbitControls.cjs',
     '^three/examples/jsm/loaders/STLLoader$': '<rootDir>/src/__mocks__/stlLoader.cjs',
+    // Force Jest to use root picomatch (2.3.1) so it never picks up Vite's nested one (different API).
+    '^picomatch$': '<rootDir>/node_modules/picomatch',
   },
-  setupFiles: ['<rootDir>/jest-picomatch-setup.cjs'],
+  setupFiles: ['<rootDir>/jest-setup.cjs'],
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   modulePathIgnorePatterns: ['<rootDir>/src/jest-dom.d.ts'],
 };
