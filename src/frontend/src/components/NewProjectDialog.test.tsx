@@ -42,7 +42,15 @@ describe('NewProjectDialog', () => {
       />
     );
     await userEvent.click(getByRole('button', { name: /Create Project/ }));
-    expect(onConfirm).toHaveBeenCalledWith('box');
+    expect(onConfirm).toHaveBeenCalledWith(
+      expect.objectContaining({
+        projectName: 'box',
+        modelUnits: 'mm',
+        voxelSize: 1,
+        voxelUnits: 'mm',
+        defaultMaterial: 'material1',
+      })
+    );
     expect(onClose).toHaveBeenCalled();
   });
 
@@ -58,7 +66,15 @@ describe('NewProjectDialog', () => {
     );
     await userEvent.type(getByPlaceholderText('project-suffix'), 'v1');
     await userEvent.click(getByRole('button', { name: /Create Project/ }));
-    expect(onConfirm).toHaveBeenCalledWith('box-v1');
+    expect(onConfirm).toHaveBeenCalledWith(
+      expect.objectContaining({
+        projectName: 'box-v1',
+        modelUnits: 'mm',
+        voxelSize: 1,
+        voxelUnits: 'mm',
+        defaultMaterial: 'material1',
+      })
+    );
   });
 
   it('calls onClose when Cancel clicked', async () => {

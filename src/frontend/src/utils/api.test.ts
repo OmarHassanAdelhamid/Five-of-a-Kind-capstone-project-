@@ -81,7 +81,14 @@ describe('api', () => {
       ok: true,
       json: async () => ({ message: 'OK' }),
     });
-    const result = await api.voxelizeModel('x.stl', 0.1, 'proj');
+    const result = await api.voxelizeModel({
+      stlFilename: 'x.stl',
+      voxelSize: 0.1,
+      projectName: 'proj',
+      modelUnits: 'mm',
+      voxelUnits: 'mm',
+      defaultMaterial: 'material1',
+    });
     expect(result.message).toBe('OK');
   });
 
@@ -200,7 +207,16 @@ describe('api', () => {
 
   it('voxelizeModel throws on non-ok', async () => {
     (global.fetch as jest.Mock).mockResolvedValue({ ok: false, status: 500 });
-    await expect(api.voxelizeModel('x.stl', 0.1, 'proj')).rejects.toThrow();
+    await expect(
+      api.voxelizeModel({
+        stlFilename: 'x.stl',
+        voxelSize: 0.1,
+        projectName: 'proj',
+        modelUnits: 'mm',
+        voxelUnits: 'mm',
+        defaultMaterial: 'material1',
+      })
+    ).rejects.toThrow();
   });
 
   it('fetchLayers throws with detail message on non-ok', async () => {

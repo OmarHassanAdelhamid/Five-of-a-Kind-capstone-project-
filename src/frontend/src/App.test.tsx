@@ -392,7 +392,16 @@ describe('App', () => {
     await act(async () => {
       await userEvent.click(result!.getByRole('button', { name: /create project/i }));
     });
-    expect(api.voxelizeModel).toHaveBeenCalledWith('cube.stl', expect.any(Number), 'cube');
+    expect(api.voxelizeModel).toHaveBeenCalledWith(
+      expect.objectContaining({
+        stlFilename: 'cube.stl',
+        projectName: 'cube',
+        voxelSize: expect.any(Number),
+        modelUnits: 'mm',
+        voxelUnits: 'mm',
+        defaultMaterial: 'material1',
+      })
+    );
     expect(api.fetchAvailableProjects).toHaveBeenCalled();
     await act(async () => {});
     expect(api.fetchPartitions).toHaveBeenCalledWith('cube');

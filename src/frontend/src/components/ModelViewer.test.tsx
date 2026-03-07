@@ -32,6 +32,7 @@ describe('ModelViewer', () => {
         selectedModel={null}
         voxelCoordinates={[]}
         onStatusChange={jest.fn()}
+        voxelSize={1}
       />
     );
     expect(container.firstChild).toBeInTheDocument();
@@ -43,6 +44,7 @@ describe('ModelViewer', () => {
         selectedModel={null}
         voxelCoordinates={[]}
         onStatusChange={jest.fn()}
+        voxelSize={1}
       />
     );
     const viewerContainer = container.querySelector('.viewer-container') || container.querySelector('[class*="viewer"]') || container.firstChild;
@@ -55,6 +57,7 @@ describe('ModelViewer', () => {
         selectedModel={null}
         voxelCoordinates={[]}
         onStatusChange={jest.fn()}
+        voxelSize={1}
         projectName="myproj"
         selectedPartition="default"
       />
@@ -68,6 +71,7 @@ describe('ModelViewer', () => {
         selectedModel={null}
         voxelCoordinates={[]}
         onStatusChange={jest.fn()}
+        voxelSize={1}
         isLayerEditingMode={false}
         layerAxis="z"
       />
@@ -82,6 +86,7 @@ describe('ModelViewer', () => {
         selectedModel="test.stl"
         voxelCoordinates={[]}
         onStatusChange={onStatusChange}
+        voxelSize={1}
       />
     );
     await act(async () => {});
@@ -97,6 +102,7 @@ describe('ModelViewer', () => {
         selectedModel={null}
         voxelCoordinates={[]}
         onStatusChange={jest.fn()}
+        voxelSize={1}
       />
     );
     await act(async () => {});
@@ -112,6 +118,7 @@ describe('ModelViewer', () => {
         selectedModel={null}
         voxelCoordinates={[]}
         onStatusChange={jest.fn()}
+        voxelSize={1}
       />
     );
     await act(async () => {});
@@ -129,6 +136,7 @@ describe('ModelViewer', () => {
         selectedModel={null}
         voxelCoordinates={[]}
         onStatusChange={jest.fn()}
+        voxelSize={1}
         isLayerEditorOpen={true}
         onLayerEditorOpenChange={jest.fn()}
       />
@@ -143,6 +151,7 @@ describe('ModelViewer', () => {
         selectedModel="test.stl"
         voxelCoordinates={[[0, 0, 0], [1, 0, 0]]}
         onStatusChange={jest.fn()}
+        voxelSize={1}
       />
     );
     await act(async () => {});
@@ -156,6 +165,7 @@ describe('ModelViewer', () => {
         selectedModel={null}
         voxelCoordinates={[]}
         onStatusChange={jest.fn()}
+        voxelSize={1}
         isLayerEditorOpen={true}
         onLayerEditorOpenChange={onLayerEditorOpenChange}
       />
@@ -175,6 +185,7 @@ describe('ModelViewer', () => {
         selectedModel={null}
         voxelCoordinates={[]}
         onStatusChange={jest.fn()}
+        voxelSize={1}
         isLayerEditorOpen={false}
         onLayerEditorOpenChange={onLayerEditorOpenChange}
       />
@@ -190,7 +201,7 @@ describe('ModelViewer', () => {
   it('unmount calls disposeScene', async () => {
     const threeUtils = require('../utils/threeUtils');
     const { unmount } = render(
-      <ModelViewer selectedModel={null} voxelCoordinates={[]} onStatusChange={jest.fn()} />
+      <ModelViewer selectedModel={null} voxelCoordinates={[]} onStatusChange={jest.fn()} voxelSize={1} />
     );
     await act(async () => {});
     unmount();

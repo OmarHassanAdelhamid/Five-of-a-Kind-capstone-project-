@@ -13,6 +13,12 @@ class Vector3 {
   clone() {
     return new Vector3(this.x, this.y, this.z);
   }
+  multiplyScalar(s) {
+    this.x *= s;
+    this.y *= s;
+    this.z *= s;
+    return this;
+  }
   negate() {
     this.x = -this.x;
     this.y = -this.y;

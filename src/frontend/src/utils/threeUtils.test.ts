@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import {
-  calculateVoxelSize,
   calculateCenterOffset,
   createModelMaterial,
   setupCameraForGeometry,
@@ -11,34 +10,6 @@ import {
 } from './threeUtils';
 
 describe('threeUtils', () => {
-  describe('calculateVoxelSize', () => {
-    it('uses modelSize when provided', () => {
-      const result = calculateVoxelSize([[0, 0, 0], [1, 1, 1]], 10);
-      expect(result).toBeGreaterThanOrEqual(10 * 0.005);
-      expect(result).toBeLessThanOrEqual(10 * 0.05);
-    });
-
-    it('returns 0.1 for single coordinate', () => {
-      expect(calculateVoxelSize([[0, 0, 0]])).toBe(0.1);
-    });
-
-    it('computes from spacing for two coords', () => {
-      const result = calculateVoxelSize([[0, 0, 0], [0.5, 0, 0]]);
-      expect(result).toBeGreaterThan(0);
-      expect(result).toBeLessThanOrEqual(1);
-    });
-
-    it('returns 0.1 when spacing too small', () => {
-      const result = calculateVoxelSize([[0, 0, 0], [0.0001, 0, 0]]);
-      expect(result).toBe(0.1);
-    });
-
-    it('returns 0.1 when spacing too large', () => {
-      const result = calculateVoxelSize([[0, 0, 0], [20, 0, 0]]);
-      expect(result).toBe(0.1);
-    });
-  });
-
   describe('calculateCenterOffset', () => {
     it('returns negated center when provided', () => {
       const center = new THREE.Vector3(1, 2, 3);
@@ -95,7 +66,7 @@ describe('threeUtils', () => {
   describe('renderVoxelInstanced', () => {
     it('returns mesh and instanceIdMap for empty coordinates', () => {
       const scene = { add: jest.fn(), remove: jest.fn(), traverse: jest.fn() };
-      const result = renderVoxelInstanced(scene as any, []);
+      const result = renderVoxelInstanced(scene as any, [], 1);
       expect(result.mesh).toBeDefined();
       expect(result.instanceIdMap).toBeInstanceOf(Map);
       expect(result.instanceIdMap.size).toBe(0);
@@ -103,7 +74,7 @@ describe('threeUtils', () => {
 
     it('returns mesh and instanceIdMap for non-empty coordinates', () => {
       const scene = { add: jest.fn(), remove: jest.fn(), traverse: jest.fn() };
-      const result = renderVoxelInstanced(scene as any, [[0, 0, 0], [1, 0, 0]]);
+      const result = renderVoxelInstanced(scene as any, [[0, 0, 0], [1, 0, 0]], 1);
       expect(result.mesh).toBeDefined();
       expect(result.instanceIdMap.size).toBe(2);
       expect(scene.add).toHaveBeenCalledWith(result.mesh);
@@ -118,7 +89,7 @@ describe('threeUtils', () => {
         geometry: existingGeo,
         material: existingMat,
       };
-      renderVoxelInstanced(scene as any, [[0, 0, 0]], null, existingMesh as any);
+      renderVoxelInstanced(scene as any, [[0, 0, 0]], 1, null, existingMesh as any);
       expect(scene.remove).toHaveBeenCalledWith(existingMesh);
       expect(existingGeo.dispose).toHaveBeenCalled();
       expect(existingMat.dispose).toHaveBeenCalled();
