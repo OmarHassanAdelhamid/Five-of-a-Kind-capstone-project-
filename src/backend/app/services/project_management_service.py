@@ -8,14 +8,14 @@ import app.services.partition_manager as pm
 def set_user_req(mesh, ref_stl, ref_vox, vox_len)->None:
     # convert everything into mm
     if ref_stl == "nm":
-        mesh.apply_scale(1e-6)
+        mesh.apply_scale(1e6)
     elif ref_stl == "cm":
-        mesh.apply_scale(10.0)
+        mesh.apply_scale(0.1)
 
     if ref_vox == "nm":
-        vox_len *= 1e-6
+        vox_len *= 1e6
     elif ref_vox == "cm":
-        vox_len *= 10.0
+        vox_len *= 0.1
 
     return mesh, vox_len
 
