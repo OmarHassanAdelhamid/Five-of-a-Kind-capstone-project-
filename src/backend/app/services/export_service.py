@@ -33,8 +33,11 @@ def write_csv(project_path: str, file_to_write: str) -> bool:
         else:
             return False
 
-# TODO: complete.
 def _validate_voxels(voxels: List[Tuple[float, float, float, int, float, float, float]]):
     """
+    Validate that voxels to be written are correct.
+    Since all voxels have default properties now, all this does is check that 
+    the project is not empty; could be modified in the future to check against other things.
     """
-    if (voxels != None): return True
+    if (voxels != []): return True # cannot export empty project.
+    else: return False
