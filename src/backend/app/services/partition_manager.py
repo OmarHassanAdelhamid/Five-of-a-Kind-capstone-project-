@@ -9,7 +9,7 @@ get partitions, adjust integer coordinates to center the main structure, and not
 voxel_ref determines how partitions show be offset from the center 
 '''
 # adjust integer coordinates to center the main structure
-def get_partitions(db_path: str, partition_size: int) -> None:
+def get_partitions(db_path: str, partition_size: int) -> list:
     partitions = []
     with VoxelDB(db_path) as db:
         db.cur.execute("""
@@ -21,32 +21,23 @@ def get_partitions(db_path: str, partition_size: int) -> None:
         """)
         min_ix, max_ix, min_iy, max_iy, min_iz, max_iz = db.cur.fetchone()
 
-    print("ix:", min_ix, max_ix, "span:", max_ix - min_ix)
-    print("iy:", min_iy, max_iy, "span:", max_iy - min_iy)
-    print("iz:", min_iz, max_iz, "span:", max_iz - min_iz)
-
-
     base_dir = os.path.dirname(db_path)
     count = 1
-    half = partition_size//2
 
     '''
     NOTE:
     if we would like to add padding around the structure as a safety net 
     for how many voxels can be added around the structure, adjust the lo and
     hi values, like below:
-    x_lo = ((min_ix // half) - ADDED VALUE) * half
+    x_lo = ((min_ix // partition_size) - ADDED VALUE) * partition_size
     '''
-    x_lo = (min_ix // half) * half
-    y_lo = (min_iy // half) * half
-    z_lo = (min_iz // half) * half
-    x_hi = ((max_ix // half) + 1) * half
-    y_hi = ((max_iy // half) + 1) * half
-    z_hi = ((max_iz // half) + 1) * half
+    x_lo = (min_ix // partition_size) * partition_size
+    y_lo = (min_iy // partition_size) * partition_size
+    z_lo = (min_iz // partition_size) * partition_size
 
-    print("low & high:", x_lo, x_hi)
-    print("low & high:", y_lo, y_hi)
-    print("low & high:", z_lo, z_hi)
+    x_hi = ((max_ix // partition_size) + 1) * partition_size
+    y_hi = ((max_iy // partition_size) + 1) * partition_size
+    z_hi = ((max_iz // partition_size) + 1) * partition_size
 
     for i in range (x_lo, x_hi, partition_size):
         for j in range (y_lo, y_hi, partition_size):
@@ -66,6 +57,7 @@ def get_partitions(db_path: str, partition_size: int) -> None:
                     count += 1
                 else:
                     os.remove(new_path)
+    return partitions
 
 # query to remove parts of the sql table that are not part of the specific partition
 def remove_outside_range(path: str, voxel_range: tuple[int, int, int, int, int, int]) -> None:
