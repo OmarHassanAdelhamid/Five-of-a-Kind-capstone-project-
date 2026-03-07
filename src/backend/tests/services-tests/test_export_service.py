@@ -1,7 +1,5 @@
 from unittest.mock import MagicMock, patch, call
 import app.services.export_service as es
-import os
-from pathlib import Path
 
 @patch("builtins.open")
 @patch("csv.writer")
