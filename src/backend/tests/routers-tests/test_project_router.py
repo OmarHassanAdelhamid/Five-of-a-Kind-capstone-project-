@@ -1,7 +1,6 @@
 import app.routers.project_router as pr_r
 from app.models.schemas import VoxelizeRequest
-from unittest.mock import MagicMock, patch, call
-from types import SimpleNamespace
+from unittest.mock import MagicMock, patch
 import pytest
 import numpy as np
 import os
