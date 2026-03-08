@@ -67,7 +67,6 @@ Date 2 & 1.1 & Notes\\
   VnV & Verification and Validation\\
   IM & Import Manager\\
   VM & Visualization Manager\\
-  INT & Integration (Import to Visualization)\\
   EM & Editing Manager\\
   XM & Export Manager\\
   MAX\_VOXELS & Maximum number of voxels to display in the 3D view\\
@@ -75,8 +74,8 @@ Date 2 & 1.1 & Notes\\
   \bottomrule
 \end{tabular}\\
 
-\wss{symbols, abbreviations or acronyms -- you can reference the SRS tables if needed}
-
+\iffalse \wss{symbols, abbreviations or acronyms -- you can reference the SRS tables if needed}
+\fi
 \newpage
 
 \tableofcontents
@@ -183,7 +182,7 @@ Table~\ref{table:im_config_tests} gives the results for model configuration and 
 
   //Missing TC6 & F213 & Specify custom voxel size & System applies the dimensions and slices the model into voxels of the requested size & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
   //Missing TC7 & F214 & Specify custom geometric model size & System scales the model to desired model size before slicing & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC8 & F216 & Import a model containing more than MAX\_DISPLAY voxels. & System partitions the model into display sections not exceeding MAX\_VOXELS & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC8 & F216 & Import a model containing more than MAX\_VOXELS voxels. & System partitions the model into display sections not exceeding MAX\_VOXELS & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
   TC9 & F216 & Import a model containing less than MAX\_VOXELS voxels & System returns only one partition with all voxels visible& All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
   TC10 & F216 & Delete a partition with no voxels & System deletes the partition and returns the model to the previous state & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
   TC11 & F213, F214, F215 & Voxelize uploaded STL model into voxels& System voxelizes the model into voxels of the requested size using Triangle Meshes & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
@@ -223,8 +222,8 @@ Table~\ref{table:vm_rendering_tests} gives the results for 3D model rendering an
 
   TC13 & F221 & Import a STL model into the system & System renders a non-voxelized 3D STL model using Three.js & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
   TC14 & F221 & Open a voxelized project from file directory & System renders a voxelized 3D model using Three.js broken down into layers & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC15 & F222 & Open a voxelized project from file directory where the number of layers is greater than MAX\_DISPLAY & System displays a partitions panel with more than 1 partition & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC16 & F222 & Open a voxelized project from file directory where the number of layers is less than MAX\_DISPLAY & System displays a partitions panel with only 1 partition & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\
+  TC15 & F222 & Open a voxelized project from file directory where the number of voxles is greater than MAX\_VOXELS & System displays a partitions panel with more than 1 partition & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC16 & F222 & Open a voxelized project from file directory where the number of voxles is less than MAX\_VOXELS & System displays a partitions panel with only 1 partition & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\
 
 \end{longtable}
 
@@ -542,6 +541,10 @@ System-level and UI tests are executed manually; their outcomes are recorded in 
 
 The test cases in this report are the execution of the system and unit tests defined in the \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/docs/VnVPlan/VnVPlan.pdf}{VnV Plan}. The following tables show the traceability between these test cases and the functional requirements from the \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/docs/SRS/SRS.pdf}{SRS}. A filled cell (\xbox) indicates that the test case verifies the corresponding requirement; an empty cell (\obox) indicates it does not.
 
+\subsection{Functional Requirements}
+
+Table~\ref{tab:report-imt} shows the trace between Import Manager test cases and corresponding requirements.
+
 \begin{table}[H]
 \centering
 \caption{Trace Between Import Manager Test Cases and Corresponding Requirements}
@@ -569,9 +572,11 @@ TC12 & \obox & \obox & \xbox & \xbox & \xbox & \obox \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:report-vmt} shows the trace between Visualization Manager test cases and corresponding requirements.
+
 \begin{table}[H]
 \centering
-\caption{Trace Between Visualization Manager and Integration Test Cases and Corresponding Requirements}
+\caption{Trace Between Visualization Manager test cases and corresponding requirements}
 \label{tab:report-vmt}
 \small
 \setlength{\tabcolsep}{3pt}
@@ -597,6 +602,8 @@ TC26 & \obox & \obox & \obox & \obox & \obox & \obox & \xbox \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+Table~\ref{tab:report-emt-1} shows the trace between Editing Manager test cases and corresponding requirements (Part 1: voxel editing and history).
 
 \begin{table}[H]
 \centering
@@ -633,6 +640,8 @@ TC46 & \obox & \obox & \obox & \obox & \obox & \xbox \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:report-emt-2} shows the trace between Editing Manager test cases and corresponding requirements (Part 2: layers, add/delete, reset, save).
+
 \begin{table}[H]
 \centering
 \caption{Trace Between Editing Manager Test Cases and Corresponding Requirements (Part 2: layers, add/delete, reset, save)}
@@ -664,6 +673,8 @@ TC62 & \obox & \obox & \obox & \xbox \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:report-xmt} shows the trace between Export Manager test cases and corresponding requirements.
+
 \begin{table}[H]
 \centering
 \caption{Trace Between Export Manager Test Cases and Corresponding Requirements}
@@ -689,9 +700,99 @@ TC72 & \xbox & \obox & \obox & \obox & \obox \\
 \end{tabular}
 \end{table}
 
+\subsection{Non-Functional Requirements}
+
+Table~\ref{tab:report-nft-import} shows the trace between Non-Functional Requirements Import Manager test cases and corresponding requirements.
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Non-Functional Requirements Import Manager Test Cases and Corresponding Requirements}
+\label{tab:report-nft-import}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{5}{c}}
+\toprule
+\textbf{Reqs:}
+& NF211 & NF212 & NF213 \\
+\midrule
+TC8 & \xbox & \obox & \obox \\
+TC9 & \xbox & \obox & \obox \\
+Not Explicitly Tested & \obox & \xbox & \obox \\
+Tested by usability test (Graduate Students) & \obox & \obox & \xbox \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:report-nft-viz} shows the trace between Non-Functional Requirements Visualization Manager test cases and corresponding requirements.
+
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Non-Functional Requirements Visualization Manager Test Cases and Corresponding Requirements}
+\label{tab:report-nft-viz}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{5}{c}}
+\toprule
+\textbf{Reqs:}
+& NF221 & NF222 & NF223 \\
+\midrule
+TC18 & \xbox & \obox & \obox \\
+TC19 & \xbox & \obox & \obox \\
+TC15 & \obox & \xbox & \obox \\
+TC16 & \obox & \xbox & \obox \\
+Not Explicitly Tested & \obox & \obox & \xbox \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:report-nft-edit} shows the trace between Non-Functional Requirements Editing Manager test cases and corresponding requirements.
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Non-Functional Requirements Editing Manager Test Cases and Corresponding Requirements}
+\label{tab:report-nft-edit}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{5}{c}}
+\toprule
+\textbf{Reqs:}
+& NF231 & NF232 \\
+\midrule
+TC59 & \xbox & \obox \\
+Tested by usability test (Graduate Students) & \obox & \xbox \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:report-nft-export} shows the trace between Non-Functional Requirements Export Manager test cases and corresponding requirements.
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Non-Functional Requirements Export Manager Test Cases and Corresponding Requirements}
+\label{tab:report-nft-export}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{5}{c}}
+\toprule
+\textbf{Reqs:}
+& NF241 & NF242 & NF243 \\
+\midrule
+TC63 & \xbox & \xbox & \obox \\
+TC64 & \xbox & \xbox & \obox \\
+TC65 & \xbox & \xbox & \obox \\
+TC66 & \xbox & \xbox & \obox \\
+TC67 & \xbox & \xbox & \obox \\
+Not Explicitly Tested & \obox & \obox & \xbox \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Trace to Modules}
 \label{sec:trace-modules}
-The following tables show the traceability between the test cases in this report and the modules defined in the \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/docs/Design/SoftArchitecture/MG.pdf}{Module Guide}. A filled cell (\xbox) indicates that the test case exercises or verifies behaviour involving that module; an empty cell (\obox) indicates it does not. The module identifiers (M1, M2, \ldots) correspond to the modules in the MG: Input Interpreter (M1), Voxel Slicing (M2), Display Partitioning (M3), Project Manager (M4), Interaction Controller (M7), Visualization State Manager (M8), Model Manager (M9), History Manager (M10), Voxel Tracking (M12), Highlight Manager (M13), Export Validation (M14), Export Manager (M15), Error Diagnostic Handler (M16), Model Structure (M17), Graphics Adapter (M18), and Export Structure (M20).
+The following tables show the traceability between the test cases in this report and the modules defined in the \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/docs/Design/SoftArchitecture/MG.pdf}{Module Guide}. A filled cell (\xbox) indicates that the test case exercises or verifies behaviour involving that module; an empty cell (\obox) indicates it does not. The module identifiers correspond to the modules in the MG.
+
+Table~\ref{tab:report-tm-import} shows the trace between Import Manager test cases and modules.
 
 \begin{table}[H]
 \centering
@@ -719,14 +820,15 @@ TC12 & \xbox & \xbox & \obox & \xbox & \obox \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:report-tm-viz} shows the trace between Visualization Manager test cases and modules.
+
 \begin{table}[H]
 \centering
-\caption{Trace Between Visualization Manager and Integration Test Cases and Modules}
+\caption{Trace Between Visualization Manager Test Cases and Modules}
 \label{tab:report-tm-viz}
 \small
-\setlength{\tabcolsep}{2pt}
-\resizebox{\textwidth}{!}{
-\begin{tabular}{l|*{16}{c}}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{7}{c}}
 \toprule
 \textbf{TC} & M3 & M5 & M6 & M9 & M10 & M14 & M15 \\
 \midrule
@@ -748,14 +850,15 @@ TC26 & \obox & \obox & \xbox & \xbox & \xbox & \xbox & \xbox \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:report-tm-edit} shows the trace between Editing Manager test cases and modules (Part 1: voxel editing and history).
+
 \begin{table}[H]
 \centering
-\caption{Trace Between Editing Manager Test Cases and Modules}
+\caption{Trace Between Editing Manager Test Cases and Modules (Part 1: voxel editing and history)}
 \label{tab:report-tm-edit}
 \small
-\setlength{\tabcolsep}{2pt}
-\resizebox{\textwidth}{!}{
-\begin{tabular}{l|*{16}{c}}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{7}{c}}
 \toprule
 \textbf{TC} & M5 & M7 & M8 & M9 & M10 & M13 & M14 \\
 \midrule
@@ -781,31 +884,64 @@ TC45 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
 TC46 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
 \bottomrule
 \end{tabular}
-}
 \end{table}
+
+Table~\ref{tab:report-tm-edit-2} shows the trace between Editing Manager test cases and modules (Part 2: layers, add/delete, reset, save).
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Editing Manager Test Cases and Modules (Part 2: layers, add/delete, reset, save)}
+\label{tab:report-tm-edit-2}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{5}{c}}
+\toprule
+\textbf{TC} & M4 & M5 & M7 & M10 & M14 \\
+\midrule
+TC47 & \obox & \xbox & \xbox & \xbox & \xbox \\
+TC48 & \obox & \xbox & \xbox & \xbox & \xbox \\
+TC49 & \obox & \xbox & \xbox & \xbox & \xbox \\
+TC50 & \obox & \xbox & \xbox & \xbox & \xbox \\
+TC51 & \obox & \xbox & \xbox & \xbox & \xbox \\
+TC52 & \obox & \xbox & \xbox & \xbox & \xbox \\
+TC53 & \obox & \xbox & \xbox & \obox & \xbox \\
+TC54 & \obox & \xbox & \xbox & \obox & \xbox \\
+TC55 & \obox & \xbox & \xbox & \obox & \xbox \\
+TC56 & \obox & \xbox & \xbox & \obox & \xbox \\
+TC57 & \obox & \xbox & \xbox & \obox & \xbox \\
+TC58 & \obox & \xbox & \xbox & \obox & \xbox \\
+TC59 & \xbox & \obox & \obox & \obox & \obox \\
+TC60 & \xbox & \obox & \obox & \obox & \obox \\
+TC61 & \xbox & \obox & \obox & \obox & \obox \\
+TC62 & \xbox & \obox & \obox & \obox & \obox \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:report-tm-export} shows the trace between Export Manager test cases and modules.
 
 \begin{table}[H]
 \centering
 \caption{Trace Between Export Manager Test Cases and Modules}
 \label{tab:report-tm-export}
 \small
-\setlength{\tabcolsep}{2pt}
-\resizebox{\textwidth}{!}{
-\begin{tabular}{l|*{16}{c}}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{6}{c}}
 \toprule
-\textbf{TC} & M1 & M2 & M3 & M4 & M7 & M8 & M9 & M10 & M12 & M13 & M14 & M15 & M16 & M17 & M18 & M20 \\
+\textbf{TC} & M9 & M11 & M12 & M13 & M14 & M16 \\
 \midrule
-TC62 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
-TC63 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
-TC64 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \xbox & \obox & \xbox \\
-TC65 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
-TC66 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox & \obox & \xbox \\
-TC67 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \xbox & \obox & \xbox \\
-TC68 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
-TC69 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
+TC63 & \xbox & \xbox & \obox & \obox & \xbox & \obox \\
+TC64 & \xbox & \xbox & \obox & \obox & \xbox & \obox \\
+TC65 & \obox & \obox & \xbox & \obox & \xbox & \xbox \\
+TC66 & \obox & \obox & \xbox & \obox & \xbox & \xbox \\
+TC67 & \obox & \obox & \xbox & \obox & \xbox & \xbox \\
+TC68 & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+TC69 & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+TC70 & \obox & \obox & \xbox & \obox & \xbox & \obox \\
+TC71 & \obox & \obox & \xbox & \obox & \xbox & \xbox \\
+TC72 & \xbox & \xbox & \obox & \obox & \xbox & \obox \\
 \bottomrule
 \end{tabular}
-}
 \end{table}
 
 \section{Code Coverage Metrics}
