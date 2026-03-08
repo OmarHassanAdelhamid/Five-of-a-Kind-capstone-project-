@@ -1,5 +1,5 @@
 \documentclass[12pt, titlepage]{article}
-
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
@@ -10,7 +10,23 @@
     linkcolor=red,
     urlcolor=blue
 }
-\usepackage[round]{natbib}
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{array}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{caption}
+\usepackage{graphicx}
+\captionsetup[table]{width=0.9\textwidth,position=top}
+
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily, % Use monospaced font
+  breaklines=true,      % Enable line breaks
+}
+\usepackage{csvsimple}
 
 \input{../Comments}
 \input{../Common}
@@ -45,6 +61,17 @@ Date 2 & 1.1 & Notes\\
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   T & Test\\
+  TC & Test Case\\
+  FR & Functional Requirement\\
+  NF & Non-Functional Requirement\\
+  VnV & Verification and Validation\\
+  IM & Import Manager\\
+  VM & Visualization Manager\\
+  INT & Integration (Import to Visualization)\\
+  EM & Editing Manager\\
+  XM & Export Manager\\
+  MAX\_VOXELS & Maximum number of voxels to display in the 3D view\\
+  STL & Standard Tessellation Language\\
   \bottomrule
 \end{tabular}\\
 
@@ -79,19 +106,707 @@ This document ...
 This section will not be appropriate for every project.
 
 \section{Unit Testing}
+\label{sec:unit-testing}
+This section reports \textbf{test results} and evidence for the system unit tests. The emphasis is on outcomes and evidence, not on the rationale for test selection (see the \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/docs/VnVPlan/VnVPlan.pdf}{VnV Plan} for that). Test cases are organized by manager: Import Manager (TC1--TC5), Visualization Manager (TC4--TC11), Editing Manager (TC12--TC61), and Export Manager (TC62--TC69).
+
+For each test case, the tables below provide: \textbf{test case name} (TC id), \textbf{initial state} (implied by the Ref.\ Req.\ and test context), \textbf{input} (Action), \textbf{expected result}, and \textbf{whether actual output matched expected} (Result: Pass/Fail). Actual outcomes are backed by automated test runs; see Section~\ref{sec:automated-testing} for how to reproduce.
+
+\subsection{Import Manager Tests}
+\newcounter{testcase}
+\newcommand{\testcount}{\stepcounter{testcase}\thetestcase}
+\renewcommand{\arraystretch}{1.2}
+
+\subsubsection{CAD File Import and Project Management}
+Table~\ref{table:im_cad_tests} gives the results for STL file import and project management tests (TC1--TC5).
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{3.5cm}
+  >{\raggedright\arraybackslash}p{2.5cm} c}
+  \caption{Import Manager: STL File Import and Project Management Test Cases}
+  \label{table:im_cad_tests} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \endlastfoot
+
+  TC1 & F211 & Provide a valid STL file to system through file settings panel & STL file is uploaded succesfully to the system, and saved to the sample file directory & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC2 & F211 & Browse all uploaded STL files in the sample file directory & System displays a list of all uploaded STL files in the sample file directory & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC3 & F211 & Browse all uploaded STL files, without ever uploading a STL file & System displays an empty list of uploaded STL files & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC4 & F211 & Provide a file with unsupported format (e.g.\ .txt, .jpg, .pdf) to system through file settings panel & System rejects the file and displays an error indicating unsupported format & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC5 & F212 & Open a previously uploaded STL file & System loads the STL file from the sample file directory & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Model Configuration and Slicing}
+Table~\ref{table:im_config_tests} gives the results for model configuration and slicing tests (TC6--TC12).
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{3.5cm}
+  >{\raggedright\arraybackslash}p{2.5cm} c}
+  \caption{Import Manager: Model Configuration and Slicing Test Cases}
+  \label{table:im_config_tests} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \endlastfoot
+
+  //Missing TC6 & F213 & Specify custom voxel size & System applies the dimensions and slices the model into voxels of the requested size & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  //Missing TC7 & F214 & Specify custom geometric model size & System scales the model to desired model size before slicing & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC8 & F216 & Import a model containing more than MAX\_DISPLAY voxels. & System partitions the model into display sections not exceeding MAX\_VOXELS & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC9 & F216 & Import a model containing less than MAX\_VOXELS voxels & System returns only one partition with all voxels visible& All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC10 & F216 & Delete a partition with no voxels & System deletes the partition and returns the model to the previous state & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC11 & F213, F214, F215 & Voxelize uploaded STL model into voxels& System voxelizes the model into voxels of the requested size using Triangle Meshes & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC12 & F213, F214, F215 & Voxelize non-existing STL model into voxels& System returns an error indicating the STL model does not exist & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsection{Visualization Manager Tests}
+
+\subsubsection{3D Model Rendering and Display}
+Table~\ref{table:vm_rendering_tests} gives the results for 3D model rendering and display tests (TC13--TC16).
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{3.5cm}
+  >{\raggedright\arraybackslash}p{2.5cm} c}
+  \caption{Visualization Manager: 3D Model Rendering and Display Test Cases}
+  \label{table:vm_rendering_tests} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \endlastfoot
+
+  TC13 & F221 & Import a STL model into the system & System renders a non-voxelized 3D STL model using Three.js & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC14 & F221 & Open a voxelized project from file directory & System renders a voxelized 3D model using Three.js broken down into layers & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC15 & F222 & Open a voxelized project from file directory where the number of layers is greater than MAX\_DISPLAY & System displays a partitions panel with more than 1 partition & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC16 & F222 & Open a voxelized project from file directory where the number of layers is less than MAX\_DISPLAY & System displays a partitions panel with only 1 partition & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\
+
+\end{longtable}
+
+\subsubsection{Layer Focus and Voxel Selection Tests}
+Table~\ref{table:vm_layer_tests} gives the results for layer focus and voxel selection tests (TC17--TC24).
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{3.5cm}
+  >{\raggedright\arraybackslash}p{2.5cm} c}
+  \caption{Visualization Manager: Layer Focus and Voxel Selection Test Cases}
+  \label{table:vm_layer_tests} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \endlastfoot
+
+  TC17 & F222 & Pick a specific partition to focus on from the partitions panel. & The selected partition is isolated and displayed as a 3D view without any other partitions. & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC18 & F223 & Rotate the model using interface controls. & Model rotates smoothly and intuitively & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC19 & F223 & Zoom the model using interface controls. & Model zooms smoothly and intuitively & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC20 & F224 & Select a specific layer to focus on from the 3D model display. & Selected layer is isolated, layer editor is opened displaying the layer voxels and properties in a 2D view. & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC21 & F225 & Select individual voxel within the focused layer from the layer editor. & The selected voxel is highlighted in the 2D layer view & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC22 & F225 & Select multiple voxels within the focused layer from the layer editor using lasso selection. & The selected voxels are highlighted in the 2D layer view & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC23 & F225 & Select all voxels in the partition on the 3D view (CTRL+A) & All voxels in the partition are highlighted in the 3D view & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC24 & F225 & Select all voxels in the layer on the 2D layer view (CTRL+A) & All voxels in the layer are highlighted in the 2D layer view & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Material and Magnetization Tracking}
+Table~\ref{table:vm_tracking_tests} gives the results for material and magnetization tracking tests (TC25--TC26).
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{3.5cm}
+  >{\raggedright\arraybackslash}p{2.5cm} c}
+  \caption{Visualization Manager: Material and Magnetization Tracking Test Cases}
+  \label{table:vm_tracking_tests} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \endlastfoot
+
+  TC25 & F226 & Assign material IDs to a voxel or multiple voxels in the layer editor. & The color of the voxels are updated to the assigned material color. & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC26 & F227 & Assign magnetization to a voxel or multiple voxels in the layer editor. & The voxels assigned will be highlighted with a X-arrow icon indicating magnetization. & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\
+
+\end{longtable}
+
+\subsection{Editing Manager Tests}
+The Editing Manager tests are organized into three subsections: editing a voxel (TC27--TC49), utilizing the history manager (TC50--TC58), and saving project (TC59--TC62).
+
+\subsubsection{Editing a voxel}
+Table~\ref{table:em_voxel_tests} gives the results for voxel editing tests (TC27--TC49): magnetization and material assignment, layer access, and adding, deleting, or resetting voxels.
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{3.8cm}
+    >{\raggedright\arraybackslash}p{3.5cm}
+  >{\raggedright\arraybackslash}p{2.2cm} c}
+  \caption{Editing Manager: Editing a voxel (system and backend)}
+  \label{table:em_voxel_tests} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \endlastfoot
+
+  TC27 & F231 & Update magnetization of a single voxel (e.g.\ x=1.0, y=0.0, z=0.0). & System saves the magnetization vector of the voxel to the database & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC28 & F231 & Update magnetization of a multiple voxels (e.g.\ x=1.0, y=0.0, z=0.0). & System saves the magnetization vector of the voxels to the database & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC29 & F231 & Update magnetization of a non-existing voxel (e.g.\ x=1.0, y=0.0, z=0.0). & System returns an error indicating the voxel does not exist & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC30 & F231 & Update magnetization of a voxel with invalid magnetization vector (e.g.\ x=1.0, y=0.0, z=0.0). & System returns an error indicating the magnetization vector is invalid & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC31 & F232 & Create a favourite magnetization vector (e.g.\ x=1.0, y=0.0, z=0.0). & System saves the magnetization vector to the favourite bar & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC32 & F233 & Assign material ID to a single voxel (e.g.\ 2). & System saves the material ID to the voxel and in the database & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC33 & F233 & Assign material ID to a multiple voxels (e.g.\ 2). & System saves the material ID to the voxels and in the database & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC34 & F233 & Assign material ID to a non-existing voxel (e.g.\ 2). & System returns an error indicating the voxel does not exist & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule 
+  TC35 & F231, F233 & Assign material ID to a voxel and magnetization to a voxel (e.g.\ 2, x=1.0, y=0.0, z=0.0). & System saves the material ID and magnetization vector to the voxel and in the database & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC36 & F234 & Assign label ``Steel'' to material ID 1. & Material ID 1 is associated with the label ``Steel'' in the database. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC37 & F235 & Copy assigned properties from one layer to another layer. & Target layer voxels receive the same material and magnetization properties as the source. & All assertions are met and passed by backend and frontend unit test & \cellcolor{green} Pass \\ \midrule 
+  TC38 & F238 & Get list of layers in the project. & The list of layers is returned. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC39 & F238 & Get specific layer in the project based on the layer index and axis. & The specific layer is returned. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC40 & F238 & Get specific layer with non-existing layer index. & System returns an error indicating the layer index does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC41 & F238 & Get specific layer with non-existing axis. & System returns an error indicating the axis does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC42 & F238 & Get specific layer with non-existing project. & System returns an error indicating the project does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC43 & F238 & Get specific layer with non-existing partition. & System returns an error indicating the partition does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC44 & F239 & Add a new voxel at new indices. & A new voxel is added to the database at the new indices with default material and magnetization. & All assertions are met and passed by backend and frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC45 & F239 & Delete an existing voxel. & A voxel is removed from the database at the existing indices. & All assertions are met and passed by backend and frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC46 & F239 & Delete a non-existent voxel. & System returns an error indicating the voxel does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC47 & F2310 & Reset materials on selected voxels. & The voxels are reset to the default material in the database. & All assertions are met and passed by backend and frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC48 & F2310 & Reset magnetizations on selected voxels. & The voxels are reset to the default magnetization in the database. & All assertions are met and passed by backend and frontend unit test & \cellcolor{green} Pass \\ \midrule
+  TC49 & F2310 & Reset materials and magnetizations on selected voxels. & The voxels are reset to the default material and magnetization in the database. & All assertions are met and passed by backend and frontend unit test & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Utilizing the history manager}
+Table~\ref{table:em_history_tests} gives the results for history manager tests (TC50--TC58): undo, redo, and clear history.
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{3.8cm}
+    >{\raggedright\arraybackslash}p{3.5cm}
+  >{\raggedright\arraybackslash}p{2.2cm} c}
+  \caption{Editing Manager: Utilizing the history manager (backend)}
+  \label{table:em_history_tests} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \endlastfoot
+
+  TC50 & F237 & Undo any updates made to a voxel. & The changes are undone and the voxel returns to the previous state. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC51 & F237 & Redo any undone updates to a voxel. & The changes are redone and the voxel returns to the previous state. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC52 & F237 & Undo any added voxels. & The voxels are removed from the database. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC53 & F237 & Redo any deleted voxels. & The voxels are added back to the database. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC54 & F237 & Undo any reset material on a voxel. & The voxel is reset to the default material. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC55 & F237 & Redo any reset material on a voxel. & The voxel is reset to the default material. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC56 & F237 & Undo when history empty. & System returns an error indicating the history is empty & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC57 & F237 & Redo when redo stack empty. & System returns an error indicating the redo stack is empty & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC58 & F237 & Clear history. & Both history and redo stacks empty. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Saving project}
+Table~\ref{table:em_save_tests} gives the results for saving project tests (TC59--TC62).
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{3.8cm}
+    >{\raggedright\arraybackslash}p{3.5cm}
+  >{\raggedright\arraybackslash}p{2.2cm} c}
+  \caption{Editing Manager: Saving project (backend)}
+  \label{table:em_save_tests} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \endlastfoot
+
+  TC59 & F236 & Save the project automatically. & The project is saved to the database. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC60 & F2311 & Save the project manually. & The project is saved to the database. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC61 & F2311 & Save a non-existent project. & System returns an error indicating the project does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC62 & F2311 & Save a project with invalid data. & System returns an error indicating the project data is invalid. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsection{Export Manager Tests}
+
+\subsubsection{Export Validation and File Export}
+Table~\ref{table:xm_tests} gives the results for export validation and file export (TC63--TC72).
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \caption{Export Manager Test Cases}
+  \label{table:xm_tests} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \endlastfoot
+
+  TC63 & F241 & Validate all voxels have magnetization. & System checks if all voxels have magnetization and returns an error if any voxels are missing magnetization. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC64 & F241 & Validate all voxels have material. & System checks if all voxels have material and returns an error if any voxels are missing material. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC65 & F242 & Export CSV file of an existing project. & System exports a CSV file with all voxel metadata. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC66 & F242 & Export CSV file of a non-existent project. & System returns an error indicating the project does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC67 & F242 & Export CSV file of a project with invalid data. & System returns an error indicating the project data is invalid. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC68 & F243 & Export project file of an existing project. & System exports a project file with all project data. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC69 & F243 & Export project file of a non-existent project. & System returns an error indicating the project does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC70 & F243 & Export project file of a project with invalid data. & System returns an error indicating the project data is invalid. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC71 & F245 & Export model with summary option enabled. & System exports a model file with a summary of the model. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC72 & F241 & Export operation is interrupted (simulated failure). & Original project data remains intact and unaltered. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\
+\end{longtable}
 
 \section{Changes Due to Testing}
+\label{sec:changes-due-to-testing}
 
-\wss{This section should highlight how feedback from the users and from 
-the supervisor (when one exists) shaped the final product.  In particular 
-the feedback from the Rev 0 demo to the supervisor (or to potential users) 
-should be highlighted.}
+During the VnV process, several changes to the project that were made based on the feedback from the stakeholders (supervisor and graduate students) that will be used to improve the system. These changes are related to the usability and user input, interaction flow, and performance adjustments.
+
+\subsection{Usability and User Input Adjustments}
+
+Feedback from usability testing led to the following usability and user-input changes:
+
+\begin{itemize}
+  \item \textbf{Project and file menus:} A project popup after selecting a file to show existing projects, improving feedback and selection, as it was not clear where to naviagte to open a project.
+  \item \textbf{Layer editor:} The magnitude control in the layer editor was removed to reduce clutter and confusion and as it was not used by the stakeholders.
+  \item \textbf{File and material naming:} File naming was reviewed to handle spaces and to indicate when a file with the same name already exists. Material naming in settings was reviewed for clarity and consistency.
+  \item \textbf{Magnetization display:} A checkmark or toggle was added to show or hide magnetization, giving users control over what is displayed.
+  \item \textbf{Partition behaviour:} Default partition centring was changed so partitions are not automatically centred. A rename-partition capability was added.
+\end{itemize}
+
+\subsection{Interaction Flow Adjustments}
+
+The following changes address the sequence of user actions and overall flow from opening a file to working with partitions:
+
+\begin{itemize}
+  \item \textbf{Partition visibility:} The cause of partitions not showing immediately was investigated and addressed so that partitions appear promptly after selecting a project or confirguring a new one.
+  \item \textbf{Reduced redundancy:} When a file is already open, re-selecting or re-confirming the same file is no longer required for subsequent actions where possible.
+\end{itemize}
+
+\subsection{Performance Adjustments}
+
+Performance feedback from testing led to optimisations focused on model loading and rendering:
+
+\begin{itemize}
+  \item \textbf{Flow from first open to partitions:} The slowness of the flow from first opening a file to obtaining partitions was addressed through performance improvements in file loading and initial processing.
+  \item \textbf{Model rendering:} Trimesh (or equivalent mesh handling) was used or integrated to speed up model rendering, reducing latency when displaying the voxelised model and partitions.
+\end{itemize}
+
+\subsection{Future Improvements}
+
+Usability testing also highlighted potential enhancements for future work:
+
+\begin{itemize}
+  \item \textbf{Partition logic:} Revisit or extend partition logic to support more flexible partitioning strategies and user control.
+  \item \textbf{Lasso tool:} Consider a lasso (or similar) selection tool to add voxels in a more intuitive way.
+  \item \textbf{Export Model Summary:} Add a model summary to the export model file to allow users to see what changes were made to the model.
+  \item \textbf{Export Progress Trackers:} Test the export performance of the system to ensure it meets the requirements and improve the progress tracker.
+\end{itemize}
+
+Overall, the testing phase was successfull and played a crucial role in the development of the system. It allowed for the identification of issues and the implementation of improvements, ensuring the system is of high quality and meets the requirements of the stakeholders.
 
 \section{Automated Testing}
-		
+\label{sec:automated-testing}
+All tests for the Python backend and for the TypeScript frontend modules are automated. The pass/fail results in the tables in Section~\ref{sec:unit-testing} are backed by the output of these test runs, readers can reproduce the evidence by running the tests as described in the VnV Plan.
+
+\begin{itemize}
+  \item \textbf{Backend (Python/PyTest):} From the project root, run \texttt{pytest} in \texttt{src/backend/} (e.g.\ \texttt{cd src/backend \&\& pytest}). The console output shows per-test pass/fail and any failures; this output is the evidence for the ``Actual Result'' and ``Result'' columns in the tables in Section~\ref{sec:unit-testing}.
+  \item \textbf{Frontend (TypeScript/Jest):} From \texttt{src/frontend/}, run \texttt{npm run test}. The console (or test report) output is the evidence for the ``Actual Result'' and ``Result'' columns in the tables in Section~\ref{sec:unit-testing}.
+\end{itemize}
+System-level and UI tests are executed manually; their outcomes are recorded in the corresponding tables in Section~\ref{sec:unit-testing} and match the expected results listed there.
+
 \section{Trace to Requirements}
-		
-\section{Trace to Modules}		
+\label{sec:trace-requirements}
+
+\newcommand{\obox}{\fbox{\rule{0pt}{1.5ex}\hspace{1.5ex}}}
+\newcommand{\xbox}{\colorbox{black}{\rule{0pt}{1.5ex}\hspace{1.5ex}}}
+
+The test cases in this report are the execution of the system and unit tests defined in the \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/docs/VnVPlan/VnVPlan.pdf}{VnV Plan}. The following tables show the traceability between these test cases and the functional requirements from the \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/docs/SRS/SRS.pdf}{SRS}. A filled cell (\xbox) indicates that the test case verifies the corresponding requirement; an empty cell (\obox) indicates it does not.
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Import Manager Test Cases and Corresponding Requirements}
+\label{tab:report-imt}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{6}{c}}
+\toprule
+\textbf{Reqs:}
+& F211 & F212 & F213 & F214 & F215 & F216\\
+\midrule
+TC1 & \xbox & \obox & \obox & \obox & \obox & \obox \\
+TC2 & \xbox & \obox & \obox & \obox & \obox & \obox \\
+TC3 & \xbox & \obox & \obox & \obox & \obox & \obox \\
+TC4 & \xbox & \obox & \obox & \obox & \obox & \obox \\
+TC5 & \obox & \xbox & \obox & \obox & \obox & \obox \\
+TC6 & \obox & \obox & \xbox & \obox & \obox & \obox \\
+TC7 & \obox & \obox & \obox & \xbox & \obox & \obox \\
+TC8 & \obox & \obox & \obox & \obox & \obox & \xbox \\
+TC9 & \obox & \obox & \obox & \obox & \obox & \xbox \\
+TC10 & \obox & \obox & \obox & \obox & \obox & \xbox \\
+TC11 & \obox & \obox & \xbox & \xbox & \xbox & \obox \\
+TC12 & \obox & \obox & \xbox & \xbox & \xbox & \obox \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Visualization Manager and Integration Test Cases and Corresponding Requirements}
+\label{tab:report-vmt}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{8}{c}}
+\toprule
+\textbf{Reqs:}
+& F221 & F222 & F223 & F224 & F225 & F226 & F227 \\
+\midrule
+TC13 & \xbox & \obox & \obox & \obox & \obox & \obox & \obox \\
+TC14 & \xbox & \obox & \obox & \obox & \obox & \obox & \obox \\
+TC15 & \obox & \xbox & \obox & \obox & \obox & \obox & \obox \\
+TC16 & \obox & \xbox & \obox & \obox & \obox & \obox & \obox \\
+TC17 & \obox & \xbox & \obox & \obox & \obox & \obox & \obox \\
+TC18 & \obox & \obox & \xbox & \obox & \obox & \obox & \obox \\
+TC19 & \obox & \obox & \xbox & \obox & \obox & \obox & \obox \\
+TC20 & \obox & \obox & \obox & \xbox & \obox & \obox & \obox \\
+TC21 & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
+TC22 & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
+TC23 & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
+TC24 & \obox & \obox & \obox & \obox & \xbox & \obox & \obox \\
+TC25 & \obox & \obox & \obox & \obox & \obox & \xbox & \obox \\
+TC26 & \obox & \obox & \obox & \obox & \obox & \obox & \xbox \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Editing Manager Test Cases and Corresponding Requirements (Part 1: voxel editing and history)}
+\label{tab:report-emt-1}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{6}{c}}
+\toprule
+\textbf{Reqs:}
+& F231 & F232 & F233 & F234 & F235 & F237 \\
+\midrule
+TC27 & \xbox & \obox & \obox & \obox & \obox & \obox \\
+TC28 & \xbox & \obox & \obox & \obox & \obox & \obox \\
+TC29 & \xbox & \obox & \obox & \obox & \obox & \obox \\
+TC30 & \xbox & \obox & \obox & \obox & \obox & \obox \\
+TC31 & \obox & \xbox & \obox & \obox & \obox & \obox \\
+TC32 & \obox & \obox & \xbox & \obox & \obox & \obox \\
+TC33 & \obox & \obox & \xbox & \obox & \obox & \obox \\
+TC34 & \obox & \obox & \xbox & \obox & \obox & \obox \\
+TC35 & \xbox & \obox & \xbox & \obox & \obox & \obox \\
+TC36 & \obox & \obox & \obox & \xbox & \obox & \obox \\
+TC37 & \obox & \obox & \obox & \obox & \xbox & \obox \\
+TC38 & \obox & \obox & \obox & \obox & \obox & \xbox \\
+TC39 & \obox & \obox & \obox & \obox & \obox & \xbox \\
+TC40 & \obox & \obox & \obox & \obox & \obox & \xbox \\
+TC41 & \obox & \obox & \obox & \obox & \obox & \xbox \\
+TC42 & \obox & \obox & \obox & \obox & \obox & \xbox \\
+TC43 & \obox & \obox & \obox & \obox & \obox & \xbox \\
+TC44 & \obox & \obox & \obox & \obox & \obox & \xbox \\
+TC45 & \obox & \obox & \obox & \obox & \obox & \xbox \\
+TC46 & \obox & \obox & \obox & \obox & \obox & \xbox \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Editing Manager Test Cases and Corresponding Requirements (Part 2: layers, add/delete, reset, save)}
+\label{tab:report-emt-2}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{4}{c}}
+\toprule
+\textbf{Reqs:}
+& F238 & F239 & F2310 & F2311 \\
+\midrule
+TC47 & \xbox & \obox & \obox & \obox \\
+TC48 & \xbox & \obox & \obox & \obox \\
+TC49 & \xbox & \obox & \obox & \obox \\
+TC50 & \xbox & \obox & \obox & \obox \\
+TC51 & \xbox & \obox & \obox & \obox \\
+TC52 & \xbox & \obox & \obox & \obox \\
+TC53 & \obox & \xbox & \obox & \obox \\
+TC54 & \obox & \xbox & \obox & \obox \\
+TC55 & \obox & \xbox & \obox & \obox \\
+TC56 & \obox & \obox & \xbox & \obox \\
+TC57 & \obox & \obox & \xbox & \obox \\
+TC58 & \obox & \obox & \xbox & \obox \\
+TC59 & \obox & \obox & \obox & \xbox \\
+TC60 & \obox & \obox & \obox & \xbox \\
+TC61 & \obox & \obox & \obox & \xbox \\
+TC62 & \obox & \obox & \obox & \xbox \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Export Manager Test Cases and Corresponding Requirements}
+\label{tab:report-xmt}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{5}{c}}
+\toprule
+\textbf{Reqs:}
+& F241 & F242 & F243 & F244 & F245 \\
+\midrule
+TC63 & \xbox & \obox & \obox & \obox & \obox \\
+TC64 & \xbox & \obox & \obox & \obox & \obox \\
+TC65 & \obox & \xbox & \obox & \obox & \obox \\
+TC66 & \obox & \xbox & \obox & \obox & \obox \\
+TC67 & \obox & \xbox & \obox & \obox & \obox \\
+TC68 & \obox & \obox & \xbox & \obox & \obox \\
+TC69 & \obox & \obox & \xbox & \obox & \obox \\
+TC70 & \obox & \obox & \xbox & \obox & \obox \\
+TC71 & \obox & \obox & \obox & \obox & \xbox \\
+TC72 & \xbox & \obox & \obox & \obox & \obox \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Trace to Modules}
+\label{sec:trace-modules}
+The following tables show the traceability between the test cases in this report and the modules defined in the \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/docs/Design/SoftArchitecture/MG.pdf}{Module Guide}. A filled cell (\xbox) indicates that the test case exercises or verifies behaviour involving that module; an empty cell (\obox) indicates it does not. The module identifiers (M1, M2, \ldots) correspond to the modules in the MG: Input Interpreter (M1), Voxel Slicing (M2), Display Partitioning (M3), Project Manager (M4), Interaction Controller (M7), Visualization State Manager (M8), Model Manager (M9), History Manager (M10), Voxel Tracking (M12), Highlight Manager (M13), Export Validation (M14), Export Manager (M15), Error Diagnostic Handler (M16), Model Structure (M17), Graphics Adapter (M18), and Export Structure (M20).
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Import Manager Test Cases and Modules}
+\label{tab:report-tm-import}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{5}{c}}
+\toprule
+\textbf{TC} & M1 & M2 & M3 & M4 & M5 \\
+\midrule
+TC1 & \xbox & \obox & \obox & \xbox & \obox \\
+TC2 & \xbox & \obox & \obox & \xbox & \obox \\
+TC3 & \xbox & \obox & \obox & \xbox & \obox \\
+TC4 & \xbox & \obox & \obox & \xbox & \obox \\
+TC5 & \xbox & \obox & \obox & \xbox & \obox \\
+TC6 & \xbox & \xbox & \obox & \obox & \xbox \\
+TC7 & \xbox & \obox & \obox & \obox & \xbox \\
+TC8 & \obox & \obox & \xbox & \obox & \obox \\
+TC9 & \obox & \obox & \xbox & \obox & \obox \\
+TC10 & \obox & \obox & \xbox & \obox & \obox \\
+TC11 & \xbox & \xbox & \obox & \xbox & \obox \\
+TC12 & \xbox & \xbox & \obox & \xbox & \obox \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Visualization Manager and Integration Test Cases and Modules}
+\label{tab:report-tm-viz}
+\small
+\setlength{\tabcolsep}{2pt}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{l|*{16}{c}}
+\toprule
+\textbf{TC} & M3 & M5 & M6 & M9 & M10 & M14 & M15 \\
+\midrule
+TC13 & \obox & \obox & \xbox & \obox & \obox & \obox & \obox \\
+TC14 & \obox & \obox & \xbox & \obox & \obox & \obox & \obox \\
+TC15 & \xbox & \xbox & \xbox & \obox & \obox & \xbox & \obox \\
+TC16 & \xbox & \xbox & \xbox & \obox & \obox & \xbox & \obox \\
+TC17 & \xbox & \xbox & \xbox & \obox & \obox & \xbox & \obox \\
+TC18 & \obox & \xbox & \xbox & \obox & \obox & \xbox & \xbox \\
+TC19 & \obox & \xbox & \xbox & \obox & \obox & \xbox & \xbox \\
+TC20 & \obox & \xbox & \xbox & \obox & \obox & \xbox & \xbox \\
+TC21 & \obox & \xbox & \xbox & \xbox & \xbox & \xbox & \xbox \\
+TC22 & \obox & \xbox & \xbox & \xbox & \xbox & \xbox & \xbox \\
+TC23 & \obox & \xbox & \xbox & \xbox & \xbox & \xbox & \xbox \\
+TC24 & \obox & \xbox & \xbox & \xbox & \xbox & \xbox & \xbox \\
+TC25 & \obox & \obox & \xbox & \xbox & \xbox & \xbox & \xbox \\
+TC26 & \obox & \obox & \xbox & \xbox & \xbox & \xbox & \xbox \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Editing Manager Test Cases and Modules}
+\label{tab:report-tm-edit}
+\small
+\setlength{\tabcolsep}{2pt}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{l|*{16}{c}}
+\toprule
+\textbf{TC} & M5 & M7 & M8 & M9 & M10 & M13 & M14 \\
+\midrule
+TC27 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
+TC28 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
+TC29 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
+TC30 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
+TC31 & \xbox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
+TC32 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
+TC33 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
+TC34 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
+TC35 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
+TC36 & \xbox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
+TC37 & \xbox & \xbox & \xbox & \xbox & \obox & \obox & \xbox \\
+TC38 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
+TC39 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
+TC40 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
+TC41 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
+TC42 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
+TC43 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
+TC44 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
+TC45 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
+TC46 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Trace Between Export Manager Test Cases and Modules}
+\label{tab:report-tm-export}
+\small
+\setlength{\tabcolsep}{2pt}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{l|*{16}{c}}
+\toprule
+\textbf{TC} & M1 & M2 & M3 & M4 & M7 & M8 & M9 & M10 & M12 & M13 & M14 & M15 & M16 & M17 & M18 & M20 \\
+\midrule
+TC62 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
+TC63 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
+TC64 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \xbox & \obox & \xbox \\
+TC65 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
+TC66 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \xbox & \obox & \obox & \obox & \xbox \\
+TC67 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \obox & \xbox & \obox & \xbox \\
+TC68 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
+TC69 & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \obox & \xbox & \obox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
 
 \section{Code Coverage Metrics}
 
