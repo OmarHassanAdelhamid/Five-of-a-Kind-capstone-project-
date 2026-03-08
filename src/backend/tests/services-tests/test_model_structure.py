@@ -39,7 +39,10 @@ def test_create_initial_db() -> None:
         rows = db.cur.fetchall()
         assert rows == TEST_VOXELS
 
-# TODO: test for get_grid_conversion, centre_structure
+@pytest.mark.dependency(depends=["init-db"])
+def test_get_grid_conversion_typical_case() -> None:
+    with VoxelDB(TEST_PATH / TEST_FILE) as db:
+        assert db.get_grid_conversion([34.5, 10.1, -19.3]) == (34, 10, -19)
 
 @pytest.mark.dependency(depends=["init-db"], name="add")
 def test_add_new_voxel() -> None:
@@ -139,7 +142,7 @@ def test_reset_material_on_existing_voxel() -> None:
         assert prop_retrieved[0] == DEFAULT_MATERIAL
         assert prop_retrieved[1:4] == (1.5, 1.9, 2.8)
 
-@pytest.mark.dependency(depends=["init-db", "reset_mat"])
+@pytest.mark.dependency(depends=["init-db", "reset_mat"], name="final")
 def test_reset_magnetization_on_existing_voxel() -> None:
     with VoxelDB(TEST_PATH / TEST_FILE) as db:
         voxel = (3, 3, 3)
@@ -148,3 +151,21 @@ def test_reset_magnetization_on_existing_voxel() -> None:
         prop_retrieved = db.get_properties(*voxel)[0]
         assert prop_retrieved[0] == 4
         assert prop_retrieved[1:4] == DEFAULT_MAGNET  
+
+@pytest.mark.dependency(depends=["init-db", "final"])
+def test_centre_structure_typical() -> None:
+    with VoxelDB(TEST_PATH / TEST_FILE) as db:
+        # make structure exactly centreable by deleting even voxel.
+        db.delete_voxel(5, 5, 5)
+
+        db.centre_structure()
+        db.cur.execute("""
+                       SELECT ix, iy, iz, x, y, z
+                       FROM voxels
+                       """)
+        rows = db.cur.fetchall()
+        assert rows == [(-2, -2, -2, 0.0, 0.0, 0.0),
+                        (-1, -1, -1, 1.0, 1.0, 1.0),
+                        (0, 0, 0, 2.0, 2.0, 2.0),
+                        (1, 1, 1, 3.0, 3.0, 3.0),
+                        (2, 2, 2, 4.0, 4.0, 4.0)]
