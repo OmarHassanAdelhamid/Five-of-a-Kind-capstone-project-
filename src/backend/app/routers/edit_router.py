@@ -12,6 +12,7 @@ from app.models.schemas import RetrieveLayerRequest, LayerAxis, UpdateVoxelsRequ
 import app.services.model_editing_service as em
 import app.services.model_tracking_service as mt
 import app.services.history_management_service as hm
+from app.services.history_management_service import EmptyHistoryException
 
 router = APIRouter(prefix="/api/edit", tags=["edit"])
 
@@ -27,7 +28,7 @@ async def get_layer(request: RetrieveLayerRequest):
     Returns:
         (dict): Contains message reflecting the relevant voxels, and associated information passed in initially.
     """
-    if request.axis not in (LayerAxis.Z, LayerAxis.X, LayerAxis.Y):
+    if request.axis not in (LayerAxis.Z, LayerAxis.X, LayerAxis.Y): # pretty sure this line is redundant as pydantic will catch the issue first.
         raise HTTPException(status_code=400, detail="Invalid request; axis must be 'z', 'x', or 'y'")
 
     project_path = PROJECT_STORAGE_DIR / request.project_name
@@ -109,6 +110,12 @@ async def update_voxels(request: UpdateVoxelsRequest):
             detail=f"Partition '{request.partition_name}' not found within project '{request.project_name}'. Available partitions: {available if available else 'none'}"
         )
     
+    if len(request.voxels) < 1:
+        raise HTTPException(
+            status_code=400,
+            detail="UpdateRequest must contain at least one voxel to be updated."
+        )
+    
     try:
         if (request.action == UpdateAction.UPDATE):
             old_voxels = mt.get_full_voxels(str(partition_path), request.voxels)  # record voxel state pre-update
@@ -160,7 +167,7 @@ async def update_voxels(request: UpdateVoxelsRequest):
             hm.record_change(ModelDelta(old_voxels=old_voxels, new_voxels=[]))
             em.delete_voxels(partition_path, request.voxels)
         else:
-            raise HTTPException(
+            raise HTTPException( # !redundant
                 status_code=400,
                 detail=f"Invalid update action code passed: {request.action}."
             )
@@ -258,7 +265,7 @@ async def update_history(request: UpdateHistoryRequest):
             "redo_empty": str(hm.is_redo_empty())
         }
 
-    except hm.EmptyHistoryException as hist_ex:
+    except EmptyHistoryException as hist_ex:
         raise HTTPException(status_code=400, detail=f"Bad history request: {str(hist_ex)}")
     except HTTPException as httpex:
         raise httpex

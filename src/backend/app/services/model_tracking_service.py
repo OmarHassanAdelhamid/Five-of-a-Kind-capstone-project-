@@ -69,7 +69,6 @@ def z_directory(db_path: str) -> List[Tuple]:
         rows = db.cur.fetchall()
     return rows
 
-# get a list of all x layers based on their integer identifier
 def get_x_layer(ix: int, db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute("""
@@ -81,7 +80,6 @@ def get_x_layer(ix: int, db_path: str) -> List[Tuple]:
         layer_voxels = db.cur.fetchall()
     return layer_voxels
 
-# get a list of all y layers based on their integer identifier
 def get_y_layer(iy: int, db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute("""
@@ -93,7 +91,6 @@ def get_y_layer(iy: int, db_path: str) -> List[Tuple]:
         layer_voxels = db.cur.fetchall()
     return layer_voxels
 
-# get a list of all z layers based on their integer identifier
 def get_z_layer(iz: int, db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute("""

@@ -9,6 +9,7 @@ from app.models.schemas import ModelDelta
 
 class EmptyHistoryException(Exception):
     """Raised when undo/redo is requested on an empty stack."""
+    pass
 
 
 # Max number of undo states stored. 100 is a reasonable default, not specified in the MIS.
