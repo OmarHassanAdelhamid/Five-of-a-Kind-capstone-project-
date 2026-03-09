@@ -181,8 +181,8 @@ Table~\ref{table:im_config_tests} gives the results for model configuration and 
   \bottomrule
   \endlastfoot
 
-  //Missing TC6 & F213 & Specify custom voxel size & System applies the dimensions and slices the model into voxels of the requested size & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  //Missing TC7 & F214 & Specify custom geometric model size & System scales the model to desired model size before slicing & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC6 & F213 & Specify custom voxel size & System applies the dimensions and slices the model into voxels of the requested size & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC7 & F214 & Specify custom geometric model size & System scales the model to desired model size before slicing & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
   TC8 & F216 & Import a model containing more than MAX\_VOXELS voxels. & System partitions the model into display sections not exceeding MAX\_VOXELS & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
   TC9 & F216 & Import a model containing less than MAX\_VOXELS voxels & System returns only one partition with all voxels visible& All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
   TC10 & F216 & Delete a partition with no voxels & System deletes the partition and returns the model to the previous state & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
@@ -984,20 +984,57 @@ graduate attribute of Reflection.
 
 \input{../Reflection.tex}
 
-\begin{enumerate}
-  \item What went well while writing this deliverable? 
-  \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
-  \item Which parts of this document stemmed from speaking to your client(s) or
-  a proxy (e.g. your peers)? Which ones were not, and why?
-  \item In what ways was the Verification and Validation (VnV) Plan different
-  from the activities that were actually conducted for VnV?  If there were
-  differences, what changes required the modification in the plan?  Why did
-  these changes occur?  Would you be able to anticipate these changes in future
-  projects?  If there weren't any differences, how was your team able to clearly
-  predict a feasible amount of effort and the right tasks needed to build the
-  evidence that demonstrates the required quality?  (It is expected that most
-  teams will have had to deviate from their original VnV Plan.)
-\end{enumerate}
+% \begin{enumerate}
+%   \item What went well while writing this deliverable? 
+%   \item What pain points did you experience during this deliverable, and how
+%     did you resolve them?
+%   \item Which parts of this document stemmed from speaking to your client(s) or
+%   a proxy (e.g. your peers)? Which ones were not, and why?
+%   \item In what ways was the Verification and Validation (VnV) Plan different
+%   from the activities that were actually conducted for VnV?  If there were
+%   differences, what changes required the modification in the plan?  Why did
+%   these changes occur?  Would you be able to anticipate these changes in future
+%   projects?  If there weren't any differences, how was your team able to clearly
+%   predict a feasible amount of effort and the right tasks needed to build the
+%   evidence that demonstrates the required quality?  (It is expected that most
+%   teams will have had to deviate from their original VnV Plan.)
+% \end{enumerate}
+
+\subsubsection*{1. What went well while writing this deliverable?}
+\bigskip\bigskip
+\textbf{Omar: } 
+\newline
+\newline
+\textbf{Daniel: } 
+\newline
+\newline
+\textbf{Andrew: } 
+\newline
+\newline
+\textbf{Olivia: }
+\newline
+\newline
+\textbf{Khalid: } I worked on the unit tests and tracibility between the test cases and the requirements. Having the tracibility between the functional requirements and modules in the MIS document was very helpful in ensuring that all the test cases were covered and that the test cases were testing the correct functionality. It was also helpful to have the tracibility between the test cases and the modules in the VnV Plan document. Overall, this deliverable went really well as everything was clearly defined and we were able to complete it on time. Another thing that was helpful was the fact that I didn't have much university work to do at the same time, so I was able to focus on this deliverable and get it done on time.
+
+\subsubsection*{2. What pain points did you experience during this deliverable, and how
+did you resolve them?}
+\bigskip
+\textbf{Omar: } 
+\newline
+\newline
+\textbf{Daniel: } 
+\newline
+\newline
+\textbf{Andrew: } 
+\newline
+\newline
+\textbf{Olivia: } 
+\newline
+\newline
+\textbf{Khalid: } I didn't experience much pain points during this deliverable. The only pain point I had was just the amount of repetitive work that was required to document the test cases and the requirements. However, I was able to resolve it by breaking down the work into smaller tasks and completing them one by one.
+
+\subsubsection*{3. Which parts of this document stemmed from speaking to your client(s) or
+a proxy (e.g. your peers)? Which ones were not, and why?}
+\bigskip
 
 \end{document}
