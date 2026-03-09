@@ -131,6 +131,7 @@ async def voxelize_stl(request: VoxelizeRequest):
         # load passed stl file as a mesh and voxelize it
         mesh = ms.create_mesh(file, file_type='stl')
         model_dim = mesh.extents
+        print(model_dim)
 
         mesh, voxel_size = pm.set_user_req(mesh, model_units, voxel_units, voxel_size)
         voxelized = vx.voxelize(mesh, voxel_size)

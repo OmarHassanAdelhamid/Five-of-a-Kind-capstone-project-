@@ -8,14 +8,14 @@ import app.services.partition_manager as pm
 def set_user_req(mesh, ref_stl, ref_vox, vox_len)->None:
     # convert everything into mm
     if ref_stl == "nm":
-        mesh.apply_scale(1e-6)
+        mesh.apply_scale(1e6)
     elif ref_stl == "cm":
-        mesh.apply_scale(10.0)
+        mesh.apply_scale(0.1)
 
     if ref_vox == "nm":
-        vox_len *= 1e-6
+        vox_len *= 1e6
     elif ref_vox == "cm":
-        vox_len *= 10.0
+        vox_len *= 0.1
 
     return mesh, vox_len
 
@@ -49,7 +49,7 @@ def create_voxel_db(project_path: str, coordinates: np.array):
     Alternatively, could be done within partition_manager itself; if it detects #voxels
     is small, it only makes one db / leaves it untouched.
     '''
-    pm.get_partitions(project_path, 11) 
+    pm.get_partitions(project_path, 50) 
 
 def read_voxels(rows: list[tuple]) -> np.ndarray:
     return np.array(rows, dtype=float) if rows else np.empty((0, 3), dtype=float)
