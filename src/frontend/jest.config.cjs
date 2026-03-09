@@ -36,7 +36,6 @@ module.exports = {
     '!src/**/*.spec.ts',
     '!src/**/*.spec.tsx',
     // Exclude very large or canvas-heavy components to reach 80% on the rest
-    // '!src/components/LayerEditor.tsx',
     '!src/components/ModelViewer.tsx',
     '!src/components/Layer2DGrid.tsx',
   ],
@@ -44,10 +43,10 @@ module.exports = {
   coverageReporters: ['text', 'text-summary', 'html', 'lcov'],
   coverageThreshold: {
     global: {
-      statements: 43,
-      branches: 37,
-      functions: 53,
-      lines: 43,
+      statements: 79,
+      branches: 50,
+      functions: 75,
+      lines: 80,
     },
   },
   moduleNameMapper: {

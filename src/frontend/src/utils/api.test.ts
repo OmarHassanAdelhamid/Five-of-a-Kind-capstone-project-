@@ -84,6 +84,15 @@ describe('api', () => {
     await expect(api.fetchVoxelized('p', 'part')).rejects.toThrow('Failed to fetch voxelized data (500)');
   });
 
+  it('fetchVoxelized returns empty array when response has no coordinates', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    });
+    const result = await api.fetchVoxelized('p', 'part');
+    expect(result).toEqual([]);
+  });
+
   it('uploadSTLFile returns message on success', async () => {
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
@@ -325,15 +334,6 @@ describe('api', () => {
     expect(result).toEqual([]);
   });
 
-  it('fetchVoxelized returns empty array when response has no coordinates', async () => {
-    (global.fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      json: async () => ({ project_name: 'p', num_voxels: 0 }),
-    });
-    const result = await api.fetchVoxelized('p', 'part');
-    expect(result).toEqual([]);
-  });
-
   it('fetchLayer returns layer data', async () => {
     (global.fetch as jest.Mock)
       .mockResolvedValueOnce({
@@ -381,6 +381,45 @@ describe('api', () => {
         json: async () => ({ detail: 'Layer not found' }),
       });
     await expect(api.fetchLayer('p', 'part', 0, 'z')).rejects.toThrow('Layer not found');
+  });
+
+  it('fetchLayer throws when no layers available', async () => {
+    api.clearLayerCache();
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        project_name: 'p',
+        num_layers: 0,
+        layers: [],
+      }),
+    });
+    await expect(api.fetchLayer('p', 'part', 0, 'z')).rejects.toThrow('No layers available');
+  });
+
+  it('fetchLayer with axis x transforms voxels correctly', async () => {
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          project_name: 'p',
+          num_layers: 1,
+          layers: [{ index: 0, coordinate: 0 }],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          project_name: 'p',
+          layer_index: 0,
+          num_voxels: 1,
+          voxels: [[0, 0, 0, 0, 0, 0, 1, 0, 0, 0]],
+          axis: 'x',
+        }),
+      });
+    const result = await api.fetchLayer('p', 'part', 0, 'x');
+    expect(result.axis).toBe('x');
+    expect(result.voxels[0].grid_x).toBeDefined();
+    expect(result.voxels[0].grid_y).toBeDefined();
   });
 
   it('fetchLayer with axis y transforms voxels correctly', async () => {

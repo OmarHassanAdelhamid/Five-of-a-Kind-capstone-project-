@@ -120,4 +120,163 @@ describe('NewProjectDialog', () => {
     fireEvent.keyDown(input, { key: 'Escape' });
     expect(onClose).toHaveBeenCalled();
   });
+
+  it('shows alert when voxel size invalid and form submitted', async () => {
+    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const onConfirm = jest.fn();
+    const { getByRole, getByLabelText } = render(
+      <NewProjectDialog
+        isOpen
+        stlFileName="box.stl"
+        onClose={jest.fn()}
+        onConfirm={onConfirm}
+      />
+    );
+    const voxelInput = document.getElementById('voxel-size-input');
+    if (voxelInput) {
+      fireEvent.change(voxelInput, { target: { value: '0' } });
+    }
+    await userEvent.click(getByRole('button', { name: /Create Project/ }));
+    expect(alertMock).toHaveBeenCalledWith('Please enter a valid voxel size (> 0).');
+    expect(onConfirm).not.toHaveBeenCalled();
+    alertMock.mockRestore();
+  });
+
+  it('shows validation message when voxel size invalid', () => {
+    const { getByText } = render(
+      <NewProjectDialog isOpen stlFileName="x.stl" onClose={jest.fn()} onConfirm={jest.fn()} />
+    );
+    const voxelInput = document.getElementById('voxel-size-input');
+    if (voxelInput) {
+      fireEvent.change(voxelInput, { target: { value: '0' } });
+    }
+    expect(getByText(/Voxel size must be a number greater than 0/i)).toBeInTheDocument();
+  });
+
+  it('can change model units and voxel units', async () => {
+    const onConfirm = jest.fn();
+    const { getByRole, container } = render(
+      <NewProjectDialog
+        isOpen
+        stlFileName="box.stl"
+        onClose={jest.fn()}
+        onConfirm={onConfirm}
+      />
+    );
+    const modelCm = container.querySelector<HTMLInputElement>('input[name="modelUnits"][value="cm"]');
+    const voxelNm = container.querySelector<HTMLInputElement>('input[name="voxelUnits"][value="nm"]');
+    if (modelCm) await userEvent.click(modelCm);
+    if (voxelNm) await userEvent.click(voxelNm);
+    await userEvent.click(getByRole('button', { name: /Create Project/ }));
+    expect(onConfirm).toHaveBeenCalledWith(
+      expect.objectContaining({
+        modelUnits: 'cm',
+        voxelUnits: 'nm',
+      })
+    );
+  });
+
+  it('add material flow: select add then add new material', async () => {
+    const onConfirm = jest.fn();
+    const { getByRole, getByPlaceholderText } = render(
+      <NewProjectDialog
+        isOpen
+        stlFileName="box.stl"
+        onClose={jest.fn()}
+        onConfirm={onConfirm}
+      />
+    );
+    const materialSelect = document.getElementById('material-select');
+    if (materialSelect) {
+      fireEvent.change(materialSelect, { target: { value: '__ADD_NEW_MATERIAL__' } });
+    }
+    const nameInput = getByPlaceholderText('material name');
+    await userEvent.type(nameInput, 'steel');
+    await userEvent.click(getByRole('button', { name: 'Add' }));
+    await userEvent.click(getByRole('button', { name: /Create Project/ }));
+    expect(onConfirm).toHaveBeenCalledWith(
+      expect.objectContaining({
+        defaultMaterial: 'steel',
+      })
+    );
+  });
+
+  it('add material flow: Cancel restores previous selection', async () => {
+    const { container } = render(
+      <NewProjectDialog
+        isOpen
+        stlFileName="box.stl"
+        onClose={jest.fn()}
+        onConfirm={jest.fn()}
+      />
+    );
+    const materialSelect = document.getElementById('material-select');
+    if (materialSelect) {
+      fireEvent.change(materialSelect, { target: { value: '__ADD_NEW_MATERIAL__' } });
+    }
+    const cancelInPanel = container.querySelector('.add-material-actions button.dialog-button-small');
+    if (cancelInPanel) await userEvent.click(cancelInPanel as HTMLElement);
+    expect((document.getElementById('material-select') as HTMLSelectElement)?.value).toBe('material1');
+  });
+
+  it('voxel size input allows decimal', () => {
+    const { container } = render(
+      <NewProjectDialog isOpen stlFileName="x.stl" onClose={jest.fn()} onConfirm={jest.fn()} />
+    );
+    const voxelInput = document.getElementById('voxel-size-input') as HTMLInputElement;
+    fireEvent.change(voxelInput, { target: { value: '1.5' } });
+    expect(voxelInput.value).toBe('1.5');
+  });
+
+  it('add material with empty name does nothing', async () => {
+    const { getByRole, getByPlaceholderText } = render(
+      <NewProjectDialog
+        isOpen
+        stlFileName="box.stl"
+        onClose={jest.fn()}
+        onConfirm={jest.fn()}
+      />
+    );
+    const materialSelect = document.getElementById('material-select');
+    if (materialSelect) {
+      fireEvent.change(materialSelect, { target: { value: '__ADD_NEW_MATERIAL__' } });
+    }
+    const addBtn = getByRole('button', { name: 'Add' });
+    await userEvent.click(addBtn);
+    expect(getByPlaceholderText('material name')).toBeInTheDocument();
+  });
+
+  it('voxel size allows empty string', () => {
+    const { container } = render(
+      <NewProjectDialog isOpen stlFileName="x.stl" onClose={jest.fn()} onConfirm={jest.fn()} />
+    );
+    const voxelInput = document.getElementById('voxel-size-input') as HTMLInputElement;
+    fireEvent.change(voxelInput, { target: { value: '' } });
+    expect(voxelInput.value).toBe('');
+  });
+
+  it('add material with duplicate name (case-insensitive) keeps existing', async () => {
+    const onConfirm = jest.fn();
+    const { getByRole, getByPlaceholderText } = render(
+      <NewProjectDialog
+        isOpen
+        stlFileName="box.stl"
+        initialMaterials={['Steel', 'Copper']}
+        onClose={jest.fn()}
+        onConfirm={onConfirm}
+      />
+    );
+    const materialSelect = document.getElementById('material-select');
+    if (materialSelect) {
+      fireEvent.change(materialSelect, { target: { value: '__ADD_NEW_MATERIAL__' } });
+    }
+    await userEvent.type(getByPlaceholderText('material name'), 'steel');
+    await userEvent.click(getByRole('button', { name: 'Add' }));
+    await userEvent.click(getByRole('button', { name: /Create Project/ }));
+    expect(onConfirm).toHaveBeenCalledWith(
+      expect.objectContaining({
+        defaultMaterial: 'Steel',
+      })
+    );
+  });
 });

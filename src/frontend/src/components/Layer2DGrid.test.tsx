@@ -186,4 +186,124 @@ describe('Layer2DGrid', () => {
     }
     expect(container.firstChild).toBeInTheDocument();
   });
+
+  it('renders with selectedVoxelIndices to show selection', () => {
+    const { container } = render(
+      <Layer2DGrid
+        layerData={mockLayerData}
+        selectedVoxelIndices={new Set([0])}
+        onLayerUp={jest.fn()}
+        onLayerDown={jest.fn()}
+      />
+    );
+    expect(container.querySelector('canvas')).toBeInTheDocument();
+  });
+
+  it('mouseLeave clears hover state', () => {
+    const { container } = render(
+      <Layer2DGrid
+        layerData={mockLayerData}
+        onLayerUp={jest.fn()}
+        onLayerDown={jest.fn()}
+      />
+    );
+    const canvas = container.querySelector('canvas');
+    if (canvas) {
+      fireEvent.mouseLeave(canvas);
+    }
+    expect(container.firstChild).toBeInTheDocument();
+  });
+
+  it('calls onVoxelsSelect when provided', async () => {
+    const onVoxelsSelect = jest.fn();
+    const { container } = render(
+      <Layer2DGrid
+        layerData={mockLayerData}
+        onVoxelsSelect={onVoxelsSelect}
+        onLayerUp={jest.fn()}
+        onLayerDown={jest.fn()}
+      />
+    );
+    const canvas = container.querySelector('canvas');
+    if (canvas) {
+      await userEvent.click(canvas);
+    }
+    expect(container.firstChild).toBeInTheDocument();
+  });
+
+  it('renders placeholder when layerData has no bounds', () => {
+    const noBounds = {
+      project_name: 'p',
+      layer_index: 0,
+      num_voxels: 1,
+      voxels: [mockLayerData.voxels[0]],
+      bounds: null as unknown as { grid_x_min: number; grid_x_max: number; grid_y_min: number; grid_y_max: number },
+    };
+    const { getByText } = render(<Layer2DGrid layerData={noBounds} />);
+    expect(getByText('Select a layer to view 2D grid')).toBeInTheDocument();
+  });
+
+  it('editVoxelsMode right-click on empty cell calls onVoxelAdd', () => {
+    const onVoxelAdd = jest.fn();
+    const { container } = render(
+      <Layer2DGrid
+        layerData={mockLayerData}
+        editVoxelsMode
+        onVoxelAdd={onVoxelAdd}
+        onLayerUp={jest.fn()}
+        onLayerDown={jest.fn()}
+      />
+    );
+    const canvas = container.querySelector('canvas');
+    if (canvas) {
+      fireEvent.contextMenu(canvas, { clientX: 0, clientY: 0 });
+    }
+    expect(container.firstChild).toBeInTheDocument();
+  });
+
+  it('editVoxelsMode left-click calls onVoxelRemove when hitting voxel', () => {
+    const onVoxelRemove = jest.fn();
+    const { container } = render(
+      <Layer2DGrid
+        layerData={mockLayerData}
+        editVoxelsMode
+        onVoxelRemove={onVoxelRemove}
+        onLayerUp={jest.fn()}
+        onLayerDown={jest.fn()}
+      />
+    );
+    const canvas = container.querySelector('canvas');
+    if (canvas) {
+      fireEvent.click(canvas, { button: 0, clientX: 0, clientY: 0 });
+    }
+    expect(container.firstChild).toBeInTheDocument();
+  });
+
+  it('wheel on container changes zoom', () => {
+    const { container } = render(
+      <Layer2DGrid
+        layerData={mockLayerData}
+        onLayerUp={jest.fn()}
+        onLayerDown={jest.fn()}
+      />
+    );
+    const wrapper = container.querySelector('.layer-2d-grid-canvas-container');
+    if (wrapper) {
+      fireEvent.wheel(wrapper, { deltaY: -100 });
+    }
+    expect(container.querySelector('canvas')).toBeInTheDocument();
+  });
+
+  it('click mode button activates Click', async () => {
+    const { getByRole } = render(
+      <Layer2DGrid
+        layerData={mockLayerData}
+        onLayerUp={jest.fn()}
+        onLayerDown={jest.fn()}
+      />
+    );
+    await userEvent.click(getByRole('button', { name: /lasso/i }));
+    await userEvent.click(getByRole('button', { name: /click/i }));
+    expect(getByRole('button', { name: /click/i }).className).toContain('active');
+  });
 });

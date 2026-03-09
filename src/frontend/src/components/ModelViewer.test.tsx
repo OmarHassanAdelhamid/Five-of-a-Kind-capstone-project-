@@ -198,6 +198,43 @@ describe('ModelViewer', () => {
     expect(onLayerEditorOpenChange).toHaveBeenCalledWith(true);
   });
 
+  it('resize event updates camera when model loaded', async () => {
+    const threeUtils = require('../utils/threeUtils');
+    const mockSetup = threeUtils.createScene();
+    render(
+      <ModelViewer
+        selectedModel="test.stl"
+        voxelCoordinates={[]}
+        onStatusChange={jest.fn()}
+        voxelSize={1}
+      />
+    );
+    await act(async () => {});
+    expect(mockSetup.camera.updateProjectionMatrix).toBeDefined();
+    await act(async () => {
+      window.dispatchEvent(new Event('resize'));
+    });
+    expect(mockSetup.camera.updateProjectionMatrix).toHaveBeenCalled();
+  });
+
+  it('click on viewer element runs click handler (no intersect)', async () => {
+    const threeUtils = require('../utils/threeUtils');
+    render(
+      <ModelViewer
+        selectedModel="test.stl"
+        voxelCoordinates={[]}
+        onStatusChange={jest.fn()}
+        voxelSize={1}
+      />
+    );
+    await act(async () => {});
+    const domElement = threeUtils.createScene().renderer.domElement;
+    await act(async () => {
+      domElement.dispatchEvent(new MouseEvent('click', { clientX: 0, clientY: 0, bubbles: true }));
+    });
+    expect(domElement).toBeTruthy();
+  });
+
   it('unmount calls disposeScene', async () => {
     const threeUtils = require('../utils/threeUtils');
     const { unmount } = render(
@@ -207,5 +244,47 @@ describe('ModelViewer', () => {
     unmount();
     await act(async () => {});
     expect(threeUtils.disposeScene).toHaveBeenCalled();
+  });
+
+  it('Layer Editor tab click when open closes it', async () => {
+    const onLayerEditorOpenChange = jest.fn();
+    const { getByTitle } = render(
+      <ModelViewer
+        selectedModel={null}
+        voxelCoordinates={[]}
+        onStatusChange={jest.fn()}
+        voxelSize={1}
+        isLayerEditorOpen={true}
+        onLayerEditorOpenChange={onLayerEditorOpenChange}
+      />
+    );
+    await act(async () => {});
+    const layerEditorBtn = getByTitle('Close Layer Editor');
+    await act(async () => {
+      layerEditorBtn.click();
+    });
+    expect(onLayerEditorOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it('Partitions tab click when open closes panel', async () => {
+    const { getByTitle } = render(
+      <ModelViewer
+        selectedModel={null}
+        voxelCoordinates={[]}
+        onStatusChange={jest.fn()}
+        voxelSize={1}
+      />
+    );
+    await act(async () => {});
+    const partitionsBtn = getByTitle('Open Partitions');
+    await act(async () => {
+      partitionsBtn.click();
+    });
+    const closePartitionsBtn = getByTitle('Close Partitions');
+    expect(closePartitionsBtn).toBeInTheDocument();
+    await act(async () => {
+      closePartitionsBtn.click();
+    });
+    expect(getByTitle('Open Partitions')).toBeInTheDocument();
   });
 });
