@@ -409,7 +409,7 @@ Traceability &
 
 \noindent The list of tasks will closely relate to essential requirements. The list of tasks will depend on the current status of the project. However, tasks may include:
 \begin{itemize}
-\item create a new project with a given CAS file (F221)
+\item create a new project with a given CAD file (F221)
 \item generate a 3D image with a given voxel size (F213)
 \item access the bottom face of the object (F223)
 \item given desired voxel properties of 3 layers, replicate structure on software (F224 - F227, F231, F2313)
@@ -1726,6 +1726,14 @@ The following tables show the traceability between test cases and their correspo
 \restoregeometry
 
 \newpage
+
+\section{Unit Test Description}
+
+To avoid repeating repetitive information, to view the full set of unit tests, view the backend test cases within src/backend/tests
+and frontend tests within src/frontend (all test files have test as suffix). For backend unit tests, cases were selected with the aim
+to execute each if statement or possibility either way, as well as triggering foreseeable error cases that should be verifiably caught.
+Names of all test cases were also made to be self-descriptive, not requiring additional documentation within the code to explain what they
+test (e.g. the entire test case is in the name of the function).
 
 \clearpage
 
