@@ -61,6 +61,7 @@ describe('threeUtils', () => {
       expect(camera.position.set).toHaveBeenCalled();
       expect(controls.update).toHaveBeenCalled();
     });
+
   });
 
   describe('renderVoxelInstanced', () => {
@@ -78,6 +79,16 @@ describe('threeUtils', () => {
       expect(result.mesh).toBeDefined();
       expect(result.instanceIdMap.size).toBe(2);
       expect(scene.add).toHaveBeenCalledWith(result.mesh);
+    });
+
+    it('throws when voxelSize is invalid (0 or NaN)', () => {
+      const scene = { add: jest.fn(), remove: jest.fn(), traverse: jest.fn() };
+      expect(() =>
+        renderVoxelInstanced(scene as any, [[0, 0, 0]], 0)
+      ).toThrow(/Invalid voxelSize/);
+      expect(() =>
+        renderVoxelInstanced(scene as any, [[0, 0, 0]], NaN)
+      ).toThrow(/Invalid voxelSize/);
     });
 
     it('disposes existingMesh when provided', () => {

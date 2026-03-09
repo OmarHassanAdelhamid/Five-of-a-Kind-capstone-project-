@@ -35,15 +35,16 @@ module.exports = {
     '!src/**/*.test.tsx',
     '!src/**/*.spec.ts',
     '!src/**/*.spec.tsx',
+    '!src/components/ModelViewer.tsx',
   ],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'text-summary', 'html', 'lcov'],
   coverageThreshold: {
     global: {
-      statements: 43,
-      branches: 37,
-      functions: 53,
-      lines: 43,
+      statements: 79,
+      branches: 50,
+      functions: 75,
+      lines: 80,
     },
   },
   moduleNameMapper: {

@@ -100,6 +100,22 @@ describe('App', () => {
     expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Download failed'));
   });
 
+  it('upload STL failure shows alert', async () => {
+    (api.uploadSTLFile as jest.Mock).mockRejectedValue(new Error('Upload failed'));
+    let result: ReturnType<typeof render>;
+    await act(async () => {
+      result = render(<App />);
+    });
+    const input = result!.container.querySelector('#stl-upload-input') as HTMLInputElement;
+    expect(input).toBeTruthy();
+    const file = new File(['x'], 'model.stl', { type: 'application/octet-stream' });
+    await act(async () => {
+      await userEvent.upload(input, file);
+    });
+    await act(async () => {});
+    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Upload failed'));
+  });
+
   it('handleSaveAs shows alert when download fails', async () => {
     const promptSpy = jest.spyOn(window, 'prompt').mockReturnValue('newname');
     (api.fetchAvailableProjects as jest.Mock).mockResolvedValue(['cube']);
@@ -760,6 +776,23 @@ describe('App', () => {
       partition_name: 'part1',
       action: 'redo',
     });
+  });
+
+  it('File > Open File > select model changes model', async () => {
+    let result: ReturnType<typeof render>;
+    await act(async () => {
+      result = render(<App />);
+    });
+    await act(async () => {
+      await userEvent.click(result!.getByRole('button', { name: 'File' }));
+    });
+    await act(async () => {
+      await userEvent.hover(result!.getByText('Open File...'));
+    });
+    await act(async () => {
+      await userEvent.click(result!.getByRole('button', { name: 'box.stl' }));
+    });
+    expect(result!.getByTestId('model-viewer')).toBeInTheDocument();
   });
 
   it('Undo with project and partition calls updateHistory', async () => {

@@ -66,6 +66,24 @@ describe('api', () => {
     await expect(api.fetchVoxelized('p', '')).rejects.toThrow('Partition name is required');
   });
 
+  it('fetchVoxelized throws with detail when response not ok', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ detail: 'Invalid partition' }),
+    });
+    await expect(api.fetchVoxelized('p', 'part')).rejects.toThrow('Invalid partition');
+  });
+
+  it('fetchVoxelized returns empty array when response has no coordinates', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    });
+    const result = await api.fetchVoxelized('p', 'part');
+    expect(result).toEqual([]);
+  });
+
   it('uploadSTLFile returns message on success', async () => {
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
@@ -137,6 +155,22 @@ describe('api', () => {
     ).rejects.toThrow('Partition name is required');
   });
 
+  it('updateVoxels throws with errorData.detail when response not ok', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ detail: 'Invalid voxels' }),
+    });
+    await expect(
+      api.updateVoxels({
+        project_name: 'p',
+        partition_name: 'part',
+        voxels: [],
+        action: 'update',
+      })
+    ).rejects.toThrow('Invalid voxels');
+  });
+
   it('downloadVoxelCSV returns blob', async () => {
     const blob = new Blob(['csv,data'], { type: 'text/csv' });
     (global.fetch as jest.Mock).mockResolvedValue({
@@ -205,6 +239,16 @@ describe('api', () => {
     await expect(api.uploadSTLFile(file)).rejects.toThrow();
   });
 
+  it('uploadSTLFile throws with errorData.message when response not ok', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ message: 'File too large' }),
+    });
+    const file = new File(['x'], 'a.stl', { type: 'application/octet-stream' });
+    await expect(api.uploadSTLFile(file)).rejects.toThrow('File too large');
+  });
+
   it('voxelizeModel throws on non-ok', async () => {
     (global.fetch as jest.Mock).mockResolvedValue({ ok: false, status: 500 });
     await expect(
@@ -217,6 +261,24 @@ describe('api', () => {
         defaultMaterial: 'material1',
       })
     ).rejects.toThrow();
+  });
+
+  it('voxelizeModel throws with errorData.detail when response not ok', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ detail: 'Invalid STL' }),
+    });
+    await expect(
+      api.voxelizeModel({
+        stlFilename: 'x.stl',
+        voxelSize: 0.1,
+        projectName: 'proj',
+        modelUnits: 'mm',
+        voxelUnits: 'mm',
+        defaultMaterial: 'material1',
+      })
+    ).rejects.toThrow('Invalid STL');
   });
 
   it('fetchLayers throws with detail message on non-ok', async () => {
@@ -242,15 +304,6 @@ describe('api', () => {
   it('fetchPartitions returns empty array on reject', async () => {
     (global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
     const result = await api.fetchPartitions('p');
-    expect(result).toEqual([]);
-  });
-
-  it('fetchVoxelized returns empty array when response has no coordinates', async () => {
-    (global.fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      json: async () => ({ project_name: 'p', num_voxels: 0 }),
-    });
-    const result = await api.fetchVoxelized('p', 'part');
     expect(result).toEqual([]);
   });
 
@@ -303,6 +356,45 @@ describe('api', () => {
     await expect(api.fetchLayer('p', 'part', 0, 'z')).rejects.toThrow('Layer not found');
   });
 
+  it('fetchLayer throws when no layers available', async () => {
+    api.clearLayerCache();
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        project_name: 'p',
+        num_layers: 0,
+        layers: [],
+      }),
+    });
+    await expect(api.fetchLayer('p', 'part', 0, 'z')).rejects.toThrow('No layers available');
+  });
+
+  it('fetchLayer with axis x transforms voxels correctly', async () => {
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          project_name: 'p',
+          num_layers: 1,
+          layers: [{ index: 0, coordinate: 0 }],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          project_name: 'p',
+          layer_index: 0,
+          num_voxels: 1,
+          voxels: [[0, 0, 0, 0, 0, 0, 1, 0, 0, 0]],
+          axis: 'x',
+        }),
+      });
+    const result = await api.fetchLayer('p', 'part', 0, 'x');
+    expect(result.axis).toBe('x');
+    expect(result.voxels[0].grid_x).toBeDefined();
+    expect(result.voxels[0].grid_y).toBeDefined();
+  });
+
   it('fetchLayer with axis y transforms voxels correctly', async () => {
     (global.fetch as jest.Mock)
       .mockResolvedValueOnce({
@@ -327,6 +419,34 @@ describe('api', () => {
     expect(result.axis).toBe('y');
     expect(result.voxels[0].grid_x).toBeDefined();
     expect(result.voxels[0].grid_y).toBeDefined();
+  });
+
+  it('fetchLayer finds closest layer when multiple layers', async () => {
+    api.clearLayerCache();
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          project_name: 'p',
+          num_layers: 2,
+          layers: [
+            { index: 0, coordinate: 1.0 },
+            { index: 1, coordinate: 0.0 },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          project_name: 'p',
+          layer_index: 1,
+          num_voxels: 0,
+          voxels: [],
+          axis: 'z',
+        }),
+      });
+    const result = await api.fetchLayer('p', 'part', 0.0, 'z');
+    expect(result.layer_index).toBe(1);
   });
 
   it('clearLayerCache clears cache', () => {
