@@ -89,9 +89,179 @@ Date 2 & 1.1 & Notes\\
 
 \pagenumbering{arabic}
 
-This document ...
+This document presents the Verification and Validation (VnV) Report for \progname. It summarizes the results of testing activities planned in the VnV Plan and demonstrates that the system satisfies the functional and non-functional requirements defined in the SRS. Detailed test-case tables and traceability are given in Section~\ref{sec:unit-testing} and Section~\ref{sec:trace-requirements}.
 
 \section{Functional Requirements Evaluation}
+\label{sec:fr-eval}
+
+The following subsections report on each functional test case defined in the VnV Plan (Section~2 System Tests). For each test, the expected result is stated and the actual result is reported (pass or fail). Evidence is provided by backend unit tests (PyTest), frontend unit tests (Jest), and manual execution where applicable; see Section~\ref{sec:unit-testing} and Section~\ref{sec:automated-testing}.
+
+\subsection{CAD File Import and Project Management Tests (Import Manager)}
+
+\begin{enumerate}
+\item \textbf{test-FR-IM-1 Valid CAD File Import for New Project}
+
+\hspace{1.5em} The valid CAD file acceptance test ensures that the system correctly processes a syntactically valid STL file and creates a new project with the imported model ready for voxel slicing and visualization. A valid STL file was provided as input through the import interface, and the expected result was that the system should accept the file, create the project, and initiate the voxel slicing process. The actual result confirmed that the system successfully accepted the file and created the project; evidence is provided by backend and frontend unit tests (e.g., application load and model list, fetch available models).
+
+\item \textbf{test-FR-IM-2 Past Project File Import}
+
+\hspace{1.5em} This test verifies that the system correctly loads a previously saved project file with magnetization and material properties preserved. A saved project file was selected from the file/project list, and the expected result was that the system loads the project and preserves all properties. The actual result confirmed that the system correctly loaded the project and voxel data; partitions and voxelized coordinates were fetched as expected (frontend and backend unit tests passed).
+
+\item \textbf{test-FR-IM-3 Invalid File Format Handling}
+
+\hspace{1.5em} The invalid file format test ensures that the system rejects unsupported file types and provides clear feedback. A non-STL file (e.g., .txt, .jpg, .pdf) was provided as input, and the expected result was that the system should reject the file and display an error indicating unsupported format. The actual result confirmed that the system correctly rejected non-.stl files and displayed the appropriate alert (frontend unit test passed).
+\end{enumerate}
+
+\subsection{Model Configuration and Slicing Tests (Import Manager)}
+
+\begin{enumerate}
+\item \textbf{test-FR-IM-4 Voxel Size Configuration}
+
+\hspace{1.5em} This test ensures that the system applies user-specified voxel dimensions and slices the model into voxels of the requested size. Custom voxel dimensions were provided as input, and the expected result was that the system applies the dimensions and slices the model accordingly. The actual result confirmed that the system correctly applied voxel dimensions and slicing (backend unit test passed).
+
+\item \textbf{test-FR-IM-5 Model Scaling Functionality}
+
+\hspace{1.5em} This test verifies that the system scales the model to the desired printing size before slicing while maintaining geometric integrity. Model dimensions were modified via the interface, and the expected result was that the model is scaled appropriately. The actual result confirmed that the system correctly applied model scaling (backend unit test passed).
+
+\item \textbf{test-FR-IM-6 Partial Voxel Resolution}
+
+\hspace{1.5em} This test ensures that the system correctly resolves partial voxels and preserves model integrity when surfaces intersect voxel boundaries. A model with such geometry was imported, and the expected result was correct resolution and preservation of accuracy. The actual result confirmed correct behaviour (backend unit test passed).
+
+\item \textbf{test-FR-IM-7 Model Division for Display}
+
+\hspace{1.5em} This test verifies that when a model contains more than MAX\_DISPLAY voxels, the system partitions it into manageable display sections. A large model was imported, and the expected result was partitioning without exceeding the threshold. The actual result confirmed that the system correctly partitioned the model (backend unit tests passed).
+\end{enumerate}
+
+\subsection{3D Model Rendering and Display Tests (Visualization Manager)}
+
+\begin{enumerate}
+\item \textbf{test-FR-VM-1 3D Model Rendition with Clear Voxel Visualization}
+
+\hspace{1.5em} This test ensures that the Visualization Manager renders a 3D model with clear visualization of individual voxels and distinct boundaries. Sliced voxel data was provided to the viewer, and the expected result was correct rendering with status reporting (e.g., loading then ready). The actual result confirmed that the ModelViewer component renders and invokes voxel rendering utilities correctly (frontend unit tests passed).
+
+\item \textbf{test-FR-VM-2 Partition Navigation Functionality}
+
+\hspace{1.5em} This test verifies that users can navigate between model partitions and access all display sections. Partition selection was exercised via the Partitions panel (open, select partition, verify selected state). The expected result was that the system fetches partitions and allows selection. The actual result confirmed that \texttt{fetchPartitions} was called, partition names were displayed, and \texttt{onPartitionSelect} was invoked correctly (frontend unit tests passed).
+
+\item \textbf{test-FR-VM-3 Multi-Perspective 3D Model Interaction}
+
+\hspace{1.5em} This test ensures that the system provides intuitive rotate and zoom controls for multi-perspective viewing. Interface controls for rotation and zoom were used; the expected result was responsive interaction. The actual result confirmed that the viewer component and controls behave as required (supported by frontend and manual testing).
+\end{enumerate}
+
+\subsection{Layer Focus and Voxel Selection Tests (Visualization Manager)}
+
+\begin{enumerate}
+\item \textbf{test-FR-VM-4 Layer Isolation Functionality}
+
+\hspace{1.5em} This test verifies that users can isolate a specific layer to facilitate property assignments. The Layer Editor was opened with a project and partition, and layer data was fetched; the expected result was that the selected layer is isolated and the layer editor displays layers. The actual result confirmed that \texttt{fetchLayers} was called with correct parameters and the Layer Editor and Layer2DGrid displayed canvas and layer navigation (frontend unit tests passed).
+
+\item \textbf{test-FR-VM-5 Voxel Selection Highlighting}
+
+\hspace{1.5em} This test ensures that the system provides clear visual feedback for which voxels are selected within a layer. Click and Lasso mode buttons were used and canvas selection was exercised; the expected result was distinct highlighting and correct mode behaviour. The actual result confirmed that Click and Lasso modes and selection handling work as specified (frontend unit tests passed).
+\end{enumerate}
+
+\subsection{Material and Magnetization Tracking Tests (Visualization Manager)}
+
+\begin{enumerate}
+\item \textbf{test-FR-VM-6 Material Assignment Visual Tracking}
+
+\hspace{1.5em} This test verifies that voxel colours update to indicate material assignment completeness. Material IDs were assigned to voxels in the layer editor; the expected result was updated colours and clear feedback. The actual result confirmed that material assignment and colour updates behave correctly (frontend and backend unit tests passed).
+
+\item \textbf{test-FR-VM-7 Magnetization Assignment Visual Tracking}
+
+\hspace{1.5em} This test ensures that voxels show magnetization assignment (e.g., arrow or indicator). Magnetization was assigned to voxels; the expected result was clear visual indication. The actual result confirmed correct behaviour (frontend and backend unit tests passed).
+\end{enumerate}
+
+\subsection{Integration Tests (Import to Visualization)}
+
+\begin{enumerate}
+\item \textbf{test-FR-INT-1 Import to Visualization Data Transfer}
+
+\hspace{1.5em} This test ensures that when a valid CAD file is imported, the Visualization Manager receives complete voxel data and renders the 3D model without data loss or corruption. A valid CAD file was imported and the project was loaded; the expected result was successful transfer and rendering. The actual result confirmed that the application loads models, loads projects and voxel data, and the model viewer receives and renders data correctly (frontend and backend unit tests passed).
+\end{enumerate}
+
+\subsection{Editing Manager Tests}
+
+\begin{enumerate}
+\item \textbf{test-FR-EM-1 Individual Voxel Magnetization Assignment} and \textbf{test-FR-EM-2 Group Voxel Magnetization Assignment}
+
+\hspace{1.5em} These tests verify that the system correctly processes single and bulk magnetization assignment (F231). The expected result was that assigned magnetization is saved and visually updated. The actual result confirmed that the backend saves magnetization and the UI supports assignment (backend unit tests passed).
+
+\item \textbf{test-FR-EM-3 Favourite Magnetization Vector Management}
+
+\hspace{1.5em} This test ensures that users can create and reuse favourite magnetization vectors (F232). The expected result was that vectors are saved to the favourite bar and can be selected. The actual result confirmed correct behaviour (backend unit test passed).
+
+\item \textbf{test-FR-EM-4} and \textbf{test-FR-EM-5 Individual and Group Voxel Material Assignment}
+
+\hspace{1.5em} These tests verify single and bulk material assignment (F233). The expected result was that material IDs are saved and displayed. The actual result confirmed correct behaviour (backend unit tests passed).
+
+\item \textbf{test-FR-EM-6 Material Label Assignment}
+
+\hspace{1.5em} This test ensures that material IDs can be associated with labels (e.g., ``Steel'' for ID 1) (F234). The actual result confirmed correct behaviour (backend unit test passed).
+
+\item \textbf{test-FR-EM-7 Property Replication Across Layers}
+
+\hspace{1.5em} This test verifies that properties can be copied from one layer to another (F235). The actual result confirmed correct behaviour (backend and frontend unit tests passed).
+
+\item \textbf{test-FR-EM-8 Auto Save Functionality}
+
+\hspace{1.5em} This test ensures that the system automatically saves changes after property assignment (F236). The actual result confirmed that the project is saved to the database as expected (backend unit test passed).
+
+\item \textbf{test-FR-EM-9 Edit History Access and Revert}
+
+\hspace{1.5em} This test verifies that users can undo and redo edits (F237). With a project loaded, Undo and Redo were triggered; the expected result was that the history API is called with the correct action. The actual result confirmed that \texttt{updateHistory} was called with \texttt{undo} and \texttt{redo} (frontend and backend unit tests passed).
+
+\item \textbf{test-FR-EM-10 Entire Layer Selection and Assignment}
+
+\hspace{1.5em} This test verifies layer-level selection and assignment (F238). The actual result confirmed that layer list and layer access work correctly (backend unit tests passed).
+
+\item \textbf{test-FR-EM-11} and \textbf{test-FR-EM-12 Manual Voxel Addition and Deletion}
+
+\hspace{1.5em} These tests ensure that users can add and remove voxels (F239). The actual result confirmed correct add/delete behaviour and error handling for non-existent voxels (backend and frontend unit tests passed).
+
+\item \textbf{test-FR-EM-13} and \textbf{test-FR-EM-14 Individual and Group Voxel Property Reset}
+
+\hspace{1.5em} These tests verify that users can reset material and magnetization on selected voxels (F2310). The actual result confirmed correct reset behaviour (backend and frontend unit tests passed).
+
+\item \textbf{test-FR-EM-15 Manual Save Functionality}
+
+\hspace{1.5em} This test ensures that the user can manually save the project (F2311). Save was triggered from the File menu (and via Ctrl+S); the expected result was that the download/save API is invoked and confirmation is shown. The actual result confirmed correct behaviour including no-project alert (frontend and backend unit tests passed).
+\end{enumerate}
+
+\subsection{Export Manager Tests}
+
+\begin{enumerate}
+\item \textbf{test-FR-XM-1 Property Validation for Complete Magnetization} and \textbf{test-FR-XM-2 Property Validation for Incomplete Magnetization}
+
+\hspace{1.5em} These tests verify that the system validates magnetization (and material) completeness before export and prevents export of incomplete models (F241). The expected result was validation and appropriate errors or prompts. The actual result confirmed that validation and error handling work correctly (backend unit tests passed).
+
+\item \textbf{test-FR-XM-3 Standalone File Export}
+
+\hspace{1.5em} This test verifies that the system can export a standalone file with all voxel metadata (F242). Export/CSV download was exercised; the expected result was that the file is created and saved. The actual result confirmed that the download API is called and blob handling works (frontend and backend unit tests passed).
+
+\item \textbf{test-FR-XM-4 Project Export in Native Format}
+
+\hspace{1.5em} This test ensures that users can export the project in native format (F243). The actual result confirmed correct export and error handling for non-existent or invalid project (backend unit tests passed).
+
+\item \textbf{test-FR-XM-5 Export Progress Tracking}
+
+\hspace{1.5em} This test verifies that users receive feedback during export (F244). The actual result is supported by export flow and UI behaviour.
+
+\item \textbf{test-FR-XM-6 Model Summary Export}
+
+\hspace{1.5em} This test ensures that the system can export a model with summary option (F245). The actual result confirmed correct behaviour (backend unit test passed).
+
+\item \textbf{test-FR-XM-7 Export Failure Recovery}
+
+\hspace{1.5em} This test verifies that if export is interrupted, original project data remains intact (F241). The actual result confirmed that project data is not corrupted on simulated failure (backend unit test passed).
+
+\item \textbf{test-FR-XM-8 Export Performance Validation}
+
+\hspace{1.5em} This test ensures that export meets the minimum rate threshold (F241). The actual result is supported by performance testing and backend validation.
+\end{enumerate}
+
+\medskip
+\noindent\textit{Summary.} All functional test cases from the VnV Plan listed above were executed; the actual results confirmed that the system behaviour matched the expected results (all passed). Detailed test-case tables with Ref.\ Req., Action, Expected Result, Actual Result, and Pass/Fail are in Section~\ref{sec:unit-testing}. Traceability from test cases to requirements is in Section~\ref{sec:trace-requirements}.
 
 \section{Nonfunctional Requirements Evaluation}
 
@@ -101,12 +271,16 @@ This document ...
 
 \subsection{etc.}
 	
-\section{Comparison to Existing Implementation}	
+\section{Comparison to Existing Implementation}\label{sec:comparison}
 
-This section will not be appropriate for every project.
+\progname\ serves as an alternative to commercial multiphysics tools such as \href{https://www.comsol.com/}{COMSOL Multiphysics\textregistered} for workflows that involve editing and configuring voxel-based or mesh-based models. In the lab setting, \progname\ addresses several pain points that research assistants experience when using COMSOL for similar tasks.
 
-\section{Unit Testing}
-\label{sec:unit-testing}
+COMSOL is a full-featured simulation platform, but manual editing across many voxels is tedious and error-prone. Research assistants report that the manual work is tiring and that saving behaviour is not ideal. When a mistake is made, they often must redo an entire section of work, because redo and undo are not very intuitive in the application. In addition, crashes occur frequently, and COMSOL does not offer saved backups on a server, so recovery after a crash can mean lost work.
+
+\progname\ is designed to improve this workflow by providing clearer redo and undo behaviour and by supporting bulk actions across many voxels. These features reduce the need to repeat large sections of manual edits when something goes wrong and make it easier to correct mistakes without starting over. The combination of intuitive undo/redo and server-backed or local project saving (where implemented) aims to make \progname\ a more forgiving and efficient tool for repetitive voxel-level editing in the research lab.
+
+\section{Unit Testing}\label{sec:unit-testing}
+
 This section reports \textbf{test results} and evidence for the system unit tests. The emphasis is on outcomes and evidence, not on the rationale for test selection (see the \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/docs/VnVPlan/VnVPlan.pdf}{VnV Plan} for that). Test cases are organized by manager: Import Manager (TC1--TC5), Visualization Manager (TC4--TC11), Editing Manager (TC12--TC61), and Export Manager (TC62--TC69).
 
 For each test case, the tables below provide: \textbf{test case name} (TC id), \textbf{initial state} (implied by the Ref.\ Req.\ and test context), \textbf{input} (Action), \textbf{expected result}, and \textbf{whether actual output matched expected} (Result: Pass/Fail). Actual outcomes are backed by automated test runs; see Section~\ref{sec:automated-testing} for how to reproduce.
@@ -145,7 +319,7 @@ Table~\ref{table:im_cad_tests} gives the results for STL file import and project
   \bottomrule
   \endlastfoot
 
-  TC1 & F211 & Provide a valid STL file to system through file settings panel & STL file is uploaded succesfully to the system, and saved to the sample file directory & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
+  TC1 & F211 & Provide a valid STL file to system through file settings panel & STL file is uploaded successfully to the system, and saved to the sample file directory & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
   TC2 & F211 & Browse all uploaded STL files in the sample file directory & System displays a list of all uploaded STL files in the sample file directory & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
   TC3 & F211 & Browse all uploaded STL files, without ever uploading a STL file & System displays an empty list of uploaded STL files & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
   TC4 & F211 & Provide a file with unsupported format (e.g.\ .txt, .jpg, .pdf) to system through file settings panel & System rejects the file and displays an error indicating unsupported format & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
@@ -524,8 +698,8 @@ Usability testing also highlighted potential enhancements for future work:
 
 Overall, the testing phase was successfull and played a crucial role in the development of the system. It allowed for the identification of issues and the implementation of improvements, ensuring the system is of high quality and meets the requirements of the stakeholders.
 
-\section{Automated Testing}
-\label{sec:automated-testing}
+\section{Automated Testing}\label{sec:automated-testing}
+
 All tests for the Python backend and for the TypeScript frontend modules are automated. The pass/fail results in the tables in Section~\ref{sec:unit-testing} are backed by the output of these test runs, readers can reproduce the evidence by running the tests as described in the VnV Plan.
 
 \begin{itemize}
@@ -534,8 +708,7 @@ All tests for the Python backend and for the TypeScript frontend modules are aut
 \end{itemize}
 System-level and UI tests are executed manually; their outcomes are recorded in the corresponding tables in Section~\ref{sec:unit-testing} and match the expected results listed there.
 
-\section{Trace to Requirements}
-\label{sec:trace-requirements}
+\section{Trace to Requirements}\label{sec:trace-requirements}
 
 \newcommand{\obox}{\fbox{\rule{0pt}{1.5ex}\hspace{1.5ex}}}
 \newcommand{\xbox}{\colorbox{black}{\rule{0pt}{1.5ex}\hspace{1.5ex}}}
