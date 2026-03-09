@@ -20,14 +20,37 @@ essentially is just calling functions from other files that
 were already tested
 '''
 
-def test_user_settings():
-    stl_path = TEST_PATH / TEST_STL
-    print(stl_path)
-    mesh = trimesh.load_mesh(file_obj = stl_path, file_type='stl')
-    expected_dim = mesh.extents * 1000000
-    new_mesh, vox_len = pms.set_user_req(mesh, 'nm', 'cm', 0.1)
-    assert np.array_equal(new_mesh.extents, expected_dim)
+def test_user_settings_nm_cm():
+    """Test set_user_req: nm scale multiplies extents by 1e6, cm voxel units scale vox_len by 0.1."""
+    mesh = MagicMock()
+    mesh.extents = np.array([1.0, 2.0, 3.0])
+    new_mesh, vox_len = pms.set_user_req(mesh, "nm", "cm", 0.1)
+    mesh.apply_scale.assert_called_once_with(1e6)
+    assert new_mesh is mesh
     assert vox_len == pytest.approx(0.01)
+
+
+def test_user_settings_cm_stl():
+    """Test set_user_req: ref_stl cm applies scale 0.1."""
+    mesh = MagicMock()
+    new_mesh, vox_len = pms.set_user_req(mesh, "cm", "mm", 1.0)
+    mesh.apply_scale.assert_called_once_with(0.1)
+    assert vox_len == 1.0
+
+
+def test_user_settings_mm_no_scale():
+    """Test set_user_req: mm ref_stl and ref_vox leave mesh and vox_len unchanged."""
+    mesh = MagicMock()
+    new_mesh, vox_len = pms.set_user_req(mesh, "mm", "mm", 0.5)
+    mesh.apply_scale.assert_not_called()
+    assert vox_len == 0.5
+
+
+def test_user_settings_nm_vox_units():
+    """Test set_user_req: ref_vox nm scales vox_len by 1e6."""
+    mesh = MagicMock()
+    new_mesh, vox_len = pms.set_user_req(mesh, "mm", "nm", 0.001)
+    assert vox_len == pytest.approx(1000.0)
 
 def test_path_voxel_db():
     '''tests path for voxel database creation to ensure all commands are properly executed'''

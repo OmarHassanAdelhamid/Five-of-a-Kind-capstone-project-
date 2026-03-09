@@ -66,6 +66,24 @@ describe('api', () => {
     await expect(api.fetchVoxelized('p', '')).rejects.toThrow('Partition name is required');
   });
 
+  it('fetchVoxelized throws with detail when response not ok', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 404,
+      json: async () => ({ detail: 'Project not found' }),
+    });
+    await expect(api.fetchVoxelized('p', 'part')).rejects.toThrow('Project not found');
+  });
+
+  it('fetchVoxelized throws with status when response not ok and no detail', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: async () => ({}),
+    });
+    await expect(api.fetchVoxelized('p', 'part')).rejects.toThrow('Failed to fetch voxelized data (500)');
+  });
+
   it('uploadSTLFile returns message on success', async () => {
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
@@ -137,6 +155,22 @@ describe('api', () => {
     ).rejects.toThrow('Partition name is required');
   });
 
+  it('updateVoxels throws with detail when response not ok', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ detail: 'Invalid voxels' }),
+    });
+    await expect(
+      api.updateVoxels({
+        project_name: 'p',
+        partition_name: 'part',
+        voxels: [[0, 0, 0]],
+        action: 'update',
+      })
+    ).rejects.toThrow('Invalid voxels');
+  });
+
   it('downloadVoxelCSV returns blob', async () => {
     const blob = new Blob(['csv,data'], { type: 'text/csv' });
     (global.fetch as jest.Mock).mockResolvedValue({
@@ -205,6 +239,16 @@ describe('api', () => {
     await expect(api.uploadSTLFile(file)).rejects.toThrow();
   });
 
+  it('uploadSTLFile throws with message when response not ok', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ message: 'File too large' }),
+    });
+    const file = new File(['x'], 'a.stl', { type: 'application/octet-stream' });
+    await expect(api.uploadSTLFile(file)).rejects.toThrow('File too large');
+  });
+
   it('voxelizeModel throws on non-ok', async () => {
     (global.fetch as jest.Mock).mockResolvedValue({ ok: false, status: 500 });
     await expect(
@@ -217,6 +261,42 @@ describe('api', () => {
         defaultMaterial: 'material1',
       })
     ).rejects.toThrow();
+  });
+
+  it('voxelizeModel throws with detail when response not ok', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ detail: 'Invalid voxel size' }),
+    });
+    await expect(
+      api.voxelizeModel({
+        stlFilename: 'x.stl',
+        voxelSize: 0.1,
+        projectName: 'proj',
+        modelUnits: 'mm',
+        voxelUnits: 'mm',
+        defaultMaterial: 'material1',
+      })
+    ).rejects.toThrow('Invalid voxel size');
+  });
+
+  it('voxelizeModel throws with message when response not ok and no detail', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ message: 'Validation failed' }),
+    });
+    await expect(
+      api.voxelizeModel({
+        stlFilename: 'x.stl',
+        voxelSize: 0.1,
+        projectName: 'proj',
+        modelUnits: 'mm',
+        voxelUnits: 'mm',
+        defaultMaterial: 'material1',
+      })
+    ).rejects.toThrow('Validation failed');
   });
 
   it('fetchLayers throws with detail message on non-ok', async () => {
@@ -327,6 +407,54 @@ describe('api', () => {
     expect(result.axis).toBe('y');
     expect(result.voxels[0].grid_x).toBeDefined();
     expect(result.voxels[0].grid_y).toBeDefined();
+  });
+
+  it('fetchLayer findClosestLayerIndex picks closest layer by coordinate', async () => {
+    api.clearLayerCache();
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          project_name: 'p',
+          num_layers: 3,
+          layers: [
+            { index: 0, coordinate: 0 },
+            { index: 1, coordinate: 0.1 },
+            { index: 2, coordinate: 0.2 },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          project_name: 'p',
+          layer_index: 1,
+          num_voxels: 0,
+          voxels: [],
+          axis: 'z',
+        }),
+      });
+    const result = await api.fetchLayer('p', 'part', 0.09, 'z');
+    expect(result.layer_index).toBe(1);
+  });
+
+  it('fetchLayer throws with detail when retrieve response not ok', async () => {
+    api.clearLayerCache();
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          project_name: 'p',
+          num_layers: 1,
+          layers: [{ index: 0, coordinate: 0 }],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        json: async () => ({ detail: 'Layer not found' }),
+      });
+    await expect(api.fetchLayer('p', 'part', 0, 'z')).rejects.toThrow('Layer not found');
   });
 
   it('clearLayerCache clears cache', () => {

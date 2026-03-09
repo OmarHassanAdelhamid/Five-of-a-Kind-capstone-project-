@@ -73,18 +73,39 @@ def test_export_incomplete_voxels(tmp_path) -> None:
     with patch.object(ex_r, "PROJECT_STORAGE_DIR", tmp_path), \
          patch("app.routers.export_router.tempfile.mkdtemp", return_value=str(fake_temp_dir)), \
          patch("app.routers.export_router.es.write_csv", return_value=False) as mock_export:
-        mock_btask = MagicMock()
-
         client = TestClient(app)
-        with pytest.raises(HTTPException) as exc:
-            client.get(
-                "/api/export",
-                params={"project_name": "proj_name", "export_name": "exp_name"}
-            )
+        response = client.get(
+            "/api/export",
+            params={"project_name": "proj_name", "export_name": "exp_name"}
+        )
 
-        assert exc.value.status_code == 400
-        assert exc.value.detail == "File requested to export incomplete: proj_name"
-        
+        assert response.status_code == 400
+        assert response.json()["detail"] == "File requested to export incomplete: proj_name"
         mock_export.assert_called_once_with(proj_dir, str(fake_csv))
-        mock_btask.add_task.assert_has_calls([])
+
+
+def test_export_write_csv_raises_returns_500(tmp_path) -> None:
+    proj_dir = tmp_path / "proj_name"
+    proj_dir.mkdir()
+    fake_temp_dir = tmp_path / "temp"
+    fake_temp_dir.mkdir()
+
+    with patch.object(ex_r, "PROJECT_STORAGE_DIR", tmp_path), \
+         patch("app.routers.export_router.tempfile.mkdtemp", return_value=str(fake_temp_dir)), \
+         patch("app.routers.export_router.es.write_csv", side_effect=RuntimeError("db error")):
+        client = TestClient(app)
+        response = client.get(
+            "/api/export",
+            params={"project_name": "proj_name", "export_name": "exp_name"}
+        )
+        assert response.status_code == 500
+        assert "db error" in response.json()["detail"]
+
+
+def test_cleanup_removes_file(tmp_path) -> None:
+    f = tmp_path / "to_remove.csv"
+    f.write_text("x")
+    assert f.exists()
+    ex_r._cleanup(str(f))
+    assert not f.exists()
 

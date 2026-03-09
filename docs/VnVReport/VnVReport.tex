@@ -19,6 +19,7 @@
 \usepackage{colortbl}
 \usepackage{caption}
 \usepackage{graphicx}
+\graphicspath{{./images/}}
 \captionsetup[table]{width=0.9\textwidth,position=top}
 
 \usepackage{listings}
@@ -946,6 +947,32 @@ TC72 & \xbox & \xbox & \obox & \obox & \xbox & \obox \\
 
 \section{Code Coverage Metrics}
 
+\subsection{Python Code Coverage}
+
+The following section analyzes the code coverage of the Python code in the backend. The analysis is provided in the Figure~\ref{fig:python-coverage} and is a measure of how much of the code is being tested, and helps us understand which parts of the code are not being tested.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{python-coverage.png}
+\caption{Python Code Coverage}
+\label{fig:python-coverage}
+\end{figure}
+
+The backend codebase has an overall code coverage of 90\% for statements, branches, functions, and lines. The code coverage overall met the VnV Plan's requirement of 50\%. The \texttt{voxel\_service.py} was the file that was the most difficult to test because it utilizes the \texttt{trimesh} library for voxelization. The team will furthur analyze the code coverage of the \texttt{voxel\_service.py} file to understand which parts of the code are not being tested and improve the coverage of the file.
+
+
+\subsection{TypeScript Code Coverage}
+
+The following section analyzes the code coverage of the TypeScript code in the frontend. The analysis is provided in the Figure~\ref{fig:typescript-coverage} and is a measure of how much of the code is being tested, and helps us understand which parts of the code are not being tested.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{typescript-coverage.png}
+\caption{TypeScript Code Coverage}
+\label{fig:typescript-coverage}
+\end{figure}
+
+The frontend codebase has an overall code coverage of 71.46\% for statements, 54.89\% for branches, 71.23\% for functions, and 72.54\% for lines. The code coverage overall was not as high as required by the VnV Plan, however the team will focus on improving the coverage of the most critical components in the future. \texttt{LayerEditor.tsx} and \texttt{ModelViewer.tsx} were the two components that were the most difficult to test, and the team will focus on improving the coverage of these components in the future. This will be done by dividing the components into smaller, more manageable components and testing each component individually.
 \bibliographystyle{plainnat}
 \bibliography{../../refs/References}
 

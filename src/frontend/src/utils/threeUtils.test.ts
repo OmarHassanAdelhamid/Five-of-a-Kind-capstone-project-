@@ -94,6 +94,20 @@ describe('threeUtils', () => {
       expect(existingGeo.dispose).toHaveBeenCalled();
       expect(existingMat.dispose).toHaveBeenCalled();
     });
+
+    it('throws when voxelSize is invalid (0)', () => {
+      const scene = { add: jest.fn(), remove: jest.fn() };
+      expect(() => renderVoxelInstanced(scene as any, [[0, 0, 0]], 0)).toThrow(
+        'Invalid voxelSize received from backend'
+      );
+    });
+
+    it('throws when voxelSize is NaN', () => {
+      const scene = { add: jest.fn(), remove: jest.fn() };
+      expect(() => renderVoxelInstanced(scene as any, [[0, 0, 0]], NaN)).toThrow(
+        'Invalid voxelSize received from backend'
+      );
+    });
   });
 
   describe('createScene', () => {
@@ -158,6 +172,34 @@ describe('threeUtils', () => {
       disposeScene(scene as any, renderer as any, controls as any, mesh as any);
       expect(mesh.material[0].dispose).toHaveBeenCalled();
       expect(mesh.material[1].dispose).toHaveBeenCalled();
+    });
+
+    it('traverse disposes Mesh with single material', () => {
+      const mesh = {
+        geometry: { dispose: jest.fn() },
+        material: { dispose: jest.fn() },
+        isMesh: true,
+      };
+      const scene = { remove: jest.fn(), traverse: jest.fn((cb: (o: unknown) => void) => { cb(mesh); }) };
+      const renderer = { dispose: jest.fn() };
+      const controls = { dispose: jest.fn() };
+      disposeScene(scene as any, renderer as any, controls as any, null);
+      expect(mesh.geometry.dispose).toHaveBeenCalled();
+      expect(mesh.material.dispose).toHaveBeenCalled();
+    });
+
+    it('traverse disposes InstancedMesh with array material', () => {
+      const mesh = {
+        geometry: { dispose: jest.fn() },
+        material: [{ dispose: jest.fn() }],
+        isInstancedMesh: true,
+      };
+      const scene = { remove: jest.fn(), traverse: jest.fn((cb: (o: unknown) => void) => { cb(mesh); }) };
+      const renderer = { dispose: jest.fn() };
+      const controls = { dispose: jest.fn() };
+      disposeScene(scene as any, renderer as any, controls as any, null);
+      expect(mesh.geometry.dispose).toHaveBeenCalled();
+      expect(mesh.material[0].dispose).toHaveBeenCalled();
     });
   });
 });
