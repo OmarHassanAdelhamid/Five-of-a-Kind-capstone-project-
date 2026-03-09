@@ -745,6 +745,77 @@ describe('App', () => {
     createObjectURLSpy.mockRestore();
   });
 
+  it('Redo shows alert when project selected but no partition', async () => {
+    (api.fetchAvailableProjects as jest.Mock).mockResolvedValue(['cube']);
+    (api.fetchPartitions as jest.Mock).mockResolvedValue([]);
+    let result: ReturnType<typeof render>;
+    await act(async () => {
+      result = render(<App />);
+    });
+    await act(async () => {
+      await userEvent.click(result!.getByRole('button', { name: 'File' }));
+    });
+    await act(async () => {
+      await userEvent.hover(result!.getByText('Open Project...'));
+    });
+    await act(async () => {
+      await userEvent.click(result!.getByRole('button', { name: 'cube' }));
+    });
+    await act(async () => {});
+    await act(async () => {
+      await userEvent.click(result!.getByRole('button', { name: 'Edit' }));
+    });
+    await act(async () => {
+      await userEvent.click(result!.getByRole('button', { name: /redo/i }));
+    });
+    expect(alertMock).toHaveBeenCalledWith('Please select a partition to redo changes.');
+  });
+
+  it('Redo shows alert when updateHistory rejects', async () => {
+    (api.fetchAvailableProjects as jest.Mock).mockResolvedValue(['cube']);
+    (api.fetchPartitions as jest.Mock).mockResolvedValue(['part1']);
+    (api.fetchVoxelized as jest.Mock).mockResolvedValue([[0, 0, 0]]);
+    (api.updateHistory as jest.Mock).mockRejectedValue(new Error('History server error'));
+    let result: ReturnType<typeof render>;
+    await act(async () => {
+      result = render(<App />);
+    });
+    await act(async () => {
+      await userEvent.click(result!.getByRole('button', { name: 'File' }));
+    });
+    await act(async () => {
+      await userEvent.hover(result!.getByText('Open Project...'));
+    });
+    await act(async () => {
+      await userEvent.click(result!.getByRole('button', { name: 'cube' }));
+    });
+    await act(async () => {});
+    await act(async () => {
+      await userEvent.click(result!.getByRole('button', { name: 'Edit' }));
+    });
+    await act(async () => {
+      await userEvent.click(result!.getByRole('button', { name: /redo/i }));
+    });
+    await act(async () => {});
+    expect(alertMock).toHaveBeenCalledWith('History server error');
+  });
+
+  it('Help > View Manual opens /docs in new tab', async () => {
+    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
+    let result: ReturnType<typeof render>;
+    await act(async () => {
+      result = render(<App />);
+    });
+    await act(async () => {
+      await userEvent.click(result!.getByRole('button', { name: 'Help' }));
+    });
+    await act(async () => {
+      await userEvent.click(result!.getByRole('button', { name: /view manual/i }));
+    });
+    expect(openSpy).toHaveBeenCalledWith('/docs', '_blank');
+    openSpy.mockRestore();
+  });
+
   it('Redo with project and partition calls updateHistory', async () => {
     (api.fetchAvailableProjects as jest.Mock).mockResolvedValue(['cube']);
     (api.fetchPartitions as jest.Mock).mockResolvedValue(['part1']);

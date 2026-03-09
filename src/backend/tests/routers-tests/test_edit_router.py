@@ -106,6 +106,113 @@ async def test_get_layer_z_invalid_layer(mock_layer) -> None:
         assert exc.value.status_code == 404
         assert exc.value.detail == "Layer at Z=5 not found."
 
+
+@patch("app.routers.edit_router.mt.get_x_layer")
+@pytest.mark.asyncio
+async def test_get_layer_x_typical_case(mock_layer) -> None:
+    with patch.object(ed_r, "PROJECT_STORAGE_DIR") as mock_storage:
+        mock_project_path = mock_storage.__truediv__.return_value
+        mock_project_path.exists.return_value = True
+        mock_partition_path = mock_project_path.__truediv__.return_value
+        mock_partition_path.exists.return_value = True
+        mock_layer.return_value = [(0, 1, 2, 0.0, 1.0, 2.0, 1, 0.0, 0.0, 0.0)]
+
+        result = await ed_r.get_layer(RetrieveLayerRequest(
+            project_name="p", partition_name="part", layer_index=0, axis=LayerAxis.X
+        ))
+        assert result["axis"] == "x"
+        assert result["num_voxels"] == 1
+        mock_layer.assert_called_once()
+
+
+@patch("app.routers.edit_router.mt.get_y_layer")
+@pytest.mark.asyncio
+async def test_get_layer_y_typical_case(mock_layer) -> None:
+    with patch.object(ed_r, "PROJECT_STORAGE_DIR") as mock_storage:
+        mock_project_path = mock_storage.__truediv__.return_value
+        mock_project_path.exists.return_value = True
+        mock_partition_path = mock_project_path.__truediv__.return_value
+        mock_partition_path.exists.return_value = True
+        mock_layer.return_value = [(1, 0, 2, 1.0, 0.0, 2.0, 1, 0.0, 0.0, 0.0)]
+
+        result = await ed_r.get_layer(RetrieveLayerRequest(
+            project_name="p", partition_name="part", layer_index=0, axis=LayerAxis.Y
+        ))
+        assert result["axis"] == "y"
+        assert result["num_voxels"] == 1
+        mock_layer.assert_called_once()
+
+
+@patch("app.routers.edit_router.mt.get_z_layer")
+@pytest.mark.asyncio
+async def test_get_layer_service_raises(mock_layer) -> None:
+    with patch.object(ed_r, "PROJECT_STORAGE_DIR") as mock_storage:
+        mock_project_path = mock_storage.__truediv__.return_value
+        mock_project_path.exists.return_value = True
+        mock_partition_path = mock_project_path.__truediv__.return_value
+        mock_partition_path.exists.return_value = True
+        mock_layer.side_effect = RuntimeError("db error")
+
+        with pytest.raises(HTTPException) as exc:
+            await ed_r.get_layer(RetrieveLayerRequest(
+                project_name="p", partition_name="part", layer_index=0, axis=LayerAxis.Z
+            ))
+        assert exc.value.status_code == 500
+        assert "db error" in exc.value.detail
+
+
+@pytest.mark.asyncio
+async def test_update_voxels_empty_list() -> None:
+    with patch.object(ed_r, "PROJECT_STORAGE_DIR") as mock_storage:
+        mock_project_path = mock_storage.__truediv__.return_value
+        mock_project_path.exists.return_value = True
+        mock_partition_path = mock_project_path.__truediv__.return_value
+        mock_partition_path.exists.return_value = True
+
+        with pytest.raises(HTTPException) as exc:
+            await ed_r.update_voxels(UpdateVoxelsRequest(
+                project_name="p", partition_name="part", voxels=[], action=UpdateAction.UPDATE, materialID=1
+            ))
+        assert exc.value.status_code == 400
+        assert "at least one voxel" in exc.value.detail.lower()
+
+
+@pytest.mark.asyncio
+async def test_update_both_material_and_magnetization_invalid() -> None:
+    with patch.object(ed_r, "PROJECT_STORAGE_DIR") as mock_storage:
+        mock_project_path = mock_storage.__truediv__.return_value
+        mock_project_path.exists.return_value = True
+        mock_partition_path = mock_project_path.__truediv__.return_value
+        mock_partition_path.exists.return_value = True
+
+        with patch("app.routers.edit_router.mt.get_full_voxels", return_value=[]):
+            with pytest.raises(HTTPException) as exc:
+                await ed_r.update_voxels(UpdateVoxelsRequest(
+                    project_name="p", partition_name="part", voxels=[(0, 0, 0)],
+                    action=UpdateAction.UPDATE, materialID=1, magnetization=[1.0, 0.0, 0.0]
+                ))
+            assert exc.value.status_code == 400
+            assert "both" in exc.value.detail.lower()
+
+
+@pytest.mark.asyncio
+async def test_update_neither_material_nor_magnetization_invalid() -> None:
+    with patch.object(ed_r, "PROJECT_STORAGE_DIR") as mock_storage:
+        mock_project_path = mock_storage.__truediv__.return_value
+        mock_project_path.exists.return_value = True
+        mock_partition_path = mock_project_path.__truediv__.return_value
+        mock_partition_path.exists.return_value = True
+
+        with patch("app.routers.edit_router.mt.get_full_voxels", return_value=[]):
+            with pytest.raises(HTTPException) as exc:
+                await ed_r.update_voxels(UpdateVoxelsRequest(
+                    project_name="p", partition_name="part", voxels=[(0, 0, 0)],
+                    action=UpdateAction.UPDATE
+                ))
+            assert exc.value.status_code == 400
+            assert "neither" in exc.value.detail.lower()
+
+
 @pytest.mark.asyncio
 async def test_update_non_existent_project() -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR") as mock_storage:

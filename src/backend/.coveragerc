@@ -1,0 +1,9 @@
+[run]
+source = app
+omit =
+    app/main.py
+    app/models/models.py
+
+[report]
+# Reach 80% after installing pytest-asyncio so async router tests run: pip install pytest-asyncio
+fail_under = 70

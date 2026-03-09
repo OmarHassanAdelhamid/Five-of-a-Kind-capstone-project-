@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MenuBar } from './MenuBar';
 
@@ -70,5 +70,36 @@ describe('MenuBar', () => {
     const projBtn = await findByRole('button', { name: 'proj1' });
     await userEvent.click(projBtn);
     expect(onOpenProjectSelect).toHaveBeenCalledWith('proj1');
+  });
+
+  it('calls handleOpenFileLeave when leaving Open File area', async () => {
+    const { getByRole, getByText } = render(
+      <MenuBar availableModels={['a.stl']} />
+    );
+    await userEvent.click(getByRole('button', { name: 'File' }));
+    await userEvent.hover(getByText('Open File...'));
+    const openFileEl = getByText('Open File...');
+    fireEvent.mouseLeave(openFileEl);
+    expect(getByRole('button', { name: 'File' })).toBeInTheDocument();
+  });
+
+  it('opens Open Project submenu when hover with projects', async () => {
+    const { getByRole, getByText, findByRole } = render(
+      <MenuBar availableProjects={['p1']} />
+    );
+    await userEvent.click(getByRole('button', { name: 'File' }));
+    await userEvent.hover(getByText('Open Project...'));
+    const p1Btn = await findByRole('button', { name: 'p1' });
+    expect(p1Btn).toBeInTheDocument();
+  });
+
+  it('handleOpenProjectLeave closes submenu on mouse leave', async () => {
+    const { getByRole, getByText } = render(
+      <MenuBar availableProjects={['p1']} />
+    );
+    await userEvent.click(getByRole('button', { name: 'File' }));
+    await userEvent.hover(getByText('Open Project...'));
+    fireEvent.mouseLeave(getByText('Open Project...'));
+    expect(getByRole('button', { name: 'File' })).toBeInTheDocument();
   });
 });

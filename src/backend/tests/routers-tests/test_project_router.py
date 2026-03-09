@@ -210,3 +210,22 @@ async def test_voxelize_non_existent_stl() -> None:
         assert exc.value.detail == "Filename file1.stl not found on server!"
 
 
+@patch("app.routers.project_router.mt.find_surface")
+@patch("app.routers.project_router.pm.read_voxels")
+@patch("app.routers.project_router.hm.clear_history")
+@pytest.mark.asyncio
+async def test_get_surface_route_find_surface_raises(mock_clear, mock_read_voxels, mock_find_surface) -> None:
+    with patch.object(pr_r, "PROJECT_STORAGE_DIR") as mock_storage:
+        mock_project_path = mock_storage.__truediv__.return_value
+        mock_project_path.exists.return_value = True
+        mock_partition_path = mock_project_path.__truediv__.return_value
+        mock_partition_path.exists.return_value = True
+        mock_find_surface.side_effect = ValueError("db read failed")
+
+        with pytest.raises(HTTPException) as exc:
+            await pr_r.get_surface_voxels("proj_name", "part_name")
+
+        assert exc.value.status_code == 500
+        assert "db read failed" in exc.value.detail
+
+
