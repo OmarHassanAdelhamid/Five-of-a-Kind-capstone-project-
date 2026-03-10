@@ -267,10 +267,228 @@ The following subsections report on each functional test case defined in the VnV
 \section{Nonfunctional Requirements Evaluation}
 
 \subsection{Usability}
-		
+	\subsubsection{Key Findings}
+
+The usability of the voxel editing system was evaluated to determine whether users could effectively interact with the software and perform the primary operations required for voxel processing and modification. The evaluation focused on common tasks within the system workflow, including importing and loading STL files, performing voxelization, editing voxels within the layer editor, applying partitioning operations, modifying voxel properties such as material and magnetization, and saving or exporting the resulting model.
+
+Overall, the system demonstrated strong usability. Users were able to complete the main workflow, from file import and voxelization to voxel editing and exporting with minimal guidance. Participants were able to locate key tools within the interface, perform edits in the layer editor, and apply partitioning operations without significant difficulty.
+
+These findings indicate that the interface supports efficient interaction and that the overall workflow for voxel processing, editing, and exporting is intuitive for users interacting with the system.	
+
+  \subsubsection{Methodology}
+
+Usability testing was conducted to evaluate how effectively users could interact with the voxel editing software while performing the main system operations. The evaluation focused on determining whether users could successfully complete common tasks within the workflow when provided with instructions.
+
+The testing involved both technical and non-technical participants. Two technical users, including the research student stakeholder, and two non-technical student users participated in the evaluation. The goal of including both groups was to observe how users with different levels of familiarity with the system interacted with the interface and executed the required tasks.
+
+Participants were provided with a set of instructions and asked to perform a series of representative operations using the software. These tasks included importing and loading STL models, performing voxelization, editing voxel layers through the layer editor, applying partitioning operations, modifying voxel properties such as material and magnetization, and saving or exporting the resulting models. The task of adding and removing voxels was not included in this evaluation.
+
+Testing was conducted on local machines using multiple prepared STL models of varying complexity. These models included small, medium, and complex geometries in order to evaluate how users interacted with voxelization and partitioning across different model sizes.
+
+During testing, several usability metrics were recorded, including task completion success, the number of user errors encountered during task execution, and qualitative observations regarding how users navigated the interface. Participants were also asked to provide open feedback and rate their satisfaction with the usability of the software.
+
+Each testing session was conducted as a single session lasting approximately one hour, during which participants completed the full set of tasks and provided feedback on their experience using the system.
+\subsubsection{Results}
+
+The usability evaluation produced both quantitative survey results and qualitative feedback from participants. Users completed the usability survey using a 5-point scale where 1 represents the least intuitive experience and 5 represents the most intuitive.
+
+The recorded survey responses are summarized in Table~\ref{tab:usability-survey-results}.
+
+\begin{table}[H]
+\centering
+\caption{Usability Survey Results}
+\label{tab:usability-survey-results}
+\begin{tabular}{|p{9cm}|c|}
+\hline
+\textbf{Feature Evaluated} & \textbf{Score} \\ \hline
+Interface navigation & 3 \\ \hline
+Model movement & 5 \\ \hline
+Layer select functionality & 4 \\ \hline
+Voxel selection & 5 \\ \hline
+Magnetization assignment & 5 \\ \hline
+Material assignment & 5 \\ \hline
+Completed voxel indicators & 5 \\ \hline
+File import process & 5 \\ \hline
+File export process & 5 \\ \hline
+\end{tabular}
+\end{table}
+
+The average usability score across all evaluated features was \textbf{4.67 out of 5}, which exceeds the usability acceptance threshold defined in the VnV plan.
+
+All participants were able to successfully complete the assigned tasks, including importing STL files, performing voxelization, editing voxel layers, applying partitioning operations, assigning materials and magnetization vectors, and exporting the resulting model. This indicates that the primary workflow of the system is understandable and usable for both technical and non-technical users.
+
+The only task where users experienced some difficulty was during the model loading step. This stage introduces an additional layer of interaction compared to the other tasks, which increased the perceived complexity for some users. However, once the model was successfully loaded, users were able to proceed through the remainder of the workflow without difficulty.
+
+Additional qualitative feedback suggested that edited voxels could be made more visually distinguishable, for example by displaying a marker or indicator on voxels with modified magnetization.
+
+Overall, the results demonstrate that the system satisfies the usability requirements defined in the VnV plan, with the majority of evaluated features receiving the highest usability rating.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{images/usability_chart.png}
+\caption{User Usability Survey Results}
+\end{figure}
+
+\subsubsection{Discussion}
+
+The usability evaluation indicated that users generally found the voxel editing system intuitive and effective for performing the primary workflow tasks. Participants reported that the main system features were easy to understand and operate, particularly the voxel editing tools available in the layer editor.
+
+One feature that was specifically highlighted by users was the lasso selection tool for voxels within the layer editor, which allowed users to efficiently select groups of voxels for editing. Participants also appreciated the ability to assign colors to materials, as the color-coded materials made it easier to visually identify different voxel regions within both the layer editor and the model viewer.
+
+Users also indicated that the overall workflow of the application was intuitive. Core operations such as importing STL files, exporting models, editing voxels, and viewing partitions were generally performed without difficulty.
+
+The only stage that presented some challenges for users was the process of loading previously voxelized files. This process includes an additional interaction step compared to other tasks, which increased its perceived complexity. However, users were still able to complete the operation successfully after understanding the workflow.
+
+Overall, the results suggest that the interface design and editing workflow support efficient interaction with the voxel editing system while still leaving room for minor usability improvements.
+
+\subsubsection{Feedback and Implementation Plan}
+
+User feedback collected during the usability evaluation provided several suggestions for improving the usability and workflow of the voxel editing system. The feedback and the planned implementation actions are summarized in Table~\ref{tab:usability-feedback}.
+
+\begin{table}[H]
+\centering
+\caption{Usability Feedback and Implementation Plan}
+\label{tab:usability-feedback}
+\begin{tabular}{|p{4cm}|p{6cm}|p{6cm}|}
+\hline
+\textbf{Feedback Area} & \textbf{User Feedback} & \textbf{Implementation Plan} \\ \hline
+
+Magnetization Visualization & Users suggested adding a visual indicator (such as an ``X'') on voxels whose magnetization has been modified from the default value. & This feature will be implemented by adding a marker on edited voxels in the layer editor to improve visibility of magnetization changes. \\ \hline
+
+Voxelized File Loading & Some users found the process of opening and loading voxelized files slightly more complex due to the additional interaction step required. & No immediate change is planned as the functionality is complete and operates correctly, but documentation may be improved to clarify the workflow. \\ \hline
+
+Partition Viewing & Users suggested that partitions should not always be centered automatically when viewed. & This suggestion will be evaluated and adjusted to the viewing behaviour in next revision. \\ \hline
+
+Layer Viewing Orientation & Some participants suggested that viewing layers from a top-to-bottom orientation may be more intuitive than the current right-to-left presentation. & This suggestion will be investigated to determine whether alternative viewing modes can be supported. \\ \hline
+
+Saving Behaviour & Users requested the ability to overwrite files when saving using the same name. & A file overwrite confirmation option may be added in future updates. \\ \hline
+
+Partition Management & Users suggested the ability to rename partitions after they are created. & This feature will be evaluated and added in future development iterations. \\ \hline
+
+\end{tabular}
+\end{table}
 \subsection{Performance}
 
-\subsection{etc.}
+\subsubsection{Methodology}
+
+Performance testing was conducted according to the procedures defined in the VnV plan, specifically tests PS-1, PS-2, and PS-3. A set of STL models of varying sizes was used to evaluate system scalability, operational latency, and resource usage. The tests measured the time required for importing models, visualizing voxel structures, performing editing operations, and exporting completed models. Additionally, CPU and GPU usage were monitored while executing core operations.
+
+\subsubsection{Results}
+
+The scalability test evaluated the relationship between model size and import time. Five STL files with increasing voxel counts were imported sequentially and the time required to complete the import process was recorded. All resulting voxel models rendered correctly within the application.
+
+\begin{table}[H]
+\centering
+\caption{Scalability Test Results}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{File} & \textbf{Estimated Voxels} & \textbf{Import Time (s)} \\
+\hline
+F1 & 120 & 0.8 \\
+F2 & 900 & 1.1 \\
+F3 & 4500 & 1.9 \\
+F4 & 18000 & 3.4 \\
+F5 & 42000 & 5.2 \\
+\hline
+\end{tabular}
+\end{table}
+
+The relationship between voxel count and import time is illustrated in Figure~\ref{fig:import_scalability}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{images/import_scalability.png}
+\caption{Import Time vs Voxel Count}
+\label{fig:import_scalability}
+\end{figure}
+
+Operational latency was also measured for core system actions including model import, viewing operations, voxel editing, and exporting.
+
+\begin{table}[H]
+\centering
+\caption{Operation Latency Results}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Operation} & \textbf{Time (s)} \\
+\hline
+Import Model & 1.6 \\
+Rotate Model & 0.3 \\
+Open Layer View & 0.6 \\
+Edit Single Voxel & 0.05 \\
+Edit 100 Voxels & 0.35 \\
+Edit Full Layer & 0.9 \\
+Export Project & 2.1 \\
+\hline
+\end{tabular}
+\end{table}
+
+The latency for the various operations is visualized in Figure~\ref{fig:operation_latency}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{images/operation_latency.png}
+\caption{Operation Latency Measurements}
+\label{fig:operation_latency}
+\end{figure}
+
+Resource usage during testing remained within acceptable limits. CPU usage ranged between 18--32\%, while GPU usage ranged between 6--14\% during voxel processing and visualization.
+
+\subsubsection{Discussion}
+
+The results demonstrate that the system scales appropriately with increasing voxel counts while maintaining acceptable performance. Import times increased gradually as model size grew, indicating that the voxelization and visualization pipeline handles larger models efficiently.
+
+Core editing operations such as voxel selection and modification were executed with minimal latency, allowing users to interact with the voxel editor without noticeable delay. Export operations required slightly more processing time due to file writing and data serialization but remained within acceptable limits.
+
+Overall, the results confirm that the system satisfies the performance requirements defined in the VnV plan, demonstrating stable operation, scalable processing behaviour, and acceptable hardware resource usage across a range of model sizes.
+\subsection{Compliance}
+
+\subsubsection{Methodology}
+
+Compliance testing was performed according to the procedures defined in the VnV plan (tests CO-1 through CO-4). The evaluation focused on verifying operating system compatibility, file import and export compatibility, project file reliability during unexpected interruptions, and adherence to coding standards.
+
+\subsubsection{Results}
+
+The Windows and Linux compatibility test confirmed that the application could be successfully installed and executed on both operating systems. After installation, the application was opened and core functionalities such as importing STL files, editing voxel structures, and exporting project files were successfully performed on both platforms.
+
+Import and export compatibility was verified by importing CAD models into the system, performing voxel editing operations, and exporting the resulting files to the 3D-printer ready format. The exported files were inspected and confirmed to be correctly formatted and complete.
+
+The project file fail-safe test was conducted by intentionally interrupting the export process while a project file was being written. After restarting the application, the original project file was compared with a backup copy. No differences were observed, confirming that the project file remained unaltered.
+
+Finally, static analysis was conducted on the codebase using a linting tool to verify compliance with the PEP8 coding standard. Minor formatting warnings were addressed during development, and the final codebase was verified to conform to the required style guidelines.
+
+\subsubsection{Discussion}
+
+The compliance tests demonstrate that the application satisfies the compatibility and reliability requirements defined in the VnV plan. The system operates correctly across supported operating systems, maintains file integrity during unexpected interruptions, and adheres to recognized Python coding standards. These results confirm that the system meets the specified compliance requirements.
+
+\subsection{Maintainability}
+
+\subsubsection{Methodology}
+
+Maintainability was evaluated through manual review of the application codebase and associated documentation as described in test MA-1 of the VnV plan. The evaluation focused on modularity of the code structure, quality of documentation, clarity of naming conventions, and readability of comments within the code.
+
+\subsubsection{Results}
+
+The codebase was reviewed to ensure that system components were separated into well-defined modules responsible for specific aspects of the application, including voxel editing, visualization, file management, and user interface functionality. This modular architecture allows developers to modify individual components without requiring extensive changes across the entire system.
+
+Function and class definitions were reviewed to ensure that appropriate comments and documentation were provided. Complex operations and algorithms include explanatory comments to improve readability and maintainability. Naming conventions for functions, classes, and variables were found to be consistent and descriptive.
+
+Associated documentation describing the system architecture and functionality was also reviewed and determined to be sufficiently detailed and readable for future developers.
+
+\subsubsection{Discussion}
+
+The maintainability evaluation confirms that the application codebase is organized in a modular and well-documented manner. The use of clear naming conventions, explanatory comments, and structured documentation supports future development and maintenance activities. As a result, the system satisfies the maintainability requirements defined in the VnV plan.
+
+\subsection{Security}
+
+Security requirements defined in the Hazard Analysis document were not tested independently as standalone tests. Instead, they were implicitly verified through existing functional and unit tests across multiple system components.
+
+Several security-related constraints were validated through tests that verify correct system behavior under edge conditions. For example, editing and visualization managers include unit tests that ensure voxel selection limits are enforced and that operations remain within defined memory and performance constraints.
+
+Other security-related requirements are implicitly verified through import and export validation tests, which ensure that file handling operations do not produce corrupted outputs or unintended system states.
+
+Some security constraints related to hardware limitations could not be tested directly due to the absence of specialized hardware environments. These constraints were instead verified through unit tests that simulate reduced system resources.
+
+Overall, the existing functional and unit testing framework provides coverage for the security requirements defined in the Hazard Analysis document, ensuring that the system operates safely within expected constraints.
+
 	
 \section{Comparison to Existing Implementation}\label{sec:comparison}
 
