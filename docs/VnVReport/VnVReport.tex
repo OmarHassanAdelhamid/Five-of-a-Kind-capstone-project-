@@ -1095,11 +1095,11 @@ TC72 & \xbox & \obox & \obox & \obox & \obox \\
 
 \subsection{Non-Functional Requirements}
 
-Table~\ref{tab:report-nft-import} shows the trace between Non-Functional Requirements Import Manager test cases and corresponding requirements.
+Table~\ref{tab:report-nft-import} shows the trace between Import Manager Non-Functional Tests and corresponding requirements.
 
 \begin{table}[H]
 \centering
-\caption{Trace Between Non-Functional Requirements Import Manager Test Cases and Corresponding Requirements}
+\caption{Trace Between Import Manager Non-Functional Tests and Corresponding Requirements}
 \label{tab:report-nft-import}
 \small
 \setlength{\tabcolsep}{3pt}
@@ -1110,18 +1110,19 @@ Table~\ref{tab:report-nft-import} shows the trace between Non-Functional Require
 \midrule
 TC8 & \xbox & \obox & \obox \\
 TC9 & \xbox & \obox & \obox \\
-Not Explicitly Tested & \obox & \xbox & \obox \\
-Tested by usability test (Graduate Students) & \obox & \obox & \xbox \\
+PS-1 (Performance Test) & \xbox & \obox & \obox \\
+PS-2 (Performance Test) & \xbox & \xbox & \obox \\
+US-3 (Usability Test) & \obox & \obox & \xbox \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:report-nft-viz} shows the trace between Non-Functional Requirements Visualization Manager test cases and corresponding requirements.
+Table~\ref{tab:report-nft-viz} shows the trace between Visualization Manager Non-Functional Tests and corresponding requirements.
 
 
 \begin{table}[H]
 \centering
-\caption{Trace Between Non-Functional Requirements Visualization Manager Test Cases and Corresponding Requirements}
+\caption{Trace Between Visualization Manager Non-Functional Tests and Corresponding Requirements}
 \label{tab:report-nft-viz}
 \small
 \setlength{\tabcolsep}{3pt}
@@ -1134,16 +1135,18 @@ TC18 & \xbox & \obox & \obox \\
 TC19 & \xbox & \obox & \obox \\
 TC15 & \obox & \xbox & \obox \\
 TC16 & \obox & \xbox & \obox \\
-Not Explicitly Tested & \obox & \obox & \xbox \\
+PS-1 (Performance Test) & \obox & \xbox & \obox \\
+PS-2 (Performance Test) & \xbox & \obox & \obox \\
+US-3 (Usability Test) & \obox & \obox & \xbox \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:report-nft-edit} shows the trace between Non-Functional Requirements Editing Manager test cases and corresponding requirements.
+Table~\ref{tab:report-nft-edit} shows the trace between Editing Manager Non-Functional Tests and corresponding requirements.
 
 \begin{table}[H]
 \centering
-\caption{Trace Between Non-Functional Requirements Editing Manager Test Cases and Corresponding Requirements}
+\caption{Trace Between Editing Manager Non-Functional Tests and Corresponding Requirements}
 \label{tab:report-nft-edit}
 \small
 \setlength{\tabcolsep}{3pt}
@@ -1153,16 +1156,17 @@ Table~\ref{tab:report-nft-edit} shows the trace between Non-Functional Requireme
 & NF231 & NF232 \\
 \midrule
 TC59 & \xbox & \obox \\
-Tested by usability test (Graduate Students) & \obox & \xbox \\
+US-3 (Usability Test) & \xbox & \obox \\
+PS-2 (Performance Test) & \obox & \xbox \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:report-nft-export} shows the trace between Non-Functional Requirements Export Manager test cases and corresponding requirements.
+Table~\ref{tab:report-nft-export} shows the trace between Export Manager Non-Functional Tests and corresponding requirements.
 
 \begin{table}[H]
 \centering
-\caption{Trace Between Non-Functional Requirements Export Manager Test Cases and Corresponding Requirements}
+\caption{Trace Between Export Manager Non-Functional Tests and Corresponding Requirements}
 \label{tab:report-nft-export}
 \small
 \setlength{\tabcolsep}{3pt}
@@ -1176,7 +1180,29 @@ TC64 & \xbox & \xbox & \obox \\
 TC65 & \xbox & \xbox & \obox \\
 TC66 & \xbox & \xbox & \obox \\
 TC67 & \xbox & \xbox & \obox \\
+CO-3 (Compliance Test) & \xbox & \obox & \obox \\
+US-2 (Usability Test) & \obox & \xbox & \obox \\
+PS-2 (Performance Test) & \obox & \xbox & \obox \\
 Not Explicitly Tested & \obox & \obox & \xbox \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:report-nft-gen} shows the trace between General Non-Functional Tests and corresponding requirements.
+
+\begin{table}[H]
+\centering
+\caption{Trace Between General Non-Functional Tests and Corresponding Requirements}
+\label{tab:report-nft-gen}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{5}{c}}
+\toprule
+\textbf{Reqs:}
+& GEN1 & GEN2 \\
+\midrule
+US-6 (Usability Test) & \xbox & \obox  \\
+MA-1 (Maintainability Test)& \obox & \xbox \\
 \bottomrule
 \end{tabular}
 \end{table}
