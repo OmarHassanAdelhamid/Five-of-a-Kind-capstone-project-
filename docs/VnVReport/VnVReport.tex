@@ -266,6 +266,10 @@ The following subsections report on each functional test case defined in the VnV
 
 \section{Nonfunctional Requirements Evaluation}
 
+The non-functional requirements defined in the SRS were evaluated using the corresponding test groups defined in the VnV Plan. 
+In particular, tests labeled \texttt{test-US} correspond to usability evaluation, tests labeled \texttt{test-PS} correspond to performance evaluation, and tests labeled \texttt{test-CO} correspond to compliance testing. 
+The results of these evaluations are summarized in the following subsections.
+
 \subsection{Usability}
 	\subsubsection{Key Findings}
 
@@ -288,6 +292,8 @@ Testing was conducted on local machines using multiple prepared STL models of va
 During testing, several usability metrics were recorded, including task completion success, the number of user errors encountered during task execution, and qualitative observations regarding how users navigated the interface. Participants were also asked to provide open feedback and rate their satisfaction with the usability of the software.
 
 Each testing session was conducted as a single session lasting approximately one hour, during which participants completed the full set of tasks and provided feedback on their experience using the system.
+
+This usability evaluation corresponds primarily to tests \texttt{test-US-1} (Design Acceptance and Intuitivity Survey) and \texttt{test-US-3} (Design Ease of Use Test) defined in the VnV Plan.
 \subsubsection{Results}
 
 The usability evaluation produced both quantitative survey results and qualitative feedback from participants. Users completed the usability survey using a 5-point scale where 1 represents the least intuitive experience and 5 represents the most intuitive.
@@ -370,7 +376,7 @@ Partition Management & Users suggested the ability to rename partitions after th
 
 \subsubsection{Methodology}
 
-Performance testing was conducted according to the procedures defined in the VnV plan, specifically tests PS-1, PS-2, and PS-3. A set of STL models of varying sizes was used to evaluate system scalability, operational latency, and resource usage. The tests measured the time required for importing models, visualizing voxel structures, performing editing operations, and exporting completed models. Additionally, CPU and GPU usage were monitored while executing core operations.
+Performance testing was conducted according to the procedures defined in the VnV Plan, specifically tests \texttt{test-PS-1} (Scalability Validation), \texttt{test-PS-2} (Operational Performance Validation), and \texttt{test-PS-3} (Resource Usage Validation). A set of STL models of varying sizes was used to evaluate system scalability, operational latency, and resource usage. The tests measured the time required for importing models, visualizing voxel structures, performing editing operations, and exporting completed models. Additionally, CPU and GPU usage were monitored while executing core operations. 
 
 \subsubsection{Results}
 
@@ -401,22 +407,21 @@ The relationship between voxel count and import time is illustrated in Figure~\r
 \label{fig:import_scalability}
 \end{figure}
 
-Operational latency was also measured for core system actions including model import, viewing operations, voxel editing, and exporting.
-
+User interaction counts were measured for core system actions including model import, viewing operations, voxel editing, and export.
 \begin{table}[H]
 \centering
 \caption{Operation Latency Results}
 \begin{tabular}{|c|c|}
 \hline
-\textbf{Operation} & \textbf{Time (s)} \\
+\textbf{Operation} & \textbf{Interactions} \\
 \hline
-Import Model & 1.6 \\
-Rotate Model & 0.3 \\
-Open Layer View & 0.6 \\
-Edit Single Voxel & 0.05 \\
-Edit 100 Voxels & 0.35 \\
-Edit Full Layer & 0.9 \\
-Export Project & 2.1 \\
+Import Model & 3 \\
+Rotate Model & 2 \\
+Open Layer View & 4 \\
+Edit Single Voxel & 5 \\
+Edit 100 Voxels & 5 \\
+Edit Full Layer & 5 \\
+Export Project & 3 \\
 \hline
 \end{tabular}
 \end{table}
@@ -443,7 +448,9 @@ Overall, the results confirm that the system satisfies the performance requireme
 
 \subsubsection{Methodology}
 
-Compliance testing was performed according to the procedures defined in the VnV plan (tests CO-1 through CO-4). The evaluation focused on verifying operating system compatibility, file import and export compatibility, project file reliability during unexpected interruptions, and adherence to coding standards.
+Compliance testing was performed according to the procedures defined in the VnV plan (tests \texttt{test-CO-1} through \texttt{test-CO-4}). The evaluation focused on verifying operating system compatibility, file import and export compatibility, project file reliability during unexpected interruptions, and adherence to coding standards.
+
+Compliance testing followed the procedures defined in the VnV Plan through tests \texttt{test-CO-1} to \texttt{test-CO-4}, covering operating system compatibility, file compatibility, project file fail-safe behaviour, and PEP8 coding standard compliance.
 
 \subsubsection{Results}
 
@@ -1394,7 +1401,7 @@ graduate attribute of Reflection.
 
 \subsubsection*{1. What went well while writing this deliverable?}
 \bigskip\bigskip
-\textbf{Omar: } 
+\textbf{Omar: } The main thing that went well was connecting the VnV plan with the VnV report. The plan already defined the tests clearly, so it was straightforward to structure the report around usability, performance, compliance, maintainability, and security. The usability testing also went well since we were able to get feedback from both technical and non-technical users, which helped validate that the interface and main features were intuitive.
 \newline
 \newline
 \textbf{Daniel: } I worked on the backend unit tests, as well as the organization of the usability test with our supervisor and her graduate students, which both went fairly smoothly in spite of the time crunch. The reorganization of the backend into cohesive modules and functions that I participated in was extremely helpful when generating all unit test cases, as well as their relative simplicity. The structure of the usability test - providing as little instruction as possible - also made it easy to identify parts of the software that still need work in terms of understandability.
@@ -1411,7 +1418,7 @@ graduate attribute of Reflection.
 \subsubsection*{2. What pain points did you experience during this deliverable, and how
 did you resolve them?}
 \bigskip
-\textbf{Omar: } 
+\textbf{Omar: } One difficulty was making sure the report matched the VnV plan without repeating the same information. Since the plan already explains how tests are performed, the report had to focus more on results and evaluation. Another challenge was presenting the nonfunctional testing clearly, especially performance results, which required organizing the data into tables and graphs. Following the structure of the reference VnV report helped resolve this.
 \newline
 \newline
 \textbf{Daniel: } Less of a pain point and more a frustration due to lack of experience; when generating unit tests my primary struggle was learning proper use of pytest and mocking classes, as well as when to mock. While I had planned to become familiar with it prior to needing to write these tests, other commitments prevented me from doing so, and I had to learn on the fly how to accomplish what I wanted to do. Fortunately, it was less complex once I figured out the syntax and I was able to finish all unit tests by the deadline I promised.
