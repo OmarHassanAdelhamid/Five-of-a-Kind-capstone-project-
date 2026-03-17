@@ -266,11 +266,13 @@ function App() {
         const projectList = await fetchAvailableProjects();
         setAvailableProjects(projectList);
 
-        setProjectName(projectName);
-        const parts = await fetchPartitions(projectName);
+        // Use project_folder_name from backend (e.g. "cube-dir") for API calls; list_projects returns folder names
+        const projectFolderName = res.project_folder_name ?? `${projectName}-dir`;
+        setProjectName(projectFolderName);
+        const parts = await fetchPartitions(projectFolderName);
         if (parts.length > 0) {
           setSelectedPartition(parts[0]);
-          handleLoadVoxels(projectName, parts[0]);
+          handleLoadVoxels(projectFolderName, parts[0]);
         } else {
           setSelectedPartition(null);
         }

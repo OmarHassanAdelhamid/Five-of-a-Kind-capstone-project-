@@ -121,6 +121,7 @@ export interface VoxelizeRequest {
 export interface VoxelizeResponse {
   message: string;
   project_folder: string;
+  project_folder_name?: string;
   voxel_size: number;
 }
 
