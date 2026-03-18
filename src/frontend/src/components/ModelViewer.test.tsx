@@ -124,7 +124,6 @@ describe('ModelViewer', () => {
     await act(async () => {});
     await expect(ref.current!.applyPaste({
       material: 1,
-      magnetization: 0,
       polarAngle: 0,
       azimuthAngle: 0,
     })).resolves.toBeUndefined();

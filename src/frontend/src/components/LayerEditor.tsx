@@ -76,10 +76,8 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
     const [selectedMaterial, setSelectedMaterial] = useState<number>(1);
     const [selectedTheta, setSelectedTheta] = useState<number>(90);
     const [selectedPhi, setSelectedPhi] = useState<number>(0);
-    const [selectedMagnitude, setSelectedMagnitude] = useState<number>(1);
     const [displayTheta, setDisplayTheta] = useState<string>('90');
     const [displayPhi, setDisplayPhi] = useState<string>('0');
-    const [displayMagnitude, setDisplayMagnitude] = useState<string>('1');
     const [hasChanges, setHasChanges] = useState(false);
     const [editVoxelsMode, setEditVoxelsMode] = useState(false);
     const didAutoSelectFirstLayerRef = useRef(false);
@@ -142,10 +140,9 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
     );
 
     const syncMagnetizationDisplay = useCallback(
-      (theta: number, phi: number, magnitude: number) => {
+      (theta: number, phi: number) => {
         setDisplayTheta(String(theta));
         setDisplayPhi(String(phi));
-        setDisplayMagnitude(String(magnitude));
       },
       [],
     );
@@ -155,13 +152,11 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
         if (voxel && index >= 0) {
           setSelectedVoxelIndices(new Set([index]));
           setSelectedMaterial(voxel.material || 1);
-          const mag = voxel.magnetization ?? 1;
           const phi = voxel.azimuthAngle ?? 0;
           const theta = voxel.polarAngle ?? 90;
-          setSelectedMagnitude(mag);
           setSelectedPhi(phi);
           setSelectedTheta(theta);
-          syncMagnetizationDisplay(theta, phi, mag);
+          syncMagnetizationDisplay(theta, phi);
           setHasChanges(false);
         } else {
           setSelectedVoxelIndices(new Set());
@@ -176,13 +171,11 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           setSelectedVoxelIndices(new Set(indices));
           const first = voxels[0];
           setSelectedMaterial(first.material || 1);
-          const mag = first.magnetization ?? 1;
           const phi = first.azimuthAngle ?? 0;
           const theta = first.polarAngle ?? 90;
-          setSelectedMagnitude(mag);
           setSelectedPhi(phi);
           setSelectedTheta(theta);
-          syncMagnetizationDisplay(theta, phi, mag);
+          syncMagnetizationDisplay(theta, phi);
           setHasChanges(indices.length > 1);
         } else {
           setSelectedVoxelIndices(new Set());
@@ -260,11 +253,9 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
 
       const theta = parseFloat(displayTheta);
       const phi = parseFloat(displayPhi);
-      const magnitude = parseFloat(displayMagnitude);
 
-      // Backend expects polar: [magnitude, polar (θ), azimuth (φ)]
-      const magnetization: [number, number, number] = [
-        Number.isNaN(magnitude) ? selectedMagnitude : magnitude,
+      // Backend expects polar: [polar (θ), azimuth (φ)]
+      const magnetization: [number, number] = [
         Number.isNaN(theta) ? selectedTheta : theta,
         Number.isNaN(phi) ? selectedPhi : phi,
       ];
@@ -286,15 +277,14 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           magnetization,
         });
 
-        const [mag, theta, phi] = magnetization;
+        const [updatedTheta, updatedPhi] = magnetization;
         const updatedVoxels = [...selectedLayerData.voxels];
         for (const idx of selectedVoxelIndices) {
           if (updatedVoxels[idx]) {
             updatedVoxels[idx] = {
               ...updatedVoxels[idx],
-              magnetization: mag,
-              polarAngle: theta,
-              azimuthAngle: phi,
+              polarAngle: updatedTheta,
+              azimuthAngle: updatedPhi,
             };
           }
         }
@@ -317,10 +307,8 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       selectedLayerData,
       selectedTheta,
       selectedPhi,
-      selectedMagnitude,
       displayTheta,
       displayPhi,
-      displayMagnitude,
       projectName,
     ]);
 
@@ -566,7 +554,6 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
         if (!v) return null;
         return {
           material: v.material ?? 1,
-          magnetization: v.magnetization ?? 1,
           polarAngle: v.polarAngle ?? 90,
           azimuthAngle: v.azimuthAngle ?? 0,
         };
@@ -602,11 +589,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
             partition_name: partitionName,
             voxels: voxelCoords,
             action: 'update',
-            magnetization: [
-              props.magnetization,
-              props.polarAngle,
-              props.azimuthAngle,
-            ],
+            magnetization: [props.polarAngle, props.azimuthAngle] as [number, number],
           });
           const updatedVoxels = [...selectedLayerData.voxels];
           for (const idx of selectedVoxelIndices) {
@@ -614,7 +597,6 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
               updatedVoxels[idx] = {
                 ...updatedVoxels[idx],
                 material: props.material,
-                magnetization: props.magnetization,
                 polarAngle: props.polarAngle,
                 azimuthAngle: props.azimuthAngle,
               };
@@ -821,24 +803,6 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
                             setDisplayPhi(e.target.value);
                             const v = parseFloat(e.target.value);
                             if (!Number.isNaN(v)) setSelectedPhi(v);
-                            setHasChanges(true);
-                          }}
-                          className="magnetization-input"
-                        />
-                      </div>
-                      <div className="magnetization-input-row">
-                        <label htmlFor="magnitude-input">|M| (magnitude)</label>
-                        <input
-                          id="magnitude-input"
-                          type="number"
-                          min={0}
-                          step={0.1}
-                          value={displayMagnitude}
-                          onChange={(e) => {
-                            setDisplayMagnitude(e.target.value);
-                            const v = parseFloat(e.target.value);
-                            if (!Number.isNaN(v) && v >= 0)
-                              setSelectedMagnitude(v);
                             setHasChanges(true);
                           }}
                           className="magnetization-input"

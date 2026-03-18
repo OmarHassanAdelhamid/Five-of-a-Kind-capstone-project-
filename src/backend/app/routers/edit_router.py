@@ -124,8 +124,8 @@ async def update_voxels(request: UpdateVoxelsRequest):
                 # request is to set all voxels to the passed material.
                 em.update_voxel_materials(partition_path, request.voxels, request.materialID)
             elif (request.materialID == None and request.magnetization != None):
-                # request is to set all voxels to the passed magnetization.
-                em.update_voxel_magnetization(partition_path, request.voxels, request.magnetization)
+                # request is to set all voxels to the passed magnetization direction.
+                em.update_voxel_magnetization(partition_path, request.voxels, request.magnetization[0], request.magnetization[1])
             elif (request.materialID != None and request.magnetization != None):
                 # invalid request. only one can be updated in a single step.
                 raise HTTPException(

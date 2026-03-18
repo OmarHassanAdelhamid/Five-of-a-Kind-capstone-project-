@@ -249,6 +249,30 @@ export const Layer2DGrid = ({
         ctx.lineWidth = 2;
         ctx.strokeRect(pixelX - 1, pixelY - 1, cellSize + 2, cellSize + 2);
       }
+
+      const hasMagnetization =
+        (v.polarAngle != null && v.polarAngle !== 0) ||
+        (v.azimuthAngle != null && v.azimuthAngle !== 0);
+      if (hasMagnetization && cellSize >= 8) {
+        const cx = pixelX + cellSize / 2;
+        const cy = pixelY + cellSize / 2;
+        const r = Math.max(3, cellSize * 0.28);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+        ctx.beginPath();
+        ctx.arc(cx, cy, r + 1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = Math.max(1, cellSize * 0.1);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(cx - r * 0.55, cy);
+        ctx.lineTo(cx - r * 0.1, cy + r * 0.5);
+        ctx.lineTo(cx + r * 0.55, cy - r * 0.45);
+        ctx.stroke();
+        ctx.lineCap = 'butt';
+        ctx.lineJoin = 'miter';
+      }
     }
 
     if (lassoPath.length > 1) {
