@@ -221,7 +221,6 @@ class VoxelDB:
     # additional helpers
     @staticmethod
     def _parse_material_int(material_val) -> int:
-        """Coerce material to int, handling legacy string format like 'material1'."""
         if isinstance(material_val, int):
             return material_val
         try:
@@ -236,7 +235,6 @@ class VoxelDB:
         return 1
 
     def _migrate_material_values(self) -> None:
-        """Rewrite any legacy string material values (e.g. 'material1') to integers."""
         self.cur.execute("SELECT DISTINCT material FROM voxels WHERE typeof(material) = 'text'")
         legacy = self.cur.fetchall()
         for (mat_str,) in legacy:

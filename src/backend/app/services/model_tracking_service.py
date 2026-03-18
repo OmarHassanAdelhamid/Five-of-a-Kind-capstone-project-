@@ -103,7 +103,6 @@ def get_z_layer(iz: int, db_path: str) -> List[Tuple]:
     return layer_voxels
 
 def _parse_material_int(material_val) -> int:
-    """Coerce a material value to int, handling legacy string format like 'material1'."""
     if isinstance(material_val, int):
         return material_val
     try:
