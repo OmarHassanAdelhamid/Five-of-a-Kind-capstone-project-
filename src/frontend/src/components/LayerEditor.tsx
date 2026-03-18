@@ -463,6 +463,138 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       ],
     );
 
+    const handleVoxelsAdd = useCallback(
+      async (cells: { gridX: number; gridY: number }[]) => {
+        if (!selectedLayerData || !partitionName || cells.length === 0) return;
+        const voxels = selectedLayerData.voxels ?? [];
+        const first = voxels[0];
+        if (first == null) return;
+
+        let vs = voxelSize ?? 0.1;
+        let ox = first.x - first.ix * vs;
+        let oy = first.y - first.iy * vs;
+        let oz = first.z - first.iz * vs;
+        if (voxels.length >= 2) {
+          const a = voxels[0];
+          const b = voxels[1];
+          if (a.ix !== b.ix) {
+            const vsx = (a.x - b.x) / (a.ix - b.ix);
+            if (Number.isFinite(vsx)) { vs = vsx; ox = a.x - a.ix * vs; }
+          }
+          if (a.iy !== b.iy) {
+            const vsy = (a.y - b.y) / (a.iy - b.iy);
+            if (Number.isFinite(vsy)) oy = a.y - a.iy * vsy;
+          }
+          if (a.iz !== b.iz) {
+            const vsz = (a.z - b.z) / (a.iz - b.iz);
+            if (Number.isFinite(vsz)) oz = a.z - a.iz * vsz;
+          }
+        }
+
+        const coords: [number, number, number][] = cells.map(
+          ({ gridX, gridY }) => {
+            const desiredX = Math.round(gridX) * vs + ox;
+            const desiredY = Math.round(gridY) * vs + oy;
+            const desiredZ = first.z;
+            const ix = Math.round((desiredX - ox) / vs);
+            const iy = Math.round((desiredY - oy) / vs);
+            const iz = Math.round((desiredZ - oz) / vs);
+            if (layerAxis === 'z') return [ix, iy, iz];
+            if (layerAxis === 'x') return [iz, ix, iy];
+            return [ix, iz, iy];
+          },
+        );
+
+        setLoading(true);
+        setError(null);
+        setMessage(null);
+        try {
+          await updateVoxels({
+            project_name: projectName,
+            partition_name: partitionName,
+            voxels: coords,
+            action: 'add',
+            materialID: selectedMaterial,
+          });
+          setMessage(`${cells.length} voxel(s) added.`);
+          if (
+            externalSelectedLayerZ !== undefined &&
+            externalSelectedLayerZ !== null
+          ) {
+            await loadLayer(externalSelectedLayerZ);
+          }
+          await onVoxelsChanged?.();
+        } catch (err) {
+          setError(
+            err instanceof Error ? err.message : 'Failed to add voxels',
+          );
+        } finally {
+          setLoading(false);
+        }
+      },
+      [
+        selectedLayerData,
+        partitionName,
+        projectName,
+        layerAxis,
+        voxelSize,
+        selectedMaterial,
+        externalSelectedLayerZ,
+        loadLayer,
+        onVoxelsChanged,
+      ],
+    );
+
+    const handleVoxelsRemove = useCallback(
+      async (indices: number[]) => {
+        if (!selectedLayerData?.voxels || !partitionName || indices.length === 0)
+          return;
+        const voxelList = selectedLayerData.voxels;
+        const coords: [number, number, number][] = indices
+          .filter((i) => voxelList[i] != null)
+          .map((i) => [
+            Math.round(voxelList[i].ix),
+            Math.round(voxelList[i].iy),
+            Math.round(voxelList[i].iz),
+          ]);
+
+        setLoading(true);
+        setError(null);
+        setMessage(null);
+        try {
+          await updateVoxels({
+            project_name: projectName,
+            partition_name: partitionName,
+            voxels: coords,
+            action: 'delete',
+          });
+          setMessage(`${indices.length} voxel(s) removed.`);
+          setSelectedVoxelIndices(new Set());
+          if (
+            externalSelectedLayerZ !== undefined &&
+            externalSelectedLayerZ !== null
+          ) {
+            await loadLayer(externalSelectedLayerZ);
+          }
+          await onVoxelsChanged?.();
+        } catch (err) {
+          setError(
+            err instanceof Error ? err.message : 'Failed to remove voxels',
+          );
+        } finally {
+          setLoading(false);
+        }
+      },
+      [
+        selectedLayerData,
+        partitionName,
+        projectName,
+        externalSelectedLayerZ,
+        loadLayer,
+        onVoxelsChanged,
+      ],
+    );
+
     // Combined confirm that updates material (backend only supports one at a time)
     const handleConfirm = useCallback(async () => {
       // For now, just update material since backend requires separate calls
@@ -711,6 +843,8 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
                   editVoxelsMode={editVoxelsMode}
                   onVoxelAdd={editVoxelsMode ? handleVoxelAdd : undefined}
                   onVoxelRemove={editVoxelsMode ? handleVoxelRemove : undefined}
+                  onVoxelsAdd={editVoxelsMode ? handleVoxelsAdd : undefined}
+                  onVoxelsRemove={editVoxelsMode ? handleVoxelsRemove : undefined}
                   onLayerUp={() => {
                     if (canGoUp) loadLayer(layers[currentIdx + 1].coordinate);
                   }}

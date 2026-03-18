@@ -102,6 +102,22 @@ def get_z_layer(iz: int, db_path: str) -> List[Tuple]:
         layer_voxels = db.cur.fetchall()
     return layer_voxels
 
+def _parse_material_int(material_val) -> int:
+    """Coerce a material value to int, handling legacy string format like 'material1'."""
+    if isinstance(material_val, int):
+        return material_val
+    try:
+        return int(material_val)
+    except (ValueError, TypeError):
+        pass
+    if isinstance(material_val, str) and material_val.startswith('material'):
+        try:
+            return int(material_val[len('material'):])
+        except ValueError:
+            pass
+    return 1
+
+
 # get voxels with their properties given their integer identifiers
 # returns (ix, iy, iz, material, magnet_polar, magnet_azimuth) tuples
 def get_full_voxels(db_path: str, voxels: List[Tuple[int, int, int]]) -> List[Tuple]:
@@ -111,6 +127,7 @@ def get_full_voxels(db_path: str, voxels: List[Tuple[int, int, int]]) -> List[Tu
             rows = db.get_properties(voxel[0], voxel[1], voxel[2])
             props = rows[0]
             # props: (material, magnet_magnitude, magnet_polar, magnet_azimuth)
-            full_voxels.append((voxel[0], voxel[1], voxel[2], props[0], props[2], props[3]))
+            # _parse_material_int handles legacy DBs that stored material as 'material1' strings
+            full_voxels.append((voxel[0], voxel[1], voxel[2], _parse_material_int(props[0]), props[2], props[3]))
     return full_voxels
 

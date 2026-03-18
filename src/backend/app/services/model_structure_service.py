@@ -40,6 +40,7 @@ class VoxelDB:
 
         self.cur.execute("CREATE INDEX IF NOT EXISTS idx_voxels_iz ON voxels(iz);")
         self._migrate_magnetization_columns() # for legacy dbs.
+        self._migrate_material_values()       # for legacy dbs with string material IDs.
         self.conn.commit()
 
     def _migrate_magnetization_columns(self) -> None:
@@ -198,11 +199,13 @@ class VoxelDB:
         )
 
     def reset_material(self, ix: int, iy: int, iz: int) -> None:
+        raw = self._get_default_property("material")
+        material_default = self._parse_material_int(raw)
         self.cur.execute("""
             UPDATE voxels
             SET material = ?
             WHERE ix = ? AND iy = ? AND iz = ?""",
-            (self._get_default_property("material"), ix, iy, iz)
+            (material_default, ix, iy, iz)
         )
 
     def reset_magnetization(self, ix: int, iy: int, iz: int) -> None:
@@ -216,6 +219,33 @@ class VoxelDB:
         )
 
     # additional helpers
+    @staticmethod
+    def _parse_material_int(material_val) -> int:
+        """Coerce material to int, handling legacy string format like 'material1'."""
+        if isinstance(material_val, int):
+            return material_val
+        try:
+            return int(material_val)
+        except (ValueError, TypeError):
+            pass
+        if isinstance(material_val, str) and material_val.startswith('material'):
+            try:
+                return int(material_val[len('material'):])
+            except ValueError:
+                pass
+        return 1
+
+    def _migrate_material_values(self) -> None:
+        """Rewrite any legacy string material values (e.g. 'material1') to integers."""
+        self.cur.execute("SELECT DISTINCT material FROM voxels WHERE typeof(material) = 'text'")
+        legacy = self.cur.fetchall()
+        for (mat_str,) in legacy:
+            mat_int = self._parse_material_int(mat_str)
+            self.cur.execute(
+                "UPDATE voxels SET material = ? WHERE material = ?",
+                (mat_int, mat_str),
+            )
+
     def _get_default_property(self, property_name: str):
         # helper to return default values for each column.
         self.cur.execute("PRAGMA table_info(voxels)")

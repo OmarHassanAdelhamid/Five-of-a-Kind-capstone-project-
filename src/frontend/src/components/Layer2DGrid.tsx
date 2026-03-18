@@ -35,6 +35,8 @@ interface Layer2DGridProps {
   editVoxelsMode?: boolean;
   onVoxelAdd?: (gridX: number, gridY: number) => void;
   onVoxelRemove?: (index: number) => void;
+  onVoxelsAdd?: (cells: { gridX: number; gridY: number }[]) => void;
+  onVoxelsRemove?: (indices: number[]) => void;
   onLayerUp?: () => void;
   onLayerDown?: () => void;
   canGoUp?: boolean;
@@ -75,6 +77,8 @@ export const Layer2DGrid = ({
   editVoxelsMode = false,
   onVoxelAdd,
   onVoxelRemove,
+  onVoxelsAdd,
+  onVoxelsRemove,
   onLayerUp,
   onLayerDown,
   canGoUp = false,
@@ -275,6 +279,31 @@ export const Layer2DGrid = ({
       }
     }
 
+    if (isDrawingLasso && editVoxelsMode && lassoPath.length >= 3) {
+      for (const pos of emptyCellPositionsRef.current) {
+        const cx = pos.x + pos.w / 2;
+        const cy = pos.y + pos.h / 2;
+        if (isPointInPolygon(cx, cy, lassoPath)) {
+          ctx.fillStyle = 'rgba(34, 197, 94, 0.5)';
+          ctx.fillRect(pos.x, pos.y, pos.w, pos.h);
+          ctx.strokeStyle = '#22c55e';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(pos.x - 1, pos.y - 1, pos.w + 2, pos.h + 2);
+        }
+      }
+      for (const pos of voxelPositionsRef.current) {
+        const cx = pos.x + pos.w / 2;
+        const cy = pos.y + pos.h / 2;
+        if (isPointInPolygon(cx, cy, lassoPath)) {
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.55)';
+          ctx.fillRect(pos.x, pos.y, pos.w, pos.h);
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(pos.x - 1, pos.y - 1, pos.w + 2, pos.h + 2);
+        }
+      }
+    }
+
     if (lassoPath.length > 1) {
       ctx.strokeStyle = 'rgba(56, 189, 248, 0.9)';
       ctx.lineWidth = 2;
@@ -387,7 +416,7 @@ export const Layer2DGrid = ({
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const coords = getCanvasCoords(e.clientX, e.clientY);
     if (!coords) return;
-    if (selectionMode === 'lasso' && !editVoxelsMode) {
+    if (selectionMode === 'lasso') {
       setIsDrawingLasso(true);
       lassoPathRef.current = [coords];
       setLassoPath([coords]);
@@ -397,7 +426,7 @@ export const Layer2DGrid = ({
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const coords = getCanvasCoords(e.clientX, e.clientY);
     if (!coords) return;
-    if (isDrawingLasso && selectionMode === 'lasso' && !editVoxelsMode) {
+    if (isDrawingLasso && selectionMode === 'lasso') {
       const prev = lassoPathRef.current;
       if (prev.length > 0) {
         const last = prev[prev.length - 1];
@@ -424,32 +453,60 @@ export const Layer2DGrid = ({
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (isDrawingLasso && selectionMode === 'lasso' && !editVoxelsMode) {
+    if (isDrawingLasso && selectionMode === 'lasso') {
       setIsDrawingLasso(false);
       const path = lassoPathRef.current;
       if (path.length >= 3) {
         const polygon = [...path];
-        const selected: { voxel: LayerVoxel; index: number }[] = [];
-        for (const pos of voxelPositionsRef.current) {
-          const centerX = pos.x + pos.w / 2;
-          const centerY = pos.y + pos.h / 2;
-          if (isPointInPolygon(centerX, centerY, polygon)) {
-            selected.push({ voxel: pos.voxel, index: pos.index });
-          }
-        }
-        if (selected.length > 0) {
-          if (onVoxelsSelect) {
-            onVoxelsSelect(
-              selected.map((s) => s.voxel),
-              selected.map((s) => s.index),
+        if (editVoxelsMode) {
+          const emptyCellsInLasso = emptyCellPositionsRef.current.filter(
+            (pos) => {
+              const cx = pos.x + pos.w / 2;
+              const cy = pos.y + pos.h / 2;
+              return isPointInPolygon(cx, cy, polygon);
+            },
+          );
+          const voxelIndicesInLasso = voxelPositionsRef.current
+            .filter((pos) => {
+              const cx = pos.x + pos.w / 2;
+              const cy = pos.y + pos.h / 2;
+              return isPointInPolygon(cx, cy, polygon);
+            })
+            .map((pos) => pos.index);
+          if (emptyCellsInLasso.length > 0 && onVoxelsAdd) {
+            onVoxelsAdd(
+              emptyCellsInLasso.map((c) => ({
+                gridX: c.gridX,
+                gridY: c.gridY,
+              })),
             );
-          } else if (onVoxelSelect && selected.length === 1) {
-            onVoxelSelect(selected[0].voxel, selected[0].index);
           }
-        } else if (onVoxelSelect) {
-          onVoxelSelect(null, -1);
+          if (voxelIndicesInLasso.length > 0 && onVoxelsRemove) {
+            onVoxelsRemove(voxelIndicesInLasso);
+          }
+        } else {
+          const selected: { voxel: LayerVoxel; index: number }[] = [];
+          for (const pos of voxelPositionsRef.current) {
+            const centerX = pos.x + pos.w / 2;
+            const centerY = pos.y + pos.h / 2;
+            if (isPointInPolygon(centerX, centerY, polygon)) {
+              selected.push({ voxel: pos.voxel, index: pos.index });
+            }
+          }
+          if (selected.length > 0) {
+            if (onVoxelsSelect) {
+              onVoxelsSelect(
+                selected.map((s) => s.voxel),
+                selected.map((s) => s.index),
+              );
+            } else if (onVoxelSelect && selected.length === 1) {
+              onVoxelSelect(selected[0].voxel, selected[0].index);
+            }
+          } else if (onVoxelSelect) {
+            onVoxelSelect(null, -1);
+          }
         }
-      } else if (path.length === 1 && onVoxelSelect) {
+      } else if (path.length === 1 && onVoxelSelect && !editVoxelsMode) {
         const hit = getVoxelAtPosition(e.clientX, e.clientY);
         if (hit) onVoxelSelect(hit.voxel, hit.index);
       }
@@ -459,9 +516,12 @@ export const Layer2DGrid = ({
 
   const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (e.button !== 0) return;
-    if (editVoxelsMode && onVoxelRemove) {
-      const cell = getCellAtPosition(e.clientX, e.clientY);
-      if (cell?.type === 'voxel') onVoxelRemove(cell.index);
+    if (editVoxelsMode) {
+      if (selectionMode === 'lasso') return;
+      if (onVoxelRemove) {
+        const cell = getCellAtPosition(e.clientX, e.clientY);
+        if (cell?.type === 'voxel') onVoxelRemove(cell.index);
+      }
       return;
     }
     if (selectionMode !== 'click') return;
@@ -539,7 +599,11 @@ export const Layer2DGrid = ({
           type="button"
           className={`layer-2d-tool-btn ${selectionMode === 'lasso' ? 'active' : ''}`}
           onClick={() => setSelectionMode('lasso')}
-          title="Draw lasso to select multiple voxels"
+          title={
+            editVoxelsMode
+              ? 'Draw lasso to add empty cells (green) and remove voxels (red)'
+              : 'Draw lasso to select multiple voxels'
+          }
         >
           Lasso
         </button>
