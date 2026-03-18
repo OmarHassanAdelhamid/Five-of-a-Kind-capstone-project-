@@ -200,7 +200,6 @@ export const fetchLayers = async (
   projectName: string,
   partitionName: string,
   axis: 'z' | 'x' | 'y' = 'z',
-  _voxelSize?: number, // Unused but kept for interface compatibility
 ): Promise<LayersResponse> => {
   try {
     if (!partitionName) {
@@ -368,7 +367,6 @@ export const fetchLayer = async (
   partitionName: string,
   layerValue: number, // This is the real coordinate value (e.g., 0.05) or layer index
   axis: 'z' | 'x' | 'y' = 'z',
-  _voxelSize?: number, // Kept for interface compatibility
 ): Promise<LayerResponse> => {
   try {
     if (!partitionName) {

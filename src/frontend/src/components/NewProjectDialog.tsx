@@ -55,7 +55,7 @@ export const NewProjectDialog = ({
       setSelectedMaterial((initialMaterials[0] ?? 'material1'))
       setMaterials(initialMaterials.length ? initialMaterials : ['material1', 'material2', 'material3'])
     }
-  }, [isOpen]);
+  }, [isOpen, initialMaterials]);
 
   const baseName = stlFileName.replace('.stl', '')
   const fullProjectName = suffix.trim() ? `${baseName}-${suffix.trim()}` : baseName
@@ -103,21 +103,6 @@ export const NewProjectDialog = ({
       onClose();
     }
   };
-
-  const handleAddMaterial = () => {
-    const name = newMaterialName.trim()
-    if (!name) return
-
-    // Avoid duplicates (case-insensitive)
-    const exists = materials.some((m) => m.toLowerCase() === name.toLowerCase())
-    const finalName = exists ? name : name
-
-    const next = exists ? materials : [...materials, finalName]
-    setMaterials(next)
-    setSelectedMaterial(finalName)
-    setNewMaterialName('')
-    setIsAddingMaterial(false)
-  }
 
   if (!isOpen) return null;
 

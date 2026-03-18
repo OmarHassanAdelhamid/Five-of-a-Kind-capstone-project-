@@ -472,7 +472,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
         raycasterRef.current = null;
         setSelectedVoxel(null);
       };
-    }, [selectedModel, voxelCoordinates, onStatusChange]);
+    }, [selectedModel, voxelCoordinates, onStatusChange, voxelSize]);
 
     useEffect(() => {
       if (selectedModel || voxelCoordinates.length === 0) {
@@ -783,7 +783,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
         raycasterRef.current = null;
         setSelectedVoxel(null);
       };
-    }, [selectedModel, voxelCoordinates, onStatusChange]);
+    }, [selectedModel, voxelCoordinates, onStatusChange, voxelSize]);
 
     useEffect(() => {
       if (!instancedMeshRef.current || instanceIdMapRef.current.size === 0)

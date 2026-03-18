@@ -87,7 +87,7 @@ describe('Layer2DGrid', () => {
   });
 
   it('switches to Lasso mode when Lasso button clicked', async () => {
-    const { getByTitle, getByRole } = render(
+    const { getByRole } = render(
       <Layer2DGrid
         layerData={mockLayerData}
         onLayerUp={jest.fn()}

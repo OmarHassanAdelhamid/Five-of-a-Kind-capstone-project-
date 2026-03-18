@@ -91,7 +91,6 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           projectName,
           partitionName,
           layerAxis,
-          voxelSize,
         );
         setLayersData(data);
       } catch (err) {
@@ -100,7 +99,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       } finally {
         setLoading(false);
       }
-    }, [projectName, partitionName, voxelSize, layerAxis, disabled]);
+    }, [projectName, partitionName, layerAxis, disabled]);
 
     const loadLayer = useCallback(
       async (layerZ: number) => {
@@ -119,7 +118,6 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
             partitionName,
             layerZ,
             layerAxis,
-            voxelSize,
           );
           console.log(
             `[LayerEditor] fetchLayer returned layer_index: ${data.layer_index}`,
@@ -136,7 +134,13 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           setLoading(false);
         }
       },
-      [projectName, voxelSize, layerAxis, disabled, onLayerSelect],
+      [
+        projectName,
+        partitionName,
+        layerAxis,
+        disabled,
+        onLayerSelect,
+      ],
     );
 
     const syncMagnetizationDisplay = useCallback(
@@ -239,6 +243,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       selectedLayerData,
       selectedMaterial,
       projectName,
+      partitionName,
     ]);
 
     const handleConfirmMagnetization = useCallback(async () => {
@@ -310,6 +315,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       displayTheta,
       displayPhi,
       projectName,
+      partitionName,
     ]);
 
     const handleRefresh = useCallback(() => {
@@ -479,7 +485,10 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           const b = voxels[1];
           if (a.ix !== b.ix) {
             const vsx = (a.x - b.x) / (a.ix - b.ix);
-            if (Number.isFinite(vsx)) { vs = vsx; ox = a.x - a.ix * vs; }
+            if (Number.isFinite(vsx)) {
+              vs = vsx;
+              ox = a.x - a.ix * vs;
+            }
           }
           if (a.iy !== b.iy) {
             const vsy = (a.y - b.y) / (a.iy - b.iy);
@@ -525,9 +534,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           }
           await onVoxelsChanged?.();
         } catch (err) {
-          setError(
-            err instanceof Error ? err.message : 'Failed to add voxels',
-          );
+          setError(err instanceof Error ? err.message : 'Failed to add voxels');
         } finally {
           setLoading(false);
         }
@@ -547,7 +554,11 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
 
     const handleVoxelsRemove = useCallback(
       async (indices: number[]) => {
-        if (!selectedLayerData?.voxels || !partitionName || indices.length === 0)
+        if (
+          !selectedLayerData?.voxels ||
+          !partitionName ||
+          indices.length === 0
+        )
           return;
         const voxelList = selectedLayerData.voxels;
         const coords: [number, number, number][] = indices
@@ -721,7 +732,10 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
             partition_name: partitionName,
             voxels: voxelCoords,
             action: 'update',
-            magnetization: [props.polarAngle, props.azimuthAngle] as [number, number],
+            magnetization: [props.polarAngle, props.azimuthAngle] as [
+              number,
+              number,
+            ],
           });
           const updatedVoxels = [...selectedLayerData.voxels];
           for (const idx of selectedVoxelIndices) {
@@ -844,7 +858,9 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
                   onVoxelAdd={editVoxelsMode ? handleVoxelAdd : undefined}
                   onVoxelRemove={editVoxelsMode ? handleVoxelRemove : undefined}
                   onVoxelsAdd={editVoxelsMode ? handleVoxelsAdd : undefined}
-                  onVoxelsRemove={editVoxelsMode ? handleVoxelsRemove : undefined}
+                  onVoxelsRemove={
+                    editVoxelsMode ? handleVoxelsRemove : undefined
+                  }
                   onLayerUp={() => {
                     if (canGoUp) loadLayer(layers[currentIdx + 1].coordinate);
                   }}

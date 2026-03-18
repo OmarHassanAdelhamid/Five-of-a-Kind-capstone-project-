@@ -736,9 +736,8 @@ describe('App', () => {
   });
 
   it('keyboard Ctrl+S triggers handleSave and shows alert when no project', async () => {
-    let result: ReturnType<typeof render>;
     await act(async () => {
-      result = render(<App />);
+      render(<App />);
     });
     await act(async () => {
       window.dispatchEvent(
@@ -755,9 +754,8 @@ describe('App', () => {
   });
 
   it('keyboard Ctrl+E triggers handleExport and shows alert when no project', async () => {
-    let result: ReturnType<typeof render>;
     await act(async () => {
-      result = render(<App />);
+      render(<App />);
     });
     await act(async () => {
       window.dispatchEvent(
