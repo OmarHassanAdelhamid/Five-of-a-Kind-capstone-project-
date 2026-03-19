@@ -6,15 +6,17 @@ interface NewProjectDialogProps {
   isOpen: boolean;
   stlFileName: string;
   onClose: () => void;
-  onConfirm: (payload: {
-    projectName: string
-    modelUnits: UnitOption
-    voxelSize: number
-    voxelUnits: UnitOption
-    defaultMaterial: string
-  }) => void
-
-  initialMaterials?: string[]
+  onConfirm: (
+    payload: {
+      projectName: string
+      modelUnits: UnitOption
+      voxelSize: number
+      voxelUnits: UnitOption
+      defaultMaterial: string
+    },
+    onProgress?: (message: string) => void
+  ) => void | Promise<void>;
+  initialMaterials?: string[];
 }
 
 export const NewProjectDialog = ({
@@ -37,6 +39,8 @@ export const NewProjectDialog = ({
   const [isAddingMaterial, setIsAddingMaterial] = useState(false)
   const [newMaterialName, setNewMaterialName] = useState('')
   const [prevSelectedMaterial, setPrevSelectedMaterial] = useState<string>(initialMaterials[0] ?? '')
+  const [isCreating, setIsCreating] = useState(false)
+  const [progressMessage, setProgressMessage] = useState<string>('')
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -51,7 +55,7 @@ export const NewProjectDialog = ({
       setSelectedMaterial((initialMaterials[0] ?? 'material1'))
       setMaterials(initialMaterials.length ? initialMaterials : ['material1', 'material2', 'material3'])
     }
-  }, [isOpen]);
+  }, [isOpen, initialMaterials]);
 
   const baseName = stlFileName.replace('.stl', '')
   const fullProjectName = suffix.trim() ? `${baseName}-${suffix.trim()}` : baseName
@@ -62,7 +66,7 @@ export const NewProjectDialog = ({
     return n
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const voxelSize = parseVoxelSize()
@@ -71,51 +75,57 @@ export const NewProjectDialog = ({
       return
     }
 
-    onConfirm({
-      projectName: fullProjectName,
-      modelUnits,
-      voxelSize,
-      voxelUnits,
-      defaultMaterial: selectedMaterial,
-    })
-    onClose()
-  };
+    setIsCreating(true)
+    setProgressMessage('Voxelizing model...')
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      onClose();
+    try {
+      await onConfirm(
+        {
+          projectName: fullProjectName,
+          modelUnits,
+          voxelSize,
+          voxelUnits,
+          defaultMaterial: selectedMaterial,
+        },
+        setProgressMessage
+      )
+      onClose()
+    } catch {
+      // Error already shown by parent
+    } finally {
+      setIsCreating(false)
+      setProgressMessage('')
     }
   };
 
-  const handleAddMaterial = () => {
-    const name = newMaterialName.trim()
-    if (!name) return
-
-    // Avoid duplicates (case-insensitive)
-    const exists = materials.some((m) => m.toLowerCase() === name.toLowerCase())
-    const finalName = exists ? name : name
-
-    const next = exists ? materials : [...materials, finalName]
-    setMaterials(next)
-    setSelectedMaterial(finalName)
-    setNewMaterialName('')
-    setIsAddingMaterial(false)
-  }
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape' && !isCreating) {
+      onClose();
+    }
+  };
 
   if (!isOpen) return null;
 
 
   return (
-    <div className="dialog-overlay" onClick={onClose}>
+    <div className="dialog-overlay" onClick={isCreating ? undefined : onClose}>
       <div className="dialog-content" onClick={(e) => e.stopPropagation()}>
         <div className="dialog-header">
           <h3>New Project</h3>
-          <button className="dialog-close" onClick={onClose} title="Close">
-            ×
-          </button>
+          {!isCreating && (
+            <button className="dialog-close" onClick={onClose} title="Close">
+              ×
+            </button>
+          )}
         </div>
+        {isCreating && (
+          <div className="dialog-progress-overlay">
+            <div className="dialog-progress-spinner" />
+            <p className="dialog-progress-message">{progressMessage}</p>
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
-          <div className="dialog-body">
+          <div className={`dialog-body ${isCreating ? 'dialog-body--disabled' : ''}`}>
             <label htmlFor="project-name-input">Project Name:</label>
             <div className="project-name-input-wrapper">
               <span className="project-name-prefix">{baseName}-</span>
@@ -299,11 +309,20 @@ export const NewProjectDialog = ({
           </div> 
                       
           <div className="dialog-footer">
-            <button type="button" onClick={onClose} className="dialog-button-cancel">
+            <button
+              type="button"
+              onClick={onClose}
+              className="dialog-button-cancel"
+              disabled={isCreating}
+            >
               Cancel
             </button>
-            <button type="submit" className="dialog-button-confirm">
-              Create Project
+            <button
+              type="submit"
+              className="dialog-button-confirm"
+              disabled={isCreating}
+            >
+              {isCreating ? 'Creating…' : 'Create Project'}
             </button>
           </div>
         </form>

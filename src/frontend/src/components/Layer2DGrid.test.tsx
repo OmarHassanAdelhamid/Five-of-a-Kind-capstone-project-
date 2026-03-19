@@ -9,12 +9,12 @@ const mockLayerData = {
   voxels: [
     {
       ix: 0, iy: 0, iz: 0, x: 0, y: 0, z: 0,
-      material: 1, magnetization: 0, polarAngle: 0, azimuthAngle: 0,
+      material: 1, polarAngle: 0, azimuthAngle: 0,
       grid_x: 0, grid_y: 0,
     },
     {
       ix: 1, iy: 0, iz: 0, x: 0.1, y: 0, z: 0,
-      material: 1, magnetization: 0, polarAngle: 0, azimuthAngle: 0,
+      material: 1, polarAngle: 0, azimuthAngle: 0,
       grid_x: 1, grid_y: 0,
     },
   ],
@@ -87,7 +87,7 @@ describe('Layer2DGrid', () => {
   });
 
   it('switches to Lasso mode when Lasso button clicked', async () => {
-    const { getByTitle, getByRole } = render(
+    const { getByRole } = render(
       <Layer2DGrid
         layerData={mockLayerData}
         onLayerUp={jest.fn()}

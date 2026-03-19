@@ -22,7 +22,10 @@ describe('App', () => {
   let alertMock: jest.SpyInstance;
 
   beforeEach(() => {
-    (api.fetchAvailableModels as jest.Mock).mockResolvedValue(['cube.stl', 'box.stl']);
+    (api.fetchAvailableModels as jest.Mock).mockResolvedValue([
+      'cube.stl',
+      'box.stl',
+    ]);
     (api.fetchAvailableProjects as jest.Mock).mockResolvedValue([]);
     alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
   });
@@ -41,7 +44,9 @@ describe('App', () => {
   });
 
   it('handles fetchAvailableProjects rejection and sets empty project list', async () => {
-    (api.fetchAvailableProjects as jest.Mock).mockRejectedValue(new Error('Network error'));
+    (api.fetchAvailableProjects as jest.Mock).mockRejectedValue(
+      new Error('Network error'),
+    );
     let result: ReturnType<typeof render>;
     await act(async () => {
       result = render(<App />);
@@ -53,7 +58,9 @@ describe('App', () => {
   it('handles fetchVoxelized rejection when loading project', async () => {
     (api.fetchAvailableProjects as jest.Mock).mockResolvedValue(['cube']);
     (api.fetchPartitions as jest.Mock).mockResolvedValue(['part1']);
-    (api.fetchVoxelized as jest.Mock).mockRejectedValue(new Error('Load failed'));
+    (api.fetchVoxelized as jest.Mock).mockRejectedValue(
+      new Error('Load failed'),
+    );
     let result: ReturnType<typeof render>;
     await act(async () => {
       result = render(<App />);
@@ -75,7 +82,9 @@ describe('App', () => {
     (api.fetchAvailableProjects as jest.Mock).mockResolvedValue(['cube']);
     (api.fetchPartitions as jest.Mock).mockResolvedValue(['part1']);
     (api.fetchVoxelized as jest.Mock).mockResolvedValue([[0, 0, 0]]);
-    (api.downloadVoxelCSV as jest.Mock).mockRejectedValue(new Error('Download failed'));
+    (api.downloadVoxelCSV as jest.Mock).mockRejectedValue(
+      new Error('Download failed'),
+    );
     let result: ReturnType<typeof render>;
     await act(async () => {
       result = render(<App />);
@@ -97,23 +106,33 @@ describe('App', () => {
       await userEvent.click(result!.getByText('Save...'));
     });
     await act(async () => {});
-    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Download failed'));
+    expect(alertMock).toHaveBeenCalledWith(
+      expect.stringContaining('Download failed'),
+    );
   });
 
   it('upload STL failure shows alert', async () => {
-    (api.uploadSTLFile as jest.Mock).mockRejectedValue(new Error('Upload failed'));
+    (api.uploadSTLFile as jest.Mock).mockRejectedValue(
+      new Error('Upload failed'),
+    );
     let result: ReturnType<typeof render>;
     await act(async () => {
       result = render(<App />);
     });
-    const input = result!.container.querySelector('#stl-upload-input') as HTMLInputElement;
+    const input = result!.container.querySelector(
+      '#stl-upload-input',
+    ) as HTMLInputElement;
     expect(input).toBeTruthy();
-    const file = new File(['x'], 'model.stl', { type: 'application/octet-stream' });
+    const file = new File(['x'], 'model.stl', {
+      type: 'application/octet-stream',
+    });
     await act(async () => {
       await userEvent.upload(input, file);
     });
     await act(async () => {});
-    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Upload failed'));
+    expect(alertMock).toHaveBeenCalledWith(
+      expect.stringContaining('Upload failed'),
+    );
   });
 
   it('handleSaveAs shows alert when download fails', async () => {
@@ -121,7 +140,9 @@ describe('App', () => {
     (api.fetchAvailableProjects as jest.Mock).mockResolvedValue(['cube']);
     (api.fetchPartitions as jest.Mock).mockResolvedValue(['part1']);
     (api.fetchVoxelized as jest.Mock).mockResolvedValue([[0, 0, 0]]);
-    (api.downloadVoxelCSV as jest.Mock).mockRejectedValue(new Error('Save failed'));
+    (api.downloadVoxelCSV as jest.Mock).mockRejectedValue(
+      new Error('Save failed'),
+    );
     let result: ReturnType<typeof render>;
     await act(async () => {
       result = render(<App />);
@@ -140,10 +161,14 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'File' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /save as\.\.\./i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /save as\.\.\./i }),
+      );
     });
     await act(async () => {});
-    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Save failed'));
+    expect(alertMock).toHaveBeenCalledWith(
+      expect.stringContaining('Save failed'),
+    );
     promptSpy.mockRestore();
   });
 
@@ -164,9 +189,13 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'View' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /open layer menu/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /open layer menu/i }),
+      );
     });
-    expect(alertMock).toHaveBeenCalledWith('Please select a project to open the Layer Editor.');
+    expect(alertMock).toHaveBeenCalledWith(
+      'Please select a project to open the Layer Editor.',
+    );
   });
 
   it('Save shows alert when no project', async () => {
@@ -178,9 +207,13 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'File' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /save\.\.\./i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /save\.\.\./i }),
+      );
     });
-    expect(alertMock).toHaveBeenCalledWith('No project to save. Please create or load a project first.');
+    expect(alertMock).toHaveBeenCalledWith(
+      'No project to save. Please create or load a project first.',
+    );
   });
 
   it('Export shows alert when no project', async () => {
@@ -192,9 +225,13 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'File' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /export\.\.\./i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /export\.\.\./i }),
+      );
     });
-    expect(alertMock).toHaveBeenCalledWith('Please select a project to export.');
+    expect(alertMock).toHaveBeenCalledWith(
+      'Please select a project to export.',
+    );
   });
 
   it('Help > About shows alert', async () => {
@@ -206,9 +243,13 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'Help' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /about version/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /about version/i }),
+      );
     });
-    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Voxel Editor'));
+    expect(alertMock).toHaveBeenCalledWith(
+      expect.stringContaining('Voxel Editor'),
+    );
   });
 
   it('Help > License shows alert', async () => {
@@ -220,7 +261,9 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'Help' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /^license$/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /^license$/i }),
+      );
     });
     expect(alertMock).toHaveBeenCalled();
   });
@@ -234,9 +277,13 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'Help' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /^credits$/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /^credits$/i }),
+      );
     });
-    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Five-of-a-Kind'));
+    expect(alertMock).toHaveBeenCalledWith(
+      expect.stringContaining('Five-of-a-Kind'),
+    );
   });
 
   it('Edit > Preferences shows alert', async () => {
@@ -248,9 +295,13 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'Edit' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /^preferences$/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /^preferences$/i }),
+      );
     });
-    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Preferences'));
+    expect(alertMock).toHaveBeenCalledWith(
+      expect.stringContaining('Preferences'),
+    );
   });
 
   it('opens New Project dialog when model selected and New Project clicked', async () => {
@@ -262,13 +313,17 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'File' }));
     });
     await act(async () => {
-      await userEvent.hover(result!.getByRole('button', { name: /open project/i }));
+      await userEvent.hover(
+        result!.getByRole('button', { name: /open project/i }),
+      );
     });
     await act(async () => {
       await userEvent.click(result!.getByText('New Project...'));
     });
     expect(result!.getByText(/new project/i)).toBeInTheDocument();
-    expect(result!.getByRole('button', { name: /create project/i })).toBeInTheDocument();
+    expect(
+      result!.getByRole('button', { name: /create project/i }),
+    ).toBeInTheDocument();
   });
 
   it('Undo shows alert when no project', async () => {
@@ -282,7 +337,9 @@ describe('App', () => {
     await act(async () => {
       await userEvent.click(result!.getByRole('button', { name: /^undo/i }));
     });
-    expect(alertMock).toHaveBeenCalledWith('Please select a project to undo changes.');
+    expect(alertMock).toHaveBeenCalledWith(
+      'Please select a project to undo changes.',
+    );
   });
 
   it('Edit > Open Partition Menu shows alert', async () => {
@@ -294,9 +351,13 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'View' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /open partition menu/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /open partition menu/i }),
+      );
     });
-    expect(alertMock).toHaveBeenCalledWith('Partition Menu functionality not yet implemented.');
+    expect(alertMock).toHaveBeenCalledWith(
+      'Partition Menu functionality not yet implemented.',
+    );
   });
 
   it('Selection > Reset selected does not throw', async () => {
@@ -308,7 +369,9 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'Selection' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /reset selected voxels/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /reset selected voxels/i }),
+      );
     });
     expect(result!.getByTestId('model-viewer')).toBeInTheDocument();
   });
@@ -322,7 +385,9 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'Selection' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /select all/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /select all/i }),
+      );
     });
     expect(result!.getByTestId('model-viewer')).toBeInTheDocument();
   });
@@ -336,13 +401,17 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'Help' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /privacy statement/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /privacy statement/i }),
+      );
     });
     expect(alertMock).toHaveBeenCalled();
   });
 
   it('New Project confirm shows alert when voxelizeModel fails', async () => {
-    (api.voxelizeModel as jest.Mock).mockRejectedValue(new Error('Server error'));
+    (api.voxelizeModel as jest.Mock).mockRejectedValue(
+      new Error('Server error'),
+    );
     let result: ReturnType<typeof render>;
     await act(async () => {
       result = render(<App />);
@@ -357,9 +426,13 @@ describe('App', () => {
       await userEvent.click(result!.getByText('New Project...'));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /create project/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /create project/i }),
+      );
     });
-    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Server error'));
+    expect(alertMock).toHaveBeenCalledWith(
+      expect.stringContaining('Server error'),
+    );
   });
 
   it('New Project confirm with empty voxels sets error status', async () => {
@@ -381,7 +454,9 @@ describe('App', () => {
       await userEvent.click(result!.getByText('New Project...'));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /create project/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /create project/i }),
+      );
     });
     await act(async () => {});
     expect(api.fetchVoxelized).toHaveBeenCalledWith('cube', 'default');
@@ -400,13 +475,17 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'File' }));
     });
     await act(async () => {
-      await userEvent.hover(result!.getByRole('button', { name: /open project/i }));
+      await userEvent.hover(
+        result!.getByRole('button', { name: /open project/i }),
+      );
     });
     await act(async () => {
       await userEvent.click(result!.getByText('New Project...'));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /create project/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /create project/i }),
+      );
     });
     expect(api.voxelizeModel).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -416,7 +495,7 @@ describe('App', () => {
         modelUnits: 'mm',
         voxelUnits: 'mm',
         defaultMaterial: 'material1',
-      })
+      }),
     );
     expect(api.fetchAvailableProjects).toHaveBeenCalled();
     await act(async () => {});
@@ -434,7 +513,9 @@ describe('App', () => {
   });
 
   it('sets error when fetch models rejects', async () => {
-    (api.fetchAvailableModels as jest.Mock).mockRejectedValue(new Error('Network error'));
+    (api.fetchAvailableModels as jest.Mock).mockRejectedValue(
+      new Error('Network error'),
+    );
     let result: ReturnType<typeof render>;
     await act(async () => {
       result = render(<App />);
@@ -454,7 +535,9 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'File' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /save as\.\.\./i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /save as\.\.\./i }),
+      );
     });
     expect(promptSpy).toHaveBeenCalled();
     expect(api.downloadVoxelCSV).not.toHaveBeenCalled();
@@ -485,7 +568,9 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'File' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /save as\.\.\./i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /save as\.\.\./i }),
+      );
     });
     await act(async () => {});
     expect(api.downloadVoxelCSV).toHaveBeenCalledWith('cube', 'cube');
@@ -504,7 +589,9 @@ describe('App', () => {
     await act(async () => {
       await userEvent.click(result!.getByRole('button', { name: /redo/i }));
     });
-    expect(alertMock).toHaveBeenCalledWith('Please select a project to redo changes.');
+    expect(alertMock).toHaveBeenCalledWith(
+      'Please select a project to redo changes.',
+    );
   });
 
   it('handleUploadFile shows alert for non-.stl file', async () => {
@@ -518,22 +605,30 @@ describe('App', () => {
       const file = new File(['x'], 'image.png', { type: 'image/png' });
       fireEvent.change(input!, { target: { files: [file], value: '' } });
     });
-    expect(alertMock).toHaveBeenCalledWith('Please select a file with the .stl extension.');
+    expect(alertMock).toHaveBeenCalledWith(
+      'Please select a file with the .stl extension.',
+    );
   });
 
   it('handleUploadFile shows alert when upload fails', async () => {
-    (api.uploadSTLFile as jest.Mock).mockRejectedValue(new Error('Upload failed'));
+    (api.uploadSTLFile as jest.Mock).mockRejectedValue(
+      new Error('Upload failed'),
+    );
     let result: ReturnType<typeof render>;
     await act(async () => {
       result = render(<App />);
     });
     const input = result!.container.querySelector('#stl-upload-input');
     await act(async () => {
-      const file = new File(['x'], 'a.stl', { type: 'application/octet-stream' });
+      const file = new File(['x'], 'a.stl', {
+        type: 'application/octet-stream',
+      });
       fireEvent.change(input!, { target: { files: [file], value: '' } });
     });
     await act(async () => {});
-    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Upload failed'));
+    expect(alertMock).toHaveBeenCalledWith(
+      expect.stringContaining('Upload failed'),
+    );
   });
 
   it('handleUploadFile uploads .stl and refreshes model list', async () => {
@@ -547,7 +642,9 @@ describe('App', () => {
     });
     const input = result!.container.querySelector('#stl-upload-input');
     await act(async () => {
-      const file = new File(['x'], 'uploaded.stl', { type: 'application/octet-stream' });
+      const file = new File(['x'], 'uploaded.stl', {
+        type: 'application/octet-stream',
+      });
       fireEvent.change(input!, { target: { files: [file], value: '' } });
     });
     await act(async () => {});
@@ -564,10 +661,12 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'Edit' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /preferences/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /preferences/i }),
+      );
     });
     expect(alertMock).toHaveBeenCalledWith(
-      expect.stringContaining('Preferences dialog would open here')
+      expect.stringContaining('Preferences dialog would open here'),
     );
   });
 
@@ -579,11 +678,15 @@ describe('App', () => {
     await act(async () => {
       await userEvent.click(result!.getByRole('button', { name: 'View' }));
     });
-    const partitionBtn = await result!.findByRole('button', { name: /open partition menu/i });
+    const partitionBtn = await result!.findByRole('button', {
+      name: /open partition menu/i,
+    });
     await act(async () => {
       await userEvent.click(partitionBtn);
     });
-    expect(alertMock).toHaveBeenCalledWith('Partition Menu functionality not yet implemented.');
+    expect(alertMock).toHaveBeenCalledWith(
+      'Partition Menu functionality not yet implemented.',
+    );
   });
 
   it('Help > About shows About text', async () => {
@@ -597,7 +700,9 @@ describe('App', () => {
     await act(async () => {
       await userEvent.click(result!.getByText('About Version'));
     });
-    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Voxel Editor'));
+    expect(alertMock).toHaveBeenCalledWith(
+      expect.stringContaining('Voxel Editor'),
+    );
   });
 
   it('Help > License shows alert', async () => {
@@ -625,29 +730,45 @@ describe('App', () => {
     await act(async () => {
       await userEvent.click(result!.getByText('Credits'));
     });
-    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Five-of-a-Kind'));
+    expect(alertMock).toHaveBeenCalledWith(
+      expect.stringContaining('Five-of-a-Kind'),
+    );
   });
 
   it('keyboard Ctrl+S triggers handleSave and shows alert when no project', async () => {
-    let result: ReturnType<typeof render>;
     await act(async () => {
-      result = render(<App />);
+      render(<App />);
     });
     await act(async () => {
-      window.dispatchEvent(new KeyboardEvent('keydown', { key: 's', ctrlKey: true, bubbles: true }));
+      window.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key: 's',
+          ctrlKey: true,
+          bubbles: true,
+        }),
+      );
     });
-    expect(alertMock).toHaveBeenCalledWith('No project to save. Please create or load a project first.');
+    expect(alertMock).toHaveBeenCalledWith(
+      'No project to save. Please create or load a project first.',
+    );
   });
 
   it('keyboard Ctrl+E triggers handleExport and shows alert when no project', async () => {
-    let result: ReturnType<typeof render>;
     await act(async () => {
-      result = render(<App />);
+      render(<App />);
     });
     await act(async () => {
-      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'e', ctrlKey: true, bubbles: true }));
+      window.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key: 'e',
+          ctrlKey: true,
+          bubbles: true,
+        }),
+      );
     });
-    expect(alertMock).toHaveBeenCalledWith('Please select a project to export.');
+    expect(alertMock).toHaveBeenCalledWith(
+      'Please select a project to export.',
+    );
   });
 
   it('keyboard Ctrl+A triggers handleSelectAll', async () => {
@@ -656,7 +777,13 @@ describe('App', () => {
       result = render(<App />);
     });
     await act(async () => {
-      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', ctrlKey: true, bubbles: true }));
+      window.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key: 'a',
+          ctrlKey: true,
+          bubbles: true,
+        }),
+      );
     });
     expect(result!.getByTestId('model-viewer')).toBeInTheDocument();
   });
@@ -664,7 +791,10 @@ describe('App', () => {
   it('selecting project from File menu loads voxels and sets status', async () => {
     (api.fetchAvailableProjects as jest.Mock).mockResolvedValue(['cube']);
     (api.fetchPartitions as jest.Mock).mockResolvedValue(['part1']);
-    (api.fetchVoxelized as jest.Mock).mockResolvedValue([[0, 0, 0], [1, 0, 0]]);
+    (api.fetchVoxelized as jest.Mock).mockResolvedValue([
+      [0, 0, 0],
+      [1, 0, 0],
+    ]);
     let result: ReturnType<typeof render>;
     await act(async () => {
       result = render(<App />);
@@ -706,14 +836,22 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'View' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /open layer menu/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /open layer menu/i }),
+      );
     });
-    expect(alertMock).not.toHaveBeenCalledWith('Please select a project to open the Layer Editor.');
+    expect(alertMock).not.toHaveBeenCalledWith(
+      'Please select a project to open the Layer Editor.',
+    );
   });
 
   it('handleDownloadCSV success creates link and revokes URL', async () => {
-    const revokeSpy = jest.spyOn(window.URL, 'revokeObjectURL').mockImplementation(() => {});
-    const createObjectURLSpy = jest.spyOn(window.URL, 'createObjectURL').mockReturnValue('blob:mock');
+    const revokeSpy = jest
+      .spyOn(window.URL, 'revokeObjectURL')
+      .mockImplementation(() => {});
+    const createObjectURLSpy = jest
+      .spyOn(window.URL, 'createObjectURL')
+      .mockReturnValue('blob:mock');
     (api.fetchAvailableProjects as jest.Mock).mockResolvedValue(['cube']);
     (api.fetchPartitions as jest.Mock).mockResolvedValue(['part1']);
     (api.fetchVoxelized as jest.Mock).mockResolvedValue([[0, 0, 0]]);
@@ -768,14 +906,18 @@ describe('App', () => {
     await act(async () => {
       await userEvent.click(result!.getByRole('button', { name: /redo/i }));
     });
-    expect(alertMock).toHaveBeenCalledWith('Please select a partition to redo changes.');
+    expect(alertMock).toHaveBeenCalledWith(
+      'Please select a partition to redo changes.',
+    );
   });
 
   it('Redo shows alert when updateHistory rejects', async () => {
     (api.fetchAvailableProjects as jest.Mock).mockResolvedValue(['cube']);
     (api.fetchPartitions as jest.Mock).mockResolvedValue(['part1']);
     (api.fetchVoxelized as jest.Mock).mockResolvedValue([[0, 0, 0]]);
-    (api.updateHistory as jest.Mock).mockRejectedValue(new Error('History server error'));
+    (api.updateHistory as jest.Mock).mockRejectedValue(
+      new Error('History server error'),
+    );
     let result: ReturnType<typeof render>;
     await act(async () => {
       result = render(<App />);
@@ -810,7 +952,9 @@ describe('App', () => {
       await userEvent.click(result!.getByRole('button', { name: 'Help' }));
     });
     await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: /view manual/i }));
+      await userEvent.click(
+        result!.getByRole('button', { name: /view manual/i }),
+      );
     });
     expect(openSpy).toHaveBeenCalledWith('/docs', '_blank');
     openSpy.mockRestore();

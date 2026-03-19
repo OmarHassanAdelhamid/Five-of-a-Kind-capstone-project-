@@ -76,10 +76,8 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
     const [selectedMaterial, setSelectedMaterial] = useState<number>(1);
     const [selectedTheta, setSelectedTheta] = useState<number>(90);
     const [selectedPhi, setSelectedPhi] = useState<number>(0);
-    const [selectedMagnitude, setSelectedMagnitude] = useState<number>(1);
     const [displayTheta, setDisplayTheta] = useState<string>('90');
     const [displayPhi, setDisplayPhi] = useState<string>('0');
-    const [displayMagnitude, setDisplayMagnitude] = useState<string>('1');
     const [hasChanges, setHasChanges] = useState(false);
     const [editVoxelsMode, setEditVoxelsMode] = useState(false);
     const didAutoSelectFirstLayerRef = useRef(false);
@@ -93,7 +91,6 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           projectName,
           partitionName,
           layerAxis,
-          voxelSize,
         );
         setLayersData(data);
       } catch (err) {
@@ -102,7 +99,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       } finally {
         setLoading(false);
       }
-    }, [projectName, partitionName, voxelSize, layerAxis, disabled]);
+    }, [projectName, partitionName, layerAxis, disabled]);
 
     const loadLayer = useCallback(
       async (layerZ: number) => {
@@ -121,7 +118,6 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
             partitionName,
             layerZ,
             layerAxis,
-            voxelSize,
           );
           console.log(
             `[LayerEditor] fetchLayer returned layer_index: ${data.layer_index}`,
@@ -138,14 +134,19 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           setLoading(false);
         }
       },
-      [projectName, voxelSize, layerAxis, disabled, onLayerSelect],
+      [
+        projectName,
+        partitionName,
+        layerAxis,
+        disabled,
+        onLayerSelect,
+      ],
     );
 
     const syncMagnetizationDisplay = useCallback(
-      (theta: number, phi: number, magnitude: number) => {
+      (theta: number, phi: number) => {
         setDisplayTheta(String(theta));
         setDisplayPhi(String(phi));
-        setDisplayMagnitude(String(magnitude));
       },
       [],
     );
@@ -155,13 +156,11 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
         if (voxel && index >= 0) {
           setSelectedVoxelIndices(new Set([index]));
           setSelectedMaterial(voxel.material || 1);
-          const mag = voxel.magnetization ?? 1;
           const phi = voxel.azimuthAngle ?? 0;
           const theta = voxel.polarAngle ?? 90;
-          setSelectedMagnitude(mag);
           setSelectedPhi(phi);
           setSelectedTheta(theta);
-          syncMagnetizationDisplay(theta, phi, mag);
+          syncMagnetizationDisplay(theta, phi);
           setHasChanges(false);
         } else {
           setSelectedVoxelIndices(new Set());
@@ -176,13 +175,11 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           setSelectedVoxelIndices(new Set(indices));
           const first = voxels[0];
           setSelectedMaterial(first.material || 1);
-          const mag = first.magnetization ?? 1;
           const phi = first.azimuthAngle ?? 0;
           const theta = first.polarAngle ?? 90;
-          setSelectedMagnitude(mag);
           setSelectedPhi(phi);
           setSelectedTheta(theta);
-          syncMagnetizationDisplay(theta, phi, mag);
+          syncMagnetizationDisplay(theta, phi);
           setHasChanges(indices.length > 1);
         } else {
           setSelectedVoxelIndices(new Set());
@@ -246,6 +243,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       selectedLayerData,
       selectedMaterial,
       projectName,
+      partitionName,
     ]);
 
     const handleConfirmMagnetization = useCallback(async () => {
@@ -260,11 +258,9 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
 
       const theta = parseFloat(displayTheta);
       const phi = parseFloat(displayPhi);
-      const magnitude = parseFloat(displayMagnitude);
 
-      // Backend expects polar: [magnitude, polar (θ), azimuth (φ)]
-      const magnetization: [number, number, number] = [
-        Number.isNaN(magnitude) ? selectedMagnitude : magnitude,
+      // Backend expects polar: [polar (θ), azimuth (φ)]
+      const magnetization: [number, number] = [
         Number.isNaN(theta) ? selectedTheta : theta,
         Number.isNaN(phi) ? selectedPhi : phi,
       ];
@@ -286,15 +282,14 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           magnetization,
         });
 
-        const [mag, theta, phi] = magnetization;
+        const [updatedTheta, updatedPhi] = magnetization;
         const updatedVoxels = [...selectedLayerData.voxels];
         for (const idx of selectedVoxelIndices) {
           if (updatedVoxels[idx]) {
             updatedVoxels[idx] = {
               ...updatedVoxels[idx],
-              magnetization: mag,
-              polarAngle: theta,
-              azimuthAngle: phi,
+              polarAngle: updatedTheta,
+              azimuthAngle: updatedPhi,
             };
           }
         }
@@ -317,11 +312,10 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       selectedLayerData,
       selectedTheta,
       selectedPhi,
-      selectedMagnitude,
       displayTheta,
       displayPhi,
-      displayMagnitude,
       projectName,
+      partitionName,
     ]);
 
     const handleRefresh = useCallback(() => {
@@ -475,6 +469,143 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       ],
     );
 
+    const handleVoxelsAdd = useCallback(
+      async (cells: { gridX: number; gridY: number }[]) => {
+        if (!selectedLayerData || !partitionName || cells.length === 0) return;
+        const voxels = selectedLayerData.voxels ?? [];
+        const first = voxels[0];
+        if (first == null) return;
+
+        let vs = voxelSize ?? 0.1;
+        let ox = first.x - first.ix * vs;
+        let oy = first.y - first.iy * vs;
+        let oz = first.z - first.iz * vs;
+        if (voxels.length >= 2) {
+          const a = voxels[0];
+          const b = voxels[1];
+          if (a.ix !== b.ix) {
+            const vsx = (a.x - b.x) / (a.ix - b.ix);
+            if (Number.isFinite(vsx)) {
+              vs = vsx;
+              ox = a.x - a.ix * vs;
+            }
+          }
+          if (a.iy !== b.iy) {
+            const vsy = (a.y - b.y) / (a.iy - b.iy);
+            if (Number.isFinite(vsy)) oy = a.y - a.iy * vsy;
+          }
+          if (a.iz !== b.iz) {
+            const vsz = (a.z - b.z) / (a.iz - b.iz);
+            if (Number.isFinite(vsz)) oz = a.z - a.iz * vsz;
+          }
+        }
+
+        const coords: [number, number, number][] = cells.map(
+          ({ gridX, gridY }) => {
+            const desiredX = Math.round(gridX) * vs + ox;
+            const desiredY = Math.round(gridY) * vs + oy;
+            const desiredZ = first.z;
+            const ix = Math.round((desiredX - ox) / vs);
+            const iy = Math.round((desiredY - oy) / vs);
+            const iz = Math.round((desiredZ - oz) / vs);
+            if (layerAxis === 'z') return [ix, iy, iz];
+            if (layerAxis === 'x') return [iz, ix, iy];
+            return [ix, iz, iy];
+          },
+        );
+
+        setLoading(true);
+        setError(null);
+        setMessage(null);
+        try {
+          await updateVoxels({
+            project_name: projectName,
+            partition_name: partitionName,
+            voxels: coords,
+            action: 'add',
+            materialID: selectedMaterial,
+          });
+          setMessage(`${cells.length} voxel(s) added.`);
+          if (
+            externalSelectedLayerZ !== undefined &&
+            externalSelectedLayerZ !== null
+          ) {
+            await loadLayer(externalSelectedLayerZ);
+          }
+          await onVoxelsChanged?.();
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Failed to add voxels');
+        } finally {
+          setLoading(false);
+        }
+      },
+      [
+        selectedLayerData,
+        partitionName,
+        projectName,
+        layerAxis,
+        voxelSize,
+        selectedMaterial,
+        externalSelectedLayerZ,
+        loadLayer,
+        onVoxelsChanged,
+      ],
+    );
+
+    const handleVoxelsRemove = useCallback(
+      async (indices: number[]) => {
+        if (
+          !selectedLayerData?.voxels ||
+          !partitionName ||
+          indices.length === 0
+        )
+          return;
+        const voxelList = selectedLayerData.voxels;
+        const coords: [number, number, number][] = indices
+          .filter((i) => voxelList[i] != null)
+          .map((i) => [
+            Math.round(voxelList[i].ix),
+            Math.round(voxelList[i].iy),
+            Math.round(voxelList[i].iz),
+          ]);
+
+        setLoading(true);
+        setError(null);
+        setMessage(null);
+        try {
+          await updateVoxels({
+            project_name: projectName,
+            partition_name: partitionName,
+            voxels: coords,
+            action: 'delete',
+          });
+          setMessage(`${indices.length} voxel(s) removed.`);
+          setSelectedVoxelIndices(new Set());
+          if (
+            externalSelectedLayerZ !== undefined &&
+            externalSelectedLayerZ !== null
+          ) {
+            await loadLayer(externalSelectedLayerZ);
+          }
+          await onVoxelsChanged?.();
+        } catch (err) {
+          setError(
+            err instanceof Error ? err.message : 'Failed to remove voxels',
+          );
+        } finally {
+          setLoading(false);
+        }
+      },
+      [
+        selectedLayerData,
+        partitionName,
+        projectName,
+        externalSelectedLayerZ,
+        loadLayer,
+        onVoxelsChanged,
+      ],
+    );
+
     // Combined confirm that updates material (backend only supports one at a time)
     const handleConfirm = useCallback(async () => {
       // For now, just update material since backend requires separate calls
@@ -566,7 +697,6 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
         if (!v) return null;
         return {
           material: v.material ?? 1,
-          magnetization: v.magnetization ?? 1,
           polarAngle: v.polarAngle ?? 90,
           azimuthAngle: v.azimuthAngle ?? 0,
         };
@@ -602,10 +732,9 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
             partition_name: partitionName,
             voxels: voxelCoords,
             action: 'update',
-            magnetization: [
-              props.magnetization,
-              props.polarAngle,
-              props.azimuthAngle,
+            magnetization: [props.polarAngle, props.azimuthAngle] as [
+              number,
+              number,
             ],
           });
           const updatedVoxels = [...selectedLayerData.voxels];
@@ -614,7 +743,6 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
               updatedVoxels[idx] = {
                 ...updatedVoxels[idx],
                 material: props.material,
-                magnetization: props.magnetization,
                 polarAngle: props.polarAngle,
                 azimuthAngle: props.azimuthAngle,
               };
@@ -729,6 +857,10 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
                   editVoxelsMode={editVoxelsMode}
                   onVoxelAdd={editVoxelsMode ? handleVoxelAdd : undefined}
                   onVoxelRemove={editVoxelsMode ? handleVoxelRemove : undefined}
+                  onVoxelsAdd={editVoxelsMode ? handleVoxelsAdd : undefined}
+                  onVoxelsRemove={
+                    editVoxelsMode ? handleVoxelsRemove : undefined
+                  }
                   onLayerUp={() => {
                     if (canGoUp) loadLayer(layers[currentIdx + 1].coordinate);
                   }}
@@ -821,24 +953,6 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
                             setDisplayPhi(e.target.value);
                             const v = parseFloat(e.target.value);
                             if (!Number.isNaN(v)) setSelectedPhi(v);
-                            setHasChanges(true);
-                          }}
-                          className="magnetization-input"
-                        />
-                      </div>
-                      <div className="magnetization-input-row">
-                        <label htmlFor="magnitude-input">|M| (magnitude)</label>
-                        <input
-                          id="magnitude-input"
-                          type="number"
-                          min={0}
-                          step={0.1}
-                          value={displayMagnitude}
-                          onChange={(e) => {
-                            setDisplayMagnitude(e.target.value);
-                            const v = parseFloat(e.target.value);
-                            if (!Number.isNaN(v) && v >= 0)
-                              setSelectedMagnitude(v);
                             setHasChanges(true);
                           }}
                           className="magnetization-input"

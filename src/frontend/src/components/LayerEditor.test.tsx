@@ -17,12 +17,12 @@ const mockLayerResponse = {
   voxels: [
     {
       ix: 0, iy: 0, iz: 0, x: 0, y: 0, z: 0,
-      material: 1, magnetization: 1, polarAngle: 90, azimuthAngle: 0,
+      material: 1, polarAngle: 90, azimuthAngle: 0,
       grid_x: 0, grid_y: 0,
     },
     {
       ix: 1, iy: 0, iz: 0, x: 0.1, y: 0, z: 0,
-      material: 2, magnetization: 1, polarAngle: 90, azimuthAngle: 0,
+      material: 2, polarAngle: 90, azimuthAngle: 0,
       grid_x: 1, grid_y: 0,
     },
   ],
@@ -190,7 +190,6 @@ describe('LayerEditor', () => {
     await act(async () => {
       await ref.current!.applyPaste({
         material: 3,
-        magnetization: 1,
         polarAngle: 90,
         azimuthAngle: 0,
       });

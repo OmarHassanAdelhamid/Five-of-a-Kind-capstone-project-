@@ -150,8 +150,10 @@ async def voxelize_stl(request: VoxelizeRequest):
         if os.path.exists(project_file_path):
             os.remove(project_file_path)
 
+        project_folder_name = f"{project_name}-dir"
         return {
             "message": f"Voxelization Status of STL file ({stl_filename}): Success",
             "project_folder": f"{project_folder}",
+            "project_folder_name": project_folder_name,
             "voxel_size": voxel_size
         }

@@ -124,7 +124,7 @@ describe('NewProjectDialog', () => {
   it('shows alert when voxel size invalid and form submitted', async () => {
     const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
     const onConfirm = jest.fn();
-    const { getByRole, getByLabelText } = render(
+    const { getByRole } = render(
       <NewProjectDialog
         isOpen
         stlFileName="box.stl"
@@ -220,7 +220,7 @@ describe('NewProjectDialog', () => {
   });
 
   it('voxel size input allows decimal', () => {
-    const { container } = render(
+    render(
       <NewProjectDialog isOpen stlFileName="x.stl" onClose={jest.fn()} onConfirm={jest.fn()} />
     );
     const voxelInput = document.getElementById('voxel-size-input') as HTMLInputElement;
@@ -247,7 +247,7 @@ describe('NewProjectDialog', () => {
   });
 
   it('voxel size allows empty string', () => {
-    const { container } = render(
+    render(
       <NewProjectDialog isOpen stlFileName="x.stl" onClose={jest.fn()} onConfirm={jest.fn()} />
     );
     const voxelInput = document.getElementById('voxel-size-input') as HTMLInputElement;

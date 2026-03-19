@@ -188,6 +188,7 @@ async def test_voxelize_typical_case(mock_mesh, mock_voxelize, mock_coords, mock
         assert result == {
             "message": f"Voxelization Status of STL file (file1.stl): Success",
             "project_folder": "ex_dir/proj_test-dir",
+            "project_folder_name": "proj_test-dir",
             "voxel_size": 0.5
         }
 

@@ -72,7 +72,7 @@ def z_directory(db_path: str) -> List[Tuple]:
 def get_x_layer(ix: int, db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute("""
-            SELECT ix, iy, iz, x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth 
+            SELECT ix, iy, iz, x, y, z, material, magnet_polar, magnet_azimuth 
             FROM voxels 
             WHERE ix = ?;""",
             (ix,)
@@ -83,7 +83,7 @@ def get_x_layer(ix: int, db_path: str) -> List[Tuple]:
 def get_y_layer(iy: int, db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute("""
-            SELECT ix, iy, iz, x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth 
+            SELECT ix, iy, iz, x, y, z, material, magnet_polar, magnet_azimuth 
             FROM voxels 
             WHERE iy = ?;""",
             (iy,)
@@ -94,7 +94,7 @@ def get_y_layer(iy: int, db_path: str) -> List[Tuple]:
 def get_z_layer(iz: int, db_path: str) -> List[Tuple]:
     with VoxelDB(db_path) as db:
         db.cur.execute("""
-            SELECT ix, iy, iz, x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth 
+            SELECT ix, iy, iz, x, y, z, material, magnet_polar, magnet_azimuth 
             FROM voxels 
             WHERE iz = ?;""",
             (iz,)
@@ -102,13 +102,31 @@ def get_z_layer(iz: int, db_path: str) -> List[Tuple]:
         layer_voxels = db.cur.fetchall()
     return layer_voxels
 
+def _parse_material_int(material_val) -> int:
+    if isinstance(material_val, int):
+        return material_val
+    try:
+        return int(material_val)
+    except (ValueError, TypeError):
+        pass
+    if isinstance(material_val, str) and material_val.startswith('material'):
+        try:
+            return int(material_val[len('material'):])
+        except ValueError:
+            pass
+    return 1
+
+
 # get voxels with their properties given their integer identifiers
+# returns (ix, iy, iz, material, magnet_polar, magnet_azimuth) tuples
 def get_full_voxels(db_path: str, voxels: List[Tuple[int, int, int]]) -> List[Tuple]:
     with VoxelDB(db_path) as db:
         full_voxels = []
         for voxel in voxels:
             rows = db.get_properties(voxel[0], voxel[1], voxel[2])
             props = rows[0]
-            full_voxels.append((voxel[0], voxel[1], voxel[2], props[0], props[1], props[2], props[3]))
+            # props: (material, magnet_magnitude, magnet_polar, magnet_azimuth)
+            # _parse_material_int handles legacy DBs that stored material as 'material1' strings
+            full_voxels.append((voxel[0], voxel[1], voxel[2], _parse_material_int(props[0]), props[2], props[3]))
     return full_voxels
 

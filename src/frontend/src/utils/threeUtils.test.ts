@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import {
   calculateCenterOffset,
   createModelMaterial,
@@ -39,83 +40,82 @@ describe('threeUtils', () => {
   describe('setupCameraForGeometry', () => {
     it('sets camera and controls from geometry bounding sphere', () => {
       const camera = { position: { set: jest.fn() }, near: 0.1, far: 100, updateProjectionMatrix: jest.fn() } as unknown as THREE.PerspectiveCamera;
-      const controls = { target: { set: jest.fn() }, minDistance: 1, maxDistance: 10, update: jest.fn() };
+      const controls = { target: { set: jest.fn() }, minDistance: 1, maxDistance: 10, update: jest.fn() } as unknown as OrbitControls;
       const geometry = {
         computeBoundingSphere: jest.fn(),
         boundingSphere: { radius: 2 },
-      };
-      const grid = { scale: { setScalar: jest.fn() }, position: { y: 0 } };
-      setupCameraForGeometry(camera, controls as any, geometry as any, grid as any);
-      expect(geometry.computeBoundingSphere).toHaveBeenCalled();
+      } as unknown as THREE.BufferGeometry;
+      const grid = { scale: { setScalar: jest.fn() }, position: { y: 0 } } as unknown as THREE.GridHelper;
+      setupCameraForGeometry(camera, controls, geometry, grid);
+      expect((geometry as { computeBoundingSphere: jest.Mock }).computeBoundingSphere).toHaveBeenCalled();
       expect(camera.position.set).toHaveBeenCalled();
-      expect(grid.scale.setScalar).toHaveBeenCalled();
+      expect((grid as { scale: { setScalar: jest.Mock } }).scale.setScalar).toHaveBeenCalled();
     });
   });
 
   describe('setupCameraForVoxels', () => {
     it('sets camera and controls from voxel coordinates', () => {
       const camera = { position: { set: jest.fn() }, near: 0.1, far: 100, updateProjectionMatrix: jest.fn() } as unknown as THREE.PerspectiveCamera;
-      const controls = { target: { set: jest.fn() }, minDistance: 1, maxDistance: 10, update: jest.fn() };
-      const grid = { scale: { setScalar: jest.fn() }, position: { y: 0 } };
-      setupCameraForVoxels(camera, controls as any, [[0, 0, 0], [1, 1, 1]], grid as any);
+      const controls = { target: { set: jest.fn() }, minDistance: 1, maxDistance: 10, update: jest.fn() } as unknown as OrbitControls;
+      const grid = { scale: { setScalar: jest.fn() }, position: { y: 0 } } as unknown as THREE.GridHelper;
+      setupCameraForVoxels(camera, controls, [[0, 0, 0], [1, 1, 1]], grid);
       expect(camera.position.set).toHaveBeenCalled();
-      expect(controls.update).toHaveBeenCalled();
+      expect((controls as { update: jest.Mock }).update).toHaveBeenCalled();
     });
 
   });
 
   describe('renderVoxelInstanced', () => {
     it('returns mesh and instanceIdMap for empty coordinates', () => {
-      const scene = { add: jest.fn(), remove: jest.fn(), traverse: jest.fn() };
-      const result = renderVoxelInstanced(scene as any, [], 1);
+      const scene = { add: jest.fn(), remove: jest.fn(), traverse: jest.fn() } as unknown as THREE.Scene;
+      const result = renderVoxelInstanced(scene, [], 1);
       expect(result.mesh).toBeDefined();
       expect(result.instanceIdMap).toBeInstanceOf(Map);
       expect(result.instanceIdMap.size).toBe(0);
     });
 
     it('returns mesh and instanceIdMap for non-empty coordinates', () => {
-      const scene = { add: jest.fn(), remove: jest.fn(), traverse: jest.fn() };
-      const result = renderVoxelInstanced(scene as any, [[0, 0, 0], [1, 0, 0]], 1);
+      const scene = { add: jest.fn(), remove: jest.fn(), traverse: jest.fn() } as unknown as THREE.Scene;
+      const result = renderVoxelInstanced(scene, [[0, 0, 0], [1, 0, 0]], 1);
       expect(result.mesh).toBeDefined();
       expect(result.instanceIdMap.size).toBe(2);
-      expect(scene.add).toHaveBeenCalledWith(result.mesh);
+      expect((scene as { add: jest.Mock }).add).toHaveBeenCalledWith(result.mesh);
     });
 
     it('throws when voxelSize is invalid (0 or NaN)', () => {
-      const scene = { add: jest.fn(), remove: jest.fn(), traverse: jest.fn() };
+      const scene = { add: jest.fn(), remove: jest.fn(), traverse: jest.fn() } as unknown as THREE.Scene;
       expect(() =>
-        renderVoxelInstanced(scene as any, [[0, 0, 0]], 0)
+        renderVoxelInstanced(scene, [[0, 0, 0]], 0)
       ).toThrow(/Invalid voxelSize/);
       expect(() =>
-        renderVoxelInstanced(scene as any, [[0, 0, 0]], NaN)
+        renderVoxelInstanced(scene, [[0, 0, 0]], NaN)
       ).toThrow(/Invalid voxelSize/);
     });
 
     it('disposes existingMesh when provided', () => {
-      const scene = { add: jest.fn(), remove: jest.fn() };
+      const scene = { add: jest.fn(), remove: jest.fn() } as unknown as THREE.Scene;
       const existingGeo = { dispose: jest.fn() };
-      const existingMat = new (THREE as any).Material();
-      existingMat.dispose = jest.fn();
+      const existingMat = { dispose: jest.fn() } as unknown as THREE.Material;
       const existingMesh = {
         geometry: existingGeo,
         material: existingMat,
-      };
-      renderVoxelInstanced(scene as any, [[0, 0, 0]], 1, null, existingMesh as any);
-      expect(scene.remove).toHaveBeenCalledWith(existingMesh);
+      } as unknown as THREE.InstancedMesh;
+      renderVoxelInstanced(scene, [[0, 0, 0]], 1, null, existingMesh);
+      expect((scene as { remove: jest.Mock }).remove).toHaveBeenCalledWith(existingMesh);
       expect(existingGeo.dispose).toHaveBeenCalled();
-      expect(existingMat.dispose).toHaveBeenCalled();
+      expect((existingMat as { dispose: jest.Mock }).dispose).toHaveBeenCalled();
     });
 
     it('throws when voxelSize is invalid (0)', () => {
-      const scene = { add: jest.fn(), remove: jest.fn() };
-      expect(() => renderVoxelInstanced(scene as any, [[0, 0, 0]], 0)).toThrow(
+      const scene = { add: jest.fn(), remove: jest.fn() } as unknown as THREE.Scene;
+      expect(() => renderVoxelInstanced(scene, [[0, 0, 0]], 0)).toThrow(
         'Invalid voxelSize received from backend'
       );
     });
 
     it('throws when voxelSize is NaN', () => {
-      const scene = { add: jest.fn(), remove: jest.fn() };
-      expect(() => renderVoxelInstanced(scene as any, [[0, 0, 0]], NaN)).toThrow(
+      const scene = { add: jest.fn(), remove: jest.fn() } as unknown as THREE.Scene;
+      expect(() => renderVoxelInstanced(scene, [[0, 0, 0]], NaN)).toThrow(
         'Invalid voxelSize received from backend'
       );
     });
@@ -136,39 +136,39 @@ describe('threeUtils', () => {
     it('disposes single mesh and controls/renderer', () => {
       const mesh = {
         geometry: { dispose: jest.fn() },
-        material: Object.assign({ dispose: jest.fn() }, new (THREE as any).Material()),
-      };
-      const scene = { remove: jest.fn(), traverse: jest.fn((cb: (o: unknown) => void) => cb(mesh)) };
-      const renderer = { dispose: jest.fn() };
-      const controls = { dispose: jest.fn() };
+        material: Object.assign({ dispose: jest.fn() }, { isMaterial: true }),
+      } as unknown as THREE.Mesh;
+      const scene = { remove: jest.fn(), traverse: jest.fn((cb: (o: unknown) => void) => cb(mesh)) } as unknown as THREE.Scene;
+      const renderer = { dispose: jest.fn() } as unknown as THREE.WebGLRenderer;
+      const controls = { dispose: jest.fn() } as unknown as OrbitControls;
       disposeScene(
-        scene as any,
-        renderer as any,
-        controls as any,
-        mesh as any,
+        scene,
+        renderer,
+        controls,
+        mesh,
       );
-      expect(scene.remove).toHaveBeenCalledWith(mesh);
-      expect(mesh.geometry.dispose).toHaveBeenCalled();
-      expect(controls.dispose).toHaveBeenCalled();
-      expect(renderer.dispose).toHaveBeenCalled();
+      expect((scene as { remove: jest.Mock }).remove).toHaveBeenCalledWith(mesh);
+      expect((mesh as { geometry: { dispose: jest.Mock } }).geometry.dispose).toHaveBeenCalled();
+      expect((controls as { dispose: jest.Mock }).dispose).toHaveBeenCalled();
+      expect((renderer as { dispose: jest.Mock }).dispose).toHaveBeenCalled();
     });
 
     it('handles array of objects to dispose', () => {
-      const mesh1 = { geometry: { dispose: jest.fn() }, material: { dispose: jest.fn() } };
-      const scene = { remove: jest.fn(), traverse: jest.fn() };
-      const renderer = { dispose: jest.fn() };
-      const controls = { dispose: jest.fn() };
-      disposeScene(scene as any, renderer as any, controls as any, [mesh1 as any]);
-      expect(scene.remove).toHaveBeenCalledWith(mesh1);
+      const mesh1 = { geometry: { dispose: jest.fn() }, material: { dispose: jest.fn() } } as unknown as THREE.Mesh;
+      const scene = { remove: jest.fn(), traverse: jest.fn() } as unknown as THREE.Scene;
+      const renderer = { dispose: jest.fn() } as unknown as THREE.WebGLRenderer;
+      const controls = { dispose: jest.fn() } as unknown as OrbitControls;
+      disposeScene(scene, renderer, controls, [mesh1]);
+      expect((scene as { remove: jest.Mock }).remove).toHaveBeenCalledWith(mesh1);
     });
 
     it('handles null objectsToDispose', () => {
-      const scene = { remove: jest.fn(), traverse: jest.fn() };
-      const renderer = { dispose: jest.fn() };
-      const controls = { dispose: jest.fn() };
-      disposeScene(scene as any, renderer as any, controls as any, null);
-      expect(controls.dispose).toHaveBeenCalled();
-      expect(renderer.dispose).toHaveBeenCalled();
+      const scene = { remove: jest.fn(), traverse: jest.fn() } as unknown as THREE.Scene;
+      const renderer = { dispose: jest.fn() } as unknown as THREE.WebGLRenderer;
+      const controls = { dispose: jest.fn() } as unknown as OrbitControls;
+      disposeScene(scene, renderer, controls, null);
+      expect((controls as { dispose: jest.Mock }).dispose).toHaveBeenCalled();
+      expect((renderer as { dispose: jest.Mock }).dispose).toHaveBeenCalled();
     });
 
     it('disposes mesh with array material', () => {
@@ -176,13 +176,13 @@ describe('threeUtils', () => {
         geometry: { dispose: jest.fn() },
         material: [{ dispose: jest.fn() }, { dispose: jest.fn() }],
         isMesh: true,
-      };
-      const scene = { remove: jest.fn(), traverse: jest.fn((cb: (o: unknown) => void) => cb(mesh)) };
-      const renderer = { dispose: jest.fn() };
-      const controls = { dispose: jest.fn() };
-      disposeScene(scene as any, renderer as any, controls as any, mesh as any);
-      expect(mesh.material[0].dispose).toHaveBeenCalled();
-      expect(mesh.material[1].dispose).toHaveBeenCalled();
+      } as unknown as THREE.Mesh;
+      const scene = { remove: jest.fn(), traverse: jest.fn((cb: (o: unknown) => void) => cb(mesh)) } as unknown as THREE.Scene;
+      const renderer = { dispose: jest.fn() } as unknown as THREE.WebGLRenderer;
+      const controls = { dispose: jest.fn() } as unknown as OrbitControls;
+      disposeScene(scene, renderer, controls, mesh);
+      expect((mesh.material as { dispose: jest.Mock }[])[0].dispose).toHaveBeenCalled();
+      expect((mesh.material as { dispose: jest.Mock }[])[1].dispose).toHaveBeenCalled();
     });
 
     it('traverse disposes Mesh with single material', () => {
@@ -190,13 +190,13 @@ describe('threeUtils', () => {
         geometry: { dispose: jest.fn() },
         material: { dispose: jest.fn() },
         isMesh: true,
-      };
-      const scene = { remove: jest.fn(), traverse: jest.fn((cb: (o: unknown) => void) => { cb(mesh); }) };
-      const renderer = { dispose: jest.fn() };
-      const controls = { dispose: jest.fn() };
-      disposeScene(scene as any, renderer as any, controls as any, null);
-      expect(mesh.geometry.dispose).toHaveBeenCalled();
-      expect(mesh.material.dispose).toHaveBeenCalled();
+      } as unknown as THREE.Mesh;
+      const scene = { remove: jest.fn(), traverse: jest.fn((cb: (o: unknown) => void) => { cb(mesh); }) } as unknown as THREE.Scene;
+      const renderer = { dispose: jest.fn() } as unknown as THREE.WebGLRenderer;
+      const controls = { dispose: jest.fn() } as unknown as OrbitControls;
+      disposeScene(scene, renderer, controls, null);
+      expect((mesh as { geometry: { dispose: jest.Mock } }).geometry.dispose).toHaveBeenCalled();
+      expect((mesh.material as { dispose: jest.Mock }).dispose).toHaveBeenCalled();
     });
 
     it('traverse disposes InstancedMesh with array material', () => {
@@ -204,13 +204,13 @@ describe('threeUtils', () => {
         geometry: { dispose: jest.fn() },
         material: [{ dispose: jest.fn() }],
         isInstancedMesh: true,
-      };
-      const scene = { remove: jest.fn(), traverse: jest.fn((cb: (o: unknown) => void) => { cb(mesh); }) };
-      const renderer = { dispose: jest.fn() };
-      const controls = { dispose: jest.fn() };
-      disposeScene(scene as any, renderer as any, controls as any, null);
-      expect(mesh.geometry.dispose).toHaveBeenCalled();
-      expect(mesh.material[0].dispose).toHaveBeenCalled();
+      } as unknown as THREE.InstancedMesh;
+      const scene = { remove: jest.fn(), traverse: jest.fn((cb: (o: unknown) => void) => { cb(mesh); }) } as unknown as THREE.Scene;
+      const renderer = { dispose: jest.fn() } as unknown as THREE.WebGLRenderer;
+      const controls = { dispose: jest.fn() } as unknown as OrbitControls;
+      disposeScene(scene, renderer, controls, null);
+      expect((mesh as { geometry: { dispose: jest.Mock } }).geometry.dispose).toHaveBeenCalled();
+      expect((mesh.material as { dispose: jest.Mock }[])[0].dispose).toHaveBeenCalled();
     });
   });
 });

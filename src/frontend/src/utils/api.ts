@@ -121,6 +121,7 @@ export interface VoxelizeRequest {
 export interface VoxelizeResponse {
   message: string;
   project_folder: string;
+  project_folder_name?: string;
   voxel_size: number;
 }
 
@@ -199,7 +200,6 @@ export const fetchLayers = async (
   projectName: string,
   partitionName: string,
   axis: 'z' | 'x' | 'y' = 'z',
-  _voxelSize?: number, // Unused but kept for interface compatibility
 ): Promise<LayersResponse> => {
   try {
     if (!partitionName) {
@@ -229,13 +229,12 @@ export const fetchLayers = async (
 // Copied voxel properties for clipboard (material + magnetization)
 export interface VoxelPropertiesClipboard {
   material: number;
-  magnetization: number;
   polarAngle: number;
   azimuthAngle: number;
 }
 
 // Voxel data structure from backend
-// Backend returns: (ix, iy, iz, x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth)
+// Backend returns: (ix, iy, iz, x, y, z, material, magnet_polar, magnet_azimuth)
 export interface LayerVoxel {
   ix: number; // Grid index X
   iy: number; // Grid index Y
@@ -244,7 +243,6 @@ export interface LayerVoxel {
   y: number; // Real coordinate Y
   z: number; // Real coordinate Z
   material: number;
-  magnetization: number; // magnet_magnitude
   polarAngle: number; // magnet_polar (θ), degrees
   azimuthAngle: number; // magnet_azimuth (φ), degrees
   // Computed fields for 2D grid display
@@ -270,19 +268,8 @@ export interface LayerResponse {
 
 // Transform raw voxel tuple from backend to LayerVoxel object
 const transformVoxel = (raw: number[], axis: 'z' | 'x' | 'y'): LayerVoxel => {
-  // Backend returns: [ix, iy, iz, x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth]
-  const [
-    ix,
-    iy,
-    iz,
-    x,
-    y,
-    z,
-    material,
-    magnet_magnitude,
-    magnet_polar,
-    magnet_azimuth,
-  ] = raw;
+  // Backend returns: [ix, iy, iz, x, y, z, material, magnet_polar, magnet_azimuth]
+  const [ix, iy, iz, x, y, z, material, magnet_polar, magnet_azimuth] = raw;
 
   // For 2D grid display, we need to determine which coordinates to use
   // based on the axis (the axis coordinate is constant for the layer)
@@ -309,7 +296,6 @@ const transformVoxel = (raw: number[], axis: 'z' | 'x' | 'y'): LayerVoxel => {
     y,
     z,
     material,
-    magnetization: magnet_magnitude,
     polarAngle: magnet_polar,
     azimuthAngle: magnet_azimuth,
     grid_x,
@@ -381,7 +367,6 @@ export const fetchLayer = async (
   partitionName: string,
   layerValue: number, // This is the real coordinate value (e.g., 0.05) or layer index
   axis: 'z' | 'x' | 'y' = 'z',
-  _voxelSize?: number, // Kept for interface compatibility
 ): Promise<LayerResponse> => {
   try {
     if (!partitionName) {
@@ -466,7 +451,7 @@ export interface UpdateVoxelsRequest {
   voxels: [number, number, number][]; // Grid coordinates: [ix, iy, iz][]
   action: UpdateAction;
   materialID?: number;
-  magnetization?: [number, number, number];
+  magnetization?: [number, number];
 }
 
 export const updateVoxels = async (

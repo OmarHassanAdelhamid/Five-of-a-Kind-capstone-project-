@@ -9,23 +9,21 @@ def update_voxel_materials(db_path: str, voxels: List[Tuple[int, int, int]], mat
         for voxel in voxels:
             db.set_material(voxel[0], voxel[1], voxel[2], materialID)
 
-def update_voxel_magnetization(db_path: str, voxels: List[Tuple[int, int, int]], magnetization: Tuple[float, float, float]):
-    if magnetization[0] < 0: raise ValueError("Magnetization magnitude must be positive.")
-    if magnetization[1] < 0 or magnetization[1] > 180: raise ValueError("Polar coordinate must be in range (0, 180)")
-    if magnetization[2] < 0 or magnetization[2] > 360: raise ValueError("Azimuth angle must be in range (0, 360)") 
+def update_voxel_magnetization(db_path: str, voxels: List[Tuple[int, int, int]], polar: float, azimuth: float):
+    if polar < 0 or polar > 180: raise ValueError("Polar coordinate must be in range (0, 180)")
+    if azimuth < 0 or azimuth > 360: raise ValueError("Azimuth angle must be in range (0, 360)") 
     with VoxelDB(db_path) as db:
         for voxel in voxels:
-            db.set_magnetization(voxel[0], voxel[1], voxel[2], 
-                                 magnetization[0], magnetization[1], magnetization[2])
+            db.set_magnetization(voxel[0], voxel[1], voxel[2], 1.0, polar, azimuth)
         
-def update_voxel_properties(db_path: str, voxels: List[Tuple[int, int, int, int, float, float, float]]):
+def update_voxel_properties(db_path: str, voxels: List[Tuple[int, int, int, int, float, float]]):
+    """Update voxel properties from (ix, iy, iz, material, magnet_polar, magnet_azimuth) tuples."""
     with VoxelDB(db_path) as db:
         for voxel in voxels:
             if voxel[3] < 1: raise ValueError("materialID must be 1 or greater.")
-            if voxel[4] < 0: raise ValueError("Magnetization magnitude must be positive.")
-            if voxel[5] < 0 or voxel[5] > 180: raise ValueError("Polar coordinate must be in range (0, 180)")
-            if voxel[6] < 0 or voxel[6] > 360: raise ValueError("Azimuth angle must be in range (0, 360)")
-            db.set_properties(voxel[0], voxel[1], voxel[2], voxel[3], voxel[4], voxel[5], voxel[6])
+            if voxel[4] < 0 or voxel[4] > 180: raise ValueError("Polar coordinate must be in range (0, 180)")
+            if voxel[5] < 0 or voxel[5] > 360: raise ValueError("Azimuth angle must be in range (0, 360)")
+            db.set_properties(voxel[0], voxel[1], voxel[2], voxel[3], 1.0, voxel[4], voxel[5])
 
 def add_voxels(db_path: str, voxels: List[Tuple[int, int, int]]):
     with VoxelDB(db_path) as db:

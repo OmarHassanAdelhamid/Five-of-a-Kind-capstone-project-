@@ -189,7 +189,7 @@ async def test_update_both_material_and_magnetization_invalid() -> None:
             with pytest.raises(HTTPException) as exc:
                 await ed_r.update_voxels(UpdateVoxelsRequest(
                     project_name="p", partition_name="part", voxels=[(0, 0, 0)],
-                    action=UpdateAction.UPDATE, materialID=1, magnetization=[1.0, 0.0, 0.0]
+                    action=UpdateAction.UPDATE, materialID=1, magnetization=[0.0, 0.0]
                 ))
             assert exc.value.status_code == 400
             assert "both" in exc.value.detail.lower()

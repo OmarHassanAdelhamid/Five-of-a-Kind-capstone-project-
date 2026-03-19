@@ -2,6 +2,7 @@ import React from 'react';
 import { render, act } from '@testing-library/react';
 import { ModelViewer } from './ModelViewer';
 import type { LayerEditorHandle } from './LayerEditor';
+import * as threeUtils from '../utils/threeUtils';
 
 const mockSceneSetup = {
   scene: { add: jest.fn() },
@@ -124,7 +125,6 @@ describe('ModelViewer', () => {
     await act(async () => {});
     await expect(ref.current!.applyPaste({
       material: 1,
-      magnetization: 0,
       polarAngle: 0,
       azimuthAngle: 0,
     })).resolves.toBeUndefined();
@@ -145,7 +145,6 @@ describe('ModelViewer', () => {
   });
 
   it('calls renderVoxelInstanced when selectedModel loads with voxelCoordinates', async () => {
-    const threeUtils = require('../utils/threeUtils');
     render(
       <ModelViewer
         selectedModel="test.stl"
@@ -199,7 +198,6 @@ describe('ModelViewer', () => {
   });
 
   it('resize event updates camera when model loaded', async () => {
-    const threeUtils = require('../utils/threeUtils');
     const mockSetup = threeUtils.createScene();
     render(
       <ModelViewer
@@ -218,7 +216,6 @@ describe('ModelViewer', () => {
   });
 
   it('click on viewer element runs click handler (no intersect)', async () => {
-    const threeUtils = require('../utils/threeUtils');
     render(
       <ModelViewer
         selectedModel="test.stl"
@@ -236,7 +233,6 @@ describe('ModelViewer', () => {
   });
 
   it('unmount calls disposeScene', async () => {
-    const threeUtils = require('../utils/threeUtils');
     const { unmount } = render(
       <ModelViewer selectedModel={null} voxelCoordinates={[]} onStatusChange={jest.fn()} voxelSize={1} />
     );

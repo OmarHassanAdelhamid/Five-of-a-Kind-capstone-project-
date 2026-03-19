@@ -72,7 +72,8 @@ class UpdateVoxelsRequest(BaseModel):
         voxels (List[Tuple[int, int, int]]): the set of voxels to be acted upon.
         action (UpdateAction): an action to take upon voxels.
         materialID (Optional[int]): if action is UPDATE, the material to be assigned to voxels.
-        magnetization (Optional[Tuple[float, float, float]]): if action is UPDATE, the magnetization to be assigned to voxels.
+        magnetization (Optional[Tuple[float, float]]): if action is UPDATE, the magnetization direction
+            to be assigned to voxels as [polar (θ), azimuth (φ)] in degrees.
 
     Notes:
         If the action is UPDATE, *only* one of materialID and magnetization can have a value!
@@ -83,7 +84,7 @@ class UpdateVoxelsRequest(BaseModel):
     voxels: List[Tuple[int, int, int]]
     action: UpdateAction
     materialID: Optional[int] = None
-    magnetization: Optional[Tuple[float, float, float]] = None
+    magnetization: Optional[Tuple[float, float]] = None
 
 class UpdateHistoryRequest(BaseModel):
     """
@@ -102,12 +103,13 @@ class ModelDelta(BaseModel):
     Datatype to represent a change to a model.
 
     Args:
-        old_voxels (List[Tuple[int, int, int, int, int, float, float]]): set of voxels; what they were previously.
-        new_voxels (List[Tuple[int, int, int, int, int, float, float]]): set of voxels; their new state.
+        old_voxels (List[Tuple[int, int, int, int, float, float]]): set of voxels; what they were previously.
+            Each tuple is (ix, iy, iz, material, magnet_polar, magnet_azimuth).
+        new_voxels (List[Tuple[int, int, int, int, float, float]]): set of voxels; their new state.
     
     Notes: 
         An empty list here is interpreted as either an addition (old = []) or deletion (new = []).
     """
-    old_voxels: List[Tuple[int, int, int, int, float, float, float]]
-    new_voxels: List[Tuple[int, int, int, int, float, float, float]]
+    old_voxels: List[Tuple[int, int, int, int, float, float]]
+    new_voxels: List[Tuple[int, int, int, int, float, float]]
 
