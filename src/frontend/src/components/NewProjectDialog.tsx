@@ -79,6 +79,7 @@ export const NewProjectDialog = ({
     setProgressMessage('Voxelizing model...')
 
     try {
+      console.log('START creating')
       await onConfirm(
         {
           projectName: fullProjectName,
@@ -89,6 +90,7 @@ export const NewProjectDialog = ({
         },
         setProgressMessage
       )
+      
       onClose()
     } catch {
       // Error already shown by parent

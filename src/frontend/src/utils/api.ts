@@ -437,6 +437,14 @@ export const fetchLayer = async (
   }
 };
 
+export type Partition = {
+  name: string;
+  label: string;
+  x: number;
+  y: number;
+  z: number;
+};
+
 // Update action types matching backend
 export type UpdateAction =
   | 'update'

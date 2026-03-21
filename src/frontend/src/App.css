@@ -652,6 +652,17 @@ header code {
   box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
 }
 
+.partition-row {
+  width: 100%;
+}
+
+.partition-item,
+.partition-edit-input {
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+}
+
 .upload-button {
   position: relative;
   display: inline-flex;
@@ -1397,6 +1408,14 @@ footer .metadata {
 .refresh-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.edit-partition-labels {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  text-align: left;
+  font-style: italic;
+  padding: 1rem;
 }
 
 .layer-editor-panel .loading-message,

@@ -39,11 +39,17 @@ def get_partitions(db_path: str, partition_size: int) -> list:
     y_hi = ((max_iy // partition_size) + 1) * partition_size
     z_hi = ((max_iz // partition_size) + 1) * partition_size
 
+    xcount = 0
+    ycount = 0
+    zcount = 0
     for i in range (x_lo, x_hi, partition_size):
+        ycount = 0
         for j in range (y_lo, y_hi, partition_size):
+            zcount = 0
             for k in range (z_lo, z_hi, partition_size):
                 voxel_range = (i, i+partition_size, j, j+partition_size, k, k+partition_size)
-                new_path = os.path.join(base_dir, f"partition{count}.db")
+                new_path = os.path.join(base_dir, f"partition-x-{xcount}-y-{ycount}-z-{zcount}.db")
+                #new_path = os.path.join(base_dir, f"partition{count}.db")
                 shutil.copy2(db_path, new_path)
                 remove_outside_range(new_path, voxel_range)
 
@@ -57,6 +63,9 @@ def get_partitions(db_path: str, partition_size: int) -> list:
                     count += 1
                 else:
                     os.remove(new_path)
+                zcount += 1
+            ycount += 1
+        xcount += 1
     return partitions
 
 # query to remove parts of the sql table that are not part of the specific partition
