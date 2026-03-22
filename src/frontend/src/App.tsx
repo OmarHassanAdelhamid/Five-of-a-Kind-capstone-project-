@@ -18,7 +18,10 @@ import {
 import type { LayerEditorHandle } from './components/LayerEditor';
 
 function App() {
-  const [, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  /** Drives StatusMessage while /api/project voxel payload is loading (parent state; ModelViewer owns STL mesh status). */
+  const [projectFetchStatus, setProjectFetchStatus] = useState<
+    'idle' | 'loading' | 'error'
+  >('idle');
   const [models, setModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [projectName, setProjectName] = useState<string>(
@@ -117,59 +120,60 @@ function App() {
     const savedProject = sessionStorage.getItem('projectName');
     const savedPartition = sessionStorage.getItem('selectedPartition');
     if (savedProject && savedPartition) {
-      setStatus('loading');
+      setProjectFetchStatus('loading');
       fetchVoxels(savedProject, savedPartition)
         .then((coords) => {
-          setStatus(coords.length > 0 ? 'ready' : 'error');
+          setProjectFetchStatus(coords.length > 0 ? 'idle' : 'error');
         })
-        .catch(() => setStatus('error'));
+        .catch(() => setProjectFetchStatus('error'));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const initialiseModels = async () => {
-      setStatus('loading');
+      const loadingProjectVoxels = Boolean(
+        projectName.trim() && selectedPartition,
+      );
 
       try {
         const modelList = await fetchModels();
-        if (modelList.length > 0) {
-          // Only auto-select first STL when welcome modal is closed, no project is loaded,
-          // and the New Project dialog is not open (so we don't overwrite the user's choice).
-          if (
-            !showWelcomeModal &&
-            !projectName.trim() &&
-            !isNewProjectDialogOpen
-          ) {
-            setSelectedModel((current) =>
-              current && modelList.includes(current) ? current : modelList[0],
-            );
-          }
-          setStatus('ready');
-        } else {
-          if (!isNewProjectDialogOpen) {
+        if (!loadingProjectVoxels) {
+          if (modelList.length > 0) {
+            if (
+              !showWelcomeModal &&
+              !projectName.trim() &&
+              !isNewProjectDialogOpen
+            ) {
+              setSelectedModel((current) =>
+                current && modelList.includes(current) ? current : modelList[0],
+              );
+            }
+          } else if (!isNewProjectDialogOpen) {
             setSelectedModel(null);
           }
-          setStatus('error');
         }
       } catch {
-        if (!isNewProjectDialogOpen) {
+        if (!loadingProjectVoxels && !isNewProjectDialogOpen) {
           setSelectedModel(null);
         }
-        setStatus('error');
       }
     };
 
     void initialiseModels();
     void fetchProjects();
-  }, [fetchModels, fetchProjects, showWelcomeModal, projectName, isNewProjectDialogOpen]);
+  }, [
+    fetchModels,
+    fetchProjects,
+    showWelcomeModal,
+    projectName,
+    isNewProjectDialogOpen,
+    selectedPartition,
+  ]);
 
-  const handleStatusChange = useCallback(
-    (newStatus: 'loading' | 'ready' | 'error') => {
-      setStatus(newStatus);
-    },
-    [],
-  );
+  const handleStatusChange = useCallback(() => {
+    /* Status banner for STL mesh loads is merged inside ModelViewer (viewerStatus). */
+  }, []);
 
   const handleModelChange = useCallback((model: string) => {
     setSelectedModel(model);
@@ -189,20 +193,21 @@ function App() {
       }
 
       try {
-        setStatus('loading');
+        setProjectFetchStatus('loading');
         setSelectedModel(null); // Clear STL model when loading project - show voxels only
+        setVoxelCoordinates([]);
         setSelectedLayerZ(null); // Clear layer selection when loading new project
         setSelectedVoxel(null); // Clear voxel selection when loading new project
         setSelectedVoxels(new Set()); // Clear multiple voxel selections
         const coordinates = await fetchVoxels(projectToLoad, partitionToLoad);
         if (coordinates.length > 0) {
           setVoxelCoordinates(coordinates);
-          setStatus('ready');
+          setProjectFetchStatus('idle');
         } else {
-          setStatus('error');
+          setProjectFetchStatus('error');
         }
       } catch {
-        setStatus('error');
+        setProjectFetchStatus('error');
       }
     },
     [projectName, selectedPartition, fetchVoxels],
@@ -214,9 +219,9 @@ function App() {
     try {
       const coordinates = await fetchVoxelized(projectName, selectedPartition);
       setVoxelCoordinates(coordinates);
-      setStatus('ready');
+      setProjectFetchStatus('idle');
     } catch {
-      setStatus('error');
+      setProjectFetchStatus('error');
     }
   }, [projectName, selectedPartition]);
 
@@ -688,6 +693,7 @@ function App() {
         ref={modelViewerRef}
         selectedModel={selectedModel}
         voxelCoordinates={voxelCoordinates}
+        projectFetchStatus={projectFetchStatus}
         onStatusChange={handleStatusChange}
         selectedLayerZ={isLayerEditingMode ? selectedLayerZ : null}
         layerAxis={layerAxis}

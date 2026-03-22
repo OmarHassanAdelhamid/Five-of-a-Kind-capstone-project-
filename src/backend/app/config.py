@@ -1,10 +1,23 @@
 from pathlib import Path
 import os
+import sys
 
-BACKEND_DIR = Path(__file__).parent.parent
-SAMPLE_DIR = BACKEND_DIR / "sample-project-files"
-STL_STORAGE_DIR = SAMPLE_DIR / "stl"                 # directory for stl files uploaded to server
-PROJECT_STORAGE_DIR = SAMPLE_DIR / "voxels"          # directory for project folders on server
+def _backend_dir() -> Path:
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return Path(sys._MEIPASS)
+    return Path(__file__).resolve().parent.parent
+
+
+BACKEND_DIR = _backend_dir()
+
+_workspace = os.environ.get("DESKTOP_WORKSPACE_DIR")
+if _workspace:
+    SAMPLE_DIR = Path(_workspace)
+else:
+    SAMPLE_DIR = BACKEND_DIR / "sample-project-files"
+
+STL_STORAGE_DIR = SAMPLE_DIR / "stl"  # directory for stl files uploaded to server
+PROJECT_STORAGE_DIR = SAMPLE_DIR / "voxels"  # directory for project folders on server
 
 # Allow all localhost origins in development
 # In production, set specific origins via environment variable

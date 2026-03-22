@@ -231,6 +231,19 @@ export const MenuBar = ({
 
   return (
     <div className="menu-bar" ref={menuRef}>
+      <div className="menu-bar-brand">
+        <span className="menu-bar-brand-icon-wrap" aria-hidden="true">
+          <img
+            className="menu-bar-brand-icon"
+            src="/autovox-gear.svg"
+            alt=""
+            width={18}
+            height={18}
+            draggable={false}
+          />
+        </span>
+        <span className="menu-bar-brand-text">AutoVox</span>
+      </div>
       {menuItems.map((menu) => (
         <div key={menu.name} className="menu-item">
           <button

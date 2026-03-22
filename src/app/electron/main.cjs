@@ -1,6 +1,7 @@
-const { app, BrowserWindow, dialog } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain } = require('electron')
 const path = require('path')
 const crypto = require('crypto')
+const os = require('os')
 const { spawn } = require('child_process')
 const net = require('net')
 const http = require('http')
@@ -15,12 +16,15 @@ const isDev =
   process.env.NODE_ENV === 'development' || !app.isPackaged
 
 const BACKEND_PORT = isDev
-  ? Number(process.env.FOAK_API_PORT) || 8000
+  ? Number(process.env.DESKTOP_API_PORT) || 8000
   : 8765
 
 const BACKEND_START_TIMEOUT_MS = isDev ? 90000 : 180000
 
-/** GUI-launched apps on macOS often lack Homebrew on PATH — add common locations. */
+/**
+ * Env for Python subprocesses. Strip Electron/Node vars — they can confuse tooling
+ * or alter behavior when spawning `python` / `uvicorn` from the GUI main process.
+ */
 function backendProcessEnv() {
   const delimiter = path.delimiter
   const extra =
@@ -29,16 +33,45 @@ function backendProcessEnv() {
       : process.platform === 'win32'
         ? []
         : ['/usr/local/bin', '/usr/bin', '/bin']
-  const basePath = process.env.PATH || ''
+
+  const base = { ...process.env }
+  for (const key of Object.keys(base)) {
+    if (key.startsWith('ELECTRON_')) delete base[key]
+  }
+  delete base.NODE_OPTIONS
+  delete base.ELECTRON_RUN_AS_NODE
+
+  const basePath = base.PATH || ''
   const PATH = [...extra, basePath].filter(Boolean).join(delimiter)
   return {
-    ...process.env,
+    ...base,
     PATH,
     PYTHONUNBUFFERED: '1',
   }
 }
 
+function pythonInterpreterFile() {
+  return path.join(app.getPath('userData'), 'python-interpreter.txt')
+}
+
+function loadSavedPythonPath() {
+  try {
+    const p = fs.readFileSync(pythonInterpreterFile(), 'utf8').trim()
+    if (p && fs.existsSync(p)) return p
+  } catch {
+    /* ignore */
+  }
+  return null
+}
+
+function savePythonPath(p) {
+  fs.mkdirSync(app.getPath('userData'), { recursive: true })
+  fs.writeFileSync(pythonInterpreterFile(), p, 'utf8')
+}
+
 function findPythonExecutable() {
+  const saved = loadSavedPythonPath()
+  if (saved) return saved
   if (process.platform === 'win32') {
     return process.env.PYTHON_EXE || 'python'
   }
@@ -100,6 +133,9 @@ function hashRequirementsFile(reqPath) {
 /** @type {BrowserWindow | null} */
 let splashWin = null
 
+/** @type {((v: string) => void) | null} */
+let pythonPathResolver = null
+
 function closeSplash() {
   if (splashWin && !splashWin.isDestroyed()) {
     splashWin.close()
@@ -107,25 +143,147 @@ function closeSplash() {
   splashWin = null
 }
 
-function showSplash(lines) {
+ipcMain.on('setup-continue-python', (_e, value) => {
+  if (pythonPathResolver) {
+    pythonPathResolver(value)
+    pythonPathResolver = null
+  }
+})
+
+function waitForPythonPathFromUser() {
+  return new Promise((resolve) => {
+    pythonPathResolver = resolve
+  })
+}
+
+function createSetupWindow() {
   closeSplash()
-  const body = lines
-    .map((l) => `<p>${String(l).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>`)
-    .join('')
-  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:28px;margin:0;background:#1a1a1a;color:#eee;font-size:14px;line-height:1.45}h1{font-size:17px;margin:0 0 14px;font-weight:600}</style></head><body><h1>Five of a Kind</h1>${body}</body></html>`
   splashWin = new BrowserWindow({
-    width: 460,
-    height: 200,
-    frame: false,
-    center: true,
-    resizable: false,
+    width: 520,
+    height: 460,
+    title: 'AutoVox — Setup',
     show: true,
+    center: true,
+    resizable: true,
+    minWidth: 480,
+    minHeight: 400,
     webPreferences: {
+      preload: path.join(__dirname, 'setup-preload.cjs'),
       contextIsolation: true,
       nodeIntegration: false,
     },
   })
-  splashWin.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(html))
+  splashWin.on('closed', () => {
+    if (pythonPathResolver) {
+      pythonPathResolver('CANCEL')
+      pythonPathResolver = null
+    }
+  })
+  splashWin.loadFile(path.join(__dirname, 'setup-window.html'))
+  return splashWin
+}
+
+function sendSetupUpdate(win, payload) {
+  if (win && !win.isDestroyed()) {
+    win.webContents.send('setup-update', payload)
+  }
+}
+
+function probePython(exe) {
+  return new Promise((resolve) => {
+    const proc = spawn(
+      exe,
+      [
+        '-c',
+        'import sys; assert sys.version_info >= (3, 9); print(sys.version.split()[0]); print(sys.executable)',
+      ],
+      { env: backendProcessEnv(), shell: false },
+    )
+    let out = ''
+    proc.stdout?.on('data', (d) => {
+      out += d.toString()
+    })
+    proc.stderr?.on('data', (d) => {
+      out += d.toString()
+    })
+    proc.on('error', () => {
+      resolve({
+        ok: false,
+        triedPath: exe,
+        error: `Cannot run "${exe}". Install Python 3.9+ or pick the executable with Browse.`,
+      })
+    })
+    proc.on('exit', (code) => {
+      if (code !== 0) {
+        resolve({
+          ok: false,
+          triedPath: exe,
+          error: out.trim() || `Exited with code ${code}`,
+        })
+        return
+      }
+      const lines = out.trim().split('\n').filter(Boolean)
+      const versionLine = lines[0] || ''
+      const resolvedPath = lines[lines.length - 1] || exe
+      resolve({
+        ok: true,
+        triedPath: exe,
+        versionLine: `Python ${versionLine}`,
+        resolvedPath,
+      })
+    })
+  })
+}
+
+function packageListFromRequirements(reqPath) {
+  if (!fs.existsSync(reqPath)) return []
+  const text = fs.readFileSync(reqPath, 'utf8')
+  const names = []
+  for (const line of text.split('\n')) {
+    const t = line.trim()
+    if (!t || t.startsWith('#')) continue
+    const cut = t.search(/[<>=[\s@!]/)
+    const base = (cut === -1 ? t : t.slice(0, cut)).trim()
+    if (base) names.push(base)
+  }
+  return names
+}
+
+function runCommandStreaming(cmd, args, { cwd, env, timeoutMs, onChunk }) {
+  const mergedEnv = env || backendProcessEnv()
+  return new Promise((resolve, reject) => {
+    const chunks = []
+    const proc = spawn(cmd, args, {
+      cwd: cwd ?? undefined,
+      env: mergedEnv,
+      shell: false,
+    })
+    proc.stdout?.on('data', (d) => {
+      chunks.push(d)
+      onChunk?.(d.toString())
+    })
+    proc.stderr?.on('data', (d) => {
+      chunks.push(d)
+      onChunk?.(d.toString())
+    })
+    const t = setTimeout(() => {
+      proc.kill('SIGTERM')
+      reject(new Error(`Timed out after ${timeoutMs}ms`))
+    }, timeoutMs)
+    proc.on('error', (err) => {
+      clearTimeout(t)
+      reject(err)
+    })
+    proc.on('exit', (code) => {
+      clearTimeout(t)
+      const out = Buffer.concat(chunks).toString()
+      if (code !== 0) {
+        reject(new Error(out.trim() || `Process exited with code ${code}`))
+      } else {
+        resolve(out)
+      }
+    })
+  })
 }
 
 function runCommand(cmd, args, { cwd, env, timeoutMs }) {
@@ -159,26 +317,39 @@ function runCommand(cmd, args, { cwd, env, timeoutMs }) {
   })
 }
 
+/** True if the venv can import backend runtime deps (avoids “marker OK” but missing trimesh). */
+async function venvImportsBackendDeps(venvPy) {
+  try {
+    await runCommand(
+      venvPy,
+      ['-c', 'import trimesh, numpy, fastapi, uvicorn'],
+      { timeoutMs: 30000 },
+    )
+    return true
+  } catch {
+    return false
+  }
+}
+
 /**
  * Packaged builds: create a venv under userData and pip install bundled requirements.
  * Requires network on first install. Dev mode skips this (use your own venv / global pip).
  */
 async function ensurePackagedPythonEnv() {
-  if (isDev || process.env.FOAK_SKIP_AUTO_VENV === '1') {
+  if (isDev || process.env.DESKTOP_SKIP_AUTO_VENV === '1') {
     return
   }
 
-  const basePy = findPythonExecutable()
   const venvDir = venvRootDir()
   const venvPy = venvInterpreterPath()
   const backend = backendRoot()
   const reqApp = path.join(backend, 'requirements-app.txt')
   const reqFull = path.join(backend, 'requirements.txt')
   const reqFile = fs.existsSync(reqApp) ? reqApp : reqFull
-  const markerPath = path.join(venvDir, '.foak-deps')
+  const markerPath = path.join(venvDir, '.desktop-python-deps')
 
   const reqHash = hashRequirementsFile(reqFile)
-  const needsInstall =
+  let needsInstall =
     !fs.existsSync(venvPy) ||
     !fs.existsSync(markerPath) ||
     (() => {
@@ -189,21 +360,82 @@ async function ensurePackagedPythonEnv() {
       }
     })()
 
+  if (!needsInstall && !(await venvImportsBackendDeps(venvPy))) {
+    try {
+      fs.unlinkSync(markerPath)
+    } catch {
+      /* ignore */
+    }
+    needsInstall = true
+  }
+
   if (!needsInstall) {
+    appendBackendLog(
+      'ensurePackagedPythonEnv: reusing venv (requirements marker + import check OK).',
+    )
     return
   }
 
-  showSplash([
-    'Setting up the Python environment…',
-    'First launch downloads packages (internet required). This may take a few minutes.',
-  ])
+  const setupWin = createSetupWindow()
+  await new Promise((resolve) => {
+    if (setupWin.webContents.isLoading()) {
+      setupWin.webContents.once('did-finish-load', resolve)
+    } else {
+      resolve()
+    }
+  })
+
+  const packages = packageListFromRequirements(reqFile)
+  const preview =
+    packages.length > 0
+      ? `Will install: ${packages.slice(0, 14).join(', ')}${packages.length > 14 ? ', …' : ''}`
+      : ''
+
+  sendSetupUpdate(setupWin, {
+    packageListPreview: preview,
+    progress: 2,
+    phase: 'Checking Python…',
+    pythonProbe: { checking: true, triedPath: findPythonExecutable() },
+  })
+
+  let probe = await probePython(findPythonExecutable())
+  sendSetupUpdate(setupWin, { pythonProbe: probe, progress: probe.ok ? 8 : 4 })
+
+  while (!probe.ok) {
+    sendSetupUpdate(setupWin, { suggestedPath: probe.triedPath })
+    const userPath = await waitForPythonPathFromUser()
+    if (userPath === 'CANCEL') {
+      closeSplash()
+      throw new Error('Setup cancelled.')
+    }
+    const trimmed = userPath != null ? String(userPath).trim() : ''
+    if (trimmed) {
+      savePythonPath(trimmed)
+    } else {
+      try {
+        fs.unlinkSync(pythonInterpreterFile())
+      } catch {
+        /* ignore */
+      }
+    }
+    probe = await probePython(findPythonExecutable())
+    sendSetupUpdate(setupWin, { pythonProbe: probe, progress: probe.ok ? 8 : 4 })
+  }
+
+  const basePy = findPythonExecutable()
 
   try {
     fs.mkdirSync(app.getPath('userData'), { recursive: true })
 
+    sendSetupUpdate(setupWin, {
+      progress: 10,
+      phase: 'Creating virtual environment…',
+    })
+
     if (!fs.existsSync(venvPy)) {
-      await runCommand(basePy, ['-m', 'venv', venvDir], {
+      await runCommandStreaming(basePy, ['-m', 'venv', venvDir], {
         timeoutMs: 120000,
+        onChunk: (t) => sendSetupUpdate(setupWin, { logChunk: t }),
       })
     }
 
@@ -213,26 +445,65 @@ async function ensurePackagedPythonEnv() {
       )
     }
 
-    await runCommand(venvPy, ['-m', 'pip', 'install', '--upgrade', 'pip'], {
+    sendSetupUpdate(setupWin, { progress: 22, phase: 'Upgrading pip…' })
+    await runCommandStreaming(venvPy, ['-m', 'pip', 'install', '--upgrade', 'pip'], {
       timeoutMs: 180000,
+      onChunk: (t) => sendSetupUpdate(setupWin, { logChunk: t }),
     })
 
-    await runCommand(
+    let pipProgress = 28
+    sendSetupUpdate(setupWin, {
+      progress: pipProgress,
+      phase: 'Installing packages (internet required)…',
+    })
+
+    await runCommandStreaming(
       venvPy,
       ['-m', 'pip', 'install', '-r', reqFile],
       {
         cwd: backend,
         timeoutMs: 600000,
+        onChunk: (text) => {
+          const m =
+            text.match(/Collecting ([^\s]+)/) ||
+            text.match(/Installing ([^\s]+)/) ||
+            text.match(/Using cached ([^\s]+)/)
+          pipProgress = Math.min(97, pipProgress + Math.min(2.5, 0.08 * text.length))
+          sendSetupUpdate(setupWin, {
+            logChunk: text,
+            currentPackage: m ? `Installing: ${m[1]}` : undefined,
+            progress: pipProgress,
+          })
+        },
       },
     )
 
+    sendSetupUpdate(setupWin, { progress: 96, phase: 'Verifying install…' })
+    if (!(await venvImportsBackendDeps(venvPy))) {
+      try {
+        fs.unlinkSync(markerPath)
+      } catch {
+        /* ignore */
+      }
+      throw new Error(
+        'pip reported success but trimesh/numpy (or FastAPI) could not be imported. ' +
+          'Try again with a stable network, or use Python 3.11–3.13 if problems persist.',
+      )
+    }
+
     fs.writeFileSync(markerPath, reqHash, 'utf8')
+    sendSetupUpdate(setupWin, {
+      progress: 100,
+      phase: 'Done.',
+      currentPackage: '',
+    })
+    await new Promise((r) => setTimeout(r, 450))
   } catch (e) {
     const detail = e instanceof Error ? e.message : String(e)
     appendBackendLog(`ensurePackagedPythonEnv failed:\n${detail}`)
     throw new Error(
       `Could not install Python dependencies.\n\n${detail}\n\n` +
-        'You need Python 3 installed and a working internet connection for the first run.',
+        'You need Python 3.9+ and a working internet connection for the first run.',
     )
   } finally {
     closeSplash()
@@ -244,6 +515,16 @@ function backendRoot() {
     return path.join(__dirname, '..', '..', 'backend')
   }
   return path.join(process.resourcesPath, 'backend')
+}
+
+function backendSpawnEnv() {
+  const env = { ...backendProcessEnv() }
+  if (!isDev) {
+    const ws = path.join(app.getPath('userData'), 'workspace')
+    fs.mkdirSync(ws, { recursive: true })
+    env.DESKTOP_WORKSPACE_DIR = ws
+  }
+  return env
 }
 
 function frontendDist() {
@@ -301,16 +582,35 @@ function waitForBackend(port, timeoutMs = 90000) {
   })
 }
 
+function backendLogFilePath() {
+  return path.join(app.getPath('userData'), 'backend.log')
+}
+
+/**
+ * Append to ~/Library/Application Support/autovox-desktop/backend.log (macOS).
+ * Not inside python-runtime/ — that folder is only the venv.
+ */
 function appendBackendLog(text) {
+  const stamp = `\n--- ${new Date().toISOString()}\n${text}\n`
+  const primary = backendLogFilePath()
   try {
     const dir = app.getPath('userData')
     fs.mkdirSync(dir, { recursive: true })
-    fs.appendFileSync(
-      path.join(dir, 'backend.log'),
-      `\n--- ${new Date().toISOString()}\n${text}\n`,
-    )
-  } catch {
-    /* ignore */
+    const st = fs.existsSync(primary) ? fs.statSync(primary) : null
+    if (st && st.isDirectory()) {
+      throw new Error(`backend.log is a directory, not a file: ${primary}`)
+    }
+    fs.appendFileSync(primary, stamp)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error('[AutoVox] backend.log write failed:', primary, msg)
+    try {
+      const fallback = path.join(os.tmpdir(), 'autovox-desktop-backend.log')
+      fs.appendFileSync(fallback, stamp)
+      console.error('[AutoVox] wrote same entry to fallback log:', fallback)
+    } catch (err2) {
+      console.error('[AutoVox] fallback log write failed:', err2)
+    }
   }
 }
 
@@ -318,12 +618,15 @@ function startBackend() {
   const cwd = backendRoot()
   const mainPy = path.join(cwd, 'app', 'main.py')
   if (!fs.existsSync(mainPy)) {
-    return Promise.reject(
-      new Error(`Backend not found at ${mainPy}. Did you install dependencies?`),
-    )
+    const msg = `Backend not found at ${mainPy}. Did you install dependencies?`
+    appendBackendLog(`startBackend aborted: ${msg}`)
+    return Promise.reject(new Error(msg))
   }
 
   const pythonExe = resolveBackendPython()
+  appendBackendLog(
+    `startBackend: spawning uvicorn | python=${pythonExe} | cwd=${cwd} | port=${BACKEND_PORT}`,
+  )
   let stderrBuf = ''
   const onStderr = (chunk) => {
     const s = chunk.toString()
@@ -346,7 +649,7 @@ function startBackend() {
     ],
     {
       cwd,
-      env: backendProcessEnv(),
+      env: backendSpawnEnv(),
       stdio: isDev ? 'inherit' : ['ignore', 'pipe', 'pipe'],
     },
   )
@@ -483,6 +786,7 @@ async function createWindow() {
   const win = new BrowserWindow({
     width: 1280,
     height: 840,
+    title: 'AutoVox',
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -496,6 +800,28 @@ async function createWindow() {
 }
 
 app.whenReady().then(async () => {
+  appendBackendLog(
+    `session start | userData=${app.getPath('userData')} | logFile=${backendLogFilePath()} | isDev=${isDev} | isPackaged=${app.isPackaged}`,
+  )
+  try {
+    ipcMain.removeHandler('setup-browse-python')
+  } catch {
+    /* no prior handler */
+  }
+  ipcMain.handle('setup-browse-python', async () => {
+    const w =
+      splashWin && !splashWin.isDestroyed()
+        ? splashWin
+        : BrowserWindow.getFocusedWindow()
+    const r = await dialog.showOpenDialog(w || undefined, {
+      title: 'Select Python 3',
+      properties: ['openFile'],
+      message: 'Choose python3 or python.exe (version 3.9 or newer).',
+    })
+    if (r.canceled || !r.filePaths[0]) return null
+    return r.filePaths[0]
+  })
+
   try {
     await ensurePackagedPythonEnv()
     await ensureBackendRunning()
@@ -503,10 +829,10 @@ app.whenReady().then(async () => {
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e)
     const logHint = isDev
-      ? ''
-      : `\n\nFull backend output is appended to:\n${path.join(app.getPath('userData'), 'backend.log')}`
+      ? `\n\nIf the API failed to start, check Terminal output (dev mode uses inherited stdio).\nLog file (if used): ${backendLogFilePath()}`
+      : `\n\nFull backend log:\n${backendLogFilePath()}\n\n(Not inside python-runtime — that is only the venv.)`
     await dialog.showErrorBox(
-      'Five of a Kind',
+      'AutoVox',
       `Could not start the application.\n\n${message}\n\n` +
         (isDev
           ? 'Ensure Python 3 is installed and run: pip install -r src/backend/requirements.txt'
@@ -537,7 +863,11 @@ app.on('activate', () => {
         await createWindow()
       } catch (e) {
         const message = e instanceof Error ? e.message : String(e)
-        await dialog.showErrorBox('Five of a Kind', message)
+        appendBackendLog(`activate → ensure backend failed:\n${message}`)
+        await dialog.showErrorBox(
+          'AutoVox',
+          `${message}\n\nLog: ${backendLogFilePath()}`,
+        )
       }
     })()
   }

@@ -1,5 +1,19 @@
-import { API_BASE_URL } from './constants';
+import { API_BASE_URL } from './constants'
 
+/** Avoid hanging forever if the FastAPI process never responds (wrong port, hung server). */
+async function apiFetch(
+  input: string,
+  init?: RequestInit,
+  timeoutMs = 90_000,
+): Promise<Response> {
+  const controller = new AbortController()
+  const id = setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    return await fetch(input, { ...init, signal: controller.signal })
+  } finally {
+    clearTimeout(id)
+  }
+}
 
 export type UnitOption = 'nm' | 'mm' | 'cm'
 
@@ -11,7 +25,7 @@ export interface VoxelizedData {
 
 export const fetchAvailableModels = async (): Promise<string[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/stl/list-stl`);
+    const response = await apiFetch(`${API_BASE_URL}/api/stl/list-stl`)
     if (!response.ok) {
       throw new Error(`Failed to fetch models (${response.status})`);
     }
@@ -29,7 +43,7 @@ export const fetchAvailableModels = async (): Promise<string[]> => {
 
 export const fetchAvailableProjects = async (): Promise<string[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/project/list`);
+    const response = await apiFetch(`${API_BASE_URL}/api/project/list`)
     if (!response.ok) {
       throw new Error(`Failed to fetch projects (${response.status})`);
     }
@@ -44,9 +58,9 @@ export const fetchAvailableProjects = async (): Promise<string[]> => {
 
 export const fetchPartitions = async (projectName: string): Promise<string[]> => {
   try {
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/project/partitions?project_name=${encodeURIComponent(projectName)}`,
-    );
+    )
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(
@@ -67,9 +81,11 @@ export const fetchVoxelized = async (project: string, partitionName: string): Pr
     if (!partitionName) {
       throw new Error('Partition name is required');
     }
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/project?project_name=${encodeURIComponent(project)}&partition_name=${encodeURIComponent(partitionName)}`,
-    );
+      undefined,
+      600_000,
+    )
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(
@@ -96,10 +112,14 @@ export const uploadSTLFile = async (
   const formData = new FormData();
   formData.append('stl_file', file);
 
-  const response = await fetch(`${API_BASE_URL}/api/stl/upload-stl`, {
-    method: 'POST',
-    body: formData,
-  });
+  const response = await apiFetch(
+    `${API_BASE_URL}/api/stl/upload-stl`,
+    {
+      method: 'POST',
+      body: formData,
+    },
+    600_000,
+  )
 
   if (!response.ok) {
     const errorData = await response.json();
@@ -144,13 +164,17 @@ export const voxelizeModel = async (
     default_material: payload.defaultMaterial,
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/project`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  const response = await apiFetch(
+    `${API_BASE_URL}/api/project`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
     },
-    body: JSON.stringify(requestBody),
-  });
+    600_000,
+  )
 
   if (!response.ok) {
     const errorData = await response.json();
@@ -164,9 +188,11 @@ export const voxelizeModel = async (
 
 export const downloadVoxelCSV = async (projectName: string, exportName: string): Promise<Blob> => {
   try {
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/export?project_name=${encodeURIComponent(projectName)}&export_name=${encodeURIComponent(exportName)}`,
-    );
+      undefined,
+      300_000,
+    )
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -211,7 +237,7 @@ export const fetchLayers = async (
     url.searchParams.set('axis', axis);
     url.searchParams.set('partition_name', partitionName);
 
-    const response = await fetch(url.toString());
+    const response = await apiFetch(url.toString())
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(
@@ -389,7 +415,7 @@ export const fetchLayer = async (
     const layerIndex = findClosestLayerIndex(layers, layerValue);
 
     // Use POST with JSON body for the retrieve endpoint
-    const response = await fetch(`${API_BASE_URL}/api/edit/retrieve`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/edit/retrieve`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -400,7 +426,7 @@ export const fetchLayer = async (
         layer_index: layerIndex,
         axis: axis,
       }),
-    });
+    })
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -462,13 +488,13 @@ export const updateVoxels = async (
       throw new Error('Partition name is required');
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/edit/update`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/edit/update`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(request),
-    });
+    })
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -497,13 +523,13 @@ export const updateHistory = async (
   request: UpdateHistoryRequest,
 ): Promise<{ message: string; undo_empty: string; redo_empty: string }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/edit/history`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/edit/history`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(request),
-    });
+    })
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));

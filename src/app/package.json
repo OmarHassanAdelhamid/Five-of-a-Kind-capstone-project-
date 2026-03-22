@@ -1,9 +1,9 @@
 {
-  "name": "five-of-a-kind-desktop",
+  "name": "autovox-desktop",
   "version": "0.1.0",
   "private": true,
-  "author": "Five of a Kind",
-  "description": "Electron shell for Five of a Kind (FastAPI + Vite React)",
+  "author": "AutoVox",
+  "description": "AutoVox desktop app (Electron + FastAPI + React)",
   "main": "electron/main.cjs",
   "scripts": {
     "dev": "concurrently -k \"npm run dev --prefix ../frontend\" \"wait-on http://127.0.0.1:5173 && cross-env NODE_ENV=development electron .\"",
@@ -22,8 +22,9 @@
     "wait-on": "^8.0.3"
   },
   "build": {
-    "appId": "com.fiveofakind.desktop",
-    "productName": "Five of a Kind",
+    "appId": "com.autovox.desktop",
+    "productName": "Autovox",
+    "icon": "build/icon.png",
     "directories": {
       "output": "release"
     },
@@ -42,7 +43,11 @@
           "!**/.coverage",
           "!**/htmlcov/**",
           "!**/tests/**",
-          "!**/*.pyc"
+          "!**/*.pyc",
+          "!**/dist/**",
+          "!**/build/**",
+          "!**/.venv/**",
+          "!**/.venv-build/**"
         ]
       }
     ],
