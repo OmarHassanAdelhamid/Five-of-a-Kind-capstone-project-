@@ -1,0 +1,70 @@
+{
+  "name": "five-of-a-kind-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Five of a Kind",
+  "description": "Electron shell for Five of a Kind (FastAPI + Vite React)",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "concurrently -k \"npm run dev --prefix ../frontend\" \"wait-on http://127.0.0.1:5173 && cross-env NODE_ENV=development electron .\"",
+    "build:frontend": "cd ../frontend && cross-env VITE_API_BASE_URL=http://127.0.0.1:8765 npx vite build",
+    "pack": "npm run build:frontend && electron-builder",
+    "pack:dir": "npm run build:frontend && electron-builder --dir"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^33.4.8",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^8.0.3"
+  },
+  "build": {
+    "appId": "com.fiveofakind.desktop",
+    "productName": "Five of a Kind",
+    "directories": {
+      "output": "release"
+    },
+    "extraResources": [
+      {
+        "from": "../frontend/dist",
+        "to": "frontend"
+      },
+      {
+        "from": "../backend",
+        "to": "backend",
+        "filter": [
+          "**/*",
+          "!**/__pycache__/**",
+          "!**/.pytest_cache/**",
+          "!**/.coverage",
+          "!**/htmlcov/**",
+          "!**/tests/**",
+          "!**/*.pyc"
+        ]
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Development"
+    }
+  }
+}
