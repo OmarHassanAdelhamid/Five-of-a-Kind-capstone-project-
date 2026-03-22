@@ -82,6 +82,8 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
     const [editVoxelsMode, setEditVoxelsMode] = useState(false);
     const didAutoSelectFirstLayerRef = useRef(false);
 
+    const [showMagnetizedOnly, setShowMagnetizedOnly] = useState(false);
+
     const loadLayers = useCallback(async () => {
       if (!projectName.trim() || !partitionName || disabled) return;
       setLoading(true);
@@ -824,6 +826,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           <div className="layer-2d-grid-section">
             <div className="layer-2d-grid-section-header">
               <h5>2D View</h5>
+
               <button
                 type="button"
                 className={`layer-edit-voxels-btn ${editVoxelsMode ? 'active' : ''}`}
@@ -872,13 +875,30 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
                 />
               );
             })()}
-            {selectedLayerData && (
-              <p className="layer-2d-info">
-                Layer {layerAxis.toUpperCase()}={selectedLayerData.layer_index}{' '}
-                ({selectedLayerData.num_voxels} voxels)
-              </p>
-            )}
-          </div>
+            <div className="layer-header-block">
+              {selectedLayerData && (
+                <p className="layer-2d-info">
+                  Layer {layerAxis.toUpperCase()}={selectedLayerData.layer_index}{' '}
+                  ({selectedLayerData.num_voxels} voxels)
+                </p>
+              )}
+                <div className="layer-toggle-row">
+                  <p className="layer-toggle-label">
+                    Show All Magnetized Voxels
+                  </p>
+
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={showMagnetizedOnly}
+                      onChange={() => setShowMagnetizedOnly((v) => !v)}
+                    />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
 
           {/* Voxel Editor Section */}
           <div className="voxel-editor-section">

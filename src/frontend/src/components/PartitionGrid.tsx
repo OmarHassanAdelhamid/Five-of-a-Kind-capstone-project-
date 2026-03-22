@@ -44,6 +44,8 @@ export const PartitionGrid = ({
 
     const cubeObjects: THREE.Mesh[] = [];
     const cubeSpacing = 2;
+    const edgeGeometries: THREE.EdgesGeometry[] = [];
+    const cubeMaterials: THREE.MeshBasicMaterial[] = [];
 
     for (const partition of partitions) {
       const material = new THREE.MeshBasicMaterial({

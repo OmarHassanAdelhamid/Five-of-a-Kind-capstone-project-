@@ -1779,10 +1779,13 @@ footer .metadata {
 }
 
 .layer-2d-info {
-  margin: 0.5rem 0 0 0;
+  margin: 1rem 0 0 0;
   font-size: 0.8rem;
   color: #38bdf8;
-  text-align: center;
+  align-self: flex-start; 
+  text-align: left;
+  white-space: nowrap;
+  margin-left: 12px;
   letter-spacing: 0.04em;
 }
 
@@ -2271,4 +2274,76 @@ footer .metadata {
   .voxel-editor-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.layer-header-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  width: 100%;
+}
+
+.layer-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 16px; 
+}
+
+.layer-toggle-label {
+  margin: 1rem 0 0 0;
+  font-size: 0.8rem;
+  color: #38bdf8;
+  align-self: flex-start; 
+  text-align: left;
+  white-space: nowrap;
+  color: #ffffff;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 36px; 
+  height: 20px;
+  margin-top: 12px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  background-color: #d1d5db;
+  transition: 0.2s ease;
+  border-radius: 999px;
+}
+
+.slider::before {
+  content: '';
+  position: absolute;
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  top: 3px;
+  background-color: white;
+  transition: 0.2s ease;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.switch input:checked + .slider {
+  background-color: #ff9ecf;
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(16px);
+}
+
+.switch input:focus + .slider {
+  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2);
 }
