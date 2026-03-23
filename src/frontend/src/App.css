@@ -24,6 +24,45 @@ body,
 }
 
 /* Menu Bar */
+.menu-bar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px 0 10px;
+  margin-right: 2px;
+  border-right: 1px solid rgba(148, 163, 184, 0.2);
+  height: 100%;
+  user-select: none;
+}
+
+/* Opaque backing: any SVG alpha / subpixel gaps won’t show a checkerboard over the blurred bar. */
+.menu-bar-brand-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background-color: #0f172a;
+  overflow: hidden;
+}
+
+.menu-bar-brand-icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  aspect-ratio: 1;
+}
+
+.menu-bar-brand-text {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #e2e8f0;
+}
+
 .menu-bar {
   display: flex;
   align-items: center;

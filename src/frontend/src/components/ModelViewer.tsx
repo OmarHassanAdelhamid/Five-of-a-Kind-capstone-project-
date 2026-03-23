@@ -45,6 +45,8 @@ interface ModelViewerProps {
   isLayerEditorOpen?: boolean;
   onLayerEditorOpenChange?: (open: boolean) => void;
   onVoxelsChanged?: () => void | Promise<void>;
+  /** When App is fetching voxel data for the current project (REST); drives StatusMessage. */
+  projectFetchStatus?: 'idle' | 'loading' | 'error';
 }
 
 export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
@@ -69,6 +71,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
       isLayerEditorOpen: isLayerEditorOpenProp,
       onLayerEditorOpenChange,
       onVoxelsChanged,
+      projectFetchStatus = 'idle',
     },
     ref,
   ) {
@@ -839,11 +842,23 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
       voxelCoordinates,
     ]);
 
+    const bannerStatus =
+      projectFetchStatus === 'loading'
+        ? 'loading'
+        : projectFetchStatus === 'error'
+          ? 'error'
+          : viewerStatus;
+    const bannerMessage =
+      projectFetchStatus === 'error'
+        ? (viewerMessage ??
+          'Could not load project voxels. Check that the API URL matches the desktop backend (port 8765).')
+        : viewerMessage;
+
     return (
       <div className="viewer" ref={mountRef}>
         <StatusMessage
-          status={viewerStatus}
-          message={viewerMessage}
+          status={bannerStatus}
+          message={bannerMessage}
           selectedModel={selectedModel}
         />
         <div className="viewer-instructions">
