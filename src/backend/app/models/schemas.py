@@ -45,8 +45,8 @@ class VoxelizeRequest(BaseModel):
     default_material: Optional[int] = 1
     default_magnet: Optional[Tuple[float, float, float]] = [0.0, 0.0, 0.0]
     project_name: str
-    model_units: Literal["nm", "mm", "cm"]
-    voxel_units: Literal["nm", "mm", "cm"]
+    model_units: Literal["µm", "mm", "cm"]
+    scale_factor: float
     default_material: str
 
 class RetrieveLayerRequest(BaseModel):

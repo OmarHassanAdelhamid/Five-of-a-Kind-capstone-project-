@@ -5,19 +5,9 @@ import trimesh
 from app.services.model_structure_service import VoxelDB
 import app.services.partition_manager as pm
 
-def set_user_req(mesh, ref_stl, ref_vox, vox_len)->None:
-    # convert everything into mm
-    if ref_stl == "nm":
-        mesh.apply_scale(1e6)
-    elif ref_stl == "cm":
-        mesh.apply_scale(0.1)
-
-    if ref_vox == "nm":
-        vox_len *= 1e6
-    elif ref_vox == "cm":
-        vox_len *= 0.1
-
-    return mesh, vox_len
+def set_user_req(mesh, factor)->None:
+    mesh.apply_scale(factor)
+    return mesh
 
 def initialize_voxel_db(project_path: str, origin: np.ndarray, voxel_size: float, 
                         default_material: int, default_magnetization: Tuple[float, float, float])-> None:

@@ -41,7 +41,7 @@ function App() {
   const selectedVoxelIndicesArray = Array.from(selectedVoxels).sort();
   const [isLayerEditingMode, setIsLayerEditingMode] = useState(false);
   const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
-  const [layerAxis] = useState<'z' | 'x' | 'y'>('z');
+  const [layerAxis] = useState<'z' | 'x' | 'y'>('y');
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(
     () => sessionStorage.getItem('welcomeModalDismissed') !== 'true',
@@ -315,9 +315,9 @@ function App() {
     async (
       payload: {
         projectName: string;
-        modelUnits: 'nm' | 'mm' | 'cm';
+        modelUnits: 'µm' | 'mm' | 'cm';
+        scaleFactor: number;
         voxelSize: number;
-        voxelUnits: 'nm' | 'mm' | 'cm';
         defaultMaterial: string;
       },
       onProgress?: (message: string) => void
@@ -329,8 +329,8 @@ function App() {
       const {
         projectName,
         modelUnits,
+        scaleFactor,
         voxelSize,
-        voxelUnits,
         defaultMaterial,
       } = payload;
 
@@ -339,9 +339,9 @@ function App() {
         const res = await voxelizeModel({
           stlFilename: selectedModel,
           projectName,
-          voxelSize,
-          voxelUnits,
           modelUnits,
+          scaleFactor,
+          voxelSize,
           defaultMaterial,
         });
         setVoxelSize(res.voxel_size);

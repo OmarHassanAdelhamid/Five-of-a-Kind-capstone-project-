@@ -120,40 +120,32 @@ async def voxelize_stl(request: VoxelizeRequest):
     default_magnet = request.default_magnet
     project_name = request.project_name
     model_units = request.model_units
-    voxel_units = request.voxel_units
+    scale_factor = request.scale_factor
     default_material = request.default_material
     stl_path = STL_STORAGE_DIR / stl_filename
 
-    if not stl_path.exists():
-        raise HTTPException(status_code=404, detail=f"Filename {stl_filename} not found on server!")
+    mesh = ms.load_stl_mesh(stl_path)
+    mesh = pm.set_user_req(mesh, scale_factor)
+    voxelized = vx.voxelize(mesh, voxel_size)
 
-    with stl_path.open("rb") as file:
-        # load passed stl file as a mesh and voxelize it
-        mesh = ms.create_mesh(file, file_type='stl')
-        model_dim = mesh.extents
-        print(model_dim)
+    # get all coordinates of voxels (centers of each voxel)
+    points = vx.get_voxel_coordinates(voxelized)
+    origin = voxelized.translation
+    
+    project_folder = os.path.join(PROJECT_STORAGE_DIR, f"{project_name}-dir")
+    os.makedirs(project_folder, exist_ok=True)
+    project_file_path = os.path.join(project_folder, f"{project_name}")
 
-        mesh, voxel_size = pm.set_user_req(mesh, model_units, voxel_units, voxel_size)
-        voxelized = vx.voxelize(mesh, voxel_size)
+    pm.initialize_voxel_db(project_file_path, origin, voxel_size, default_material, default_magnet)
+    pm.create_voxel_db(project_file_path, points)
 
-        # get all coordinates of voxels (centers of each voxel)
-        points = vx.get_voxel_coordinates(voxelized)
-        origin = voxelized.translation
-        
-        project_folder = os.path.join(PROJECT_STORAGE_DIR, f"{project_name}-dir")
-        os.makedirs(project_folder, exist_ok=True)
-        project_file_path = os.path.join(project_folder, f"{project_name}")
+    if os.path.exists(project_file_path):
+        os.remove(project_file_path)
 
-        pm.initialize_voxel_db(project_file_path, origin, voxel_size, default_material, default_magnet)
-        pm.create_voxel_db(project_file_path, points)
-
-        if os.path.exists(project_file_path):
-            os.remove(project_file_path)
-
-        project_folder_name = f"{project_name}-dir"
-        return {
-            "message": f"Voxelization Status of STL file ({stl_filename}): Success",
-            "project_folder": f"{project_folder}",
-            "project_folder_name": project_folder_name,
-            "voxel_size": voxel_size
-        }
+    project_folder_name = f"{project_name}-dir"
+    return {
+        "message": f"Voxelization Status of STL file ({stl_filename}): Success",
+        "project_folder": f"{project_folder}",
+        "project_folder_name": project_folder_name,
+        "voxel_size": voxel_size
+    }

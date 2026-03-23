@@ -1,7 +1,7 @@
 import { API_BASE_URL } from './constants';
 
 
-export type UnitOption = 'nm' | 'mm' | 'cm'
+export type UnitOption = 'µm' | 'mm' | 'cm'
 
 export interface VoxelizedData {
   project_name?: string;
@@ -26,6 +26,34 @@ export const fetchAvailableModels = async (): Promise<string[]> => {
     throw error;
   }
 };
+
+export interface STLDimensionsResponse {
+  stl_filename: string;
+  dimensions: {
+    x: number;
+    y: number;
+    z: number;
+  };
+}
+
+export const fetchSTLDimensions = async (
+  stlFilename: string,
+): Promise<STLDimensionsResponse> => {
+  const response = await fetch(
+    `${API_BASE_URL}/api/stl/dimensions?stl_filename=${encodeURIComponent(stlFilename)}`
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(
+      errorData.detail || `Failed to fetch STL dimensions (${response.status})`,
+    );
+  }
+
+  return (await response.json()) as STLDimensionsResponse;
+};
+
+
 
 export const fetchAvailableProjects = async (): Promise<string[]> => {
   try {
@@ -114,7 +142,7 @@ export interface VoxelizeRequest {
   voxel_size: number
   project_name: string
   model_units: UnitOption
-  voxel_units: UnitOption
+  scale_factor: number
   default_material: string
 }
 
@@ -130,8 +158,8 @@ export const voxelizeModel = async (
     stlFilename: string
     voxelSize: number
     projectName: string
-    modelUnits: 'nm' | 'mm' | 'cm'
-    voxelUnits: 'nm' | 'mm' | 'cm'
+    modelUnits: 'µm' | 'mm' | 'cm'
+    scaleFactor: number
     defaultMaterial: string
   }
 ): Promise<VoxelizeResponse> => {
@@ -140,7 +168,7 @@ export const voxelizeModel = async (
     voxel_size: payload.voxelSize,
     project_name: payload.projectName,
     model_units: payload.modelUnits,
-    voxel_units: payload.voxelUnits,
+    scale_factor: payload.scaleFactor,
     default_material: payload.defaultMaterial,
   }
 

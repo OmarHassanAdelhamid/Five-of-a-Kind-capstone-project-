@@ -53,7 +53,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       projectName,
       partitionName,
       voxelSize,
-      layerAxis = 'z',
+      layerAxis = 'y',
       onLayerSelect,
       selectedLayerZ: externalSelectedLayerZ,
       disabled = false,
@@ -361,24 +361,23 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           }
         }
 
-        const desiredX = Math.round(gridX) * vs + ox;
-        const desiredY = Math.round(gridY) * vs + oy;
-        const desiredZ = first.z;
-
-        const ix = Math.round((desiredX - ox) / vs);
-        const iy = Math.round((desiredY - oy) / vs);
-        const iz = Math.round((desiredZ - oz) / vs);
-
         let coords: [number, number, number];
-        console.log(
-          `[LayerEditor] Adding voxel at (ix, iy, iz) = (${ix}, ${iy}, ${iz})`,
-        );
-        if (layerAxis === 'z') {
+
+        if (layerAxis === 'y') {
+          const ix = Math.round(gridX);
+          const iy = selectedLayerData.layer_index;
+          const iz = Math.round(gridY);
           coords = [ix, iy, iz];
-        } else if (layerAxis === 'x') {
-          coords = [iz, ix, iy];
+        } else if (layerAxis === 'z') {
+          const ix = Math.round(gridX);
+          const iy = Math.round(gridY);
+          const iz = selectedLayerData.layer_index;
+          coords = [ix, iy, iz];
         } else {
-          coords = [ix, iz, iy];
+          const ix = selectedLayerData.layer_index;
+          const iy = Math.round(gridX);
+          const iz = Math.round(gridY);
+          coords = [ix, iy, iz];
         }
         console.log(
           `[LayerEditor] Adding voxel at coords = (${coords[0]}, ${coords[1]}, ${coords[2]})`,
@@ -502,19 +501,26 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           }
         }
 
-        const coords: [number, number, number][] = cells.map(
-          ({ gridX, gridY }) => {
-            const desiredX = Math.round(gridX) * vs + ox;
-            const desiredY = Math.round(gridY) * vs + oy;
-            const desiredZ = first.z;
-            const ix = Math.round((desiredX - ox) / vs);
-            const iy = Math.round((desiredY - oy) / vs);
-            const iz = Math.round((desiredZ - oz) / vs);
-            if (layerAxis === 'z') return [ix, iy, iz];
-            if (layerAxis === 'x') return [iz, ix, iy];
-            return [ix, iz, iy];
-          },
-        );
+        const coords: [number, number, number][] = cells.map(({ gridX, gridY }) => {
+          if (layerAxis === 'y') {
+            const ix = Math.round(gridX);
+            const iy = selectedLayerData.layer_index;
+            const iz = Math.round(gridY);
+            return [ix, iy, iz];
+          }
+        
+          if (layerAxis === 'z') {
+            const ix = Math.round(gridX);
+            const iy = Math.round(gridY);
+            const iz = selectedLayerData.layer_index;
+            return [ix, iy, iz];
+          }
+        
+          const ix = selectedLayerData.layer_index;
+          const iy = Math.round(gridX);
+          const iz = Math.round(gridY);
+          return [ix, iy, iz];
+        });
 
         setLoading(true);
         setError(null);

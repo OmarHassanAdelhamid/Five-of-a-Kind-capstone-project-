@@ -58,6 +58,7 @@ export const WelcomeModal = ({
 
   const handleModelSelect = (model: string) => {
     setSelectedModelForProjects(model);
+    onSelectModel(model);
     setStep('select-project');
   };
 
