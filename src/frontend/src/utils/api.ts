@@ -584,3 +584,4 @@ export const updateHistory = async (
     throw error;
   }
 };
+

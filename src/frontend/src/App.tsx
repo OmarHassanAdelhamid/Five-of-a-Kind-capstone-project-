@@ -46,9 +46,23 @@ function App() {
   const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
   const [layerAxis] = useState<'z' | 'x' | 'y'>('y');
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
-  const [showWelcomeModal, setShowWelcomeModal] = useState(
-    () => sessionStorage.getItem('welcomeModalDismissed') !== 'true',
-  );
+  
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [welcomeInitialStep, setWelcomeInitialStep] =useState<'choice' | 'select-model' | 'select-project' | 'select-file' |'select-previous'>('choice');
+
+  const handleWelcomeImportSTL = () => {
+    fileInputRef.current?.click();
+  };
+  
+  const handleWelcomeNewProject = () => {
+    setWelcomeInitialStep('select-model');
+    setShowWelcomeModal(true);
+  };
+  
+  const handleWelcomeExistingProject = () => {
+    setWelcomeInitialStep('select-previous');
+    setShowWelcomeModal(true);
+  };
 
   const dismissWelcomeModal = useCallback(() => {
     sessionStorage.setItem('welcomeModalDismissed', 'true');
@@ -308,13 +322,6 @@ function App() {
     fileInputRef.current?.click();
   }, []);
 
-  const handleNewProject = useCallback(() => {
-    if (!selectedModel) {
-      alert('Please select an STL model first.');
-      return;
-    }
-    setIsNewProjectDialogOpen(true);
-  }, [selectedModel]);
 
   const handleNewProjectConfirm = useCallback(
     async (
@@ -619,8 +626,9 @@ function App() {
         onOpenFile={handleOpenFile}
         onOpenFileSelect={handleModelChange}
         availableModels={models}
-        onUploadFile={handleUploadFileClick}
-        onNewProject={handleNewProject}
+        onUploadFile={handleWelcomeImportSTL}
+        onNewProject={handleWelcomeNewProject}
+        onOpenProject={handleWelcomeExistingProject}
         onOpenProjectSelect={handleOpenProjectSelect}
         availableProjects={(() => {
           // Show only projects for the same STL: use selectedModel, or derive from loaded projectName
@@ -665,16 +673,17 @@ function App() {
         type="file"
         accept=".stl"
         style={{ display: 'none' }}
-        onChange={(e) => {
+        onChange={async (e) => {
           const file = e.target.files?.[0];
           if (file) {
-            handleUploadFile(file);
+            await handleWelcomeFileSelected(file);
           }
           e.target.value = '';
         }}
       />
       <WelcomeModal
         isOpen={showWelcomeModal}
+        initialStep={welcomeInitialStep}
         onClose={dismissWelcomeModal}
         availableModels={models}
         availableProjects={availableProjects}

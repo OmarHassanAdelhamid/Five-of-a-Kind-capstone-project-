@@ -890,17 +890,9 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
               )}
                 <div className="layer-toggle-row">
                   <p className="layer-toggle-label">
-                    Show All Magnetized Voxels
+                    Magnetized voxels denoted by
                   </p>
-
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={showMagnetizedOnly}
-                      onChange={() => setShowMagnetizedOnly((v) => !v)}
-                    />
-                    <span className="slider"></span>
-                  </label>
+                  <span className="checkmark-circle">✓</span>
                 </div>
               </div>
             </div>

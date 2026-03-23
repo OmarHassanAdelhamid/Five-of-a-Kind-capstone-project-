@@ -2325,7 +2325,7 @@ footer .metadata {
 .layer-toggle-row {
   display: flex;
   align-items: center;
-  gap: 16px; 
+  gap: 8px; 
 }
 
 .layer-toggle-label {
@@ -2385,4 +2385,18 @@ footer .metadata {
 
 .switch input:focus + .slider {
   box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2);
+}
+
+.checkmark-circle {
+  margin: 1rem 0 0 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: white;
+  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
 }
