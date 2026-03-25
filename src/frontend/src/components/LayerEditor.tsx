@@ -89,11 +89,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       setLoading(true);
       setError(null);
       try {
-        const data = await fetchLayers(
-          projectName,
-          partitionName,
-          layerAxis,
-        );
+        const data = await fetchLayers(projectName, partitionName, layerAxis);
         setLayersData(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load layers');
@@ -136,13 +132,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           setLoading(false);
         }
       },
-      [
-        projectName,
-        partitionName,
-        layerAxis,
-        disabled,
-        onLayerSelect,
-      ],
+      [projectName, partitionName, layerAxis, disabled, onLayerSelect],
     );
 
     const syncMagnetizationDisplay = useCallback(
@@ -391,7 +381,6 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
             partition_name: partitionName,
             voxels: [coords],
             action: 'add',
-            materialID: selectedMaterial,
           });
           setMessage('Voxel added.');
           if (
@@ -501,26 +490,28 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           }
         }
 
-        const coords: [number, number, number][] = cells.map(({ gridX, gridY }) => {
-          if (layerAxis === 'y') {
-            const ix = Math.round(gridX);
-            const iy = selectedLayerData.layer_index;
+        const coords: [number, number, number][] = cells.map(
+          ({ gridX, gridY }) => {
+            if (layerAxis === 'y') {
+              const ix = Math.round(gridX);
+              const iy = selectedLayerData.layer_index;
+              const iz = Math.round(gridY);
+              return [ix, iy, iz];
+            }
+
+            if (layerAxis === 'z') {
+              const ix = Math.round(gridX);
+              const iy = Math.round(gridY);
+              const iz = selectedLayerData.layer_index;
+              return [ix, iy, iz];
+            }
+
+            const ix = selectedLayerData.layer_index;
+            const iy = Math.round(gridX);
             const iz = Math.round(gridY);
             return [ix, iy, iz];
-          }
-        
-          if (layerAxis === 'z') {
-            const ix = Math.round(gridX);
-            const iy = Math.round(gridY);
-            const iz = selectedLayerData.layer_index;
-            return [ix, iy, iz];
-          }
-        
-          const ix = selectedLayerData.layer_index;
-          const iy = Math.round(gridX);
-          const iz = Math.round(gridY);
-          return [ix, iy, iz];
-        });
+          },
+        );
 
         setLoading(true);
         setError(null);
@@ -884,19 +875,19 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
             <div className="layer-header-block">
               {selectedLayerData && (
                 <p className="layer-2d-info">
-                  Layer {layerAxis.toUpperCase()}={selectedLayerData.layer_index}{' '}
-                  ({selectedLayerData.num_voxels} voxels)
+                  Layer {layerAxis.toUpperCase()}=
+                  {selectedLayerData.layer_index} (
+                  {selectedLayerData.num_voxels} voxels)
                 </p>
               )}
-                <div className="layer-toggle-row">
-                  <p className="layer-toggle-label">
-                    Magnetized voxels denoted by
-                  </p>
-                  <span className="checkmark-circle">✓</span>
-                </div>
+              <div className="layer-toggle-row">
+                <p className="layer-toggle-label">
+                  Magnetized voxels denoted by
+                </p>
+                <span className="checkmark-circle">✓</span>
               </div>
             </div>
-            
+          </div>
 
           {/* Voxel Editor Section */}
           <div className="voxel-editor-section">

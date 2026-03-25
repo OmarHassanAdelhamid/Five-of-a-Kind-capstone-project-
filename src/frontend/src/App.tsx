@@ -46,19 +46,25 @@ function App() {
   const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
   const [layerAxis] = useState<'z' | 'x' | 'y'>('y');
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
-  
-  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
-  const [welcomeInitialStep, setWelcomeInitialStep] =useState<'choice' | 'select-model' | 'select-project' | 'select-file' |'select-previous'>('choice');
+
+  const [showWelcomeModal, setShowWelcomeModal] = useState(true);
+  const [welcomeInitialStep, setWelcomeInitialStep] = useState<
+    | 'choice'
+    | 'select-model'
+    | 'select-project'
+    | 'select-file'
+    | 'select-previous'
+  >('choice');
 
   const handleWelcomeImportSTL = () => {
     fileInputRef.current?.click();
   };
-  
+
   const handleWelcomeNewProject = () => {
     setWelcomeInitialStep('select-model');
     setShowWelcomeModal(true);
   };
-  
+
   const handleWelcomeExistingProject = () => {
     setWelcomeInitialStep('select-previous');
     setShowWelcomeModal(true);
@@ -322,7 +328,6 @@ function App() {
     fileInputRef.current?.click();
   }, []);
 
-
   const handleNewProjectConfirm = useCallback(
     async (
       payload: {
@@ -332,7 +337,7 @@ function App() {
         voxelSize: number;
         defaultMaterial: string;
       },
-      onProgress?: (message: string) => void
+      onProgress?: (message: string) => void,
     ) => {
       if (!selectedModel) {
         return;
