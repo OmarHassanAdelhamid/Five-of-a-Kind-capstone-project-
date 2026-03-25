@@ -18,7 +18,10 @@ import {
 import type { LayerEditorHandle } from './components/LayerEditor';
 
 function App() {
-  const [, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  /** Drives StatusMessage while /api/project voxel payload is loading (parent state; ModelViewer owns STL mesh status). */
+  const [projectFetchStatus, setProjectFetchStatus] = useState<
+    'idle' | 'loading' | 'error'
+  >('idle');
   const [models, setModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [projectName, setProjectName] = useState<string>(
@@ -41,11 +44,25 @@ function App() {
   const selectedVoxelIndicesArray = Array.from(selectedVoxels).sort();
   const [isLayerEditingMode, setIsLayerEditingMode] = useState(false);
   const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
-  const [layerAxis] = useState<'z' | 'x' | 'y'>('z');
+  const [layerAxis] = useState<'z' | 'x' | 'y'>('y');
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
-  const [showWelcomeModal, setShowWelcomeModal] = useState(
-    () => sessionStorage.getItem('welcomeModalDismissed') !== 'true',
-  );
+  
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [welcomeInitialStep, setWelcomeInitialStep] =useState<'choice' | 'select-model' | 'select-project' | 'select-file' |'select-previous'>('choice');
+
+  const handleWelcomeImportSTL = () => {
+    fileInputRef.current?.click();
+  };
+  
+  const handleWelcomeNewProject = () => {
+    setWelcomeInitialStep('select-model');
+    setShowWelcomeModal(true);
+  };
+  
+  const handleWelcomeExistingProject = () => {
+    setWelcomeInitialStep('select-previous');
+    setShowWelcomeModal(true);
+  };
 
   const dismissWelcomeModal = useCallback(() => {
     sessionStorage.setItem('welcomeModalDismissed', 'true');
@@ -117,59 +134,60 @@ function App() {
     const savedProject = sessionStorage.getItem('projectName');
     const savedPartition = sessionStorage.getItem('selectedPartition');
     if (savedProject && savedPartition) {
-      setStatus('loading');
+      setProjectFetchStatus('loading');
       fetchVoxels(savedProject, savedPartition)
         .then((coords) => {
-          setStatus(coords.length > 0 ? 'ready' : 'error');
+          setProjectFetchStatus(coords.length > 0 ? 'idle' : 'error');
         })
-        .catch(() => setStatus('error'));
+        .catch(() => setProjectFetchStatus('error'));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const initialiseModels = async () => {
-      setStatus('loading');
+      const loadingProjectVoxels = Boolean(
+        projectName.trim() && selectedPartition,
+      );
 
       try {
         const modelList = await fetchModels();
-        if (modelList.length > 0) {
-          // Only auto-select first STL when welcome modal is closed, no project is loaded,
-          // and the New Project dialog is not open (so we don't overwrite the user's choice).
-          if (
-            !showWelcomeModal &&
-            !projectName.trim() &&
-            !isNewProjectDialogOpen
-          ) {
-            setSelectedModel((current) =>
-              current && modelList.includes(current) ? current : modelList[0],
-            );
-          }
-          setStatus('ready');
-        } else {
-          if (!isNewProjectDialogOpen) {
+        if (!loadingProjectVoxels) {
+          if (modelList.length > 0) {
+            if (
+              !showWelcomeModal &&
+              !projectName.trim() &&
+              !isNewProjectDialogOpen
+            ) {
+              setSelectedModel((current) =>
+                current && modelList.includes(current) ? current : modelList[0],
+              );
+            }
+          } else if (!isNewProjectDialogOpen) {
             setSelectedModel(null);
           }
-          setStatus('error');
         }
       } catch {
-        if (!isNewProjectDialogOpen) {
+        if (!loadingProjectVoxels && !isNewProjectDialogOpen) {
           setSelectedModel(null);
         }
-        setStatus('error');
       }
     };
 
     void initialiseModels();
     void fetchProjects();
-  }, [fetchModels, fetchProjects, showWelcomeModal, projectName, isNewProjectDialogOpen]);
+  }, [
+    fetchModels,
+    fetchProjects,
+    showWelcomeModal,
+    projectName,
+    isNewProjectDialogOpen,
+    selectedPartition,
+  ]);
 
-  const handleStatusChange = useCallback(
-    (newStatus: 'loading' | 'ready' | 'error') => {
-      setStatus(newStatus);
-    },
-    [],
-  );
+  const handleStatusChange = useCallback(() => {
+    /* Status banner for STL mesh loads is merged inside ModelViewer (viewerStatus). */
+  }, []);
 
   const handleModelChange = useCallback((model: string) => {
     setSelectedModel(model);
@@ -189,20 +207,21 @@ function App() {
       }
 
       try {
-        setStatus('loading');
+        setProjectFetchStatus('loading');
         setSelectedModel(null); // Clear STL model when loading project - show voxels only
+        setVoxelCoordinates([]);
         setSelectedLayerZ(null); // Clear layer selection when loading new project
         setSelectedVoxel(null); // Clear voxel selection when loading new project
         setSelectedVoxels(new Set()); // Clear multiple voxel selections
         const coordinates = await fetchVoxels(projectToLoad, partitionToLoad);
         if (coordinates.length > 0) {
           setVoxelCoordinates(coordinates);
-          setStatus('ready');
+          setProjectFetchStatus('idle');
         } else {
-          setStatus('error');
+          setProjectFetchStatus('error');
         }
       } catch {
-        setStatus('error');
+        setProjectFetchStatus('error');
       }
     },
     [projectName, selectedPartition, fetchVoxels],
@@ -214,9 +233,9 @@ function App() {
     try {
       const coordinates = await fetchVoxelized(projectName, selectedPartition);
       setVoxelCoordinates(coordinates);
-      setStatus('ready');
+      setProjectFetchStatus('idle');
     } catch {
-      setStatus('error');
+      setProjectFetchStatus('error');
     }
   }, [projectName, selectedPartition]);
 
@@ -303,21 +322,14 @@ function App() {
     fileInputRef.current?.click();
   }, []);
 
-  const handleNewProject = useCallback(() => {
-    if (!selectedModel) {
-      alert('Please select an STL model first.');
-      return;
-    }
-    setIsNewProjectDialogOpen(true);
-  }, [selectedModel]);
 
   const handleNewProjectConfirm = useCallback(
     async (
       payload: {
         projectName: string;
-        modelUnits: 'nm' | 'mm' | 'cm';
+        modelUnits: 'µm' | 'mm' | 'cm';
+        scaleFactor: number;
         voxelSize: number;
-        voxelUnits: 'nm' | 'mm' | 'cm';
         defaultMaterial: string;
       },
       onProgress?: (message: string) => void
@@ -329,8 +341,8 @@ function App() {
       const {
         projectName,
         modelUnits,
+        scaleFactor,
         voxelSize,
-        voxelUnits,
         defaultMaterial,
       } = payload;
 
@@ -339,9 +351,9 @@ function App() {
         const res = await voxelizeModel({
           stlFilename: selectedModel,
           projectName,
-          voxelSize,
-          voxelUnits,
           modelUnits,
+          scaleFactor,
+          voxelSize,
           defaultMaterial,
         });
         setVoxelSize(res.voxel_size);
@@ -614,8 +626,9 @@ function App() {
         onOpenFile={handleOpenFile}
         onOpenFileSelect={handleModelChange}
         availableModels={models}
-        onUploadFile={handleUploadFileClick}
-        onNewProject={handleNewProject}
+        onUploadFile={handleWelcomeImportSTL}
+        onNewProject={handleWelcomeNewProject}
+        onOpenProject={handleWelcomeExistingProject}
         onOpenProjectSelect={handleOpenProjectSelect}
         availableProjects={(() => {
           // Show only projects for the same STL: use selectedModel, or derive from loaded projectName
@@ -660,16 +673,17 @@ function App() {
         type="file"
         accept=".stl"
         style={{ display: 'none' }}
-        onChange={(e) => {
+        onChange={async (e) => {
           const file = e.target.files?.[0];
           if (file) {
-            handleUploadFile(file);
+            await handleWelcomeFileSelected(file);
           }
           e.target.value = '';
         }}
       />
       <WelcomeModal
         isOpen={showWelcomeModal}
+        initialStep={welcomeInitialStep}
         onClose={dismissWelcomeModal}
         availableModels={models}
         availableProjects={availableProjects}
@@ -688,6 +702,7 @@ function App() {
         ref={modelViewerRef}
         selectedModel={selectedModel}
         voxelCoordinates={voxelCoordinates}
+        projectFetchStatus={projectFetchStatus}
         onStatusChange={handleStatusChange}
         selectedLayerZ={isLayerEditingMode ? selectedLayerZ : null}
         layerAxis={layerAxis}

@@ -102,6 +102,45 @@ def get_z_layer(iz: int, db_path: str) -> List[Tuple]:
         layer_voxels = db.cur.fetchall()
     return layer_voxels
 
+def get_x_magnetized_voxels(ix: int, db_path: str) -> List[Tuple]:
+    with VoxelDB(db_path) as db:
+        db.cur.execute("""
+            SELECT ix, iy, iz, x, y, z, material, magnet_polar, magnet_azimuth 
+            FROM voxels 
+            WHERE ix = ?
+                AND WHERE magnet_polar != 0
+                AND magnet_azimuth != 0;""",
+            (ix,)
+        )
+        layer_voxels = db.cur.fetchall()
+    return layer_voxels
+
+def get_y_magnetized_voxels(iy: int, db_path: str) -> List[Tuple]:
+    with VoxelDB(db_path) as db:
+        db.cur.execute("""
+            SELECT ix, iy, iz, x, y, z, material, magnet_polar, magnet_azimuth 
+            FROM voxels 
+            WHERE iy = ?
+                AND WHERE magnet_polar != 0
+                AND magnet_azimuth != 0;""",
+            (iy,)
+        )
+        layer_voxels = db.cur.fetchall()
+    return layer_voxels
+
+def get_z_magnetized_voxels(iz: int, db_path: str) -> List[Tuple]:
+    with VoxelDB(db_path) as db:
+        db.cur.execute("""
+            SELECT ix, iy, iz, x, y, z, material, magnet_polar, magnet_azimuth 
+            FROM voxels 
+            WHERE iz = ?
+                AND WHERE magnet_polar != 0
+                AND magnet_azimuth != 0;""",
+            (iz,)
+        )
+        layer_voxels = db.cur.fetchall()
+    return layer_voxels
+
 def _parse_material_int(material_val) -> int:
     if isinstance(material_val, int):
         return material_val

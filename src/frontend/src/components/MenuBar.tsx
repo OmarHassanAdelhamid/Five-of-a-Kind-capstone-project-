@@ -173,6 +173,7 @@ export const MenuBar = ({
     {
       name: 'File',
       items: [
+        /*
         { 
           label: 'Open File...', 
           handler: availableModels.length > 0 ? undefined : onOpenFile, 
@@ -185,6 +186,10 @@ export const MenuBar = ({
           handler: (availableProjects.length > 0 || (onNewProject && selectedModel)) ? undefined : onOpenProject, 
           shortcut: null,
           hasSubmenu: availableProjects.length > 0 || (!!onNewProject && !!selectedModel),
+        },
+        */
+        {
+          label: 'Open Project...', handler: undefined, shortcut: null, hasSubmenu: true,
         },
         { label: 'Save...', handler: onSave, shortcut: 'Ctrl S' },
         { label: 'Save as...', handler: onSaveAs, shortcut: null },
@@ -231,6 +236,19 @@ export const MenuBar = ({
 
   return (
     <div className="menu-bar" ref={menuRef}>
+      <div className="menu-bar-brand">
+        <span className="menu-bar-brand-icon-wrap" aria-hidden="true">
+          <img
+            className="menu-bar-brand-icon"
+            src="/autovox-gear.svg"
+            alt=""
+            width={18}
+            height={18}
+            draggable={false}
+          />
+        </span>
+        <span className="menu-bar-brand-text">AutoVox</span>
+      </div>
       {menuItems.map((menu) => (
         <div key={menu.name} className="menu-item">
           <button
@@ -303,40 +321,41 @@ export const MenuBar = ({
                     </div>
                   )}
                   {item.hasSubmenu && item.label === 'Open Project...' && (
-                    <div 
+                    <div
                       className={`menu-submenu ${openProjectSubmenu ? 'menu-submenu-visible' : ''}`}
-                      style={{ 
+                      style={{
                         display: openProjectSubmenu ? 'block' : 'none',
                         opacity: openProjectSubmenu ? 1 : 0,
-                        visibility: openProjectSubmenu ? 'visible' : 'hidden'
+                        visibility: openProjectSubmenu ? 'visible' : 'hidden',
                       }}
                       onMouseEnter={handleOpenProjectHover}
                       onMouseLeave={handleOpenProjectLeave}
                     >
-                      {onNewProject && selectedModel && (
+                      {onUploadFile && (
                         <button
-                          className="menu-submenu-item menu-submenu-item-new"
-                          onClick={handleNewProjectClick}
+                          className="menu-submenu-item"
+                          onClick={() => handleMenuItemClick(onUploadFile)}
                         >
-                          New Project...
+                          Import STL
                         </button>
                       )}
-                      {availableProjects.length > 0 && (
-                        <>
-                          {onNewProject && selectedModel && <div className="menu-submenu-divider"></div>}
-                          {availableProjects.map((project) => (
-                            <button
-                              key={project}
-                              className="menu-submenu-item"
-                              onClick={() => handleProjectSelect(project)}
-                            >
-                              {project}
-                            </button>
-                          ))}
-                        </>
+
+                      {onNewProject && (
+                        <button
+                          className="menu-submenu-item"
+                          onClick={() => handleMenuItemClick(onNewProject)}
+                        >
+                          Create New Project
+                        </button>
                       )}
-                      {availableProjects.length === 0 && (!onNewProject || !selectedModel) && (
-                        <div className="menu-submenu-item disabled">No projects available</div>
+
+                      {onOpenProject && (
+                        <button
+                          className="menu-submenu-item"
+                          onClick={() => handleMenuItemClick(onOpenProject)}
+                        >
+                          Open Existing Project
+                        </button>
                       )}
                     </div>
                   )}

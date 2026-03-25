@@ -2,12 +2,13 @@
 Routes for STL model management.
 """
 
-
 from pathlib import Path #!!
 from typing import List
 
 from fastapi import APIRouter, HTTPException, UploadFile
 from fastapi.responses import FileResponse
+
+import app.services.mesh_service as ms
 
 from app.config import STL_STORAGE_DIR
 
@@ -50,6 +51,22 @@ async def upload_stl_model(stl_file: UploadFile):
     except Exception as e:
         return {"message": f"The following error occured whilst uploading STL file ({stl_file.filename}): {str(e)}"}
 
+@router.get("/dimensions")
+async def get_stl_dimensions(stl_filename: str):
+    stl_path = STL_STORAGE_DIR / stl_filename
+
+    mesh = ms.load_stl_mesh(stl_path)
+    model_dim = mesh.extents
+
+    return {
+        "stl_filename": stl_filename,
+        "dimensions": {
+            "x": round(float(model_dim[0]), 8),
+            "y": round(float(model_dim[1]), 8),
+            "z": round(float(model_dim[2]), 8),
+        }
+    }
+
 @router.get("/{filename}")
 def get_stl_model(filename: str):
     """Get an STL model file."""
@@ -76,8 +93,3 @@ def _resolve_model_path(filename: str) -> Path:
         raise HTTPException(status_code=400, detail="Requested file is not an STL model.")
 
     return file_path
-
-@router.get("/sphere") # can probably be removed.
-def get_sphere_model():
-    """Get the sphere model (convenience endpoint)."""
-    return get_stl_model("sphere.stl")

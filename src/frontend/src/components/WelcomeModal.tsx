@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 
-type WelcomeStep = 'choice' | 'select-model' | 'select-project';
+type WelcomeStep = 'choice' | 'select-model' | 'select-project' | 'select-previous' | 'select-file';
 
 interface WelcomeModalProps {
   isOpen: boolean;
+  initialStep?: WelcomeStep;
   onClose?: () => void;
   availableModels: string[];
   availableProjects: string[];
@@ -15,6 +16,7 @@ interface WelcomeModalProps {
 
 export const WelcomeModal = ({
   isOpen,
+  initialStep = 'choice',
   onClose,
   availableModels,
   availableProjects,
@@ -31,16 +33,16 @@ export const WelcomeModal = ({
 
   useEffect(() => {
     if (isOpen) {
-      setStep('choice');
+      setStep(initialStep);
       setSelectedModelForProjects(null);
     }
-  }, [isOpen]);
-
-  if (!isOpen) return null;
+  }, [isOpen, initialStep]);
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
   };
+  
+  if (!isOpen) return null;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -56,8 +58,13 @@ export const WelcomeModal = ({
     setStep('select-model');
   };
 
+  const handleSelectPrevProject = () => {
+    setStep('select-previous');
+  };
+
   const handleModelSelect = (model: string) => {
     setSelectedModelForProjects(model);
+    onSelectModel(model);
     setStep('select-project');
   };
 
@@ -69,6 +76,8 @@ export const WelcomeModal = ({
     setSelectedModelForProjects(null);
     setStep('select-model');
   };
+
+  const allProjects = availableProjects;
 
   const projectsForModel = selectedModelForProjects
     ? availableProjects.filter((project) =>
@@ -105,7 +114,7 @@ export const WelcomeModal = ({
           onClick={(e) => e.stopPropagation()}
         >
           <div className="dialog-header">
-            <h3>Welcome to the Voxel Editor</h3>
+            <h3>Voxelized Project</h3>
             {onClose && (
               <button className="dialog-close" onClick={onClose} title="Close">
                 ×
@@ -126,10 +135,10 @@ export const WelcomeModal = ({
                   >
                     <span className="welcome-option-icon">📤</span>
                     <span className="welcome-option-title">
-                      Import a new STL file
+                      Import New STL
                     </span>
                     <span className="welcome-option-desc">
-                      Upload an STL file from your computer
+                      Upload new STL file from your computer to start
                     </span>
                   </button>
                   <button
@@ -139,12 +148,26 @@ export const WelcomeModal = ({
                   >
                     <span className="welcome-option-icon">📁</span>
                     <span className="welcome-option-title">
-                      Select an existing STL file
+                      New Project
                     </span>
                     <span className="welcome-option-desc">
-                      Choose from previously uploaded models
+                      Open new project from previously uploaded stl models
                     </span>
                   </button>
+                  <button
+                    type="button"
+                    className="welcome-option-button"
+                    onClick={handleSelectPrevProject}
+                  >
+                    <span className="welcome-option-icon">📄</span>
+                    <span className="welcome-option-title">
+                      Previous Project
+                    </span>
+                    <span className="welcome-option-desc">
+                      Reopen a previous voxelized project
+                    </span>
+                  </button>
+                  
                 </div>
               </div>
             )}
@@ -189,20 +212,25 @@ export const WelcomeModal = ({
                 >
                   ← Back
                 </button>
-                <p className="welcome-prompt">
-                  Projects for <strong>{selectedModelForProjects}</strong>
-                </p>
+
+                <button
+                  type="button"
+                  className="welcome-list-item welcome-list-item-new"
+                  onClick={handleNewProjectClick}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  Create New Project
+                </button>
+
+                <div className="welcome-list-divider" />
                 <div className="welcome-list">
-                  <button
-                    type="button"
-                    className="welcome-list-item welcome-list-item-new"
-                    onClick={handleNewProjectClick}
-                  >
-                    + New Project...
-                  </button>
-                  {projectsForModel.length > 0 && (
-                    <div className="welcome-list-divider" />
-                  )}
+                  <p className="welcome-prompt">
+                    Reopen Previous Project for <strong>{selectedModelForProjects}</strong>
+                  </p>
                   {projectsForModel.map((project) => (
                     <button
                       key={project}
@@ -215,9 +243,53 @@ export const WelcomeModal = ({
                   ))}
                   {projectsForModel.length === 0 && (
                     <p className="welcome-empty">
-                      No projects yet. Create a new one.
+                      No projects yet. 
                     </p>
                   )}
+                </div>
+              </div>
+            )}
+
+
+            {step === 'select-previous' && (
+              <div className="welcome-select-project">
+                <button
+                  type="button"
+                  className="welcome-back-button"
+                  onClick={handleBackFromModels}
+                >
+                  ← Back
+                </button>
+                <div className="welcome-list">
+                  {allProjects.length === 0 && (
+                    <p className="welcome-empty">
+                      No projects yet.
+                    </p>
+                  )}
+      
+                  {allProjects.map((project) => (
+                    <button
+                      key={project}
+                      type="button"
+                      className="welcome-list-item"
+                      onClick={() => handleProjectSelect(project)}
+                    >
+                      {project}
+                    </button>
+                  ))}
+                  
+                  <button
+                    type="button"
+                    className="welcome-list-item welcome-list-item-new"
+                    onClick={handleSelectExistingClick}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    Create New Project
+                  </button>
                 </div>
               </div>
             )}

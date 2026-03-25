@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
+import { fetchSTLDimensions } from '../utils/api';
 
-type UnitOption = 'nm' | 'mm' | 'cm';
+type UnitOption = 'µm' | 'mm' | 'cm';
+
 
 interface NewProjectDialogProps {
   isOpen: boolean;
@@ -10,8 +12,8 @@ interface NewProjectDialogProps {
     payload: {
       projectName: string;
       modelUnits: UnitOption;
+      scaleFactor: number;
       voxelSize: number;
-      voxelUnits: UnitOption;
       defaultMaterial: string;
     },
     onProgress?: (message: string) => void,
@@ -31,9 +33,11 @@ export const NewProjectDialog = ({
   const initialMaterialsRef = useRef(initialMaterials);
   initialMaterialsRef.current = initialMaterials;
 
+  const [modelDimensions, setModelDimensions] = useState<{ x: number; y: number; z: number;} | null>(null);
+
   const [modelUnits, setModelUnits] = useState<UnitOption>('mm');
+  const [scaleFactor, setScaleFactor] = useState<string>('1');
   const [voxelSizeText, setVoxelSizeText] = useState<string>('1');
-  const [voxelUnits, setVoxelUnits] = useState<UnitOption>('mm');
 
   const ADD_MATERIAL_VALUE = '__ADD_NEW_MATERIAL__';
   const [materials, setMaterials] = useState<string[]>(initialMaterials);
@@ -55,7 +59,7 @@ export const NewProjectDialog = ({
 
       const mats = initialMaterialsRef.current;
       setModelUnits('mm');
-      setVoxelUnits('mm');
+      setScaleFactor('1');
       setVoxelSizeText('1');
       setIsAddingMaterial(false);
       setNewMaterialName('');
@@ -66,10 +70,33 @@ export const NewProjectDialog = ({
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen || !stlFileName) return;
+  
+    const loadDimensions = async () => {
+      try {
+        const data = await fetchSTLDimensions(stlFileName);
+        setModelDimensions(data.dimensions);
+      } catch (error) {
+        console.error('Failed to fetch STL dimensions', error);
+        setModelDimensions(null);
+      }
+    };
+  
+    loadDimensions();
+  }, [isOpen, stlFileName]);
+
   const baseName = stlFileName.replace('.stl', '');
   const fullProjectName = suffix.trim()
     ? `${baseName}-${suffix.trim()}`
     : baseName;
+
+    const parseScaleFactor = (): number | null => {
+      const n = Number(scaleFactor);
+      if (!Number.isFinite(n) || n <= 0) return null;
+      return n;
+    };
+  
 
   const parseVoxelSize = (): number | null => {
     const n = Number(voxelSizeText);
@@ -79,6 +106,12 @@ export const NewProjectDialog = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const scaleFactor = parseScaleFactor();
+    if (scaleFactor === null) {
+      alert('Please enter a valid scale factor (> 0).');
+      return;
+    }
 
     const voxelSize = parseVoxelSize();
     if (voxelSize === null) {
@@ -90,12 +123,13 @@ export const NewProjectDialog = ({
     setProgressMessage('Voxelizing model...');
 
     try {
+      console.log('START creating')
       await onConfirm(
         {
           projectName: fullProjectName,
           modelUnits,
+          scaleFactor,
           voxelSize,
-          voxelUnits,
           defaultMaterial: selectedMaterial,
         },
         setProgressMessage,
@@ -162,28 +196,58 @@ export const NewProjectDialog = ({
             <hr className="dialog-divider" />
 
             {/* Model units */}
-            <div className="dialog-section">
-              <p className="dialog-hint-white">Define model units:</p>
+            <p className="dialog-hint-white">
+              <strong> Current dimensions: </strong>
+            </p>
+            {modelDimensions && (
+              <p className="dialog-hint-white">
+                {modelDimensions.x} × {modelDimensions.y} × {modelDimensions.z}
+              </p>
+            )}
 
-              <div className="radio-row">
-                {(['nm', 'mm', 'cm'] as UnitOption[]).map((u) => (
-                  <label key={u} className="radio-pill">
-                    <input
-                      type="radio"
-                      name="modelUnits"
-                      value={u}
-                      checked={modelUnits === u}
-                      onChange={() => setModelUnits(u)}
-                    />
-                    <span>{u}</span>
-                  </label>
-                ))}
+            {/* Scale model  */}
+            <div className="dialog-section">
+              <p className="dialog-hint-white">
+                <strong>Factor to scale model dimensions by:</strong>
+              </p>
+              <div className="inline-row">
+                <input
+                  id="scale-factor-input"
+                  type="text"
+                  inputMode="decimal"
+                  value={scaleFactor}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    // Allow empty string
+                    if (value === '') {
+                      setScaleFactor(value);
+                      return;
+                    }
+
+                    // Allow valid float or int
+                    const floatRegex = /^-?\d*\.?\d*$/;
+
+                    if (floatRegex.test(value)) {
+                      setScaleFactor(value);
+                    }
+                  }}
+                  className="scale-factor-input"
+                />
+                {/* Optional tiny validation hint */}
+                {parseScaleFactor() === null && (
+                  <p className="dialog-error">
+                    Factor must be a number greater than 0
+                  </p>
+                )}
               </div>
             </div>
 
             {/* Voxel size + units */}
             <div className="dialog-section">
-              <p className="dialog-hint-white">Input desired voxel size:</p>
+              <p className="dialog-hint-white">
+                <strong>Input desired voxel size:</strong>
+              </p>
               <div className="inline-row">
                 <input
                   id="voxel-size-input"
@@ -215,31 +279,35 @@ export const NewProjectDialog = ({
                   </p>
                 )}
               </div>
+            </div>
 
-              <div className="subsection">
-                <p className="dialog-hint-white">
-                  Select units that apply to voxel size:
-                </p>
-                <div className="radio-row">
-                  {(['nm', 'mm', 'cm'] as UnitOption[]).map((u) => (
-                    <label key={u} className="radio-pill">
-                      <input
-                        type="radio"
-                        name="voxelUnits"
-                        value={u}
-                        checked={voxelUnits === u}
-                        onChange={() => setVoxelUnits(u)}
-                      />
-                      <span>{u}</span>
-                    </label>
-                  ))}
-                </div>
+            {/* Reference units for export in which all measurements are expressed as: */}
+            <div className="dialog-section">
+              <p className="dialog-hint-white">
+                <strong>Reference units for export in which all measurements are expressed as:</strong>
+              </p>
+
+              <div className="radio-row">
+                {(['µm', 'mm', 'cm'] as UnitOption[]).map((u) => (
+                  <label key={u} className="radio-pill">
+                    <input
+                      type="radio"
+                      name="modelUnits"
+                      value={u}
+                      checked={modelUnits === u}
+                      onChange={() => setModelUnits(u)}
+                    />
+                    <span>{u}</span>
+                  </label>
+                ))}
               </div>
             </div>
 
             {/* Default material */}
             <div className="dialog-section">
-              <p className="dialog-hint-white">Select default material:</p>
+              <p className="dialog-hint-white">
+                <strong>Select default material:</strong>
+              </p>
 
               {!isAddingMaterial ? (
                 <div className="inline-row">

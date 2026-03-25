@@ -53,10 +53,14 @@ async def get_layer(request: RetrieveLayerRequest):
         # Get all voxels from corresponding layer.
         if request.axis == "x":
             voxels = mt.get_x_layer(request.layer_index, partition_path)
+            #mag_voxels = mt.get_x_magnetized_voxels(request.layer_index, partition_path)
         elif request.axis == "y":
             voxels = mt.get_y_layer(request.layer_index, partition_path)
+            #mag_voxels = mt.get_y_magnetized_voxels(request.layer_index, partition_path)
         else:
             voxels = mt.get_z_layer(request.layer_index, partition_path)
+            #mag_voxels = mt.get_z_magnetized_voxels(request.layer_index, partition_path)
+
 
         if not voxels:
             # Invalid layer.
@@ -71,6 +75,7 @@ async def get_layer(request: RetrieveLayerRequest):
             "layer_index": request.layer_index,
             "num_voxels": len(voxels),
             "voxels": voxels,
+            #"magnetized_voxels": mag_voxels,
             "axis": request.axis,
         }
     

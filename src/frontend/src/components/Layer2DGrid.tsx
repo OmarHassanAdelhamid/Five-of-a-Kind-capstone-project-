@@ -187,7 +187,7 @@ export const Layer2DGrid = ({
     const toPixelX = (gx: number) =>
       offsetX + (gx - expandedMinX + 0.5) * cellStep - cellSize / 2;
     const toPixelY = (gy: number) =>
-      height - offsetY - (gy - expandedMinY + 0.5) * cellStep - cellSize / 2;
+      offsetY + (gy - expandedMinY + 0.5) * cellStep - cellSize / 2;
 
     if (editVoxelsMode) {
       for (let gy = expandedMinY; gy <= expandedMaxY; gy++) {
@@ -225,7 +225,7 @@ export const Layer2DGrid = ({
       const gridX = (v.grid_x ?? 0) - expandedMinX;
       const gridY = (v.grid_y ?? 0) - expandedMinY;
       const pixelX = offsetX + (gridX + 0.5) * cellStep - cellSize / 2;
-      const pixelY = height - offsetY - (gridY + 0.5) * cellStep - cellSize / 2;
+      const pixelY = offsetY + (gridY + 0.5) * cellStep - cellSize / 2;
 
       voxelPositionsRef.current.push({
         x: pixelX,
