@@ -473,12 +473,12 @@ function App() {
     }
 
     try {
-      const updatedCoordinates = await updateHistory({
+      await updateHistory({
         project_name: projectName,
         partition_name: selectedPartition,
         action: 'undo',
       });
-      console.log('Undo successful, updated coordinates:', updatedCoordinates);
+      await handleRefreshVoxels();
     } catch (error) {
       console.error('Failed to undo changes', error);
       alert(
@@ -487,7 +487,7 @@ function App() {
           : 'Failed to undo changes. Please try again.',
       );
     }
-  }, [projectName, selectedPartition]);
+  }, [projectName, selectedPartition, handleRefreshVoxels]);
   const handleRedo = useCallback(async () => {
     console.log('Redo action triggered');
     console.log('Current project name:', projectName);
@@ -501,12 +501,12 @@ function App() {
     }
 
     try {
-      const updatedCoordinates = await updateHistory({
+      await updateHistory({
         project_name: projectName,
         partition_name: selectedPartition,
         action: 'redo',
       });
-      console.log('Redo successful, updated coordinates:', updatedCoordinates);
+      await handleRefreshVoxels();
     } catch (error) {
       console.error('Failed to redo changes', error);
       alert(
@@ -515,7 +515,7 @@ function App() {
           : 'Failed to redo changes. Please try again.',
       );
     }
-  }, [projectName, selectedPartition]);
+  }, [projectName, selectedPartition, handleRefreshVoxels]);
   const handleCopy = useCallback(() => {
     if (isLayerEditorOpen) {
       const props = modelViewerRef.current?.getSelectionProperties() ?? null;
@@ -617,13 +617,25 @@ function App() {
             e.preventDefault();
             handlePaste();
             break;
+          case 'z':
+            e.preventDefault();
+            if (e.shiftKey) {
+              handleRedo();
+            } else {
+              handleUndo();
+            }
+            break;
+          case 'y':
+            e.preventDefault();
+            handleRedo();
+            break;
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleSave, handleExport, handleSelectAll, handleCopy, handlePaste]);
+  }, [handleSave, handleExport, handleSelectAll, handleCopy, handlePaste, handleUndo, handleRedo]);
 
   return (
     <div className="app">
