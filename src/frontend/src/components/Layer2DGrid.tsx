@@ -518,9 +518,11 @@ export const Layer2DGrid = ({
     if (e.button !== 0) return;
     if (editVoxelsMode) {
       if (selectionMode === 'lasso') return;
-      if (onVoxelRemove) {
-        const cell = getCellAtPosition(e.clientX, e.clientY);
-        if (cell?.type === 'voxel') onVoxelRemove(cell.index);
+      const cell = getCellAtPosition(e.clientX, e.clientY);
+      if (cell?.type === 'voxel' && onVoxelRemove) {
+        onVoxelRemove(cell.index);
+      } else if (cell?.type === 'empty' && onVoxelAdd) {
+        onVoxelAdd(cell.gridX, cell.gridY);
       }
       return;
     }
@@ -535,10 +537,6 @@ export const Layer2DGrid = ({
 
   const handleContextMenu = (e: React.MouseEvent<HTMLCanvasElement>) => {
     e.preventDefault();
-    if (editVoxelsMode && onVoxelAdd) {
-      const cell = getCellAtPosition(e.clientX, e.clientY);
-      if (cell?.type === 'empty') onVoxelAdd(cell.gridX, cell.gridY);
-    }
   };
 
   const handleMouseLeave = () => {
