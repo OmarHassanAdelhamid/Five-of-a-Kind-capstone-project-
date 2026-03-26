@@ -88,8 +88,6 @@ async def get_surface_voxels(project_name: str, partition_name: str):
         rows = mt.find_surface(str(partition_path))
         coordinates = pm.read_voxels(rows)
         coordinates_list = coordinates.tolist() if hasattr(coordinates, 'tolist') else coordinates
-        
-        hm.clear_history() # when we switch projects, clear undo/redo history.
 
         return {
             "project_name": project_name,
@@ -99,6 +97,16 @@ async def get_surface_voxels(project_name: str, partition_name: str):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error reading project: {str(e)}")
+
+
+@router.delete("/history")
+async def clear_history():
+    """
+    Clears the undo/redo history. Should be called by the frontend whenever
+    the active project or partition changes.
+    """
+    hm.clear_history()
+    return {"message": "History cleared."}
 
 @router.post("")
 async def voxelize_stl(request: VoxelizeRequest):

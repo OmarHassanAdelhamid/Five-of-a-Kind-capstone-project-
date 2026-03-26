@@ -654,11 +654,7 @@ export const Layer2DGrid = ({
             style={{
               display: 'block',
               borderRadius: '8px',
-              cursor: editVoxelsMode
-                ? 'crosshair'
-                : selectionMode === 'lasso'
-                  ? 'crosshair'
-                  : 'pointer',
+              cursor: selectionMode === 'lasso' ? 'crosshair' : 'pointer',
             }}
           />
         </div>

@@ -13,6 +13,7 @@ import {
   voxelizeModel,
   downloadVoxelCSV,
   updateHistory,
+  clearHistory,
   type VoxelPropertiesClipboard,
 } from './utils/api';
 import type { LayerEditorHandle } from './components/LayerEditor';
@@ -373,6 +374,7 @@ function App() {
         const parts = await fetchPartitions(projectFolderName);
 
         onProgress?.('Loading project...');
+        await clearHistory();
         if (parts.length > 0) {
           setSelectedPartition(parts[0]);
           handleLoadVoxels(projectFolderName, parts[0]);
@@ -398,6 +400,7 @@ function App() {
       setProjectName(selectedProjectName);
       setSelectedPartition(null);
       dismissWelcomeModal();
+      clearHistory().catch(console.error);
       fetchPartitions(selectedProjectName).then((parts) => {
         if (parts.length > 0) {
           const first = parts[0];
@@ -412,6 +415,7 @@ function App() {
   const handlePartitionSelect = useCallback(
     (partitionName: string) => {
       setSelectedPartition(partitionName);
+      clearHistory().catch(console.error);
       if (projectName) {
         handleLoadVoxels(projectName, partitionName);
       }
