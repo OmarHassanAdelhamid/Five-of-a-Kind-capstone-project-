@@ -585,3 +585,20 @@ export const updateHistory = async (
   }
 };
 
+export const clearHistory = async (): Promise<void> => {
+  try {
+    const response = await apiFetch(`${API_BASE_URL}/api/project/history`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.detail || `Failed to clear history (${response.status})`,
+      );
+    }
+  } catch (error) {
+    console.error('Failed to clear history', error);
+    throw error;
+  }
+};
+
