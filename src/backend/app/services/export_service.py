@@ -18,7 +18,7 @@ def write_csv(project_path: str, file_to_write: str) -> bool:
             with VoxelDB(partition_path) as db:
                 # retrieve all voxels from each partition and add them to the list of all voxels within the project.
                 db.cur.execute("""
-                    SELECT x, y, z, material, magnet_magnitude, magnet_polar, magnet_azimuth
+                    SELECT x, y, z, material, magnet_polar, magnet_azimuth
                     FROM voxels;"""
                 )
                 all_voxels.extend(db.cur.fetchall())
@@ -26,7 +26,7 @@ def write_csv(project_path: str, file_to_write: str) -> bool:
         if (_validate_voxels(all_voxels)):
             # write header + all voxels as rows to passed temp csv file.
             writer = csv.writer(file)
-            writer.writerow(["x", "y", "z", "materialID", "magnet_magnitude", "magnet_polar", "magnet_azimuth"])
+            writer.writerow(["x", "y", "z", "materialID", "magnet_polar", "magnet_azimuth"])
             writer.writerows(all_voxels)
 
             return True

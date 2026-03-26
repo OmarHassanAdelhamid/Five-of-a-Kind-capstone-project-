@@ -31,7 +31,7 @@ def test_file_export_typical_case(mock_csv_writer, mock_open) -> None:
         mock_voxeldb.assert_has_calls([call(mock_file1), call(mock_file2)], any_order=True)
 
         mock_csv_writer.assert_called_once_with(mock_file)
-        mock_csv_writer_instance.writerow.assert_called_once_with(["x", "y", "z", "materialID", "magnet_magnitude", "magnet_polar", "magnet_azimuth"])
+        mock_csv_writer_instance.writerow.assert_called_once_with(["x", "y", "z", "materialID", "magnet_polar", "magnet_azimuth"])
         mock_csv_writer_instance.writerows.assert_called_once_with([(1.0, 1.0, 1.0, 5, 4.0, 60.0, 30.0), (2.0, 2.0, 2.0, 4, 3.0, 61.0, 31.0)])
 
         assert ret_bool == True
@@ -69,7 +69,7 @@ def test_file_export_extra_directory(mock_csv_writer, mock_open) -> None:
         mock_voxeldb.assert_has_calls([call(mock_file1), call(mock_file2)], any_order=True)
 
         mock_csv_writer.assert_called_once_with(mock_file)
-        mock_csv_writer_instance.writerow.assert_called_once_with(["x", "y", "z", "materialID", "magnet_magnitude", "magnet_polar", "magnet_azimuth"])
+        mock_csv_writer_instance.writerow.assert_called_once_with(["x", "y", "z", "materialID", "magnet_polar", "magnet_azimuth"])
         mock_csv_writer_instance.writerows.assert_called_once_with([(1.0, 1.0, 1.0, 5, 4.0, 60.0, 30.0), (2.0, 2.0, 2.0, 4, 3.0, 61.0, 31.0)])
 
         assert ret_bool == True
