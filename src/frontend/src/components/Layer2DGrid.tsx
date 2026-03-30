@@ -636,7 +636,6 @@ export const Layer2DGrid = ({
             transform: `scale(${zoom})`,
             transformOrigin: '50% 50%',
           }}
-          onWheel={handleWheel}
         >
           <canvas
             ref={canvasRef}
