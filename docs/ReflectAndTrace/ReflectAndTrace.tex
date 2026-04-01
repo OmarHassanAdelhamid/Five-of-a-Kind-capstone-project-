@@ -1,13 +1,40 @@
-\documentclass{article}
-
-\usepackage{tabularx}
+\documentclass[12pt, titlepage]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{ltablex}
+\usepackage{longtable}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=red,
+    urlcolor=blue
+}
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{array}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{caption}
+\usepackage{graphicx}
+\graphicspath{{./images/}}
+\captionsetup[table]{width=0.9\textwidth,position=top}
+
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily, % Use monospaced font
+  breaklines=true,      % Enable line breaks
+}
+\usepackage{csvsimple}
 
 \title{Reflection and Traceability Report on \progname}
 
 \author{\authname}
-
-\date{}
+\date{\today}
 
 \input{../Comments}
 \input{../Common}
@@ -15,7 +42,9 @@
 \begin{document}
 
 \maketitle
+\pagenumbering{roman}
 
+\iffalse
 \plt{Reflection is an important component of getting the full benefits from a
 learning experience.  Besides the intrinsic benefits of reflection, this
 document will be used to help the TAs grade how well your team responded to
@@ -23,9 +52,19 @@ feedback.  Therefore, traceability between Revision 0 and Revision 1 is and
 important part of the reflection exercise.  In addition, several CEAB (Canadian
 Engineering Accreditation Board) Learning Outcomes (LOs) will be assessed based
 on your reflections.}
+\fi
+
+\tableofcontents
+
+\listoftables %if appropriate
+
+\newpage
+
+\pagenumbering{arabic}
 
 \section{Changes in Response to Feedback}
 
+\iffalse
 \plt{Summarize the changes made over the course of the project in response to
 feedback from TAs, the instructor, teammates, other teams, the project
 supervisor (if present), and from user testers.}
@@ -60,12 +99,159 @@ response separately for each deliverable in the sections that follow.}
 be able to grade your response to feedback.  In that case your grade on this
 document, and likely the Revision 1 versions of the other documents will be
 low.} 
+\fi
+
+\subsection{Problem Statement, Goals, and Development Plan} %------------------------------------------------------------------------
+
+\begin{longtable}{|p{2cm}|p{4cm}|p{5cm}|p{3cm}|}
+\caption{Feedback Responses and Traceability for Problem Statement, Goals, Development Plan}
+\label{tab:PSGDPFeedback} \\
+
+\hline
+\textbf{Feedback Source} & \textbf{Summary} & \textbf{Changes Made} & \textbf{Related Issues} \\ 
+\hline
+\endfirsthead
+
+\hline
+\multicolumn{4}{c}{\textit{Table \thetable\ continued}} \\
+\hline
+\textbf{Feedback Source} & \textbf{Summary} & \textbf{Changes Made} & \textbf{Related Issues} \\ 
+\hline
+\endhead
+
+team & Reference material assignment throughout & Rephrased throughout document to reference materials & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/200}{Issue \#200}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/9afa9414904a5737602d6abb4abd919f6d082f43}{Commit 9afa941}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+TA & Add headliners to each section & Intro sentence added underneath each section & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/202}{Issue \#202}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/9afa9414904a5737602d6abb4abd919f6d082f43}{Commit 9afa941}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+team & Update POC Plan & Addressed in issue, pull request & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/161}{Issue \#161}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/252/commits/6e37f7bad766dfb49e4cdd5419fdb11361022e50}{Commit 6e37f7b}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/252}{Pull \#252} \\ \hline
+
+\end{longtable}
 
 \subsection{SRS and Hazard Analysis}
+\subsubsection{SRS}
+
+\begin{longtable}{|p{2cm}|p{4cm}|p{5cm}|p{3cm}|} %------------------------------------------------------------------------
+\caption{Feedback Responses and Traceability for SRS}
+\label{tab:SRSFeedback} \\
+
+\hline
+\textbf{Feedback Source} & \textbf{Summary} & \textbf{Changes Made} & \textbf{Related Issues} \\ 
+\hline
+\endfirsthead
+
+\hline
+\multicolumn{4}{c}{\textit{Table \thetable\ continued}} \\
+\hline
+\textbf{Feedback Source} & \textbf{Summary} & \textbf{Changes Made} & \textbf{Related Issues} \\ 
+\hline
+\endhead
+
+team & Add missing general requirements & Addressed in issue, pull request & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/160}{Issue \#160}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/220/commits/4dcf99741fcdd6f39f03d536ecb05cabfae45d39}{Commit 4dcf997}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/220}{Pull \#220} \\ \hline
+team & Add numbering to sections referenced in VnV Plan & Addressed in issue, pull request & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/162}{Issue \#162}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/220/commits/4dcf99741fcdd6f39f03d536ecb05cabfae45d39}{Commit 4dcf997}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/220}{Pull \#220} \\ \hline
+TA & Add more hyperlinks & Addressed in pull request & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/208}{Issue \#208}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/6ab9071c341c1a43b016afde0d60a40277481fa6}{Commit 6ab9071}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+TA & Make traceability explicit & Added explicit traceability tables, addressed in pull request & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/208}{Issue \#208}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/a99951220dd88428032f56d4d9d3810742d400b8}{Commit a999512}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+TA & Miscellaneous formatting fixes & Improved formatting, updated glossary; details in issue & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/207}{Issue \#207}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/052ab2b02be49545426edea2cbbe768122050106}{Commit 052ab2b}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+TA, peer & Add citations & Addressed in issue(s) & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/212}{Issue \#212}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/153}{Issue \#153}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/36222462e30c9a9a412a427c719f7115df62a3c2}{Commit 3622246}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+TA & Make low-level requirements verifiable & Reworded low-level requirements & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/209}{Issue \#209}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/bbd8ff7e7ffe140aca18d3cd53480f9ecd4beeba}{Commit bbd8ff7}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+peer & Make requirements verifiable & Reworded high-level requirements & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/152}{Issue \#152}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/42effd17a34adde7426efea55106c82f3724c94e}{Commit 42effd1}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+peer & Use Case Diagram Too detailed & Refactored diagram; addressed in pull request & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/147}{Issue \#147}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/42effd17a34adde7426efea55106c82f3724c94e}{Commit 42effd1}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+TA, peer & Expand societal benefits, goal model & Refactored relevant section; addressed in pull request & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/214}{Issue \#214}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/154}{Issue \#154}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/155}{Issue \#155}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/836ae244e2b586d0e8fe8a698d4b32b65836123d}{Commit 836ae24}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+TA & Make system boundary clear & Added system boundary diagram & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/213}{Issue \#213}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/741be088bb8af47f066f40b65198f5236b733b3a}{Commit 741be08}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+
+\end{longtable}
+
+\subsubsection{Hazard Analysis}
+
+\begin{longtable}{|p{2cm}|p{4cm}|p{5cm}|p{3cm}|} %------------------------------------------------------------------------
+\caption{Feedback Responses and Traceability for Hazard Analysis}
+\label{tab:HAFeedback} \\
+
+\hline
+\textbf{Feedback Source} & \textbf{Summary} & \textbf{Changes Made} & \textbf{Related Issues} \\ 
+\hline
+\endfirsthead
+
+\hline
+\multicolumn{4}{c}{\textit{Table \thetable\ continued}} \\
+\hline
+\textbf{Feedback Source} & \textbf{Summary} & \textbf{Changes Made} & \textbf{Related Issues} \\ 
+\hline
+\endhead
+
+Example & Example & Example & Example \\ \hline
+
+\end{longtable}
 
 \subsection{Design and Design Documentation}
 
+\begin{longtable}{|p{2cm}|p{4cm}|p{5cm}|p{3cm}|} %------------------------------------------------------------------------
+\caption{Feedback Responses and Traceability for Design Documentation}
+\label{tab:DDFeedback} \\
+
+\hline
+\textbf{Feedback Source} & \textbf{Summary} & \textbf{Changes Made} & \textbf{Related Issues} \\ 
+\hline
+\endfirsthead
+
+\hline
+\multicolumn{4}{c}{\textit{Table \thetable\ continued}} \\
+\hline
+\textbf{Feedback Source} & \textbf{Summary} & \textbf{Changes Made} & \textbf{Related Issues} \\ 
+\hline
+\endhead
+
+Example & Example & Example & Example \\ \hline
+
+\end{longtable}
+
 \subsection{VnV Plan and Report}
+\subsubsection{VnV Plan}
+
+\begin{longtable}{|p{2cm}|p{4cm}|p{5cm}|p{3cm}|} %------------------------------------------------------------------------
+\caption{Feedback Responses and Traceability for VnV Plan}
+\label{tab:VnVPFeedback} \\
+
+\hline
+\textbf{Feedback Source} & \textbf{Summary} & \textbf{Changes Made} & \textbf{Related Issues} \\ 
+\hline
+\endfirsthead
+
+\hline
+\multicolumn{4}{c}{\textit{Table \thetable\ continued}} \\
+\hline
+\textbf{Feedback Source} & \textbf{Summary} & \textbf{Changes Made} & \textbf{Related Issues} \\ 
+\hline
+\endhead
+
+TA & Convert trace tables to matrices & Addressed in pull request & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/266}{Issue \#266}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/6d76bf7355cf75f9e93c357bc26317ad184882ce}{Commit 6d76bf7}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+peer & Add hyperlinks to trace tables & Addressed in pull request & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/175}{Issue \#175}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/6d76bf7355cf75f9e93c357bc26317ad184882ce}{Commit 6d76bf7}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+TA & Consistent symbolic constants & Replaced all numbers throughout with symbolic constants & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/265}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/6d76bf7355cf75f9e93c357bc26317ad184882ce}{Commit 6d76bf7}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+TA & Miscellaneous formatting issues & Implemented all mentioned in associated issue & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/260}{Issue \#260}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/e17eca0087535efb0654f72a1007031ee95a9c22}{Commit e17eca0}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+TA & Flexibility in team roles unspecified & Added clarification to offending section & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/261}{Issue \#261}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/39e45f0ffa825d9664234e5ee6788fce38648f07}{Commit 39e45f0}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+TA & SRS Checklist unspecific & Made more detailed, expanded upon and made explicit & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/262}{Issue \#262}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/39e45f0ffa825d9664234e5ee6788fce38648f07}{Commit 39e45f0}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+TA & Make feedback session with supervisor more specific & Clarified, listed artifacts to elicit feedback & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/264}{Issue \#264}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279/commits/39e45f0ffa825d9664234e5ee6788fce38648f07}{Commit 39e45f0}, \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/279}{Pull \#279} \\ \hline
+
+\end{longtable}
+
+\subsubsection{VnV Report}
+
+\begin{longtable}{|p{2cm}|p{4cm}|p{5cm}|p{3cm}|} %------------------------------------------------------------------------
+\caption{Feedback Responses and Traceability for VnV Report}
+\label{tab:VnVRFeedback} \\
+
+\hline
+\textbf{Feedback Source} & \textbf{Summary} & \textbf{Changes Made} & \textbf{Related Issues} \\ 
+\hline
+\endfirsthead
+
+\hline
+\multicolumn{4}{c}{\textit{Table \thetable\ continued}} \\
+\hline
+\textbf{Feedback Source} & \textbf{Summary} & \textbf{Changes Made} & \textbf{Related Issues} \\ 
+\hline
+\endhead
+
+Example & Example & Example & Example \\ \hline
+
+\end{longtable}
 
 \section{Challenge Level and Extras}
 
