@@ -252,18 +252,29 @@ to assist in any technical review related to their subject matter of expertise.
 \end{itemize}
 \fi
 
-This section details how Git will be used throughout the project, as well as how Continuous Integration/Deployment will
-be implemented.\\
+This section details how Git will be used throughout the project, as well as how Continuous Integration/Deployment will be implemented.Git will be utilized as the primary, centralized collaboration space for both project
+source code and its related documentation. The repository will maintain one permanent protected branch:
 
-Git will be utilized as the primary, centralized collaboration space for both project
-source code and its related documentation. Members will create new branches for each
-feature to be implemented, as well as per each member (eg. branches will not be shared). 
-Commits should each contain a descriptive message of all edits, and ideally not lump together various changes. 
+\begin{itemize}
+  \item \texttt{main} --- the stable branch representing the latest submitted or
+  release-ready state of the project. Direct pushes are not permitted; all changes
+  must arrive via a reviewed pull request from a short-lived branch.
+\end{itemize}
+
+All other branches are short-lived and must follow the naming convention
+\texttt{<name>-<description>}, where \texttt{name} is the author's first name and
+\texttt{description} is a brief \texttt{kebab-case} summary of the work (2--4 words).
+Branches will not be shared between members; each member creates their own branch
+for each unit of work. For example, a branch by Khalid to implement voxel rendering
+would be named \texttt{khalid-voxel-rendering}. Once the work on a branch is complete
+and its pull request is merged into \texttt{main}, the branch should be deleted.\\
+
+Commits should each contain a descriptive message of all edits, and ideally not lump together various changes.
 When a member is complete with their work on a given branch, they will create a pull request
-with an appropriate description describing changes, related labels, and reviewers. 
-For instance, an acceptable reviewer could be someone working on a related feature, 
+with an appropriate description describing changes, related labels, and reviewers.
+For instance, an acceptable reviewer could be someone working on a related feature,
 or the group if it affects everyone. Labels should give an estimate of how long it might take to
-review. Each pull request should also be linked to a given issue (eg. via closes \#20). Comments within pull 
+review. Each pull request should also be linked to a given issue (eg.\ via \texttt{closes \#20}). Comments within pull
 requests will also be taken advantage of, allowing feedback to be directly linked to source
 code or documentation.
 
