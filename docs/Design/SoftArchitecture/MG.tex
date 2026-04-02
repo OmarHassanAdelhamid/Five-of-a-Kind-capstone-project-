@@ -205,13 +205,9 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum\label{ucIO}:] Input/Output devices. The system is designed with the expectation that it operates with a limited and specific set of input and output devices. Input is handled through files (such as CAD input files or configuration files) and/or keyboard entry (for command-line or interactive parameter input). Output is provided via files (for export and logging), memory (for internal data storage and communication between modules), and/or a graphical screen (for visualization and user interface feedback).
+\item[\refstepcounter{ucnum} \uctheucnum\label{ucStandalone}:] Changing from a standalone application to a plugin-based/CAD integration software. While this would bring its own set of benefits, this would require an entire system restructuring, as well as add complexity from the added requirements of complying to the external software's standards. Additionally, this would limit the number of users that could convieniently use the software.
 
-\item[\refstepcounter{ucnum} \uctheucnum\label{ucArchitecture}:] The overall system architecture. The software follows a rigid four-manager structure that divides system functionality into Import, Visualization, Editing, and Export managers. Each manager is responsible for a core facet of application operation, and this separation is central to the modular design.
-
-\item[\refstepcounter{ucnum} \uctheucnum\label{ucLayerOrder}:] The ordering of layers from bottom to top (Z-axis ordering). Layers within the voxel grid are organized along the Z-axis, proceeding from the lowest layer (the base) to the highest (the top). This convention aligns with common additive manufacturing and 3D modeling practices.
-
-\item[\refstepcounter{ucnum} \uctheucnum\label{ucInteraction}:] The fundamental user interaction paradigm. The system targets a desktop usage scenario, using mouse and keyboard as primary input methods. This supports rapid interaction, direct manipulation of interface elements, and fine control over editing tasks.
+\item[\refstepcounter{ucnum} \uctheucnum\label{ucWorkflow}:] Fundamental changes to the user's workflow (eg. transitioning from file import, to editing voxels, to exporting the project). Ultimately this software is being developed to expediate an existing specific, straightforward workflow. Not only would changes to this confuse users and slow the transition to using this tool, it would also require drastic changes to the entire system architecture. 
 
 \end{description}
 
@@ -686,10 +682,10 @@ where $Properties(v) = (position, material, magnetization)$
 \subsubsection{Graphics Adapter Module (\mref{m18})}
 
 \begin{description}
-\item[Secrets:] How to manage the persistence of project and model data, including how to store, index, and access the data. How to handle the specific file-system or database technology (e.g., CSV files) and its connection management. How to handle caching and concurrency handling mechanisms.
-\item[Services:] Provides read and write access between the application and storage layer. Saves serialized models and retrieves them when requested. Ensures data integrity and version consistency using the Serialization Manager (M5). 
+\item[Secrets:] How to communicate with the external graphics API to render images to the user's screen. How to ensure the graphics API is currently operational.
+\item[Services:] Requests renders from the graphics API given a set of updates. Checks whether the graphics API is currently operational or not.
 \item[Implemented By:] \progname{}
-\item[Type of Module:] Library: a component responsible for managing the persistence of project and model data.
+\item[Type of Module:] Library: A reusable component responsible for communication with an API.
 \end{description}
 
 \iffalse
@@ -781,6 +777,8 @@ requirements and between the modules and the anticipated changes.
 
 \begin{table}[H]
 \centering
+\caption{Trace Between Functional Requirements and Modules}
+\label{TblRT}
 \small
 \setlength{\tabcolsep}{3pt}
 \resizebox{\textwidth}{!}{
@@ -918,12 +916,12 @@ F245 &
 \bottomrule
 \end{tabular}
 }
-\caption{Trace Between Functional Requirements and Modules}
-\label{TblRT}
 \end{table}
 
 \begin{table}[H]
 \centering
+\caption{Trace Between Non-Functional Requirements and Modules}
+\label{TblRT}
 \small
 \setlength{\tabcolsep}{3pt}
 \resizebox{\textwidth}{!}{
@@ -982,8 +980,6 @@ NF242 &
 \bottomrule
 \end{tabular}
 }
-\caption{Trace Between Non-Functional Requirements and Modules}
-\label{TblRT}
 \end{table} 
 
 
@@ -991,6 +987,8 @@ NF242 &
 
 \begin{table}[H]
 \centering
+\caption{Trace Between Anticipated Changes and Modules}
+\label{TblACT}
 \small
 \setlength{\tabcolsep}{3pt}
 \resizebox{\textwidth}{!}{
@@ -1042,8 +1040,6 @@ NF242 &
 \bottomrule
 \end{tabular}
 }
-\caption{Trace Between Anticipated Changes and Modules}
-\label{TblACT}
 \end{table}
 
 \section{Use Hierarchy Between Modules} \label{SecUse}
@@ -1085,6 +1081,8 @@ Table~\ref{tab:module-timeline} summarizes the implementation responsibility and
 
 \begin{table}[H]
 \centering
+\caption{Module assignment and implementation timeline}
+\label{tab:module-timeline}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{|l|l|l|}
 \hline
@@ -1108,8 +1106,6 @@ Table~\ref{tab:module-timeline} summarizes the implementation responsibility and
 \hyperref[m20]{M16: Export Structure} & Andrew, Daniel & 24 Nov 2025 \\
 \hline
 \end{tabular}
-\caption{Module assignment and implementation timeline}
-\label{tab:module-timeline}
 \end{table}
 
 
