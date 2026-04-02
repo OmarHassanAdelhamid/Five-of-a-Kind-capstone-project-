@@ -28,6 +28,7 @@ Sept. 16, 2025 & Khalid Farag & Extras\\
 Sept. 18, 2025 & Omar Abdelhamid & Problem Statement, Goals, Stretch Goals\\
 Sept 20, 2025 & Khalid Farag & Group and Personal Reflection\\
 Sept. 21st, 2025 & All & Personal Reflections\\
+April 2nd, 2026 & All & Final Changes to Problem Statement, Goals, Stretch Goals\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -64,6 +65,8 @@ selection (single or multiple voxels), and re-assignment of properties on top of
 
 \subsection{Stakeholders}
 
+In this section, we identify the stakeholders of the project, their roles and interests in the project. These stakeholders hold the most influence over the project, and their input is crucial for the success of the project.
+
 \begin{tabularx}{\textwidth}{lX}
 \toprule
 \textbf{Stakeholder} & \textbf{Role / Interest}\\
@@ -74,6 +77,8 @@ Supervisors / PIs (Approvers) & Validate that assigned properties are correct fo
 \bottomrule
 \end{tabularx}
 \subsection{Environment}
+
+This section details the environment in which the project will exist. This includes the platforms, runtime/integration, and assumptions about the environment.
 \begin{itemize}
   \item \textbf{Platforms:} Desktop/laptop; Windows with WSL or native Linux.
   \item \textbf{Runtime/Integration:} Reads mesh CAD files for voxelization; exports a Java-readable file to drive a custom printer program.
@@ -86,7 +91,8 @@ Supervisors / PIs (Approvers) & Validate that assigned properties are correct fo
 This section details the high-level goals of the project. 
 
 \begin{enumerate}
-  \item \textbf{Import \& Voxelization:} Import a mesh CAD file and convert it to a voxel grid with fixed voxel size of $300 \times 300\,\mu\text{m}$ (XY) and $110\,\mu\text{m}$ (Z).
+  \item \textbf{Import:} Import a mesh CAD file (STL) to the system.
+  \item \textbf{Voxelization Algorithm:} Voxelize the mesh CAD file to a voxel grid.
   \item \textbf{Layered UI \& Selection:} Provide a UI to browse layers from bottom to top and select voxels (single or multiple) within a layer.
   \item \textbf{Property Assignment \& Editing:} Assign properties to selected voxels and allow re-selection and changes without restarting the design (with undo/redo).
   \item \textbf{Export:} Generate a Java-readable file capturing per-voxel properties for the custom printer software.
