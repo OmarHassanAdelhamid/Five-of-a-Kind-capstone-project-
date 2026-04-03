@@ -7,7 +7,7 @@ endif::[]
 
 Users will use this interface to interact with the generated 3D rendition of the CAD model while also viewing voxel layers to execute the core functionality of assigning magnetization and materials to voxels. It should demonstrate seamless and user-friendly navigation across multiple perspectives of the 3D model through rotation and resizing while allowing easy access to the different voxel layers and an intuitive process for property assignment and model modifications. The provided wireframe mockups showcase the simplest design that captures the essential functionalities in a well-organized interface that users will be able to navigate naturally without confusion.
 
-Figures 4 thru 6 below are some initial, general mockups, communicating these ideas without enforcing a strict design layout.
+Figures 5 thru 7 below are some initial, general mockups, communicating these ideas without enforcing a strict design layout. Figure 8 presents a high-level system state diagram, intended to communicate the general workflow of the system and use of these interfaces.
 
 .Interface after initialize 3D rendition is generated.
 image::models/interface1.png[scale=25%,align="center"]
@@ -17,3 +17,6 @@ image::models/interface2.png[scale=25%,align="center"]
 
 .Entering layer focus interface for property assignment.
 image::models/interface3.png[scale=25%,align="center"]
+
+.High-level system state diagram.
+image::models/statediagramSRS.svg[scale=100%,align="center"]

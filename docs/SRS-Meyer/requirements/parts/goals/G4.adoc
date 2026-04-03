@@ -23,5 +23,5 @@ Some high-level non-functional requirements for the system can be defined as fol
 
 • [[G4-HNF-2]] *System performance. (G4-HNF-2)* The system should support model conversion at a minimum rate, and changes to visual perspectives or edits with a maximum delay, even for projects containing a maximum number of voxels. These rates, delays, and maximums will be set based on user needs.
 
-• [[G4-HNF-3]] *File compliance. (G4-HNF-3)* The systme should support a standard CAD file format and integrate with the existing custom 3D printing software. 
+• [[G4-HNF-3]] *File compliance. (G4-HNF-3)* The system should support a standard CAD file format and integrate with the existing custom 3D printing software. 
 
