@@ -302,15 +302,10 @@ Additionally, for general issues, new general labels will be created:
 
 For larger tasks, specific labels will be created to allow for quick searching through issues.
 
-All issues should also contain a reasonable description describing the bug / feature / 
-section of documentation. As a rule of thumb, issues should not be the full task but rather
-manageable, assignable chunks of it (eg. Finish Requirements Doc is a bad issue; Finish a specific 
-section of the Doc would be better). Similar to pull requests, issues will also be given assignees, 
-who will also be responsible for managing issue movement in the GitHub project (eg. moving from 
-In Progress to In Review).
+All issues should also contain a reasonable description describing the bug/feature/section of documentation.
+As a rule of thumb, issues should not be the full task but rather manageable, assignable chunks of it (eg. Finish Requirements Doc is a bad issue; Finish a specific section of the Doc would be better). Similar to pull requests, issues will also be given assignees, who will also be responsible for managing issue movement in the GitHub project (eg. moving from In Progress to In Review).
 
-To incorporate continuous integration, upon each push/pull request, all tests in the test suite
-will be run automatically via GitHub Actions.
+To incorporate continuous integration, upon each push/pull request, all tests in the test suite will be run automatically via GitHub Actions.
 
 \section{Project Decomposition and Scheduling}
 
@@ -355,7 +350,38 @@ following columns, through which every issue must progress in order:
 
 \subsection{Project Scheduling}
 
-The project will be scheduled based on the capstone deliverables, the team will prioritize the deliverables and schedule them accordingly. At each deliverable, the sections will be broken down into smaller tasks and these tasks will be assigned to team members. The project will be scheduled to be completed in a timely manner, and to be completed to a high quality. Below is a table of the project deliverables and their corresponding due dates.
+The project will be scheduled based on the capstone deliverables, the team will prioritize the deliverables and schedule them accordingly. At each deliverable, the work will be decomposed and assigned to team members, then tracked through GitHub Projects until completion. Below is a table of the project deliverables and their corresponding due dates.
+
+\subsubsection*{Task Decomposition Strategy}
+
+Tasks will be decomposed differently depending on the nature of the deliverable:
+
+\begin{itemize}
+  \item \textbf{Documentation deliverables} will be broken down by section or subsection, ensuring each piece is small enough to review and merge independently.
+  \item \textbf{Software deliverables} will be broken down by feature or module, so that each GitHub issue maps to a well-scoped, independently testable unit of work.
+\end{itemize}
+
+\subsubsection*{Task Distribution and Skill Development}
+
+Tasks will be distributed among team members with two competing goals in mind: leveraging existing strengths to maintain quality, and making sure each team member gets to work on a variety of tasks. Assigning the same individual to the same type of task throughout the entire project risks leaving other members without a working understanding of critical system components. To address this:
+
+\begin{itemize}
+  \item \textbf{Pairing will be used for high-complexity or unfamiliar tasks.} When a team member is assigned a task outside their current skillset, they will be paired with a domain expert who can provide guidance without owning the work outright.
+  \item \textbf{Task assignments will be made collectively during team meetings} so that all members have visibility into who is doing what, and can flag any issues early.
+\end{itemize}
+
+\subsubsection*{Ensuring Task Completion}
+
+To reduce the risk of assigned tasks going incomplete or being rushed at the last minute, the team will adopt the following practices:
+
+\begin{itemize}
+  \item \textbf{Internal deadlines} will be set at least two to three days before each official course deadline, providing buffer for issues and reviews.
+  \item \textbf{Check-ins} will be held during the weekly team meeting to bring up any blockers on in-progress issues before they become critical.
+  \item \textbf{If a team member anticipates missing an internal deadline}, they are expected to communicate this as early as possible in the team chat so that the task can be re-assigned or supported by another member.
+\end{itemize}
+
+\subsubsection*{Project Deliverables and Due Dates}
+Below is a table of the project deliverables and their corresponding due dates.
 
 \begin{center}
   \begin{tabularx}{\textwidth}{Xc}
