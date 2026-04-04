@@ -214,13 +214,30 @@ export const voxelizeModel = async (
   return (await response.json()) as VoxelizeResponse;
 };
 
-export const downloadVoxelCSV = async (projectName: string, exportName: string): Promise<Blob> => {
+export interface ExportValidationResult {
+  valid: boolean;
+  warnings: string[];
+}
+
+export const validateExport = async (projectName: string): Promise<ExportValidationResult> => {
+  const response = await apiFetch(
+    `${API_BASE_URL}/api/export/validate?project_name=${encodeURIComponent(projectName)}`,
+  );
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.detail || `Validation failed (${response.status})`);
+  }
+  return response.json();
+};
+
+export const downloadVoxelCSV = async (
+  projectName: string,
+  exportName: string,
+  force = false,
+): Promise<Blob> => {
   try {
-    const response = await apiFetch(
-      `${API_BASE_URL}/api/export?project_name=${encodeURIComponent(projectName)}&export_name=${encodeURIComponent(exportName)}`,
-      undefined,
-      300_000,
-    )
+    const url = `${API_BASE_URL}/api/export?project_name=${encodeURIComponent(projectName)}&export_name=${encodeURIComponent(exportName)}&force=${force}`;
+    const response = await apiFetch(url, undefined, 300_000);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
