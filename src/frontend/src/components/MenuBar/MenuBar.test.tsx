@@ -19,7 +19,9 @@ describe('MenuBar', () => {
 
   it('calls onUploadFile when Upload File clicked', async () => {
     const onUploadFile = jest.fn();
-    const { getByRole, getByText } = render(<MenuBar onUploadFile={onUploadFile} />);
+    const { getByRole, getByText } = render(
+      <MenuBar onUploadFile={onUploadFile} />,
+    );
     await userEvent.click(getByRole('button', { name: 'File' }));
     await userEvent.click(getByText('Upload File...'));
     expect(onUploadFile).toHaveBeenCalled();
@@ -31,7 +33,7 @@ describe('MenuBar', () => {
       <MenuBar
         onOpenFileSelect={onOpenFileSelect}
         availableModels={['cube.stl', 'box.stl']}
-      />
+      />,
     );
     await userEvent.click(getByRole('button', { name: 'File' }));
     await userEvent.hover(getByText('Open File...'));
@@ -48,7 +50,7 @@ describe('MenuBar', () => {
         onOpenProjectSelect={jest.fn()}
         availableProjects={[]}
         selectedModel="x.stl"
-      />
+      />,
     );
     await userEvent.click(getByRole('button', { name: 'File' }));
     await userEvent.hover(getByText('Open Project...'));
@@ -63,7 +65,7 @@ describe('MenuBar', () => {
       <MenuBar
         onOpenProjectSelect={onOpenProjectSelect}
         availableProjects={['proj1']}
-      />
+      />,
     );
     await userEvent.click(getByRole('button', { name: 'File' }));
     await userEvent.hover(getByText('Open Project...'));
@@ -74,7 +76,7 @@ describe('MenuBar', () => {
 
   it('calls handleOpenFileLeave when leaving Open File area', async () => {
     const { getByRole, getByText } = render(
-      <MenuBar availableModels={['a.stl']} />
+      <MenuBar availableModels={['a.stl']} />,
     );
     await userEvent.click(getByRole('button', { name: 'File' }));
     await userEvent.hover(getByText('Open File...'));
@@ -85,7 +87,7 @@ describe('MenuBar', () => {
 
   it('opens Open Project submenu when hover with projects', async () => {
     const { getByRole, getByText, findByRole } = render(
-      <MenuBar availableProjects={['p1']} />
+      <MenuBar availableProjects={['p1']} />,
     );
     await userEvent.click(getByRole('button', { name: 'File' }));
     await userEvent.hover(getByText('Open Project...'));
@@ -95,7 +97,7 @@ describe('MenuBar', () => {
 
   it('handleOpenProjectLeave closes submenu on mouse leave', async () => {
     const { getByRole, getByText } = render(
-      <MenuBar availableProjects={['p1']} />
+      <MenuBar availableProjects={['p1']} />,
     );
     await userEvent.click(getByRole('button', { name: 'File' }));
     await userEvent.hover(getByText('Open Project...'));
