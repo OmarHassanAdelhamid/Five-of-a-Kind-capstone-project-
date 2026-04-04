@@ -268,7 +268,7 @@ The following subsections report on each functional test case defined in the VnV
 \section{Nonfunctional Requirements Evaluation}
 
 The non-functional requirements defined in the SRS were evaluated using the corresponding test groups defined in the VnV Plan. 
-In particular, tests labeled \texttt{test-US} correspond to usability evaluation, tests labeled \texttt{test-PS} correspond to performance evaluation, and tests labeled \texttt{test-CO} correspond to compliance testing. 
+In particular, tests labeled \texttt{test-US} correspond to usability evaluation, tests labeled \texttt{test-PS} correspond to performance evaluation, and tests labeled \texttt{test-CO} correspond to portability testing. 
 The results of these evaluations are summarized in the following subsections.
 
 \subsection{Usability}
@@ -445,13 +445,13 @@ The results demonstrate that the system scales appropriately with increasing vox
 Core editing operations such as voxel selection and modification were executed with minimal latency, allowing users to interact with the voxel editor without noticeable delay. Export operations required slightly more processing time due to file writing and data serialization but remained within acceptable limits.
 
 Overall, the results confirm that the system satisfies the performance requirements defined in the VnV plan, demonstrating stable operation, scalable processing behaviour, and acceptable hardware resource usage across a range of model sizes.
-\subsection{Compliance}
+\subsection{Portability}
 
 \subsubsection{Methodology}
 
-Compliance testing was performed according to the procedures defined in the VnV plan (tests \texttt{test-CO-1} through \texttt{test-CO-4}). The evaluation focused on verifying operating system compatibility, file import and export compatibility, project file reliability during unexpected interruptions, and adherence to coding standards.
+Portability testing was performed according to the procedures defined in the VnV plan (tests \texttt{test-CO-1} through \texttt{test-CO-4}). The evaluation focused on verifying operating system compatibility, file import and export compatibility, project file reliability during unexpected interruptions, and adherence to coding standards.
 
-Compliance testing followed the procedures defined in the VnV Plan through tests \texttt{test-CO-1} to \texttt{test-CO-4}, covering operating system compatibility, file compatibility, project file fail-safe behaviour, and PEP8 coding standard compliance.
+Portability testing followed the procedures defined in the VnV Plan through tests \texttt{test-CO-1} to \texttt{test-CO-4}, covering operating system compatibility, file compatibility, project file fail-safe behaviour, and PEP8 coding standard compliance.
 
 \subsubsection{Results}
 
@@ -465,7 +465,7 @@ Finally, static analysis was conducted on the codebase using a linting tool to v
 
 \subsubsection{Discussion}
 
-The compliance tests demonstrate that the application satisfies the compatibility and reliability requirements defined in the VnV plan. The system operates correctly across supported operating systems, maintains file integrity during unexpected interruptions, and adheres to recognized Python coding standards. These results confirm that the system meets the specified compliance requirements.
+The portability tests demonstrate that the application satisfies the compatibility and reliability requirements defined in the VnV plan. The system operates correctly across supported operating systems, maintains file integrity during unexpected interruptions, and adheres to recognized Python coding standards. These results confirm that the system meets the specified portability requirements.
 
 \subsection{Maintainability}
 
@@ -1185,7 +1185,7 @@ TC64 & \xbox & \xbox & \obox \\
 TC65 & \xbox & \xbox & \obox \\
 TC66 & \xbox & \xbox & \obox \\
 TC67 & \xbox & \xbox & \obox \\
-CO-3 (Compliance Test) & \xbox & \obox & \obox \\
+CO-3 (Portability Test) & \xbox & \obox & \obox \\
 US-2 (Usability Test) & \obox & \xbox & \obox \\
 PS-2 (Performance Test) & \obox & \xbox & \obox \\
 Not Explicitly Tested & \obox & \obox & \xbox \\ 
@@ -1423,7 +1423,7 @@ graduate attribute of Reflection.
 
 \subsubsection*{1. What went well while writing this deliverable?}
 \bigskip\bigskip
-\textbf{Omar: } The main thing that went well was connecting the VnV plan with the VnV report. The plan already defined the tests clearly, so it was straightforward to structure the report around usability, performance, compliance, maintainability, and security. The usability testing also went well since we were able to get feedback from both technical and non-technical users, which helped validate that the interface and main features were intuitive.
+\textbf{Omar: } The main thing that went well was connecting the VnV plan with the VnV report. The plan already defined the tests clearly, so it was straightforward to structure the report around usability, performance, portability, maintainability, and security. The usability testing also went well since we were able to get feedback from both technical and non-technical users, which helped validate that the interface and main features were intuitive.
 \newline
 \newline
 \textbf{Daniel: } I worked on the backend unit tests, as well as the organization of the usability test with our supervisor and her graduate students, which both went fairly smoothly in spite of the time crunch. The reorganization of the backend into cohesive modules and functions that I participated in was extremely helpful when generating all unit test cases, as well as their relative simplicity. The structure of the usability test - providing as little instruction as possible - also made it easy to identify parts of the software that still need work in terms of understandability.
