@@ -6,7 +6,6 @@ import {
   useState,
   type RefObject,
   type MouseEvent,
-  type WheelEvent,
 } from 'react';
 import type { LayerVoxel } from '../../../utils/api';
 import {
