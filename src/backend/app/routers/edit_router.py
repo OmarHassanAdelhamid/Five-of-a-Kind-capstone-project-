@@ -265,7 +265,7 @@ async def update_history(request: UpdateHistoryRequest):
             )
         
         return {
-            "message": f"{request.action} executed successfully",
+            "message": f"{request.action.value} executed successfully",
             "undo_empty": str(hm.is_undo_empty()),
             "redo_empty": str(hm.is_redo_empty())
         }

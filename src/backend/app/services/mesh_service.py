@@ -10,7 +10,7 @@ def load_stl_mesh(stl_path: str, ):
     if not stl_path.exists():
         raise HTTPException(
             status_code=404,
-            detail=f"Filename {stl_path} not found on server!"
+            detail=f"Filename {stl_path.name} not found on server!"
         )
 
     with stl_path.open("rb") as file:

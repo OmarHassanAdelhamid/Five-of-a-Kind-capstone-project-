@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState, useRef } from 'react';
 import './App.css';
-import { ModelViewer } from './components/ModelViewer';
-import { MenuBar } from './components/MenuBar';
-import { NewProjectDialog } from './components/NewProjectDialog';
-import { WelcomeModal } from './components/WelcomeModal';
+import { ModelViewer } from './components/ModelViewer/ModelViewer';
+import { MenuBar } from './components/MenuBar/MenuBar';
+import { NewProjectDialog } from './components/ProjectSettings/NewProjectDialog/NewProjectDialog.tsx';
+import { WelcomeModal } from './components/ProjectSettings/WelcomeModal';
+import { PartitionsPanel } from './components/PartitionPanel/PartitionsPanel';
 import {
   fetchAvailableModels,
   fetchAvailableProjects,
@@ -12,10 +13,12 @@ import {
   uploadSTLFile,
   voxelizeModel,
   downloadVoxelCSV,
+  validateExport,
   updateHistory,
   clearHistory,
   type VoxelPropertiesClipboard,
 } from './utils/api';
+import { ExportWarningDialog } from './components/ExportWarningDialog/ExportWarningDialog';
 import type { LayerEditorHandle } from './components/LayerEditor';
 
 function App() {
@@ -47,7 +50,8 @@ function App() {
   const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
   const [layerAxis] = useState<'z' | 'x' | 'y'>('y');
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
-
+  const [isPartitionsPanelOpen, setIsPartitionsPanelOpen] = useState(false);
+  const [exportWarnings, setExportWarnings] = useState<string[]>([]);
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
   const [welcomeInitialStep, setWelcomeInitialStep] = useState<
     | 'choice'
@@ -246,14 +250,14 @@ function App() {
     }
   }, [projectName, selectedPartition]);
 
-  const handleDownloadCSV = useCallback(async () => {
+  const handleDownloadCSV = useCallback(async (force = false) => {
     if (!projectName.trim()) {
       alert('Please select a project to download.');
       return;
     }
 
     try {
-      const blob = await downloadVoxelCSV(projectName, projectName); // eventually change so that user can input export name?
+      const blob = await downloadVoxelCSV(projectName, projectName, force);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -436,6 +440,20 @@ function App() {
       alert('Please select a project to export.');
       return;
     }
+    try {
+      const result = await validateExport(projectName);
+      if (!result.valid) {
+        setExportWarnings(result.warnings);
+        return;
+      }
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : 'Could not validate export. Please try again.',
+      );
+      return;
+    }
     await handleDownloadCSV();
   }, [projectName, handleDownloadCSV]);
 
@@ -527,8 +545,15 @@ function App() {
     }
   }, [isLayerEditorOpen]);
   const handleCut = useCallback(() => {
-    /* no-op */
-  }, []);
+    if (isLayerEditorOpen) {
+      const props = modelViewerRef.current?.getSelectionProperties() ?? null;
+      if (props) {
+        setCopiedVoxelProperties(props);
+        setSelectedVoxels(new Set());
+        setSelectedVoxel(null);
+      }
+    }
+  }, [isLayerEditorOpen]);
   const handlePaste = useCallback(async () => {
     if (isLayerEditorOpen && copiedVoxelProperties) {
       await modelViewerRef.current?.applyPaste(copiedVoxelProperties);
@@ -542,7 +567,7 @@ function App() {
   }, []);
 
   const handleOpenPartitionMenu = useCallback(() => {
-    alert('Partition Menu functionality not yet implemented.');
+    setIsPartitionsPanelOpen(true);
   }, []);
 
   const handleOpenLayerMenu = useCallback(() => {
@@ -633,13 +658,42 @@ function App() {
             e.preventDefault();
             handleRedo();
             break;
+          case 'p':
+            e.preventDefault();
+            if (!isLayerEditorOpen) {
+              handleOpenPartitionMenu();
+            }
+            break;
+          case 'l':
+            e.preventDefault();
+            if (!isPartitionsPanelOpen) {
+              handleOpenLayerMenu();
+            }
+            break;
+          case 'x':
+            e.preventDefault();
+            handleCut();
+            break;
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleSave, handleExport, handleSelectAll, handleCopy, handlePaste, handleUndo, handleRedo]);
+  }, [
+    handleSave,
+    handleExport,
+    handleSelectAll,
+    handleCopy,
+    handlePaste,
+    handleUndo,
+    handleRedo,
+    handleCut,
+    handleOpenPartitionMenu,
+    handleOpenLayerMenu,
+    isLayerEditorOpen,
+    isPartitionsPanelOpen,
+  ]);
 
   return (
     <div className="app">
@@ -652,7 +706,6 @@ function App() {
         onOpenProject={handleWelcomeExistingProject}
         onOpenProjectSelect={handleOpenProjectSelect}
         availableProjects={(() => {
-          // Show only projects for the same STL: use selectedModel, or derive from loaded projectName
           const stlBase = selectedModel
             ? selectedModel.replace(/\.stl$/i, '')
             : projectName.trim()
@@ -672,6 +725,7 @@ function App() {
         canUndo={true}
         canRedo={true}
         onCut={handleCut}
+        canCut={isLayerEditorOpen}
         onCopy={handleCopy}
         onPaste={handlePaste}
         canPaste={isLayerEditorOpen && !!copiedVoxelProperties}
@@ -719,6 +773,23 @@ function App() {
         onClose={() => setIsNewProjectDialogOpen(false)}
         onConfirm={handleNewProjectConfirm}
       />
+      <PartitionsPanel
+        isOpen={isPartitionsPanelOpen}
+        onClose={() => setIsPartitionsPanelOpen(false)}
+        projectName={projectName || null}
+        selectedPartition={selectedPartition}
+        onPartitionSelect={handlePartitionSelect}
+      />
+      {exportWarnings.length > 0 && (
+        <ExportWarningDialog
+          warnings={exportWarnings}
+          onConfirm={() => {
+            setExportWarnings([]);
+            handleDownloadCSV(true);
+          }}
+          onCancel={() => setExportWarnings([])}
+        />
+      )}
       <ModelViewer
         ref={modelViewerRef}
         selectedModel={selectedModel}
@@ -742,7 +813,6 @@ function App() {
         }}
         onVoxelSelect={setSelectedVoxel}
         onVoxelsSelect={(newSet) => {
-          // Force a new Set reference to ensure React detects the change
           setSelectedVoxels(new Set(newSet));
         }}
         selectedVoxelIndex={selectedVoxel?.index ?? null}
