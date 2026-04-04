@@ -531,7 +531,7 @@ HistoryManager.Push(\Delta M)
   \item[Secrets:] How to locate and track voxels that satisfy particular property criteria, such as selection state, material type, or user-defined rules. How to interpret the voxel grid data structure to efficiently identify and access relevant voxels without exposing model mutation or interaction logic.
   \item[Services:] Interprets the voxel data structure to find and return voxels meeting specified property criteria (e.g., all voxels with a given material, within a spatial region, or within a given layer). Enables other modules (such as Highlight Manager) to query voxel sets based on their properties.
   \item[Implemented By:] \progname{}
-  \item[Type of Module:] Abstract Object: a computational component that provides read-only querying and tracking of voxels with specific properties within the voxel grid.
+  \item[Type of Module:] Library: a computational component that provides read-only querying and tracking of voxels with specific properties within the voxel grid.
 \end{description}
 
 
@@ -541,7 +541,7 @@ HistoryManager.Push(\Delta M)
   \item[Secrets:] How to define the rules that associate voxel semantics with a highlight colour. How highlight colours are internally represented. How conflicts are resolved when a voxel qualifies for multiple highlight colours simultaneously. How colour palette, which encapsulates all highlight colours, is chosen. How accessibility requirements influence the selection of highlight colours.
   \item[Services:] Maps relationship between highlight colour and semantic meaning of highlighted voxels.
   \item[Implemented By:] \progname{}
-  \item[Type of Module:] Abstract Object
+  \item[Type of Module:] Abstract Object: must maintain a constant state of the mapping between highlight colour and material IDs.
 \end{description}
 
 \subsubsection{Export Validation Module (\mref{m14})}
