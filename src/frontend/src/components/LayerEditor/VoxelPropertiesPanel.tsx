@@ -1,3 +1,5 @@
+// This component is used to display the voxel properties panel
+
 import type { LayerVoxel } from '../../utils/api';
 
 // Material options with colors
@@ -10,6 +12,7 @@ export const MATERIALS = [
   { id: 6, name: 'Material 6', color: '#8b5cf6' }, // Purple
 ];
 
+// Props for the VoxelPropertiesPanel component
 interface VoxelPropertiesPanelProps {
   selectedVoxelIndices: Set<number>;
   selectedVoxel: LayerVoxel | null;
@@ -26,6 +29,7 @@ interface VoxelPropertiesPanelProps {
   onConfirmMagnetization: () => void;
 }
 
+// VoxelPropertiesPanel component
 export function VoxelPropertiesPanel({
   selectedVoxelIndices,
   selectedVoxel,

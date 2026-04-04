@@ -1,3 +1,5 @@
+// This component is used to display a 2D grid of voxels
+
 import { useCallback, useEffect, useRef } from 'react';
 import type { LayerResponse, LayerVoxel } from '../../utils/api';
 import {
@@ -7,6 +9,7 @@ import {
 } from './drawGridCanvas';
 import { useGridInteraction } from './hooks/useGridInteraction';
 
+// Props for the Layer2DGrid component
 interface Layer2DGridProps {
   layerData: LayerResponse | null;
   width?: number;
@@ -51,10 +54,11 @@ export const Layer2DGrid = ({
   canGoDown = false,
 }: Layer2DGridProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  // Position data populated by draw, consumed by interaction handlers
+  // Position data populated by draw and consumed by interaction handlers
   const voxelPositionsRef = useRef<VoxelPosition[]>([]);
   const emptyCellPositionsRef = useRef<EmptyCellPosition[]>([]);
 
+  // Interaction handlers
   const {
     hoveredIndex,
     hoveredEmpty,
@@ -64,7 +68,6 @@ export const Layer2DGrid = ({
     isDrawingLasso,
     zoom,
     mouseHandlers,
-    handleWheel,
   } = useGridInteraction({
     canvasRef,
     voxelPositionsRef,
@@ -78,6 +81,7 @@ export const Layer2DGrid = ({
     onVoxelsRemove,
   });
 
+  // Draws the grid onto the canvas using the drawGridCanvas function
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || !layerData?.bounds) return;
@@ -117,10 +121,12 @@ export const Layer2DGrid = ({
     isDrawingLasso,
   ]);
 
+  // Draws the grid onto the canvas when the component mounts or when the layer data changes
   useEffect(() => {
     draw();
   }, [draw]);
 
+  // If there is no layer data, return a placeholder
   if (!layerData?.voxels?.length || !layerData.bounds) {
     return (
       <div className="layer-2d-grid-placeholder">
@@ -129,6 +135,7 @@ export const Layer2DGrid = ({
     );
   }
 
+  // If there is layer data, return the grid
   return (
     <div className="layer-2d-grid-wrapper">
       <div className="layer-2d-grid-toolbar">
@@ -179,7 +186,6 @@ export const Layer2DGrid = ({
         <div
           className="layer-2d-grid-zoom-wrapper"
           style={{ transform: `scale(${zoom})`, transformOrigin: '50% 50%' }}
-          onWheel={handleWheel}
         >
           <canvas
             ref={canvasRef}

@@ -1,3 +1,5 @@
+// This component is used to edit the voxels in a layer
+
 import {
   forwardRef,
   useCallback,
@@ -11,12 +13,14 @@ import { useLayerData } from './hooks/useLayerData';
 import { useVoxelEditor } from './hooks/useVoxelEditor';
 import { VoxelPropertiesPanel, MATERIALS } from './VoxelPropertiesPanel';
 
+// Props for the LayerEditor component
 export interface LayerEditorHandle {
   getSelectionProperties: () => VoxelPropertiesClipboard | null;
   applyPaste: (props: VoxelPropertiesClipboard) => Promise<void>;
   selectAllInLayer: () => void;
 }
 
+// Props for the LayerEditor component
 interface LayerEditorProps {
   projectName: string;
   partitionName: string | null;
@@ -52,15 +56,13 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
     const [selectedLayerData, setSelectedLayerData] =
       useState<LayerResponse | null>(null);
     const [editVoxelsMode, setEditVoxelsMode] = useState(false);
-
-    // Break circular dep: useVoxelEditor needs loadLayer, useLayerData needs clearSelection.
-    // Stable proxy ref lets us wire them after both hooks are called.
     const loadLayerRef = useRef<(z: number) => Promise<void>>(async () => {});
     const stableLoadLayer = useCallback(
       (z: number) => loadLayerRef.current(z),
       [],
     );
 
+    // Voxel editor hooks
     const {
       selectedVoxelIndices,
       selectedMaterial,
@@ -100,6 +102,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       onVoxelsChanged,
     });
 
+    // Layer data hooks
     const { layersData, loadLayers, loadLayer } = useLayerData({
       projectName,
       partitionName,
@@ -114,9 +117,10 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       setSelectedLayerData,
     });
 
-    // Keep ref in sync with the real loadLayer each render
+    // Keep the loadLayer ref in sync with the real loadLayer each render
     loadLayerRef.current = loadLayer;
 
+    // Handles the refresh of the layer data
     const handleRefresh = useCallback(() => {
       if (
         externalSelectedLayerZ !== undefined &&
@@ -127,18 +131,22 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       loadLayers();
     }, [externalSelectedLayerZ, loadLayer, loadLayers]);
 
+    // Handles the confirmation of the material
     const handleConfirm = useCallback(async () => {
       await handleConfirmMaterial();
     }, [handleConfirmMaterial]);
 
+    // Imperative handle for the LayerEditor component, this is used to interact with the LayerEditor component from outside
     useImperativeHandle(
       ref,
       () => ({ getSelectionProperties, applyPaste, selectAllInLayer }),
       [getSelectionProperties, applyPaste, selectAllInLayer],
     );
 
+    // If the component is not open, return null
     if (!isOpen) return null;
 
+    // If the project name is not set or the component is disabled, return a placeholder
     if (!projectName.trim() || disabled) {
       return (
         <div className="layer-editor-panel open">
@@ -164,8 +172,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       selectedLayerData != null
         ? layers.findIndex((l) => l.index === selectedLayerData.layer_index)
         : -1;
-    // layers is sorted ascending by index, so a higher array position = higher
-    // layer. "Up" moves toward the end of the array; "Down" toward the start.
+    // layers is sorted ascending by index, so a higher array position = higher layer index. "Up" moves toward the end of the array; "Down" toward the start.
     const canGoUp = currentIdx >= 0 && currentIdx < layers.length - 1;
     const canGoDown = currentIdx > 0;
 

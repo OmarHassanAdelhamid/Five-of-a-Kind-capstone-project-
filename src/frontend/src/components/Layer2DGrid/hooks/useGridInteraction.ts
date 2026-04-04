@@ -1,3 +1,4 @@
+// This hook is used to handle the interaction with the grid
 import {
   useCallback,
   useEffect,
@@ -50,11 +51,15 @@ export function useGridInteraction({
   const [lassoPath, setLassoPath] = useState<{ x: number; y: number }[]>([]);
   const [isDrawingLasso, setIsDrawingLasso] = useState(false);
   const [zoom, setZoom] = useState(1);
+
+  
   // lassoPathRef mirrors lassoPath state but is readable inside mouse-event
   // callbacks without triggering stale-closure issues. The ref is written on
   // every move and read at mouseup; the state drives the canvas redraw.
   const lassoPathRef = useRef<{ x: number; y: number }[]>([]);
 
+
+  // Get canvas coordinates from client coordinates
   const getCanvasCoords = useCallback(
     (clientX: number, clientY: number) => {
       const canvas = canvasRef.current;
@@ -70,6 +75,8 @@ export function useGridInteraction({
     [canvasRef],
   );
 
+
+  // Gets the voxel at the given client coordinates
   const getVoxelAtPosition = useCallback(
     (clientX: number, clientY: number) => {
       const coords = getCanvasCoords(clientX, clientY);
@@ -84,9 +91,8 @@ export function useGridInteraction({
         ) {
           return pos;
         }
-        // Proximity fallback: when cells are very small (zoomed out) exact
-        // bounding-box hits become unreliable, so also accept a 20 px radius
-        // around each cell centre.
+
+        // When cells are very small (zoomed out), the exact bounding-box hits become unreliable, so also accept a 20 px radius around each cell centre.
         const centerX = pos.x + pos.w / 2;
         const centerY = pos.y + pos.h / 2;
         if (Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2) < 20) return pos;
@@ -96,6 +102,7 @@ export function useGridInteraction({
     [getCanvasCoords, voxelPositionsRef],
   );
 
+  // Gets the cell at the given client coordinates, used for hover and click events
   const getCellAtPosition = useCallback(
     (clientX: number, clientY: number) => {
       const coords = getCanvasCoords(clientX, clientY);
@@ -128,6 +135,7 @@ export function useGridInteraction({
     [getCanvasCoords, voxelPositionsRef, emptyCellPositionsRef, editVoxelsMode],
   );
 
+  // Handles mouse down events, starts lasso drawing if in lasso mode 
   const handleMouseDown = useCallback(
     (e: MouseEvent<HTMLCanvasElement>) => {
       const coords = getCanvasCoords(e.clientX, e.clientY);
@@ -141,6 +149,7 @@ export function useGridInteraction({
     [getCanvasCoords, selectionMode],
   );
 
+  // Handles mouse move events, updates lasso path and hover state
   const handleMouseMove = useCallback(
     (e: MouseEvent<HTMLCanvasElement>) => {
       const coords = getCanvasCoords(e.clientX, e.clientY);
@@ -150,7 +159,7 @@ export function useGridInteraction({
         if (prev.length > 0) {
           const last = prev[prev.length - 1];
           // Only append a new point when the cursor has moved at least 5 px
-          // to avoid thousands of near-duplicate points in a slow drag.
+          // to avoid thousands of near-duplicate points.
           const dist = Math.hypot(coords.x - last.x, coords.y - last.y);
           if (dist > 5) {
             const next = [...prev, coords];
@@ -175,6 +184,7 @@ export function useGridInteraction({
     [getCanvasCoords, isDrawingLasso, selectionMode, getCellAtPosition],
   );
 
+  // Handles mouse up events, finalizes lasso selection or single voxel selection
   const handleMouseUp = useCallback(
     (e: MouseEvent<HTMLCanvasElement>) => {
       if (isDrawingLasso && selectionMode === 'lasso') {
@@ -247,6 +257,7 @@ export function useGridInteraction({
     ],
   );
 
+  // Handles click events, adds or removes voxels in edit mode or selects a voxel
   const handleClick = useCallback(
     (e: MouseEvent<HTMLCanvasElement>) => {
       if (e.button !== 0) return;
@@ -279,6 +290,7 @@ export function useGridInteraction({
     ],
   );
 
+  // Handles mouse leave events, clears hover state and stops lasso drawing
   const handleMouseLeave = useCallback(() => {
     setHoveredIndex(null);
     setHoveredEmpty(null);
@@ -288,19 +300,12 @@ export function useGridInteraction({
     }
   }, [isDrawingLasso]);
 
-  const handleWheel = useCallback((e: WheelEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setZoom((z) => {
-      const delta = e.deltaY > 0 ? -0.1 : 0.1;
-      return Math.min(4, Math.max(0.25, z + delta));
-    });
-  }, []);
-
+  // This prevents the default context menu from appearing when right-clicking on the canvas
   const handleContextMenu = useCallback((e: MouseEvent<HTMLCanvasElement>) => {
     e.preventDefault();
   }, []);
 
+  // Handles keyboard events, zooms in and out when +/- is pressed
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
@@ -334,6 +339,5 @@ export function useGridInteraction({
       onClick: handleClick,
       onContextMenu: handleContextMenu,
     },
-    handleWheel,
   };
 }

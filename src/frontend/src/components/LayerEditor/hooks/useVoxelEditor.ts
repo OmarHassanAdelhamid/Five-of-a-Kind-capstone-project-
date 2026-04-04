@@ -1,3 +1,5 @@
+// This hook is used to edit the voxels in a layer
+
 import { useCallback, useEffect, useState } from 'react';
 import {
   updateVoxels,
@@ -6,6 +8,7 @@ import {
   type VoxelPropertiesClipboard,
 } from '../../../utils/api';
 
+// Props for the useVoxelEditor hook
 interface UseVoxelEditorParams {
   projectName: string;
   partitionName: string | null;
@@ -33,6 +36,8 @@ export function useVoxelEditor({
   loadLayer,
   onVoxelsChanged,
 }: UseVoxelEditorParams) {
+
+
   const [selectedVoxelIndices, setSelectedVoxelIndices] = useState<Set<number>>(
     new Set(),
   );
@@ -44,6 +49,7 @@ export function useVoxelEditor({
   const [hasChanges, setHasChanges] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  // Clears the message after 3 seconds
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => setMessage(null), 3000);
@@ -51,15 +57,18 @@ export function useVoxelEditor({
     }
   }, [message]);
 
+  // Clears the selected voxel indices
   const clearSelection = useCallback(() => {
     setSelectedVoxelIndices(new Set());
   }, []);
 
+  // Synchronizes the magnetization display so user can see which voxels are magnetized
   const syncMagnetizationDisplay = useCallback((theta: number, phi: number) => {
     setDisplayTheta(String(theta));
     setDisplayPhi(String(phi));
   }, []);
 
+  // Handles the selection of a single voxel
   const handleVoxelSelect = useCallback(
     (voxel: LayerVoxel | null, index: number) => {
       if (voxel && index >= 0) {
@@ -78,6 +87,7 @@ export function useVoxelEditor({
     [syncMagnetizationDisplay],
   );
 
+  // Handles the selection of multiple voxels
   const handleVoxelsSelect = useCallback(
     (voxels: LayerVoxel[], indices: number[]) => {
       if (indices.length > 0) {
@@ -99,6 +109,7 @@ export function useVoxelEditor({
     [syncMagnetizationDisplay],
   );
 
+  // Selects all voxels in the layer
   const selectAllInLayer = useCallback(() => {
     if (selectedLayerData && selectedLayerData.voxels.length > 0) {
       setSelectedVoxelIndices(
@@ -107,6 +118,7 @@ export function useVoxelEditor({
     }
   }, [selectedLayerData]);
 
+  // Handles the confirmation of the material
   const handleConfirmMaterial = useCallback(async () => {
     if (selectedVoxelIndices.size === 0 || !selectedLayerData) return;
 
@@ -166,6 +178,7 @@ export function useVoxelEditor({
     setSelectedLayerData,
   ]);
 
+  // Handles the confirmation of the magnetization
   const handleConfirmMagnetization = useCallback(async () => {
     if (selectedVoxelIndices.size === 0 || !selectedLayerData) return;
 
@@ -240,6 +253,7 @@ export function useVoxelEditor({
     setSelectedLayerData,
   ]);
 
+  // Handles the addition of a voxel
   const handleVoxelAdd = useCallback(
     async (gridX: number, gridY: number) => {
       if (!selectedLayerData || !partitionName) return;
@@ -247,8 +261,7 @@ export function useVoxelEditor({
       const first = voxels[0];
       if (first == null) return;
 
-      // Infer voxel size from the world-space distance between two adjacent
-      // voxels if available, since the prop may be absent or inaccurate.
+      // Get the voxel size from the distance between two adjacent voxels if available, since the voxelSize prop may be absent or inaccurate.
       let vs = voxelSize ?? 0.1;
       if (voxels.length >= 2) {
         const a = voxels[0];
@@ -259,33 +272,28 @@ export function useVoxelEditor({
         }
       }
 
-      // Map 2D grid coordinates to 3D voxel indices. The Layer2DGrid always
-      // uses (gridX, gridY) for the two axes that are NOT the slice axis, so
-      // the fixed coordinate (layer_index) slots into the correct position.
+      // Map 2D grid coordinates to 3D voxel indices. The Layer2DGrid always uses (gridX, gridY) for the two axes that are NOT the slice axis, so the fixed coordinate (layer_index) slots into the correct position. For example, if the layer axis is 'y', the coordinates will be [gridX, layer_index, gridY].
       let coords: [number, number, number];
       if (layerAxis === 'y') {
         coords = [
-          Math.round(gridX),     // ix
-          selectedLayerData.layer_index, // iy (fixed)
-          Math.round(gridY),     // iz
+          Math.round(gridX),     
+          selectedLayerData.layer_index, 
+          Math.round(gridY),     
         ];
       } else if (layerAxis === 'z') {
         coords = [
-          Math.round(gridX),     // ix
-          Math.round(gridY),     // iy
-          selectedLayerData.layer_index, // iz (fixed)
+          Math.round(gridX),     
+          Math.round(gridY),     
+          selectedLayerData.layer_index, 
         ];
       } else {
         coords = [
-          selectedLayerData.layer_index, // ix (fixed)
-          Math.round(gridX),     // iy
-          Math.round(gridY),     // iz
+          selectedLayerData.layer_index, 
+          Math.round(gridX),     
+          Math.round(gridY),     
         ];
       }
 
-      console.log(
-        `[LayerEditor] Adding voxel at coords = (${coords[0]}, ${coords[1]}, ${coords[2]})`,
-      );
       setLoading(true);
       setError(null);
       setMessage(null);
@@ -324,6 +332,7 @@ export function useVoxelEditor({
     ],
   );
 
+  // Handles the removal of a voxel
   const handleVoxelRemove = useCallback(
     async (index: number) => {
       if (!selectedLayerData?.voxels?.[index] || !partitionName) return;
@@ -374,6 +383,7 @@ export function useVoxelEditor({
     ],
   );
 
+  // Handles the addition of multiple voxels
   const handleVoxelsAdd = useCallback(
     async (cells: { gridX: number; gridY: number }[]) => {
       if (!selectedLayerData || !partitionName || cells.length === 0) return;
@@ -445,6 +455,7 @@ export function useVoxelEditor({
     ],
   );
 
+  // Handles the removal of multiple voxels
   const handleVoxelsRemove = useCallback(
     async (indices: number[]) => {
       if (!selectedLayerData?.voxels || !partitionName || indices.length === 0)
@@ -497,6 +508,7 @@ export function useVoxelEditor({
     ],
   );
 
+  // Gets the selection properties from the selected voxels
   const getSelectionProperties =
     useCallback((): VoxelPropertiesClipboard | null => {
       if (selectedVoxelIndices.size === 0 || !selectedLayerData) return null;
@@ -510,6 +522,7 @@ export function useVoxelEditor({
       };
     }, [selectedVoxelIndices, selectedLayerData]);
 
+  // Applies the pasted properties to the selected voxels
   const applyPaste = useCallback(
     async (props: VoxelPropertiesClipboard) => {
       if (
@@ -528,8 +541,7 @@ export function useVoxelEditor({
       setError(null);
       setMessage(null);
       try {
-        // The API treats material and magnetization as separate update fields,
-        // so two calls are needed to apply both properties atomically.
+        // The API treats material and magnetization as separate update fields, so two calls are needed to apply both properties atomically.
         await updateVoxels({
           project_name: projectName,
           partition_name: partitionName,

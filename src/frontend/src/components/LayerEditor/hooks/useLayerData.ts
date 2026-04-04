@@ -1,3 +1,5 @@
+// This hook is used to load and manage layer data for the LayerEditor component
+
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   fetchLayers,
@@ -6,6 +8,7 @@ import {
   type LayerResponse,
 } from '../../../utils/api';
 
+// Props for the useLayerData hook
 interface UseLayerDataParams {
   projectName: string;
   partitionName: string | null;
@@ -14,7 +17,6 @@ interface UseLayerDataParams {
   isOpen: boolean;
   externalSelectedLayerZ: number | null | undefined;
   onLayerSelect?: (layerZ: number | null) => void;
-  /** Called whenever a layer finishes loading (or is cleared), e.g. to reset selection. */
   onLayerChanged?: () => void;
   setLoading: (v: boolean) => void;
   setError: (v: string | null) => void;
@@ -34,9 +36,12 @@ export function useLayerData({
   setError,
   setSelectedLayerData,
 }: UseLayerDataParams) {
+
+  // State for the layers data
   const [layersData, setLayersData] = useState<LayersResponse | null>(null);
   const didAutoSelectFirstLayerRef = useRef(false);
 
+  // Loads the layers data
   const loadLayers = useCallback(async () => {
     if (!projectName.trim() || !partitionName || disabled) return;
     setLoading(true);
@@ -52,6 +57,7 @@ export function useLayerData({
     }
   }, [projectName, partitionName, layerAxis, disabled, setLoading, setError]);
 
+  // Loads a specific layer data
   const loadLayer = useCallback(
     async (layerZ: number) => {
       console.log(`[LayerEditor] loadLayer called with layerZ: ${layerZ}`);
@@ -97,14 +103,12 @@ export function useLayerData({
     ],
   );
 
-  // Three-state contract for externalSelectedLayerZ:
+  // Three states for externalSelectedLayerZ:
   //   undefined  → no external controller; do nothing here (auto-select handles it)
   //   null       → controller explicitly deselected; clear the current layer
   //   number     → load that specific layer coordinate
   useEffect(() => {
-    console.log(
-      `[LayerEditor] useEffect triggered - externalSelectedLayerZ: ${externalSelectedLayerZ}`,
-    );
+    // If there is an external selected layer, load it
     if (
       externalSelectedLayerZ !== undefined &&
       externalSelectedLayerZ !== null &&
@@ -113,9 +117,7 @@ export function useLayerData({
     ) {
       loadLayer(externalSelectedLayerZ);
     } else if (externalSelectedLayerZ === null) {
-      console.log(
-        `[LayerEditor] Clearing layer data (externalSelectedLayerZ is null)`,
-      );
+      // If the external selected layer is null, clear the current layer
       setSelectedLayerData(null);
       onLayerChanged?.();
     }
@@ -128,6 +130,7 @@ export function useLayerData({
     onLayerChanged,
   ]);
 
+  // Loads the layers data when the component mounts or when the project name or disabled state changes
   useEffect(() => {
     if (projectName.trim() && !disabled) {
       loadLayers();
@@ -145,8 +148,9 @@ export function useLayerData({
     onLayerChanged,
   ]);
 
-  // When opened with no layer selected (e.g. from context menu), auto-select first layer
+  // When opened with no layer selected auto-select first layer
   useEffect(() => {
+    // If the component is not open, return
     if (!isOpen) {
       didAutoSelectFirstLayerRef.current = false;
       return;

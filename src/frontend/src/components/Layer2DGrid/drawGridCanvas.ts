@@ -1,3 +1,4 @@
+// This file is used to draw the grid canvas
 import type { LayerResponse, LayerVoxel } from '../../utils/api';
 
 export interface VoxelPosition {
@@ -17,6 +18,9 @@ export interface EmptyCellPosition {
   gridX: number;
   gridY: number;
 }
+
+// References: //HEAVILY INFLUENCED BY THIS REPO: https://github.com/netdur/canvas.layout.ts
+
 
 // Ray-casting algorithm: counts how many polygon edges a horizontal ray from
 // (px, py) crosses. An odd count means the point is inside the polygon.
@@ -40,6 +44,7 @@ export function isPointInPolygon(
   return inside;
 }
 
+// Paramters for the drawGridCanvas function
 interface DrawGridCanvasParams {
   canvas: HTMLCanvasElement;
   layerData: LayerResponse;
@@ -79,22 +84,30 @@ export function drawGridCanvas({
   voxelPositionsOut,
   emptyCellPositionsOut,
 }: DrawGridCanvasParams): void {
+  // If there is no layer data, return
   if (!layerData?.bounds) return;
+
+
   const voxels = layerData.voxels ?? [];
   const ctx = canvas.getContext('2d');
+  // If there is no context, return
   if (!ctx) return;
+
   const { bounds } = layerData;
+  // Padding is the amount of space around the grid
   const padding = 30;
   const drawWidth = width - padding * 2;
   const drawHeight = height - padding * 2;
 
+  // Sets the center of the grid
   const centerX = (bounds.grid_x_min + bounds.grid_x_max) / 2;
   const centerY = (bounds.grid_y_min + bounds.grid_y_max) / 2;
   const halfSpanX = (bounds.grid_x_max - bounds.grid_x_min) / 2 + 0.5;
   const halfSpanY = (bounds.grid_y_max - bounds.grid_y_min) / 2 + 0.5;
+
+
   // In edit mode, expand the visible grid beyond occupied voxels so the user
-  // can click empty neighbouring cells to add new voxels. The expansion shrinks
-  // as the user zooms in (so cells stay usably large) and is capped at 4×.
+  // can click empty neighbouring cells to add new voxels
   const expansionFactor = editVoxelsMode
     ? Math.min(4, Math.max(1, 1 / zoom))
     : 1;
@@ -103,10 +116,12 @@ export function drawGridCanvas({
   const expandedMinY = Math.floor(centerY - halfSpanY * expansionFactor);
   const expandedMaxY = Math.ceil(centerY + halfSpanY * expansionFactor);
 
+  // Calculates the number of cells in the grid
   const gridCountX = Math.max(1, expandedMaxX - expandedMinX + 1);
   const gridCountY = Math.max(1, expandedMaxY - expandedMinY + 1);
-  // gapRatio controls how much of each grid slot a cell occupies; the remaining
-  // fraction (1 - gapRatio) becomes the visual gap between adjacent cells.
+
+
+  // gapRatio controls how much of each grid slot a cell occupies
   const gapRatio = 0.85;
   const cellW = Math.max(4, (drawWidth / gridCountX) * gapRatio);
   const cellH = Math.max(4, (drawHeight / gridCountY) * gapRatio);
@@ -119,11 +134,13 @@ export function drawGridCanvas({
   voxelPositionsOut.length = 0;
   emptyCellPositionsOut.length = 0;
 
+  // Calculates the actual width and height of the grid
   const actualDrawWidth = gridCountX * (cellSize / gapRatio);
   const actualDrawHeight = gridCountY * (cellSize / gapRatio);
   const offsetX = padding + (drawWidth - actualDrawWidth) / 2;
   const offsetY = padding + (drawHeight - actualDrawHeight) / 2;
 
+  // Creates a set of occupied cells
   const occupied = new Set<string>();
   for (const v of voxels) {
     const gx = v.grid_x ?? 0;
@@ -131,8 +148,6 @@ export function drawGridCanvas({
     occupied.add(`${gx},${gy}`);
   }
 
-  // cellStep is the full slot width (cell + gap), so toPixelX/Y convert a
-  // grid coordinate to the top-left canvas pixel of that cell's bounding box.
   const cellStep = cellSize / gapRatio;
   const toPixelX = (gx: number) =>
     offsetX + (gx - expandedMinX + 0.5) * cellStep - cellSize / 2;
@@ -171,7 +186,7 @@ export function drawGridCanvas({
     }
   }
 
-  // Draw voxels
+  // Draw the voxels onto the canvas
   for (let i = 0; i < voxels.length; i++) {
     const v = voxels[i];
     const gridX = (v.grid_x ?? 0) - expandedMinX;
@@ -232,9 +247,7 @@ export function drawGridCanvas({
     }
   }
 
-  // While the lasso is still being drawn, preview which cells will be affected:
-  // empty cells inside the polygon are tinted green (will be added) and
-  // occupied voxels are tinted red (will be removed).
+  // While the lasso is still being drawn, preview which cells will be affected: empty cells inside the polygon are colored green (will be added) and occupied voxels are colored red (will be removed).
   if (isDrawingLasso && editVoxelsMode && lassoPath.length >= 3) {
     for (const pos of emptyCellPositionsOut) {
       const cx = pos.x + pos.w / 2;
@@ -260,7 +273,7 @@ export function drawGridCanvas({
     }
   }
 
-  // Draw lasso path
+  // Draw the lasso path on the canvas
   if (lassoPath.length > 1) {
     ctx.strokeStyle = 'rgba(56, 189, 248, 0.9)';
     ctx.lineWidth = 2;
