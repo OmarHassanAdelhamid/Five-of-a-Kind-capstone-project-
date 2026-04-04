@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { fetchPartitions } from '../utils/api';
+import { fetchPartitions } from '../../utils/api';
 import { PartitionGrid } from './PartitionGrid';
-import type { Partition } from '../utils/api'
+import type { Partition } from '../../utils/api';
 
 interface PartitionsPanelProps {
   isOpen: boolean;
@@ -52,7 +52,9 @@ export const PartitionsPanel = ({
           setLoading(false);
         })
         .catch((err) => {
-          setError(err instanceof Error ? err.message : 'Failed to load partitions');
+          setError(
+            err instanceof Error ? err.message : 'Failed to load partitions',
+          );
           setPartitions([]);
           setLoading(false);
         });
@@ -63,22 +65,20 @@ export const PartitionsPanel = ({
 
   const normalizePartitionName = (value: string) => {
     const trimmed = value.trim();
-  
+
     if (!trimmed) return '';
-  
-    return trimmed.toLowerCase().endsWith('.db')
-      ? trimmed
-      : `${trimmed}.db`;
+
+    return trimmed.toLowerCase().endsWith('.db') ? trimmed : `${trimmed}.db`;
   };
 
   const handleRenamePartition = async (oldName: string, newName: string) => {
     const normalizedName = normalizePartitionName(newName);
 
-  if (!normalizedName) {
-    setEditingPartition(null);
-    setEditedName('');
-    return;
-  }
+    if (!normalizedName) {
+      setEditingPartition(null);
+      setEditedName('');
+      return;
+    }
 
     try {
       setPartitions((prev) =>
@@ -89,15 +89,17 @@ export const PartitionsPanel = ({
                 name: normalizedName,
                 label: normalizedName,
               }
-            : partition
-        )
+            : partition,
+        ),
       );
 
       if (selectedPartition === oldName) {
         onPartitionSelect(normalizedName);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to rename partition');
+      setError(
+        err instanceof Error ? err.message : 'Failed to rename partition',
+      );
     } finally {
       setEditingPartition(null);
       setEditedName('');
@@ -114,7 +116,13 @@ export const PartitionsPanel = ({
           ×
         </button>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginBottom: '8px',
+        }}
+      >
         <PartitionGrid
           partitions={partitions}
           selectedPartition={selectedPartition}
@@ -122,7 +130,9 @@ export const PartitionsPanel = ({
         />
       </div>
       <div>
-      <p className="edit-partition-labels">Double click to change partition name</p>
+        <p className="edit-partition-labels">
+          Double click to change partition name
+        </p>
       </div>
       <div className="partitions-panel-content">
         {!projectName ? (
@@ -145,7 +155,9 @@ export const PartitionsPanel = ({
                     value={editedName}
                     autoFocus
                     onChange={(e) => setEditedName(e.target.value)}
-                    onBlur={() => handleRenamePartition(partition.name, editedName)}
+                    onBlur={() =>
+                      handleRenamePartition(partition.name, editedName)
+                    }
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         handleRenamePartition(partition.name, editedName);
