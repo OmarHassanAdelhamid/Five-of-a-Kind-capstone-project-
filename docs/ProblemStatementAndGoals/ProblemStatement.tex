@@ -43,23 +43,20 @@ There is currently no CAD workflow that lets users take a finished 3D design and
 select sets of voxels (note: a voxel is a cube building block in a 3D printer) to assign
 properties (e.g. a material, or magnetization). Without automated voxelization and per-layer editing, researchers are
 forced to rebuild the object voxel-by-voxel (e.g., in COMSOL), manually choosing properties for each voxel. 
-This consumes hours per part andmakes iteration fragile; if a mistake is made, there is no practical way to
-reselect or change a prior voxel’s properties without redoing subsequent work.
-Our system aims to remove this bottleneck by enabling per-layer voxel viewing,
-selection (single or multiple voxels), and re-assignment of properties on top of an imported design.
+This consumes hours per part and makes iteration fragile; if a mistake is made, there is no practical way to
+reselect or change a prior voxel’s properties without redoing subsequent work. Our system aims to remove this bottleneck and minimize the time needed for the workflow.
 
 
 \subsection{Inputs and Outputs}
 \textbf{Inputs}
 \begin{itemize}
-  \item Mesh CAD file exported from common tools (e.g., AutoCAD) and ingested as a mesh for voxelization (e.g., STL/OBJ).
-  \item Voxel grid initially fixed at $300 \times 300\,\mu\text{m}$ (XY) and $110\,\mu\text{m}$ (Z) to form cubes at the stated dimensions.
-  \item User interaction via a UI that slices the object into layers (bottom$\rightarrow$top) and allows selecting one or multiple voxels within a layer to assign properties.
+  \item Finished 3D designs exported from standard CAD tools (e.g., STL/OBJ files from AutoCAD).
+  \item Researcher-defined property specifications (e.g., material type, magnetization) for particular spatial regions of the design.
 \end{itemize}
 
-\noindent\textbf{Outputs }
+\noindent\textbf{Outputs}
 \begin{itemize}
-  \item A Java-readable export containing per-voxel data for the custom printer pipeline (voxel location/layer and property metadata).
+  \item Per-voxel property data (location, layer index, and associated properties) in a format consumable by the custom printer pipeline.
 \end{itemize}
 
 
