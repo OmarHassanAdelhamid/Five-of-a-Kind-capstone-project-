@@ -1,13 +1,15 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { PartitionsPanel } from './PartitionsPanel';
-import * as api from '../utils/api';
+import { PartitionsPanel } from '../../components/PartitionPanel/PartitionsPanel';
+import * as api from '../../utils/api';
 
-jest.mock('../utils/api', () => ({
+jest.mock('../../utils/api', () => ({
   fetchPartitions: jest.fn(),
 }));
 
-const mockFetchPartitions = api.fetchPartitions as jest.MockedFunction<typeof api.fetchPartitions>;
+const mockFetchPartitions = api.fetchPartitions as jest.MockedFunction<
+  typeof api.fetchPartitions
+>;
 
 describe('PartitionsPanel', () => {
   beforeEach(() => {
@@ -22,7 +24,7 @@ describe('PartitionsPanel', () => {
         selectedPartition={null}
         onPartitionSelect={jest.fn()}
         onClose={jest.fn()}
-      />
+      />,
     );
     expect(container.firstChild).toBeNull();
   });
@@ -35,9 +37,11 @@ describe('PartitionsPanel', () => {
         selectedPartition={null}
         onPartitionSelect={jest.fn()}
         onClose={jest.fn()}
-      />
+      />,
     );
-    expect(getByText('Select a project to view partitions')).toBeInTheDocument();
+    expect(
+      getByText('Select a project to view partitions'),
+    ).toBeInTheDocument();
     expect(mockFetchPartitions).not.toHaveBeenCalled();
   });
 
@@ -50,7 +54,7 @@ describe('PartitionsPanel', () => {
         selectedPartition={null}
         onPartitionSelect={jest.fn()}
         onClose={jest.fn()}
-      />
+      />,
     );
     expect(mockFetchPartitions).toHaveBeenCalledWith('myproj');
     expect(await findByText('default')).toBeInTheDocument();
@@ -67,7 +71,7 @@ describe('PartitionsPanel', () => {
         selectedPartition={null}
         onPartitionSelect={onPartitionSelect}
         onClose={jest.fn()}
-      />
+      />,
     );
     const btn = await findByText('default');
     await userEvent.click(btn);
@@ -84,7 +88,7 @@ describe('PartitionsPanel', () => {
         selectedPartition={null}
         onPartitionSelect={jest.fn()}
         onClose={onClose}
-      />
+      />,
     );
     await userEvent.click(getByTitle('Close'));
     expect(onClose).toHaveBeenCalled();
@@ -99,7 +103,7 @@ describe('PartitionsPanel', () => {
         selectedPartition={null}
         onPartitionSelect={jest.fn()}
         onClose={jest.fn()}
-      />
+      />,
     );
     expect(await findByText('Network error')).toBeInTheDocument();
   });
@@ -113,7 +117,7 @@ describe('PartitionsPanel', () => {
         selectedPartition="part1"
         onPartitionSelect={jest.fn()}
         onClose={jest.fn()}
-      />
+      />,
     );
     const part1Btn = await findByText('part1');
     expect(part1Btn.className).toContain('selected');
@@ -128,7 +132,7 @@ describe('PartitionsPanel', () => {
         selectedPartition={null}
         onPartitionSelect={jest.fn()}
         onClose={jest.fn()}
-      />
+      />,
     );
     expect(await findByText('No partitions found')).toBeInTheDocument();
   });

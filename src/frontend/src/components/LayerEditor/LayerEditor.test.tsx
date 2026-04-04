@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { LayerEditor, type LayerEditorHandle } from './LayerEditor';
-import * as api from '../utils/api';
+import { LayerEditor, type LayerEditorHandle } from '../LayerEditor';
+import * as api from '../../utils/api';
 
-jest.mock('../utils/api', () => ({
+jest.mock('../../utils/api', () => ({
   fetchLayers: jest.fn(),
   fetchLayer: jest.fn(),
   updateVoxels: jest.fn(),
@@ -16,14 +16,30 @@ const mockLayerResponse = {
   num_voxels: 2,
   voxels: [
     {
-      ix: 0, iy: 0, iz: 0, x: 0, y: 0, z: 0,
-      material: 1, polarAngle: 90, azimuthAngle: 0,
-      grid_x: 0, grid_y: 0,
+      ix: 0,
+      iy: 0,
+      iz: 0,
+      x: 0,
+      y: 0,
+      z: 0,
+      material: 1,
+      polarAngle: 90,
+      azimuthAngle: 0,
+      grid_x: 0,
+      grid_y: 0,
     },
     {
-      ix: 1, iy: 0, iz: 0, x: 0.1, y: 0, z: 0,
-      material: 2, polarAngle: 90, azimuthAngle: 0,
-      grid_x: 1, grid_y: 0,
+      ix: 1,
+      iy: 0,
+      iz: 0,
+      x: 0.1,
+      y: 0,
+      z: 0,
+      material: 2,
+      polarAngle: 90,
+      azimuthAngle: 0,
+      grid_x: 1,
+      grid_y: 0,
     },
   ],
   axis: 'z' as const,
@@ -33,14 +49,25 @@ const mockLayerResponse = {
 describe('LayerEditor', () => {
   it('returns null when not open', () => {
     const { container } = render(
-      <LayerEditor isOpen={false} projectName="p" partitionName="part" onClose={jest.fn()} />
+      <LayerEditor
+        isOpen={false}
+        projectName="p"
+        partitionName="part"
+        onClose={jest.fn()}
+      />,
     );
     expect(container.firstChild).toBeNull();
   });
 
   it('shows empty message when disabled', () => {
     const { getByText } = render(
-      <LayerEditor isOpen projectName="p" partitionName="part" disabled onClose={jest.fn()} />
+      <LayerEditor
+        isOpen
+        projectName="p"
+        partitionName="part"
+        disabled
+        onClose={jest.fn()}
+      />,
     );
     expect(getByText('Select a project to view layers')).toBeInTheDocument();
   });
@@ -49,12 +76,25 @@ describe('LayerEditor', () => {
     (api.fetchLayers as jest.Mock).mockResolvedValue({
       project_name: 'p',
       num_layers: 2,
-      layers: [{ index: 0, coordinate: 0 }, { index: 1, coordinate: 0.1 }],
+      layers: [
+        { index: 0, coordinate: 0 },
+        { index: 1, coordinate: 0.1 },
+      ],
     });
     const { getByText, findByText } = render(
-      <LayerEditor isOpen projectName="p" partitionName="default" onClose={jest.fn()} />
+      <LayerEditor
+        isOpen
+        projectName="p"
+        partitionName="default"
+        onClose={jest.fn()}
+      />,
     );
-    expect(api.fetchLayers).toHaveBeenCalledWith('p', 'default', 'z', undefined);
+    expect(api.fetchLayers).toHaveBeenCalledWith(
+      'p',
+      'default',
+      'z',
+      undefined,
+    );
     await findByText(/Layer Editor/i);
     const closeBtn = getByText('×');
     expect(closeBtn).toBeInTheDocument();
@@ -68,7 +108,12 @@ describe('LayerEditor', () => {
     });
     const onClose = jest.fn();
     const { getByTitle } = render(
-      <LayerEditor isOpen projectName="p" partitionName="default" onClose={onClose} />
+      <LayerEditor
+        isOpen
+        projectName="p"
+        partitionName="default"
+        onClose={onClose}
+      />,
     );
     await userEvent.click(getByTitle('Close'));
     expect(onClose).toHaveBeenCalled();
@@ -81,15 +126,28 @@ describe('LayerEditor', () => {
       layers: [],
     });
     render(
-      <LayerEditor isOpen projectName="p" partitionName="part" layerAxis="x" onClose={jest.fn()} />
+      <LayerEditor
+        isOpen
+        projectName="p"
+        partitionName="part"
+        layerAxis="x"
+        onClose={jest.fn()}
+      />,
     );
     expect(api.fetchLayers).toHaveBeenCalledWith('p', 'part', 'x', undefined);
   });
 
   it('shows error when fetchLayers rejects', async () => {
-    (api.fetchLayers as jest.Mock).mockRejectedValue(new Error('Network error'));
+    (api.fetchLayers as jest.Mock).mockRejectedValue(
+      new Error('Network error'),
+    );
     const { findByText } = render(
-      <LayerEditor isOpen projectName="p" partitionName="part" onClose={jest.fn()} />
+      <LayerEditor
+        isOpen
+        projectName="p"
+        partitionName="part"
+        onClose={jest.fn()}
+      />,
     );
     const errorEl = await findByText('Network error', {}, { timeout: 2000 });
     expect(errorEl).toBeInTheDocument();
@@ -108,7 +166,7 @@ describe('LayerEditor', () => {
         partitionName="part"
         voxelSize={0.05}
         onClose={jest.fn()}
-      />
+      />,
     );
     expect(api.fetchLayers).toHaveBeenCalledWith('p', 'part', 'z', 0.05);
   });
@@ -120,7 +178,12 @@ describe('LayerEditor', () => {
       layers: [{ index: 0, coordinate: 0 }],
     });
     const { getByText } = render(
-      <LayerEditor isOpen projectName="p" partitionName="part" onClose={jest.fn()} />
+      <LayerEditor
+        isOpen
+        projectName="p"
+        partitionName="part"
+        onClose={jest.fn()}
+      />,
     );
     await expect(getByText(/Layer Editor/i)).toBeInTheDocument();
     const callCountBefore = (api.fetchLayers as jest.Mock).mock.calls.length;
@@ -145,10 +208,16 @@ describe('LayerEditor', () => {
         selectedLayerZ={0}
         onClose={jest.fn()}
         ref={ref}
-      />
+      />,
     );
     await waitFor(() => {
-      expect(api.fetchLayer).toHaveBeenCalledWith('p', 'part', 0, 'z', undefined);
+      expect(api.fetchLayer).toHaveBeenCalledWith(
+        'p',
+        'part',
+        0,
+        'z',
+        undefined,
+      );
     });
     await waitFor(() => {
       expect(getByText(/Layer Z=0/)).toBeInTheDocument();
@@ -169,7 +238,11 @@ describe('LayerEditor', () => {
       layers: [{ index: 0, coordinate: 0 }],
     });
     (api.fetchLayer as jest.Mock).mockResolvedValue(mockLayerResponse);
-    (api.updateVoxels as jest.Mock).mockResolvedValue({ message: 'OK', project_name: 'p', num_voxels: 2 });
+    (api.updateVoxels as jest.Mock).mockResolvedValue({
+      message: 'OK',
+      project_name: 'p',
+      num_voxels: 2,
+    });
     const ref = React.createRef<LayerEditorHandle>();
     render(
       <LayerEditor
@@ -179,7 +252,7 @@ describe('LayerEditor', () => {
         selectedLayerZ={0}
         onClose={jest.fn()}
         ref={ref}
-      />
+      />,
     );
     await waitFor(() => {
       expect(api.fetchLayer).toHaveBeenCalled();
@@ -200,7 +273,7 @@ describe('LayerEditor', () => {
         partition_name: 'part',
         action: 'update',
         materialID: 3,
-      })
+      }),
     );
   });
 
@@ -218,7 +291,7 @@ describe('LayerEditor', () => {
         partitionName="part"
         selectedLayerZ={0}
         onClose={jest.fn()}
-      />
+      />,
     );
     await waitFor(() => {
       expect(api.fetchLayer).toHaveBeenCalled();
@@ -237,7 +310,11 @@ describe('LayerEditor', () => {
       layers: [{ index: 0, coordinate: 0 }],
     });
     (api.fetchLayer as jest.Mock).mockResolvedValue(mockLayerResponse);
-    (api.updateVoxels as jest.Mock).mockResolvedValue({ message: 'OK', project_name: 'p', num_voxels: 2 });
+    (api.updateVoxels as jest.Mock).mockResolvedValue({
+      message: 'OK',
+      project_name: 'p',
+      num_voxels: 2,
+    });
     const ref = React.createRef<LayerEditorHandle>();
     const { getByTitle, container } = render(
       <LayerEditor
@@ -247,7 +324,7 @@ describe('LayerEditor', () => {
         selectedLayerZ={0}
         onClose={jest.fn()}
         ref={ref}
-      />
+      />,
     );
     await waitFor(() => {
       expect(api.fetchLayer).toHaveBeenCalled();
@@ -255,7 +332,9 @@ describe('LayerEditor', () => {
     await act(async () => {
       ref.current!.selectAllInLayer();
     });
-    const material2 = container.querySelector('.material-square[title="Material 2"]');
+    const material2 = container.querySelector(
+      '.material-square[title="Material 2"]',
+    );
     if (material2) await userEvent.click(material2 as HTMLElement);
     const updateMaterialBtn = getByTitle(/update the material of this voxel/i);
     await userEvent.click(updateMaterialBtn);
@@ -266,7 +345,7 @@ describe('LayerEditor', () => {
           partition_name: 'part',
           action: 'update',
           materialID: 2,
-        })
+        }),
       );
     });
   });
@@ -278,7 +357,11 @@ describe('LayerEditor', () => {
       layers: [{ index: 0, coordinate: 0 }],
     });
     (api.fetchLayer as jest.Mock).mockResolvedValue(mockLayerResponse);
-    (api.updateVoxels as jest.Mock).mockResolvedValue({ message: 'OK', project_name: 'p', num_voxels: 2 });
+    (api.updateVoxels as jest.Mock).mockResolvedValue({
+      message: 'OK',
+      project_name: 'p',
+      num_voxels: 2,
+    });
     const ref = React.createRef<LayerEditorHandle>();
     const { getByTitle, getByLabelText } = render(
       <LayerEditor
@@ -288,7 +371,7 @@ describe('LayerEditor', () => {
         selectedLayerZ={0}
         onClose={jest.fn()}
         ref={ref}
-      />
+      />,
     );
     await waitFor(() => {
       expect(api.fetchLayer).toHaveBeenCalled();
@@ -308,7 +391,7 @@ describe('LayerEditor', () => {
           partition_name: 'part',
           action: 'update',
           magnetization: expect.any(Array),
-        })
+        }),
       );
     });
   });
@@ -329,7 +412,7 @@ describe('LayerEditor', () => {
         selectedLayerZ={0}
         onClose={jest.fn()}
         ref={ref}
-      />
+      />,
     );
     await waitFor(() => {
       expect(api.fetchLayer).toHaveBeenCalled();
@@ -337,7 +420,9 @@ describe('LayerEditor', () => {
     await act(async () => {
       ref.current!.selectAllInLayer();
     });
-    const material3 = container.querySelector('.material-square[title="Material 3"]');
+    const material3 = container.querySelector(
+      '.material-square[title="Material 3"]',
+    );
     if (material3) {
       await userEvent.click(material3 as HTMLElement);
     }
@@ -349,7 +434,10 @@ describe('LayerEditor', () => {
     (api.fetchLayers as jest.Mock).mockResolvedValue({
       project_name: 'p',
       num_layers: 2,
-      layers: [{ index: 0, coordinate: 0 }, { index: 1, coordinate: 0.1 }],
+      layers: [
+        { index: 0, coordinate: 0 },
+        { index: 1, coordinate: 0.1 },
+      ],
     });
     (api.fetchLayer as jest.Mock)
       .mockResolvedValueOnce(mockLayerResponse)
@@ -366,7 +454,7 @@ describe('LayerEditor', () => {
         partitionName="part"
         selectedLayerZ={0}
         onClose={jest.fn()}
-      />
+      />,
     );
     await waitFor(() => {
       expect(api.fetchLayer).toHaveBeenCalled();
@@ -374,7 +462,13 @@ describe('LayerEditor', () => {
     const upBtn = getByTitle('Higher layer');
     await userEvent.click(upBtn);
     await waitFor(() => {
-      expect(api.fetchLayer).toHaveBeenCalledWith('p', 'part', 0.1, 'z', undefined);
+      expect(api.fetchLayer).toHaveBeenCalledWith(
+        'p',
+        'part',
+        0.1,
+        'z',
+        undefined,
+      );
     });
   });
 
@@ -382,7 +476,10 @@ describe('LayerEditor', () => {
     (api.fetchLayers as jest.Mock).mockResolvedValue({
       project_name: 'p',
       num_layers: 2,
-      layers: [{ index: 0, coordinate: 0 }, { index: 1, coordinate: 0.1 }],
+      layers: [
+        { index: 0, coordinate: 0 },
+        { index: 1, coordinate: 0.1 },
+      ],
     });
     (api.fetchLayer as jest.Mock)
       .mockResolvedValueOnce({ ...mockLayerResponse, layer_index: 1 })
@@ -394,7 +491,7 @@ describe('LayerEditor', () => {
         partitionName="part"
         selectedLayerZ={0.1}
         onClose={jest.fn()}
-      />
+      />,
     );
     await waitFor(() => {
       expect(api.fetchLayer).toHaveBeenCalled();
@@ -414,7 +511,11 @@ describe('LayerEditor', () => {
       layers: [{ index: 0, coordinate: 0 }],
     });
     (api.fetchLayer as jest.Mock).mockResolvedValue(mockLayerResponse);
-    (api.updateVoxels as jest.Mock).mockResolvedValue({ message: 'OK', project_name: 'p', num_voxels: 1 });
+    (api.updateVoxels as jest.Mock).mockResolvedValue({
+      message: 'OK',
+      project_name: 'p',
+      num_voxels: 1,
+    });
     const { container, getByTitle } = render(
       <LayerEditor
         isOpen
@@ -422,7 +523,7 @@ describe('LayerEditor', () => {
         partitionName="part"
         selectedLayerZ={0}
         onClose={jest.fn()}
-      />
+      />,
     );
     await waitFor(() => {
       expect(api.fetchLayer).toHaveBeenCalled();
@@ -435,5 +536,4 @@ describe('LayerEditor', () => {
     }
     expect(container.querySelector('canvas')).toBeInTheDocument();
   });
-
 });

@@ -1,6 +1,6 @@
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Layer2DGrid } from './Layer2DGrid';
+import { Layer2DGrid } from '../Layer2DGrid';
 
 const mockLayerData = {
   project_name: 'p',
@@ -8,14 +8,30 @@ const mockLayerData = {
   num_voxels: 2,
   voxels: [
     {
-      ix: 0, iy: 0, iz: 0, x: 0, y: 0, z: 0,
-      material: 1, polarAngle: 0, azimuthAngle: 0,
-      grid_x: 0, grid_y: 0,
+      ix: 0,
+      iy: 0,
+      iz: 0,
+      x: 0,
+      y: 0,
+      z: 0,
+      material: 1,
+      polarAngle: 0,
+      azimuthAngle: 0,
+      grid_x: 0,
+      grid_y: 0,
     },
     {
-      ix: 1, iy: 0, iz: 0, x: 0.1, y: 0, z: 0,
-      material: 1, polarAngle: 0, azimuthAngle: 0,
-      grid_x: 1, grid_y: 0,
+      ix: 1,
+      iy: 0,
+      iz: 0,
+      x: 0.1,
+      y: 0,
+      z: 0,
+      material: 1,
+      polarAngle: 0,
+      azimuthAngle: 0,
+      grid_x: 1,
+      grid_y: 0,
     },
   ],
   bounds: { grid_x_min: 0, grid_x_max: 1, grid_y_min: 0, grid_y_max: 0 },
@@ -30,7 +46,7 @@ describe('Layer2DGrid', () => {
         onLayerDown={jest.fn()}
         canGoUp
         canGoDown
-      />
+      />,
     );
     expect(container.querySelector('canvas')).toBeInTheDocument();
     expect(getByText('↑')).toBeInTheDocument();
@@ -51,7 +67,7 @@ describe('Layer2DGrid', () => {
         onLayerDown={jest.fn()}
         canGoUp
         canGoDown
-      />
+      />,
     );
     await userEvent.click(getByText('↑'));
     expect(onLayerUp).toHaveBeenCalled();
@@ -66,7 +82,7 @@ describe('Layer2DGrid', () => {
         onLayerDown={onLayerDown}
         canGoUp
         canGoDown
-      />
+      />,
     );
     await userEvent.click(getByText('↓'));
     expect(onLayerDown).toHaveBeenCalled();
@@ -80,7 +96,7 @@ describe('Layer2DGrid', () => {
         onLayerDown={jest.fn()}
         canGoUp
         canGoDown
-      />
+      />,
     );
     expect(getByTitle(/click to select single voxel/i)).toBeInTheDocument();
     expect(getByTitle(/draw lasso to select multiple/i)).toBeInTheDocument();
@@ -94,10 +110,12 @@ describe('Layer2DGrid', () => {
         onLayerDown={jest.fn()}
         canGoUp
         canGoDown
-      />
+      />,
     );
     await userEvent.click(getByRole('button', { name: /lasso/i }));
-    expect(getByRole('button', { name: /lasso/i }).className).toContain('active');
+    expect(getByRole('button', { name: /lasso/i }).className).toContain(
+      'active',
+    );
   });
 
   it('renders placeholder when layerData has empty voxels', () => {
@@ -113,7 +131,7 @@ describe('Layer2DGrid', () => {
         layerData={emptyLayerData}
         onLayerUp={jest.fn()}
         onLayerDown={jest.fn()}
-      />
+      />,
     );
     expect(getByText('Select a layer to view 2D grid')).toBeInTheDocument();
   });
@@ -126,7 +144,7 @@ describe('Layer2DGrid', () => {
         cellColor="#00ff00"
         selectedCellColor="#0000ff"
         backgroundColor="#111111"
-      />
+      />,
     );
     expect(container.querySelector('canvas')).toBeInTheDocument();
   });
@@ -139,7 +157,7 @@ describe('Layer2DGrid', () => {
         onVoxelSelect={onVoxelSelect}
         onLayerUp={jest.fn()}
         onLayerDown={jest.fn()}
-      />
+      />,
     );
     const canvas = container.querySelector('canvas');
     if (canvas) {
@@ -156,7 +174,7 @@ describe('Layer2DGrid', () => {
         onLayerDown={jest.fn()}
         canGoUp
         canGoDown
-      />
+      />,
     );
     await userEvent.click(getByRole('button', { name: /lasso/i }));
     const canvas = container.querySelector('canvas');
@@ -175,7 +193,7 @@ describe('Layer2DGrid', () => {
         onLayerDown={jest.fn()}
         canGoUp
         canGoDown
-      />
+      />,
     );
     await userEvent.click(getByRole('button', { name: /lasso/i }));
     const canvas = container.querySelector('canvas');
@@ -194,7 +212,7 @@ describe('Layer2DGrid', () => {
         selectedVoxelIndices={new Set([0])}
         onLayerUp={jest.fn()}
         onLayerDown={jest.fn()}
-      />
+      />,
     );
     expect(container.querySelector('canvas')).toBeInTheDocument();
   });
@@ -205,7 +223,7 @@ describe('Layer2DGrid', () => {
         layerData={mockLayerData}
         onLayerUp={jest.fn()}
         onLayerDown={jest.fn()}
-      />
+      />,
     );
     const canvas = container.querySelector('canvas');
     if (canvas) {
@@ -222,7 +240,7 @@ describe('Layer2DGrid', () => {
         onVoxelsSelect={onVoxelsSelect}
         onLayerUp={jest.fn()}
         onLayerDown={jest.fn()}
-      />
+      />,
     );
     const canvas = container.querySelector('canvas');
     if (canvas) {
@@ -237,7 +255,12 @@ describe('Layer2DGrid', () => {
       layer_index: 0,
       num_voxels: 1,
       voxels: [mockLayerData.voxels[0]],
-      bounds: null as unknown as { grid_x_min: number; grid_x_max: number; grid_y_min: number; grid_y_max: number },
+      bounds: null as unknown as {
+        grid_x_min: number;
+        grid_x_max: number;
+        grid_y_min: number;
+        grid_y_max: number;
+      },
     };
     const { getByText } = render(<Layer2DGrid layerData={noBounds} />);
     expect(getByText('Select a layer to view 2D grid')).toBeInTheDocument();
@@ -252,7 +275,7 @@ describe('Layer2DGrid', () => {
         onVoxelAdd={onVoxelAdd}
         onLayerUp={jest.fn()}
         onLayerDown={jest.fn()}
-      />
+      />,
     );
     const canvas = container.querySelector('canvas');
     if (canvas) {
@@ -270,7 +293,7 @@ describe('Layer2DGrid', () => {
         onVoxelRemove={onVoxelRemove}
         onLayerUp={jest.fn()}
         onLayerDown={jest.fn()}
-      />
+      />,
     );
     const canvas = container.querySelector('canvas');
     if (canvas) {
@@ -285,7 +308,7 @@ describe('Layer2DGrid', () => {
         layerData={mockLayerData}
         onLayerUp={jest.fn()}
         onLayerDown={jest.fn()}
-      />
+      />,
     );
     const wrapper = container.querySelector('.layer-2d-grid-canvas-container');
     if (wrapper) {
@@ -300,10 +323,12 @@ describe('Layer2DGrid', () => {
         layerData={mockLayerData}
         onLayerUp={jest.fn()}
         onLayerDown={jest.fn()}
-      />
+      />,
     );
     await userEvent.click(getByRole('button', { name: /lasso/i }));
     await userEvent.click(getByRole('button', { name: /click/i }));
-    expect(getByRole('button', { name: /click/i }).className).toContain('active');
+    expect(getByRole('button', { name: /click/i }).className).toContain(
+      'active',
+    );
   });
 });
