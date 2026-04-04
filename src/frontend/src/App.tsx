@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState, useRef } from 'react';
 import './App.css';
-import { ModelViewer } from './components/ModelViewer';
-import { MenuBar } from './components/MenuBar';
-import { NewProjectDialog } from './components/NewProjectDialog';
-import { WelcomeModal } from './components/WelcomeModal';
+import { ModelViewer } from './components/ModelViewer/ModelViewer';
+import { MenuBar } from './components/MenuBar/MenuBar';
+import { NewProjectDialog } from './components/ProjectSettings/NewProjectDialog/NewProjectDialog.tsx';
+import { WelcomeModal } from './components/ProjectSettings/WelcomeModal';
+import { PartitionsPanel } from './components/PartitionPanel/PartitionsPanel';
 import {
   fetchAvailableModels,
   fetchAvailableProjects,
@@ -47,7 +48,7 @@ function App() {
   const [isLayerEditorOpen, setIsLayerEditorOpen] = useState(false);
   const [layerAxis] = useState<'z' | 'x' | 'y'>('y');
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
-
+  const [isPartitionsPanelOpen, setIsPartitionsPanelOpen] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
   const [welcomeInitialStep, setWelcomeInitialStep] = useState<
     | 'choice'
@@ -527,8 +528,15 @@ function App() {
     }
   }, [isLayerEditorOpen]);
   const handleCut = useCallback(() => {
-    /* no-op */
-  }, []);
+    if (isLayerEditorOpen) {
+      const props = modelViewerRef.current?.getSelectionProperties() ?? null;
+      if (props) {
+        setCopiedVoxelProperties(props);
+        setSelectedVoxels(new Set());
+        setSelectedVoxel(null);
+      }
+    }
+  }, [isLayerEditorOpen]);
   const handlePaste = useCallback(async () => {
     if (isLayerEditorOpen && copiedVoxelProperties) {
       await modelViewerRef.current?.applyPaste(copiedVoxelProperties);
@@ -542,7 +550,7 @@ function App() {
   }, []);
 
   const handleOpenPartitionMenu = useCallback(() => {
-    alert('Partition Menu functionality not yet implemented.');
+    setIsPartitionsPanelOpen(true);
   }, []);
 
   const handleOpenLayerMenu = useCallback(() => {
@@ -633,13 +641,42 @@ function App() {
             e.preventDefault();
             handleRedo();
             break;
+          case 'p':
+            e.preventDefault();
+            if (!isLayerEditorOpen) {
+              handleOpenPartitionMenu();
+            }
+            break;
+          case 'l':
+            e.preventDefault();
+            if (!isPartitionsPanelOpen) {
+              handleOpenLayerMenu();
+            }
+            break;
+          case 'x':
+            e.preventDefault();
+            handleCut();
+            break;
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleSave, handleExport, handleSelectAll, handleCopy, handlePaste, handleUndo, handleRedo]);
+  }, [
+    handleSave,
+    handleExport,
+    handleSelectAll,
+    handleCopy,
+    handlePaste,
+    handleUndo,
+    handleRedo,
+    handleCut,
+    handleOpenPartitionMenu,
+    handleOpenLayerMenu,
+    isLayerEditorOpen,
+    isPartitionsPanelOpen,
+  ]);
 
   return (
     <div className="app">
@@ -652,7 +689,6 @@ function App() {
         onOpenProject={handleWelcomeExistingProject}
         onOpenProjectSelect={handleOpenProjectSelect}
         availableProjects={(() => {
-          // Show only projects for the same STL: use selectedModel, or derive from loaded projectName
           const stlBase = selectedModel
             ? selectedModel.replace(/\.stl$/i, '')
             : projectName.trim()
@@ -672,6 +708,7 @@ function App() {
         canUndo={true}
         canRedo={true}
         onCut={handleCut}
+        canCut={isLayerEditorOpen}
         onCopy={handleCopy}
         onPaste={handlePaste}
         canPaste={isLayerEditorOpen && !!copiedVoxelProperties}
@@ -719,6 +756,13 @@ function App() {
         onClose={() => setIsNewProjectDialogOpen(false)}
         onConfirm={handleNewProjectConfirm}
       />
+      <PartitionsPanel
+        isOpen={isPartitionsPanelOpen}
+        onClose={() => setIsPartitionsPanelOpen(false)}
+        projectName={projectName || null}
+        selectedPartition={selectedPartition}
+        onPartitionSelect={handlePartitionSelect}
+      />
       <ModelViewer
         ref={modelViewerRef}
         selectedModel={selectedModel}
@@ -742,7 +786,6 @@ function App() {
         }}
         onVoxelSelect={setSelectedVoxel}
         onVoxelsSelect={(newSet) => {
-          // Force a new Set reference to ensure React detects the change
           setSelectedVoxels(new Set(newSet));
         }}
         selectedVoxelIndex={selectedVoxel?.index ?? null}
