@@ -86,3 +86,49 @@ def test_file_export_empty_directory(mock_open) -> None:
 
     assert ret_bool == False
 
+
+
+def test_validate_voxels_missing_magnetization_one_voxel() -> None:
+    """A single voxel at (polar=0, azimuth=0) is a valid z-axis direction and should pass."""
+    voxels = [
+        (1.0, 1.0, 1.0, 2, 45.0, 90.0),   # explicit direction
+        (2.0, 2.0, 2.0, 3, 0.0, 0.0),      # z-axis direction — valid
+    ]
+    assert es._validate_voxels(voxels) == True
+
+
+def test_validate_voxels_missing_magnetization_all_voxels() -> None:
+    """All voxels at (polar=0, azimuth=0) means magnetization was never set — should fail."""
+    voxels = [
+        (1.0, 1.0, 1.0, 1, 0.0, 0.0),
+        (2.0, 2.0, 2.0, 2, 0.0, 0.0),
+    ]
+    assert es._validate_voxels(voxels) == False
+
+
+def test_validate_voxels_missing_material_one_voxel() -> None:
+    """A voxel with material == 0 (unassigned) should fail validation."""
+    voxels = [
+        (1.0, 1.0, 1.0, 2, 45.0, 90.0),   # valid
+        (2.0, 2.0, 2.0, 0, 30.0, 60.0),   # material not assigned
+    ]
+    assert es._validate_voxels(voxels) == False
+
+
+def test_validate_voxels_missing_material_all_voxels() -> None:
+    """All voxels missing material should fail validation."""
+    voxels = [
+        (1.0, 1.0, 1.0, 0, 45.0, 90.0),
+        (2.0, 2.0, 2.0, 0, 30.0, 60.0),
+    ]
+    assert es._validate_voxels(voxels) == False
+
+
+def test_validate_voxels_all_properties_set() -> None:
+    """All voxels with valid material and magnetization should pass validation."""
+    voxels = [
+        (1.0, 1.0, 1.0, 2, 45.0, 90.0),
+        (2.0, 2.0, 2.0, 3, 30.0, 60.0),
+    ]
+    assert es._validate_voxels(voxels) == True
+

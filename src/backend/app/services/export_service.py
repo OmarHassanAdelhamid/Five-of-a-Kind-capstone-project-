@@ -33,11 +33,19 @@ def write_csv(project_path: str, file_to_write: str) -> bool:
         else:
             return False
 
-def _validate_voxels(voxels: List[Tuple[float, float, float, int, float, float, float]]):
+def _validate_voxels(voxels: List[Tuple[float, float, float, int, float, float]]) -> bool:
     """
-    Validate that voxels to be written are correct.
-    Since all voxels have default properties now, all this does is check that 
-    the project is not empty; could be modified in the future to check against other things.
+    Validate that voxels are complete and ready for export.
+    Returns False if:
+      - The project has no voxels.
+      - Any voxel has material == 0 (unassigned).
+      - Any voxel has both magnet_polar == 0 and magnet_azimuth == 0 (magnetization not set).
     """
-    if (voxels != []): return True # cannot export empty project.
-    else: return False
+    if voxels == []:
+        return False
+    for voxel in voxels:
+        if voxel[3] == 0:
+            return False
+    if all(voxel[4] == 0.0 and voxel[5] == 0.0 for voxel in voxels):
+        return False
+    return True
