@@ -269,7 +269,7 @@ async def test_update_non_existent_partition() -> None:
 async def test_update_material(mock_record, mock_em, mock_get_voxels) -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR", Path("proj_dir")) as mock_storage:
         with patch("pathlib.Path.exists", return_value=True):
-            mock_get_voxels.side_effect = [[(0, 0, 0, 1, 0.0, 0.0, 0.0)], [(0, 0, 0, 3, 0.0, 0.0, 0.0)]]
+            mock_get_voxels.side_effect = [[(0, 0, 0, 1, 0.0, 0.0)], [(0, 0, 0, 3, 0.0, 0.0)]]
 
             result = await ed_r.update_voxels(UpdateVoxelsRequest(project_name="proj_name",
                                                                 partition_name="part_name",
@@ -288,8 +288,8 @@ async def test_update_material(mock_record, mock_em, mock_get_voxels) -> None:
                                               call("proj_dir/proj_name/part_name", [(0,0,0)])])
             mock_em.update_voxel_materials.assert_called_once_with(mock_storage/"proj_name"/"part_name",
                                                                    [(0,0,0)], 3)
-            mock_record.assert_called_once_with(ModelDelta(old_voxels=[(0, 0, 0, 1, 0.0, 0.0, 0.0)], 
-                                                       new_voxels=[(0, 0, 0, 3, 0.0, 0.0, 0.0)]))
+            mock_record.assert_called_once_with(ModelDelta(old_voxels=[(0, 0, 0, 1, 0.0, 0.0)], 
+                                                       new_voxels=[(0, 0, 0, 3, 0.0, 0.0)]))
 
 @patch("app.routers.edit_router.mt.get_full_voxels")
 @patch("app.routers.edit_router.em")
@@ -298,13 +298,13 @@ async def test_update_material(mock_record, mock_em, mock_get_voxels) -> None:
 async def test_update_magnet(mock_record, mock_em, mock_get_voxels) -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR", Path("proj_dir")) as mock_storage:
         with patch("pathlib.Path.exists", return_value=True):
-            mock_get_voxels.side_effect = [[(0, 0, 0, 1, 0.0, 0.0, 0.0)], [(0, 0, 0, 1, 3.0, 5.0, 30.0)]]
+            mock_get_voxels.side_effect = [[(0, 0, 0, 1, 0.0, 0.0)], [(0, 0, 0, 1, 5.0, 30.0)]]
 
             result = await ed_r.update_voxels(UpdateVoxelsRequest(project_name="proj_name",
                                                                 partition_name="part_name",
                                                                 voxels=[(0,0,0)],
                                                                 action=UpdateAction.UPDATE,
-                                                                magnetization=(3.0, 5.0, 30.0)))
+                                                                magnetization=(5.0, 30.0)))
             
             assert result == {
                 "message": "Model updated successfully",
@@ -316,9 +316,9 @@ async def test_update_magnet(mock_record, mock_em, mock_get_voxels) -> None:
             mock_get_voxels.assert_has_calls([call("proj_dir/proj_name/part_name", [(0,0,0)]),
                                               call("proj_dir/proj_name/part_name", [(0,0,0)])])
             mock_em.update_voxel_magnetization.assert_called_once_with(mock_storage/"proj_name"/"part_name",
-                                                                   [(0,0,0)], (3.0, 5.0, 30.0))
-            mock_record.assert_called_once_with(ModelDelta(old_voxels=[(0, 0, 0, 1, 0.0, 0.0, 0.0)], 
-                                                       new_voxels=[(0, 0, 0, 1, 3.0, 5.0, 30.0)]))
+                                                                   [(0,0,0)], 5.0, 30.0)
+            mock_record.assert_called_once_with(ModelDelta(old_voxels=[(0, 0, 0, 1, 0.0, 0.0)], 
+                                                       new_voxels=[(0, 0, 0, 1, 5.0, 30.0)]))
 
 @pytest.mark.asyncio
 async def test_update_material_and_magnet() -> None:
@@ -329,8 +329,8 @@ async def test_update_material_and_magnet() -> None:
                                                                     partition_name="part_name",
                                                                     voxels=[(0,0,0)],
                                                                     action=UpdateAction.UPDATE,
-                                                                    material=3,
-                                                                    magnetization=(3.0, 5.0, 30.0)))
+                                                                    materialID=3,
+                                                                    magnetization=(5.0, 30.0)))
                 
                 assert exc.value.status_code == 400
                 assert exc.value.detail == "Invalid request; UpdateAction was UPDATE, but both a materialID and magnetization were passed."
@@ -355,7 +355,7 @@ async def test_update_neither() -> None:
 async def test_update_reset_material(mock_record, mock_em, mock_get_voxels) -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR", Path("proj_dir")) as mock_storage:
         with patch("pathlib.Path.exists", return_value=True):
-            mock_get_voxels.side_effect = [[(0, 0, 0, 5, 0.0, 0.0, 0.0)], [(0, 0, 0, 1, 0.0, 0.0, 0.0)]]
+            mock_get_voxels.side_effect = [[(0, 0, 0, 5, 0.0, 0.0)], [(0, 0, 0, 1, 0.0, 0.0)]]
 
             result = await ed_r.update_voxels(UpdateVoxelsRequest(project_name="proj_name",
                                                                 partition_name="part_name",
@@ -373,8 +373,8 @@ async def test_update_reset_material(mock_record, mock_em, mock_get_voxels) -> N
                                               call("proj_dir/proj_name/part_name", [(0,0,0)])])
             mock_em.reset_voxel_materials.assert_called_once_with(mock_storage/"proj_name"/"part_name",
                                                                    [(0,0,0)])
-            mock_record.assert_called_once_with(ModelDelta(old_voxels=[(0, 0, 0, 5, 0.0, 0.0, 0.0)], 
-                                                       new_voxels=[(0, 0, 0, 1, 0.0, 0.0, 0.0)]))
+            mock_record.assert_called_once_with(ModelDelta(old_voxels=[(0, 0, 0, 5, 0.0, 0.0)], 
+                                                       new_voxels=[(0, 0, 0, 1, 0.0, 0.0)]))
 
 @patch("app.routers.edit_router.mt.get_full_voxels")
 @patch("app.routers.edit_router.em")
@@ -383,7 +383,7 @@ async def test_update_reset_material(mock_record, mock_em, mock_get_voxels) -> N
 async def test_update_reset_magnet(mock_record, mock_em, mock_get_voxels) -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR", Path("proj_dir")) as mock_storage:
         with patch("pathlib.Path.exists", return_value=True):
-            mock_get_voxels.side_effect = [[(0, 0, 0, 5, 10.0, 30.0, 40.0)], [(0, 0, 0, 5, 0.0, 0.0, 0.0)]]
+            mock_get_voxels.side_effect = [[(0, 0, 0, 5, 10.0, 30.0)], [(0, 0, 0, 5, 0.0, 0.0)]]
 
             result = await ed_r.update_voxels(UpdateVoxelsRequest(project_name="proj_name",
                                                                 partition_name="part_name",
@@ -401,8 +401,8 @@ async def test_update_reset_magnet(mock_record, mock_em, mock_get_voxels) -> Non
                                               call("proj_dir/proj_name/part_name", [(0,0,0)])])
             mock_em.reset_voxel_magnetizations.assert_called_once_with(mock_storage/"proj_name"/"part_name",
                                                                    [(0,0,0)])
-            mock_record.assert_called_once_with(ModelDelta(old_voxels=[(0, 0, 0, 5, 10.0, 30.0, 40.0)], 
-                                                       new_voxels=[(0, 0, 0, 5, 0.0, 0.0, 0.0)]))
+            mock_record.assert_called_once_with(ModelDelta(old_voxels=[(0, 0, 0, 5, 10.0, 30.0)], 
+                                                       new_voxels=[(0, 0, 0, 5, 0.0, 0.0)]))
 
 @patch("app.routers.edit_router.mt.get_full_voxels")
 @patch("app.routers.edit_router.em")
@@ -411,7 +411,7 @@ async def test_update_reset_magnet(mock_record, mock_em, mock_get_voxels) -> Non
 async def test_update_add_voxels(mock_record, mock_em, mock_get_voxels) -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR", Path("proj_dir")) as mock_storage:
         with patch("pathlib.Path.exists", return_value=True):
-            mock_get_voxels.side_effect = [[(0, 0, 0, 1, 0.0, 0.0, 0.0)]]
+            mock_get_voxels.side_effect = [[(0, 0, 0, 1, 0.0, 0.0)]]
 
             result = await ed_r.update_voxels(UpdateVoxelsRequest(project_name="proj_name",
                                                                 partition_name="part_name",
@@ -429,7 +429,7 @@ async def test_update_add_voxels(mock_record, mock_em, mock_get_voxels) -> None:
             mock_em.add_voxels.assert_called_once_with(mock_storage/"proj_name"/"part_name",
                                                                    [(0,0,0)])
             mock_record.assert_called_once_with(ModelDelta(old_voxels=[], 
-                                                       new_voxels=[(0, 0, 0, 1, 0.0, 0.0, 0.0)]))
+                                                       new_voxels=[(0, 0, 0, 1, 0.0, 0.0)]))
 
 @pytest.mark.asyncio
 async def test_update_add_empty_list() -> None:
@@ -451,7 +451,7 @@ async def test_update_add_empty_list() -> None:
 async def test_update_delete_voxels(mock_record, mock_em, mock_get_voxels) -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR", Path("proj_dir")) as mock_storage:
         with patch("pathlib.Path.exists", return_value=True):
-            mock_get_voxels.side_effect = [[(0, 0, 0, 4, 3.0, 45.0, 60.0)]]
+            mock_get_voxels.side_effect = [[(0, 0, 0, 4, 3.0, 45.0)]]
 
             result = await ed_r.update_voxels(UpdateVoxelsRequest(project_name="proj_name",
                                                                 partition_name="part_name",
@@ -468,7 +468,7 @@ async def test_update_delete_voxels(mock_record, mock_em, mock_get_voxels) -> No
             mock_get_voxels.assert_called_once_with("proj_dir/proj_name/part_name", [(0,0,0)])
             mock_em.delete_voxels.assert_called_once_with(mock_storage/"proj_name"/"part_name",
                                                                    [(0,0,0)])
-            mock_record.assert_called_once_with(ModelDelta(old_voxels=[(0, 0, 0, 4, 3.0, 45.0, 60.0)], 
+            mock_record.assert_called_once_with(ModelDelta(old_voxels=[(0, 0, 0, 4, 3.0, 45.0)],
                                                        new_voxels=[]))
 
 @pytest.mark.asyncio
@@ -540,8 +540,8 @@ async def test_history_non_existent_partition() -> None:
 async def test_history_undo_update(mock_em, mock_hist) -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR", Path("proj_dir")) as mock_storage:
         with patch("pathlib.Path.exists", return_value=True):
-            mock_hist.undo_request.return_value = ModelDelta(old_voxels=[(0, 0, 0, 1, 0.0, 0.0, 0.0)], 
-                                                new_voxels=[(0, 0, 0, 3, 0.0, 0.0, 0.0)])
+            mock_hist.undo_request.return_value = ModelDelta(old_voxels=[(0, 0, 0, 1, 0.0, 0.0)], 
+                                                new_voxels=[(0, 0, 0, 3, 0.0, 0.0)])
             mock_hist.is_undo_empty.return_value = False
             mock_hist.is_redo_empty.return_value = False
             
@@ -555,7 +555,7 @@ async def test_history_undo_update(mock_em, mock_hist) -> None:
                 "redo_empty": "False"
             }
 
-            mock_em.update_voxel_properties.assert_called_once_with(str(mock_storage/"proj_name"/"part_name"), [(0, 0, 0, 1, 0.0, 0.0, 0.0)])
+            mock_em.update_voxel_properties.assert_called_once_with(str(mock_storage/"proj_name"/"part_name"), [(0, 0, 0, 1, 0.0, 0.0)])
             mock_hist.undo_request.assert_called_once()
 
 @patch("app.routers.edit_router.hm")
@@ -565,7 +565,7 @@ async def test_history_undo_add(mock_em, mock_hist) -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR", Path("proj_dir")) as mock_storage:
         with patch("pathlib.Path.exists", return_value=True):
             mock_hist.undo_request.return_value = ModelDelta(old_voxels=[], 
-                                                new_voxels=[(0, 0, 0, 1, 0.0, 0.0, 0.0)])
+                                                new_voxels=[(0, 0, 0, 1, 0.0, 0.0)])
             mock_hist.is_undo_empty.return_value = False
             mock_hist.is_redo_empty.return_value = False
             
@@ -579,7 +579,7 @@ async def test_history_undo_add(mock_em, mock_hist) -> None:
                 "redo_empty": "False"
             }
 
-            mock_em.delete_voxels.assert_called_once_with(str(mock_storage/"proj_name"/"part_name"), [(0, 0, 0, 1, 0.0, 0.0, 0.0)])
+            mock_em.delete_voxels.assert_called_once_with(str(mock_storage/"proj_name"/"part_name"), [(0, 0, 0, 1, 0.0, 0.0)])
             mock_hist.undo_request.assert_called_once()
 
 @patch("app.routers.edit_router.hm")
@@ -588,7 +588,7 @@ async def test_history_undo_add(mock_em, mock_hist) -> None:
 async def test_history_undo_delete(mock_em, mock_hist) -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR", Path("proj_dir")) as mock_storage:
         with patch("pathlib.Path.exists", return_value=True):
-            mock_hist.undo_request.return_value = ModelDelta(old_voxels=[(0, 0, 0, 3, 0.0, 20.0, 0.0)], 
+            mock_hist.undo_request.return_value = ModelDelta(old_voxels=[(0, 0, 0, 3, 0.0, 20.0)], 
                                                 new_voxels=[])
             mock_hist.is_undo_empty.return_value = False
             mock_hist.is_redo_empty.return_value = False
@@ -603,7 +603,7 @@ async def test_history_undo_delete(mock_em, mock_hist) -> None:
                 "redo_empty": "False"
             }
 
-            mock_em.add_voxels.assert_called_once_with(str(mock_storage/"proj_name"/"part_name"), [(0, 0, 0, 3, 0.0, 20.0, 0.0)])
+            mock_em.add_voxels.assert_called_once_with(str(mock_storage/"proj_name"/"part_name"), [(0, 0, 0, 3, 0.0, 20.0)])
             mock_hist.undo_request.assert_called_once()
 
 @patch("app.routers.edit_router.hm")
@@ -627,8 +627,8 @@ async def test_history_undo_empty_undo(mock_hist) -> None:
 async def test_history_redo_update(mock_em, mock_hist) -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR", Path("proj_dir")) as mock_storage:
         with patch("pathlib.Path.exists", return_value=True):
-            mock_hist.redo_request.return_value = ModelDelta(old_voxels=[(0, 0, 0, 1, 0.0, 0.0, 0.0)], 
-                                                new_voxels=[(0, 0, 0, 3, 0.0, 0.0, 0.0)])
+            mock_hist.redo_request.return_value = ModelDelta(old_voxels=[(0, 0, 0, 1, 0.0, 0.0)], 
+                                                new_voxels=[(0, 0, 0, 3, 0.0, 0.0)])
             mock_hist.is_undo_empty.return_value = False
             mock_hist.is_redo_empty.return_value = False
             
@@ -642,7 +642,7 @@ async def test_history_redo_update(mock_em, mock_hist) -> None:
                 "redo_empty": "False"
             }
 
-            mock_em.update_voxel_properties.assert_called_once_with(str(mock_storage/"proj_name"/"part_name"), [(0, 0, 0, 3, 0.0, 0.0, 0.0)])
+            mock_em.update_voxel_properties.assert_called_once_with(str(mock_storage/"proj_name"/"part_name"), [(0, 0, 0, 3, 0.0, 0.0)])
             mock_hist.redo_request.assert_called_once()
 
 @patch("app.routers.edit_router.hm")
@@ -652,7 +652,7 @@ async def test_history_redo_add(mock_em, mock_hist) -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR", Path("proj_dir")) as mock_storage:
         with patch("pathlib.Path.exists", return_value=True):
             mock_hist.redo_request.return_value = ModelDelta(old_voxels=[], 
-                                                new_voxels=[(0, 0, 0, 1, 0.0, 0.0, 0.0)])
+                                                new_voxels=[(0, 0, 0, 1, 0.0, 0.0)])
             mock_hist.is_undo_empty.return_value = False
             mock_hist.is_redo_empty.return_value = False
             
@@ -666,7 +666,7 @@ async def test_history_redo_add(mock_em, mock_hist) -> None:
                 "redo_empty": "False"
             }
 
-            mock_em.add_voxels.assert_called_once_with(str(mock_storage/"proj_name"/"part_name"), [(0, 0, 0, 1, 0.0, 0.0, 0.0)])
+            mock_em.add_voxels.assert_called_once_with(str(mock_storage/"proj_name"/"part_name"), [(0, 0, 0, 1, 0.0, 0.0)])
             mock_hist.redo_request.assert_called_once()
 
 @patch("app.routers.edit_router.hm")
@@ -675,7 +675,7 @@ async def test_history_redo_add(mock_em, mock_hist) -> None:
 async def test_history_redo_delete(mock_em, mock_hist) -> None:
     with patch.object(ed_r, "PROJECT_STORAGE_DIR", Path("proj_dir")) as mock_storage:
         with patch("pathlib.Path.exists", return_value=True):
-            mock_hist.redo_request.return_value = ModelDelta(old_voxels=[(0, 0, 0, 3, 0.0, 20.0, 0.0)], 
+            mock_hist.redo_request.return_value = ModelDelta(old_voxels=[(0, 0, 0, 3, 0.0, 20.0)], 
                                                 new_voxels=[])
             mock_hist.is_undo_empty.return_value = False
             mock_hist.is_redo_empty.return_value = False
@@ -690,7 +690,7 @@ async def test_history_redo_delete(mock_em, mock_hist) -> None:
                 "redo_empty": "False"
             }
 
-            mock_em.delete_voxels.assert_called_once_with(str(mock_storage/"proj_name"/"part_name"), [(0, 0, 0, 3, 0.0, 20.0, 0.0)])
+            mock_em.delete_voxels.assert_called_once_with(str(mock_storage/"proj_name"/"part_name"), [(0, 0, 0, 3, 0.0, 20.0)])
             mock_hist.redo_request.assert_called_once()
 
 @patch("app.routers.edit_router.hm")
