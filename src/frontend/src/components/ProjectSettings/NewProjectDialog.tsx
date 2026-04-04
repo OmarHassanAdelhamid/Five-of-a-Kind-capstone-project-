@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { fetchSTLDimensions } from '../utils/api';
+import { fetchSTLDimensions } from '../../utils/api';
 
 type UnitOption = 'µm' | 'mm' | 'cm';
-
 
 interface NewProjectDialogProps {
   isOpen: boolean;
@@ -33,7 +32,11 @@ export const NewProjectDialog = ({
   const initialMaterialsRef = useRef(initialMaterials);
   initialMaterialsRef.current = initialMaterials;
 
-  const [modelDimensions, setModelDimensions] = useState<{ x: number; y: number; z: number;} | null>(null);
+  const [modelDimensions, setModelDimensions] = useState<{
+    x: number;
+    y: number;
+    z: number;
+  } | null>(null);
 
   const [modelUnits, setModelUnits] = useState<UnitOption>('mm');
   const [scaleFactor, setScaleFactor] = useState<string>('1');
@@ -72,7 +75,7 @@ export const NewProjectDialog = ({
 
   useEffect(() => {
     if (!isOpen || !stlFileName) return;
-  
+
     const loadDimensions = async () => {
       try {
         const data = await fetchSTLDimensions(stlFileName);
@@ -82,7 +85,7 @@ export const NewProjectDialog = ({
         setModelDimensions(null);
       }
     };
-  
+
     loadDimensions();
   }, [isOpen, stlFileName]);
 
@@ -91,12 +94,11 @@ export const NewProjectDialog = ({
     ? `${baseName}-${suffix.trim()}`
     : baseName;
 
-    const parseScaleFactor = (): number | null => {
-      const n = Number(scaleFactor);
-      if (!Number.isFinite(n) || n <= 0) return null;
-      return n;
-    };
-  
+  const parseScaleFactor = (): number | null => {
+    const n = Number(scaleFactor);
+    if (!Number.isFinite(n) || n <= 0) return null;
+    return n;
+  };
 
   const parseVoxelSize = (): number | null => {
     const n = Number(voxelSizeText);
@@ -123,7 +125,7 @@ export const NewProjectDialog = ({
     setProgressMessage('Voxelizing model...');
 
     try {
-      console.log('START creating')
+      console.log('START creating');
       await onConfirm(
         {
           projectName: fullProjectName,
@@ -284,7 +286,10 @@ export const NewProjectDialog = ({
             {/* Reference units for export in which all measurements are expressed as: */}
             <div className="dialog-section">
               <p className="dialog-hint-white">
-                <strong>Reference units for export in which all measurements are expressed as:</strong>
+                <strong>
+                  Reference units for export in which all measurements are
+                  expressed as:
+                </strong>
               </p>
 
               <div className="radio-row">

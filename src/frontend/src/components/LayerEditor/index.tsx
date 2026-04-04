@@ -250,7 +250,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
                 <p className="layer-toggle-label">
                   Magnetized voxels denoted by
                 </p>
-                <span className="checkmark-circle">✓</span>
+                <span className="checkmark-circle">×</span>
               </div>
             </div>
           </div>
