@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { LayerEditor, type LayerEditorHandle } from '../LayerEditor';
 import * as api from '../../utils/api';
 
-jest.mock('../utils/api', () => ({
+jest.mock('../../utils/api', () => ({
   fetchLayers: jest.fn(),
   fetchLayer: jest.fn(),
   updateVoxels: jest.fn(),
