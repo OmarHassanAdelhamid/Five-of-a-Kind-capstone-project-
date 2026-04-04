@@ -14,7 +14,7 @@ jest.mock('./utils/api', () => ({
   updateHistory: jest.fn(),
 }));
 
-jest.mock('./components/ModelViewer', () => ({
+jest.mock('./components/ModelViewer/ModelViewer', () => ({
   ModelViewer: () => <div data-testid="model-viewer">ModelViewer</div>,
 }));
 

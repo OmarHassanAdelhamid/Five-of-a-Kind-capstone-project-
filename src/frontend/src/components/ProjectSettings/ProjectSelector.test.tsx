@@ -10,7 +10,7 @@ describe('ProjectSelector', () => {
         projectName="proj1"
         onProjectNameChange={jest.fn()}
         onLoadVoxels={jest.fn()}
-      />
+      />,
     );
     expect(getByRole('combobox')).toHaveValue('proj1');
     expect(getByText('Load Voxels')).toBeInTheDocument();
@@ -23,7 +23,7 @@ describe('ProjectSelector', () => {
         projectName=""
         onProjectNameChange={jest.fn()}
         onLoadVoxels={jest.fn()}
-      />
+      />,
     );
     expect(getByPlaceholderText('Enter project name')).toBeInTheDocument();
   });
@@ -36,7 +36,7 @@ describe('ProjectSelector', () => {
         projectName="p1"
         onProjectNameChange={jest.fn()}
         onLoadVoxels={onLoadVoxels}
-      />
+      />,
     );
     await userEvent.click(getByText('Load Voxels'));
     expect(onLoadVoxels).toHaveBeenCalled();
@@ -49,7 +49,7 @@ describe('ProjectSelector', () => {
         projectName=""
         onProjectNameChange={jest.fn()}
         onLoadVoxels={jest.fn()}
-      />
+      />,
     );
     expect(getByText('Load Voxels').closest('button')).toBeDisabled();
   });
@@ -62,7 +62,7 @@ describe('ProjectSelector', () => {
         onProjectNameChange={jest.fn()}
         onLoadVoxels={jest.fn()}
         voxelCount={100}
-      />
+      />,
     );
     expect(getByText('Loaded 100 voxel coordinates')).toBeInTheDocument();
   });
@@ -75,7 +75,7 @@ describe('ProjectSelector', () => {
         projectName=""
         onProjectNameChange={onProjectNameChange}
         onLoadVoxels={jest.fn()}
-      />
+      />,
     );
     await userEvent.type(getByPlaceholderText('Enter project name'), 'myproj');
     expect(onProjectNameChange).toHaveBeenCalled();
@@ -89,7 +89,7 @@ describe('ProjectSelector', () => {
         projectName="p1"
         onProjectNameChange={onProjectNameChange}
         onLoadVoxels={jest.fn()}
-      />
+      />,
     );
     await userEvent.selectOptions(getByRole('combobox'), 'p2');
     expect(onProjectNameChange).toHaveBeenCalledWith('p2');
@@ -103,7 +103,7 @@ describe('ProjectSelector', () => {
         projectName=""
         onProjectNameChange={jest.fn()}
         onLoadVoxels={onLoadVoxels}
-      />
+      />,
     );
     const input = getByPlaceholderText('Enter project name');
     fireEvent.keyDown(input, { key: 'Enter' });
