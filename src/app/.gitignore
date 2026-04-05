@@ -1,1 +1,4 @@
 node_modules/
+# Only the macOS DMG is tracked; unpacked app and builder outputs stay local
+release/*
+!release/*.dmg
