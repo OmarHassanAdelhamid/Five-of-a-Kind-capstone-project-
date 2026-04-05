@@ -472,14 +472,14 @@ detail within the Usability Report extra. It was these meetings that led to the 
 Overall, major changes included:
 
 \begin{itemize}
-  \item\textbf{Improvements to project creation menus.} The workflow at the time was unintuitive, and certain options \\
-  did not meet client needs. This was completely reworked and simplified, along with the development of a greeting screen \\
+  \item\textbf{Improvements to project creation menus.} The workflow at the time was unintuitive, and certain options 
+  did not meet client needs. This was completely reworked and simplified, along with the development of a greeting screen 
   specifically targeted at new users.
-  \item\textbf{Ability to rename partitions.} In order to keep track of the different parts of a project easier, instead of \\
+  \item\textbf{Ability to rename partitions.} In order to keep track of the different parts of a project easier, instead of 
   the auto-generated positional names.
-  \item\textbf{Clearer magnetization signifiers.} A checkmark was preferred at a glance, versus the original implementation \\
+  \item\textbf{Clearer magnetization signifiers.} A checkmark was preferred at a glance, versus the original implementation 
   idea of a toggleable highlight color or directional arrow.
-  \item\textbf{More guidance.} While users were able to pick up core features without instruction, it was clear that a manual \\
+  \item\textbf{More guidance.} While users were able to pick up core features without instruction, it was clear that a manual
   or quick-start guide would be extremely valuable to speed up initial understanding - which wsa developed further in between tests.
 \end{itemize}
 \noindent\textbf{Conclusions}
@@ -488,10 +488,70 @@ Overall, AutoVox's current status reflects the balance between large goals and f
 stakeholders and the creativity of the team to result in a highly usable and powerful tool.
 
 \section{Design Decisions (LO12)}
-
+\iffalse
 \plt{Reflect and justify your design decisions.  How did limitations,
  assumptions, and constraints influence your decisions?  Discuss each of these
  separately.}
+\fi
+
+Our team's primary goal when developing the system's architecture was to make future
+modifications and additions as painless as possible, whilst serving the needs of our
+client and meeting the technical abilities of our team. Additionally, the features
+considered and how they were implemented were directly informed by the limitations and 
+constraints imposed upon the project, as well as assumptions made by the team.
+Below follows a brief overview of the architecture chosen and justification, followed by 
+sets of limitations, assumptions, and constraints that informed feature and design choices.\\
+
+\noindent\textbf{Architecture Overview}
+\begin{itemize}
+  \item\textbf{Model/View/Controller Setup.} Allows for separation of concerns between the
+  user interface and voxel model updates. Given how the interface evolved considerably
+  throughout the course of the project, this decision proved valuable.
+  \item\textbf{Encapsulated backend structures.} Each of the primary backend components, such as
+  how CAD files are processed or how project files are exported, are each broken down into
+  sub-components that are encapsulated. In this way, these modules can be swapped out for alternatives
+  should their performance stop meeting client needs.
+\end{itemize}
+
+\noindent\textbf{Limitations}
+\begin{itemize}
+  \item\textbf{Variable size of models.} This posed a two-fold issue - how to handle the files in 
+  the backend efficiently, and how to effectively present large models to users without overwhelming
+  them. To address this, we introduced model partitioning - breaking down a large file into a group of
+  smaller ones - and the ability to zoom in or out within the layer editor.
+  \item\textbf{Voxelization accuracy.} No matter how a CAD file is voxelized (eg. choice of algorithm 
+  or implementation), there will be some degree of artifacting, which increases in likelihood as voxel
+  size increases To address this, we included the ability to add and delete voxels. This had the additional
+  benefit of allowing users to construct model supports for printing within our editor, instead of being
+  forced to plan this within CAD software.
+\end{itemize}
+
+\noindent\textbf{Assumptions}
+\begin{itemize}
+  \item\textbf{Valid CAD file input.} AutoVox assumes STL files provided are fully enclosed and valid 
+  3D structures and will not attempt to perform repairs, as how a file could be completed is up to the
+  user's interpretation.
+  \item\textbf{Minimum processing power requirements.} We assumed that systems running AutoVox are 
+  sufficiently powerful to handle 3D-graphics, which encouraged us to adopt Three.js to implement more
+  taxing model visualizations.
+  \item\textbf{Library availability.} We assumed that the necessary libraries for AutoVox (eg. Trimesh)
+  are readily available on target devices.
+\end{itemize}
+
+\noindent\textbf{Constraints}
+\begin{itemize}
+  \item\textbf{Resource usage minimization and performance considerations.} Rendering of voxels was altered
+  to be done in parallel, and SQL was chosen to handle voxel models to take advantage of existing database 
+  algorithms.
+  \item\textbf{File stability hazards.} Our supervisor stressed that the current software in use crashed 
+  frequently causing lost work - to address this, we implemented automatic saving after each edit to the 
+  project. This also made saving much less taxing as saves were incremental and smaller instead of being
+  accumulated over time.
+  \item\textbf{Printer file intake support.} Compatibility with the existing printer software was crucial, but
+  our supervisor did add that the files it could intake could be altered. To minimize the amount of alteration,
+  we chose to export in a basic format that is supported by a maximal number of softwares, organized in a 
+  logical and simple way.
+\end{itemize}
 
 \section{Economic Considerations (LO23)}
 
