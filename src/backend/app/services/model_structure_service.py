@@ -171,6 +171,14 @@ class VoxelDB:
             (magnet_mag, mag_polar, mag_azi, ix, iy, iz)
         ) 
 
+    def set_material_label(self, material_id: int, label: str) -> None:
+        """Associate a human-readable label with a material ID, stored in the meta table."""
+        self.set_meta(f"material_label_{material_id}", label)
+
+    def get_material_label(self, material_id: int) -> str | None:
+        """Retrieve the label associated with a material ID, or None if not set."""
+        return self.get_meta(f"material_label_{material_id}")
+
     def set_material(self, ix: int, iy: int, iz: int, material_val: int) -> None:
         self.cur.execute("""
             UPDATE voxels
