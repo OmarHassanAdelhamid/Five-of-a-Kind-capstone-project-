@@ -1,5 +1,7 @@
+// This component is used to display the help tab of the menu bar (view manual, license, privacy statement, about version, credits)
 import type { BaseTabProps } from '../types';
 
+// Props for the HelpTab component
 interface HelpTabProps extends BaseTabProps {
   onViewManual?: () => void;
   onLicense?: () => void;
@@ -18,6 +20,7 @@ export const HelpTab = ({
   onAbout,
   onCredits,
 }: HelpTabProps) => {
+  // Handles the click on a menu item
   const handleItemClick = (handler?: (() => void) | null) => {
     if (handler) handler();
     onClose();

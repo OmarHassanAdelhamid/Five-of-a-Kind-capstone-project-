@@ -1,7 +1,9 @@
+// This component is used to display the partition grid of the partition panel (3D grid of partitions)
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import type { Partition } from '../../utils/api';
 
+// Props for the PartitionGrid component
 interface PartitionGridProps {
   partitions: Partition[];
   selectedPartition: string | null;
@@ -15,6 +17,7 @@ export const PartitionGrid = ({
 }: PartitionGridProps) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
 
+  // Creates the 3D grid of partitions with three.js
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
@@ -87,6 +90,7 @@ export const PartitionGrid = ({
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
+    // Handles the click on a partition by highlighting the clicked partition
     const handleClick = (event: MouseEvent) => {
       const rect = renderer.domElement.getBoundingClientRect();
 
@@ -106,6 +110,7 @@ export const PartitionGrid = ({
 
     renderer.domElement.addEventListener('click', handleClick);
 
+    // Cleans up the 3D grid of partitions
     return () => {
       renderer.domElement.removeEventListener('click', handleClick);
       geometry.dispose();

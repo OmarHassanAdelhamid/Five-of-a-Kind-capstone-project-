@@ -1,7 +1,10 @@
+// This component is used to display the status message of the model viewer (loading, ready, error)
+
+// Props for the StatusMessage component
 interface StatusMessageProps {
-  status: 'loading' | 'ready' | 'error'
-  message?: string | null
-  selectedModel?: string | null
+  status: 'loading' | 'ready' | 'error';
+  message?: string | null;
+  selectedModel?: string | null;
 }
 
 export const StatusMessage = ({
@@ -9,21 +12,18 @@ export const StatusMessage = ({
   message,
   selectedModel,
 }: StatusMessageProps) => {
+  // If the status is ready, return null
   if (status === 'ready') {
-    return null
+    return null;
   }
 
+  // Display the message based on the status
   const displayMessage =
     status === 'loading'
       ? selectedModel
         ? `Loading ${selectedModel}…`
         : 'Loading project…'
-      : message
+      : message;
 
-  return (
-    <div className={`status ${status}`}>
-      {displayMessage}
-    </div>
-  )
-}
-
+  return <div className={`status ${status}`}>{displayMessage}</div>;
+};

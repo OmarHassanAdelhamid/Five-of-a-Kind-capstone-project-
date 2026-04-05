@@ -1,8 +1,11 @@
+// This component is used to display the partitions panel (list of partitions)
+
 import { useEffect, useState } from 'react';
 import { fetchPartitions, renamePartition } from '../../utils/api';
 import { PartitionGrid } from './PartitionGrid';
 import type { Partition } from '../../utils/api';
 
+// Props for the PartitionsPanel component
 interface PartitionsPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -11,6 +14,7 @@ interface PartitionsPanelProps {
   onPartitionSelect: (partitionName: string) => void;
 }
 
+// Parses the partition name from the filename make sure it is a valid partition name
 function parsePartitionName(name: string): Partition | null {
   const match = name.match(/partition-x-(-?\d+)-y-(-?\d+)-z-(-?\d+)\.db$/i);
   if (match) {
@@ -43,6 +47,7 @@ export const PartitionsPanel = ({
   const [editingPartition, setEditingPartition] = useState<string | null>(null);
   const [editedName, setEditedName] = useState('');
 
+  // Fetches the partitions from the server and updates the state
   useEffect(() => {
     if (isOpen && projectName) {
       setLoading(true);
@@ -68,6 +73,7 @@ export const PartitionsPanel = ({
     }
   }, [isOpen, projectName]);
 
+  // Normalizes the partition name to ensure it is a valid partition name
   const normalizePartitionName = (value: string) => {
     const trimmed = value.trim();
 
@@ -76,6 +82,7 @@ export const PartitionsPanel = ({
     return trimmed.toLowerCase().endsWith('.db') ? trimmed : `${trimmed}.db`;
   };
 
+  // Handles the renaming of a partition by sending the request to the server and updating the state
   const handleRenamePartition = async (oldName: string, newName: string) => {
     const normalizedName = normalizePartitionName(newName);
 

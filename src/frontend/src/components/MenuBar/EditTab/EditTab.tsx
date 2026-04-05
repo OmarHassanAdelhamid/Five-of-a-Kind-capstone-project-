@@ -1,5 +1,7 @@
+// This component is used to display the edit tab of the menu bar (undo, redo, cut, copy, paste, preferences)
 import type { BaseTabProps } from '../types';
 
+// Props for the EditTab component
 interface EditTabProps extends BaseTabProps {
   canCut?: boolean;
   onUndo?: () => void;
@@ -30,6 +32,7 @@ export const EditTab = ({
   canPaste = false,
   canCopy = false,
 }: EditTabProps) => {
+  // Handles the click on a menu item
   const handleItemClick = (handler?: (() => void) | null) => {
     if (handler) handler();
     onClose();

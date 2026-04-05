@@ -1,5 +1,7 @@
+// This component is used to display the view tab of the menu bar (open partition menu, open layer menu, highlight all)
 import type { BaseTabProps } from '../types';
 
+// Props for the ViewTab component
 interface ViewTabProps extends BaseTabProps {
   onOpenPartitionMenu?: () => void;
   onOpenLayerMenu?: () => void;
@@ -14,6 +16,7 @@ export const ViewTab = ({
   onOpenLayerMenu,
   onHighlightAll,
 }: ViewTabProps) => {
+  // Handles the click on a menu item
   const handleItemClick = (handler?: (() => void) | null) => {
     if (handler) handler();
     onClose();

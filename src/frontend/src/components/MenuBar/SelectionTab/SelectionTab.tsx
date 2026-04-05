@@ -1,5 +1,7 @@
+// This component is used to display the selection tab of the menu bar (select all, reset selected voxels)
 import type { BaseTabProps } from '../types';
 
+// Props for the SelectionTab component
 interface SelectionTabProps extends BaseTabProps {
   onSelectAll?: () => void;
   onResetSelected?: () => void;
@@ -12,6 +14,7 @@ export const SelectionTab = ({
   onSelectAll,
   onResetSelected,
 }: SelectionTabProps) => {
+  // Handles the click on a menu item
   const handleItemClick = (handler?: (() => void) | null) => {
     if (handler) handler();
     onClose();

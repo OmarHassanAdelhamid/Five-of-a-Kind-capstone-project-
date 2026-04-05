@@ -1,3 +1,5 @@
+// This component is used to display the footer of the model viewer (instructions for selecting voxels)
+
 interface FooterProps {
   hasVoxels?: boolean;
 }
