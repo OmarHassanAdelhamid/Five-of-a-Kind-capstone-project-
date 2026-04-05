@@ -22,6 +22,23 @@ AutoVox is a full-stack web application that **converts standard STL mesh files 
 
 ---
 
+## macOS desktop app (download)
+
+Pre-built **Apple Silicon (ARM64)** disk image (the file is stored with **Git LFS**; the plain `/raw/` URL only shows a tiny pointer, not the installer).
+
+1. Open **[`Autovox-0.1.0-arm64.dmg` on GitHub](https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/src/app/release/Autovox-0.1.0-arm64.dmg)**.
+2. Click **Download raw file** (or the **⋯** menu → **Download**) — that downloads the real ~109 MB disk image.
+
+To get the DMG with Git instead: `git lfs install`, clone the repo, then `git lfs pull` (or clone with LFS enabled so `src/app/release/*.dmg` is fetched automatically).
+
+1. Open the DMG, drag **Autovox** into **Applications**, then launch it from there.
+2. The build is **not Apple-notarized**; if macOS blocks it, open **System Settings → Privacy & Security** and choose to open it anyway.
+3. On **first run**, the app may ask for **Python 3.9+** (or use the setup flow) so it can create a local environment and install the bundled FastAPI backend.
+
+To produce a fresh DMG from source, see `src/app/package.json` (`npm run pack` from `src/app` after installing dependencies).
+
+---
+
 ## Features
 
 - **STL Import** — Upload any `.stl` file and automatically voxelize the mesh at a configurable resolution
@@ -61,6 +78,7 @@ AutoVox/
 │       └── app/
 │           ├── routers/       # stl, project, edit, export endpoints
 │           └── services/      # voxelization, editing, history, export
+│   └── app/               # Electron desktop app; release DMG under release/
 ├── docs/                  # SRS, design docs, VnV plans (LaTeX)
 └── refs/                  # Reference papers and materials
 ```
