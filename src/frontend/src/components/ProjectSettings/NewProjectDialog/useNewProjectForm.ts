@@ -1,9 +1,11 @@
+// This component is used to display the new project form (project name, model dimensions, scale factor, voxel size, material selector)
 import { useState, useEffect, useRef } from 'react';
 import { fetchSTLDimensions } from '../../../utils/api';
 import type { UnitOption, ConfirmPayload } from './types';
 
 const DEFAULT_MATERIAL_IDS = [1, 2, 3];
 
+// Props for the useNewProjectForm component
 export const useNewProjectForm = (
   isOpen: boolean,
   stlFileName: string,
@@ -19,6 +21,7 @@ export const useNewProjectForm = (
   const initialMaterialIdsRef = useRef(initialMaterialIds);
   initialMaterialIdsRef.current = initialMaterialIds;
 
+  // Sets the model dimensions
   const [modelDimensions, setModelDimensions] = useState<{
     x: number;
     y: number;
@@ -37,6 +40,7 @@ export const useNewProjectForm = (
   const [isCreating, setIsCreating] = useState(false);
   const [progressMessage, setProgressMessage] = useState<string>('');
 
+  // Sets the initial material ids
   useEffect(() => {
     if (isOpen) {
       if (inputRef.current) inputRef.current.focus();
@@ -56,6 +60,7 @@ export const useNewProjectForm = (
     }
   }, [isOpen]);
 
+  // Fetches the STL dimensions
   useEffect(() => {
     if (!isOpen || !stlFileName) return;
 
@@ -75,18 +80,21 @@ export const useNewProjectForm = (
   const baseName = stlFileName.replace('.stl', '');
   const fullProjectName = suffix.trim() ? `${baseName}-${suffix.trim()}` : baseName;
 
+  // Parses the scale factor from the scale factor input
   const parseScaleFactor = (): number | null => {
     const n = Number(scaleFactor);
     if (!Number.isFinite(n) || n <= 0) return null;
     return n;
   };
 
+  // Parses the voxel size from the voxel size input
   const parseVoxelSize = (): number | null => {
     const n = Number(voxelSizeText);
     if (!Number.isFinite(n) || n <= 0) return null;
     return n;
   };
 
+  // Handles the submit event on the form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

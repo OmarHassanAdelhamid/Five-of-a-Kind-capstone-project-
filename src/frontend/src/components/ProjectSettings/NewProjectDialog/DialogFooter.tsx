@@ -1,3 +1,6 @@
+// This component is used to display the dialog footer (cancel, create project)
+
+// Props for the DialogFooter component
 interface DialogFooterProps {
   isCreating: boolean;
   onCancel: () => void;

@@ -1,5 +1,7 @@
+// This component is used to display the float input field (scale factor, voxel size)
 const FLOAT_REGEX = /^-?\d*\.?\d*$/;
 
+// Props for the FloatInputField component
 interface FloatInputFieldProps {
   id: string;
   label: string;
@@ -19,6 +21,7 @@ export const FloatInputField = ({
   errorMessage,
   className,
 }: FloatInputFieldProps) => {
+  // Handles the change event on the input field
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = e.target.value;
     if (v === '' || FLOAT_REGEX.test(v)) {

@@ -1,3 +1,6 @@
+// This component is used to display the model dimensions (x, y, z)
+
+// Props for the ModelDimensionsDisplay component
 interface ModelDimensionsDisplayProps {
   dimensions: { x: number; y: number; z: number } | null;
 }

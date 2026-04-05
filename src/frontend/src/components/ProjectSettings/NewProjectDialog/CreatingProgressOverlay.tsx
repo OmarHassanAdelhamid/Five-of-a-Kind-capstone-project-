@@ -1,3 +1,4 @@
+// Props for the CreatingProgressOverlay component
 interface CreatingProgressOverlayProps {
   message: string;
 }

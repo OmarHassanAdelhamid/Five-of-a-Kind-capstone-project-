@@ -1,5 +1,5 @@
+// This component is used to display the material selector (material id, add material)
 import { useMemo, useState } from 'react';
-import { nextAvailableMaterialId } from './materialIds';
 
 const ADD_MATERIAL_VALUE = '__ADD_NEW_MATERIAL__';
 
@@ -7,11 +7,18 @@ function formatMaterialLabel(id: number): string {
   return `Material ${id}`;
 }
 
+// Props for the MaterialSelector component
 interface MaterialSelectorProps {
   materialIds: number[];
   selectedMaterialId: number;
   onMaterialIdsChange: (ids: number[]) => void;
   onSelectedChange: (id: number) => void;
+}
+
+// Gets the next available material id
+export function nextAvailableMaterialId(ids: number[]): number {
+  if (ids.length === 0) return 1;
+  return Math.max(...ids) + 1;
 }
 
 export const MaterialSelector = ({
@@ -23,11 +30,13 @@ export const MaterialSelector = ({
   const [isAddingMaterial, setIsAddingMaterial] = useState(false);
   const [prevSelectedId, setPrevSelectedId] = useState(selectedMaterialId);
 
+  // Sorts the material ids
   const sortedIds = useMemo(
     () => [...materialIds].sort((a, b) => a - b),
     [materialIds],
   );
 
+  // Gets the next available material id
   const idToAdd = useMemo(
     () => nextAvailableMaterialId(sortedIds),
     [sortedIds],
@@ -68,8 +77,9 @@ export const MaterialSelector = ({
       ) : (
         <div className="add-material-panel">
           <p className="add-material-preview">
-            Adds <strong>material ID {idToAdd}</strong> ({formatMaterialLabel(idToAdd)}) to the
-            list and selects it as the default.
+            Adds <strong>material ID {idToAdd}</strong> (
+            {formatMaterialLabel(idToAdd)}) to the list and selects it as the
+            default.
           </p>
           <div className="add-material-actions">
             <button

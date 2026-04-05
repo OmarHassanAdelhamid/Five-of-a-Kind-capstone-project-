@@ -1,12 +1,15 @@
-import type { ChangeEvent } from 'react'
+// This component is used to display the project selector (select a project from the list of available projects)
 
+import type { ChangeEvent } from 'react';
+
+// Props for the ProjectSelector component
 interface ProjectSelectorProps {
-  availableProjects: string[]
-  projectName: string
-  onProjectNameChange: (name: string) => void
-  onLoadVoxels: () => void
-  disabled?: boolean
-  voxelCount?: number
+  availableProjects: string[];
+  projectName: string;
+  onProjectNameChange: (name: string) => void;
+  onLoadVoxels: () => void;
+  disabled?: boolean;
+  voxelCount?: number;
 }
 
 export const ProjectSelector = ({
@@ -17,11 +20,12 @@ export const ProjectSelector = ({
   disabled,
   voxelCount,
 }: ProjectSelectorProps) => {
+  // Handles the key down event on the project name input instead of the load voxels button
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      onLoadVoxels()
+      onLoadVoxels();
     }
-  }
+  };
 
   return (
     <>
@@ -80,5 +84,5 @@ export const ProjectSelector = ({
         </p>
       )}
     </>
-  )
-}
+  );
+};

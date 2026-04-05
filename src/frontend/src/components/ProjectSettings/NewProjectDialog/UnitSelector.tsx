@@ -1,5 +1,7 @@
+// This component is used to display the unit selector (µm, mm, cm)
 import type { UnitOption } from './types';
 
+// Props for the UnitSelector component
 interface UnitSelectorProps {
   value: UnitOption;
   onChange: (u: UnitOption) => void;

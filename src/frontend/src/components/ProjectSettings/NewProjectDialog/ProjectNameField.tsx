@@ -1,5 +1,7 @@
+// This component is used to display the project name field (project name, suffix)
 import type { RefObject } from 'react';
 
+// Props for the ProjectNameField component
 interface ProjectNameFieldProps {
   baseName: string;
   suffix: string;

@@ -1,3 +1,5 @@
+// This component is used to display the dialog header (new project, close)
+
 interface DialogHeaderProps {
   isCreating: boolean;
   onClose: () => void;

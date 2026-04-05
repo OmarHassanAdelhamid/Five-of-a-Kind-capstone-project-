@@ -33,7 +33,6 @@ interface LayerEditorProps {
   disabled?: boolean;
   isOpen: boolean;
   onClose: () => void;
-  /** Called after voxels are added or removed so the model viewer can refresh. */
   onVoxelsChanged?: () => void | Promise<void>;
 }
 

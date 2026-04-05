@@ -1,10 +1,12 @@
-import type { ChangeEvent } from 'react'
+// This component is used to display the model selector (select a model from the list of available models)
+import type { ChangeEvent } from 'react';
 
+// Props for the ModelSelector component
 interface ModelSelectorProps {
-  models: string[]
-  selectedModel: string | null
-  onModelChange: (model: string) => void
-  disabled?: boolean
+  models: string[];
+  selectedModel: string | null;
+  onModelChange: (model: string) => void;
+  disabled?: boolean;
 }
 
 export const ModelSelector = ({
@@ -13,12 +15,13 @@ export const ModelSelector = ({
   onModelChange,
   disabled,
 }: ModelSelectorProps) => {
+  // Handles the change event on the model select
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value
+    const value = event.target.value;
     if (value) {
-      onModelChange(value)
+      onModelChange(value);
     }
-  }
+  };
 
   return (
     <div className="project-settings-block model-selector">
@@ -40,6 +43,5 @@ export const ModelSelector = ({
         ))}
       </select>
     </div>
-  )
-}
-
+  );
+};

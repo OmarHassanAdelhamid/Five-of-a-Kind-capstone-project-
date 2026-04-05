@@ -1,3 +1,4 @@
+// This component is used to display the new project dialog (project name, model dimensions, scale factor, voxel size, material selector)
 import { useNewProjectForm } from './useNewProjectForm';
 import { DialogHeader } from './DialogHeader';
 import { CreatingProgressOverlay } from './CreatingProgressOverlay';
@@ -9,6 +10,7 @@ import { MaterialSelector } from './MaterialSelector';
 import { DialogFooter } from './DialogFooter';
 import type { ConfirmPayload } from './types';
 
+// Props for the NewProjectDialog component
 interface NewProjectDialogProps {
   isOpen: boolean;
   stlFileName: string;
@@ -17,7 +19,6 @@ interface NewProjectDialogProps {
     payload: ConfirmPayload,
     onProgress?: (message: string) => void,
   ) => void | Promise<void>;
-  /** Initial material IDs shown in the dropdown (default 1–3). */
   initialMaterialIds?: number[];
 }
 
@@ -28,6 +29,7 @@ export const NewProjectDialog = ({
   onConfirm,
   initialMaterialIds = [1, 2, 3],
 }: NewProjectDialogProps) => {
+  // Creates the new project form
   const form = useNewProjectForm(
     isOpen,
     stlFileName,
