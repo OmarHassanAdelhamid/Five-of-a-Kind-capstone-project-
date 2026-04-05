@@ -472,15 +472,73 @@ technology?}
 
 \section{Reflection on Capstone}
 
-\plt{This question focuses on what you learned during the course of the capstone project.}
+% \plt{This question focuses on what you learned during the course of the capstone project.}
 
 \subsection{Which Courses Were Relevant}
 
-\plt{Which of the courses you have taken were relevant for the capstone project?}
+Several courses taken throughout the software engineering program contributed directly to the development of AutoVox.
+The table below maps each relevant course to the specific aspects of the project it supported.
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\caption{Courses Relevant to the Capstone Project}
+\label{tab:RelevantCourses} \\
+
+\hline
+\textbf{Course} & \textbf{Relevance to AutoVox} \\
+\hline
+\endfirsthead
+
+\hline
+\multicolumn{2}{c}{\textit{Table \thetable\ continued}} \\
+\hline
+\textbf{Course} & \textbf{Relevance to AutoVox} \\
+\hline
+\endhead
+
+SFWRENG 2AA4 -- Intro To Software Development &
+Established foundational software development habits including version control with Git, modular code organization, and collaboration practices that were applied throughout the project lifecycle. \\ \hline
+
+SFWRENG 2C03 -- Data Structures \& Algorithms &
+Directly relevant to voxelization and mesh processing. Efficient spatial data structures such as hash maps were used to store and query voxel grids, and algorithmic complexity considerations informed design decisions around large 3D datasets. \\ \hline
+
+SFWRENG 2OP3 -- Object-Oriented Programming &
+The module decomposition of AutoVox into distinct, encapsulated components (e.g., ImportModule, VoxelizationModule, VisualizationModule, ExportModule) directly applied OOP principles of encapsulation, inheritance, and polymorphism covered in this course. \\ \hline
+
+SFWRENG 3A04 -- Software Design III &
+Directly applicable to the architectural design of AutoVox. Concepts from this course including module guides, module interface specifications, architectural decomposition, and information hiding were the basis for the MG and MIS documents. \\ \hline
+
+SFWRENG 3RA3 -- Software Requirements \& Security Considerations &
+Core to the SRS and Hazard Analysis deliverables. The course's framework for writing verifiable functional and non-functional requirements, identifying stakeholders, and analyzing security risks was applied directly to AutoVox's documentation. \\ \hline
+
+SFWRENG 3S03 -- Software Testing &
+Essential for the VnV Plan and VnV Report. Test design techniques such as boundary value analysis, equivalence partitioning, and unit/integration/system testing strategies were used to plan and execute the AutoVox test suite. \\ \hline
+
+SFWRENG 4HC3 -- Human Computer Interfaces &
+Directly informed the UI/UX design of AutoVox and the usability testing extra. Concepts such as Norman's design principles and cognitive load guided interface decisions and the structured usability evaluations conducted with participants. \\ \hline
+
+SFWRENG 3DB3 -- Databases &
+A crucial part of the project was the ability to store and retrieve voxel data from a database. Ensuring that the database is efficient and scalable was essential for the project. This course provided the necessary knowledge to design and implement a database for the project. \\ \hline
+
+\end{longtable}
+
+These courses enabled the team to be successful with the capstone project by providing the necessary knowledge and skills to complete the project. They provided a team a foundation to build upon and a framework to follow.
 
 \subsection{Knowledge/Skills Outside of Courses}
 
-\plt{What skills/knowledge did you need to acquire for your capstone project
-that was outside of the courses you took?}
+A number of skills and areas of knowledge were required for AutoVox that were not covered in the courses taken during the program.
+
+\begin{itemize}
+
+  \item \textbf{3D Graphics and Rendering:} Working with a real-time 3D rendering library (Three.js) required self-directed learning. Topics such as scene graphs, camera projections, vertex and fragment shaders, instanced mesh rendering, and GPU memory management were not covered in any course and had to be learned through documentation and experimentation.
+
+  \item \textbf{Voxelization Algorithms:} Converting arbitrary triangle meshes to volumetric voxel representations is a specialized computational geometry topic not covered in the curriculum. The product uses existing libraries and tooling for mesh-to-voxel conversion rather than a custom implementation. However, the team still had to learn concepts such as ray casting, surface-to-volume conversion, and non-smooth geometry so that requirements and design documentation could describe the system's behaviour accurately.
+
+  \item \textbf{3D File Format Parsing:} The team did not implement an STL parser from scratch. On the server, meshes are read with the Python \texttt{trimesh} library for voxelization and dimension queries. In the client, the STL file served by the API is parsed with Three.js's \texttt{STLLoader} to build renderable geometry. Studying the STL specifications was still needed to document and reason about the file format. The team did not need to replace those libraries, but to write accurate technical documentation and interpret what the application shows.
+
+  \item \textbf{Desktop Application Development:} Building a cross-platform desktop application using Electron required learning how to bridge web technologies (HTML/CSS/JavaScript) with native OS capabilities, manage inter-process communication (IPC) between the main and renderer processes, and handle file system access securely.
+
+  \item \textbf{TypeScript and FastAPI:} While programming fundamentals were covered in courses, the specific TypeScript language, FastAPI framework required practical self-study to use effectively in a large multi-module project.
+
+\end{itemize}
 
 \end{document}
