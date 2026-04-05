@@ -5,6 +5,7 @@ Routes for project management and voxelization.
 ## save project should be in this file. 
 ## also -> possibly split this file into voxel related and project related? unsure.
 
+from pathlib import Path
 from typing import List
 
 from fastapi import APIRouter, HTTPException
@@ -12,7 +13,7 @@ from fastapi import APIRouter, HTTPException
 import os
 
 from app.config import STL_STORAGE_DIR, PROJECT_STORAGE_DIR
-from app.models.schemas import VoxelizeRequest
+from app.models.schemas import VoxelizeRequest, RenamePartitionRequest
 
 import app.services.mesh_service as ms
 import app.services.voxel_service as vx
@@ -51,6 +52,69 @@ def list_partitions(project_name: str):
     return {
         "project_name": project_name,
         "partitions": partitions
+    }
+
+
+def _normalize_partition_filename(name: str) -> str:
+    trimmed = name.strip()
+    if not trimmed:
+        return ""
+    lower = trimmed.lower()
+    return trimmed if lower.endswith(".db") else f"{trimmed}.db"
+
+
+@router.patch("/partitions/rename")
+def rename_partition(request: RenamePartitionRequest):
+    """
+    Renames a partition file on disk so the UI label matches the stored filename.
+    """
+    project_path = PROJECT_STORAGE_DIR / request.project_name
+
+    if not project_path.exists():
+        available = [p.name for p in PROJECT_STORAGE_DIR.iterdir() if p.is_dir()]
+        raise HTTPException(
+            status_code=404,
+            detail=f"Project '{request.project_name}' not found. Available projects: {available if available else 'none'}",
+        )
+
+    old_name = Path(request.old_partition_name).name
+    new_name = _normalize_partition_filename(Path(request.new_partition_name).name)
+
+    if not old_name or not new_name:
+        raise HTTPException(status_code=400, detail="Partition names cannot be empty.")
+
+    old_path = project_path / old_name
+
+    if not old_path.is_file():
+        available = [p.name for p in project_path.iterdir() if p.is_file()]
+        raise HTTPException(
+            status_code=404,
+            detail=f"Partition '{old_name}' not found within project '{request.project_name}'. Available partitions: {available if available else 'none'}",
+        )
+
+    if new_name == old_name:
+        return {
+            "project_name": request.project_name,
+            "old_partition_name": old_name,
+            "new_partition_name": new_name,
+        }
+
+    new_path = project_path / new_name
+    if new_path.exists():
+        raise HTTPException(
+            status_code=409,
+            detail=f"A partition named '{new_name}' already exists in this project.",
+        )
+
+    try:
+        old_path.rename(new_path)
+    except OSError as e:
+        raise HTTPException(status_code=500, detail=f"Failed to rename partition: {e}") from e
+
+    return {
+        "project_name": request.project_name,
+        "old_partition_name": old_name,
+        "new_partition_name": new_name,
     }
 
 

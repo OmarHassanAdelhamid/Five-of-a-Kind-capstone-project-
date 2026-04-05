@@ -5,6 +5,7 @@ import * as api from '../../utils/api';
 
 jest.mock('../../utils/api', () => ({
   fetchPartitions: jest.fn(),
+  renamePartition: jest.fn(),
 }));
 
 const mockFetchPartitions = api.fetchPartitions as jest.MockedFunction<

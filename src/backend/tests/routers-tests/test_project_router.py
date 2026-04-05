@@ -1,5 +1,5 @@
 import app.routers.project_router as pr_r
-from app.models.schemas import VoxelizeRequest
+from app.models.schemas import VoxelizeRequest, RenamePartitionRequest
 from unittest.mock import MagicMock, patch
 import pytest
 import numpy as np
@@ -79,6 +79,64 @@ def test_list_partitions_no_projects() -> None:
             pr_r.list_partitions("missing_project")
 
         assert exc.value.status_code == 404
+
+
+def test_rename_partition_success(tmp_path) -> None:
+    proj = tmp_path / "myproj"
+    proj.mkdir()
+    old = proj / "partition-x-0-y-0-z-0.db"
+    old.write_bytes(b"x")
+
+    with patch.object(pr_r, "PROJECT_STORAGE_DIR", tmp_path):
+        result = pr_r.rename_partition(
+            RenamePartitionRequest(
+                project_name="myproj",
+                old_partition_name="partition-x-0-y-0-z-0.db",
+                new_partition_name="custom-name.db",
+            )
+        )
+
+    assert result["new_partition_name"] == "custom-name.db"
+    assert not old.exists()
+    assert (proj / "custom-name.db").exists()
+
+
+def test_rename_partition_conflict(tmp_path) -> None:
+    proj = tmp_path / "myproj"
+    proj.mkdir()
+    (proj / "a.db").write_bytes(b"a")
+    (proj / "b.db").write_bytes(b"b")
+
+    with patch.object(pr_r, "PROJECT_STORAGE_DIR", tmp_path):
+        with pytest.raises(HTTPException) as exc:
+            pr_r.rename_partition(
+                RenamePartitionRequest(
+                    project_name="myproj",
+                    old_partition_name="a.db",
+                    new_partition_name="b.db",
+                )
+            )
+        assert exc.value.status_code == 409
+
+
+def test_rename_partition_no_op_same_name(tmp_path) -> None:
+    proj = tmp_path / "myproj"
+    proj.mkdir()
+    f = proj / "same.db"
+    f.write_bytes(b"x")
+
+    with patch.object(pr_r, "PROJECT_STORAGE_DIR", tmp_path):
+        result = pr_r.rename_partition(
+            RenamePartitionRequest(
+                project_name="myproj",
+                old_partition_name="same.db",
+                new_partition_name="same.db",
+            )
+        )
+
+    assert result["new_partition_name"] == "same.db"
+    assert f.exists()
+
 
 @patch("app.routers.project_router.mt.find_surface")
 @patch("app.routers.project_router.pm.read_voxels")

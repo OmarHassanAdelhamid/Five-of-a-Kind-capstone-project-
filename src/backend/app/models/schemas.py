@@ -86,6 +86,21 @@ class UpdateVoxelsRequest(BaseModel):
     materialID: Optional[int] = None
     magnetization: Optional[Tuple[float, float]] = None
 
+class RenamePartitionRequest(BaseModel):
+    """
+    Renames a partition file (.db) within a project folder.
+
+    Args:
+        project_name: Project folder name under storage.
+        old_partition_name: Current filename (e.g. partition-x-0-y-0-z-0.db).
+        new_partition_name: New filename; must end with .db.
+    """
+
+    project_name: str
+    old_partition_name: str
+    new_partition_name: str
+
+
 class UpdateHistoryRequest(BaseModel):
     """
     Datatype to represent a request to undo or redo a model change.

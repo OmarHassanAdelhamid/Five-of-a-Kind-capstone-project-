@@ -104,6 +104,42 @@ export const fetchPartitions = async (projectName: string): Promise<string[]> =>
   }
 };
 
+export const renamePartition = async (
+  projectName: string,
+  oldPartitionName: string,
+  newPartitionName: string,
+): Promise<{
+  project_name: string;
+  old_partition_name: string;
+  new_partition_name: string;
+}> => {
+  const response = await apiFetch(`${API_BASE_URL}/api/project/partitions/rename`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      project_name: projectName,
+      old_partition_name: oldPartitionName,
+      new_partition_name: newPartitionName,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(
+      (errorData as { detail?: string }).detail ||
+        `Failed to rename partition (${response.status})`,
+    );
+  }
+
+  return (await response.json()) as {
+    project_name: string;
+    old_partition_name: string;
+    new_partition_name: string;
+  };
+};
+
 export const fetchVoxelized = async (project: string, partitionName: string): Promise<number[][]> => {
   try {
     if (!partitionName) {

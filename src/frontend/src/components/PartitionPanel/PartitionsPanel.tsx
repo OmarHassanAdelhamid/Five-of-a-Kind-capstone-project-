@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchPartitions } from '../../utils/api';
+import { fetchPartitions, renamePartition } from '../../utils/api';
 import { PartitionGrid } from './PartitionGrid';
 import type { Partition } from '../../utils/api';
 
@@ -12,16 +12,21 @@ interface PartitionsPanelProps {
 }
 
 function parsePartitionName(name: string): Partition | null {
-  const match = name.match(/partition-x-(-?\d+)-y-(-?\d+)-z-(-?\d+)\.db$/);
-  if (!match) return null;
-
-  return {
-    name,
-    label: name,
-    x: Number(match[1]),
-    y: Number(match[2]),
-    z: Number(match[3]),
-  };
+  const match = name.match(/partition-x-(-?\d+)-y-(-?\d+)-z-(-?\d+)\.db$/i);
+  if (match) {
+    return {
+      name,
+      label: name,
+      x: Number(match[1]),
+      y: Number(match[2]),
+      z: Number(match[3]),
+    };
+  }
+  // Renamed or non-standard filenames still need to appear in the list
+  if (name.toLowerCase().endsWith('.db')) {
+    return { name, label: name, x: 0, y: 0, z: 0 };
+  }
+  return null;
 }
 
 export const PartitionsPanel = ({
@@ -80,21 +85,40 @@ export const PartitionsPanel = ({
       return;
     }
 
+    if (!projectName) {
+      setEditingPartition(null);
+      setEditedName('');
+      return;
+    }
+
+    if (normalizedName === oldName) {
+      setEditingPartition(null);
+      setEditedName('');
+      return;
+    }
+
     try {
+      const result = await renamePartition(
+        projectName,
+        oldName,
+        normalizedName,
+      );
+      const finalName = result.new_partition_name;
+
       setPartitions((prev) =>
         prev.map((partition) =>
           partition.name === oldName
             ? {
                 ...partition,
-                name: normalizedName,
-                label: normalizedName,
+                name: finalName,
+                label: finalName,
               }
             : partition,
         ),
       );
 
       if (selectedPartition === oldName) {
-        onPartitionSelect(normalizedName);
+        onPartitionSelect(finalName);
       }
     } catch (err) {
       setError(
