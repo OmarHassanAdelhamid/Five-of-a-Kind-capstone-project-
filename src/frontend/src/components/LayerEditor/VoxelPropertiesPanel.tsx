@@ -4,9 +4,10 @@ import { useId, useState } from 'react';
 import type { LayerVoxel } from '../../utils/api';
 import type { LayerMaterial } from './layerMaterialsDefaults';
 
-/** @deprecated Use DEFAULT_LAYER_MATERIALS from layerMaterialsDefaults; kept for compatibility. */
+// @deprecated Use DEFAULT_LAYER_MATERIALS from layerMaterialsDefaults; kept for compatibility
 export { DEFAULT_LAYER_MATERIALS as MATERIALS } from './layerMaterialsDefaults';
 
+// The type for the material palette view
 type MaterialPaletteView = 'pick' | 'manage';
 
 // Props for the VoxelPropertiesPanel component
@@ -57,6 +58,7 @@ export function VoxelPropertiesPanel({
   const pickTabId = `${baseId}-tab-pick`;
   const manageTabId = `${baseId}-tab-manage`;
 
+  // Handles the addition of a new material
   const handleAddMaterial = () => {
     setManageMessage(null);
     const parsed = Number(newMaterialId.trim());
@@ -125,7 +127,10 @@ export function VoxelPropertiesPanel({
             display color for the layer view and picker.
           </p>
           <div className="material-manage-add-row">
-            <label className="material-manage-label" htmlFor={`${baseId}-new-id`}>
+            <label
+              className="material-manage-label"
+              htmlFor={`${baseId}-new-id`}
+            >
               New ID
             </label>
             <input
@@ -138,7 +143,10 @@ export function VoxelPropertiesPanel({
               onChange={(e) => setNewMaterialId(e.target.value)}
               placeholder="e.g. 7"
             />
-            <label className="material-manage-sr-only" htmlFor={`${baseId}-new-color`}>
+            <label
+              className="material-manage-sr-only"
+              htmlFor={`${baseId}-new-color`}
+            >
               Color for new material
             </label>
             <input
@@ -188,7 +196,11 @@ export function VoxelPropertiesPanel({
           </ul>
         </div>
       ) : selectedVoxelIndices.size > 0 ? (
-        <div id={`${baseId}-panel-pick`} role="tabpanel" aria-labelledby={pickTabId}>
+        <div
+          id={`${baseId}-panel-pick`}
+          role="tabpanel"
+          aria-labelledby={pickTabId}
+        >
           <p className="selected-voxel-info">
             {selectedVoxelIndices.size === 1 &&
             selectedVoxel &&
@@ -274,7 +286,12 @@ export function VoxelPropertiesPanel({
           </div>
         </div>
       ) : (
-        <p className="no-voxel-selected" id={`${baseId}-panel-pick`} role="tabpanel" aria-labelledby={pickTabId}>
+        <p
+          className="no-voxel-selected"
+          id={`${baseId}-panel-pick`}
+          role="tabpanel"
+          aria-labelledby={pickTabId}
+        >
           Click or use lasso to select voxels in the 2D view
         </p>
       )}

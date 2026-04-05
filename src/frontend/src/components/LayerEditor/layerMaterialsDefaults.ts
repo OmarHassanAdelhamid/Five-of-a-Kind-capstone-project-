@@ -1,10 +1,11 @@
-/** Default layer-editor material palette (IDs match backend: integer ≥ 1). */
+// This file contains the default layer materials for the layer editor
 export type LayerMaterial = {
   id: number;
   name: string;
   color: string;
 };
 
+// The default layer materials
 export const DEFAULT_LAYER_MATERIALS: LayerMaterial[] = [
   { id: 1, name: 'Material 1', color: '#ef4444' },
   { id: 2, name: 'Material 2', color: '#f97316' },

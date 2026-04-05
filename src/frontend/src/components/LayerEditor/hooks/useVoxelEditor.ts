@@ -261,7 +261,7 @@ export function useVoxelEditor({
       const first = voxels[0];
       if (first == null) return;
 
-      // Get the voxel size from the distance between two adjacent voxels if available, since the voxelSize prop may be absent or inaccurate.
+      // Get the voxel size from the distance between two adjacent voxels if available, since the voxelSize prop may be absent or inaccurate
       let vs = voxelSize ?? 0.1;
       if (voxels.length >= 2) {
         const a = voxels[0];
@@ -272,7 +272,7 @@ export function useVoxelEditor({
         }
       }
 
-      // Map 2D grid coordinates to 3D voxel indices. The Layer2DGrid always uses (gridX, gridY) for the two axes that are NOT the slice axis, so the fixed coordinate (layer_index) slots into the correct position. For example, if the layer axis is 'y', the coordinates will be [gridX, layer_index, gridY].
+      // Map 2D grid coordinates to 3D voxel indices. The Layer2DGrid always uses (gridX, gridY) for the two axes that are NOT the slice axis, so the fixed coordinate (layer_index) slots into the correct position. For example, if the layer axis is 'y', the coordinates will be [gridX, layer_index, gridY]
       let coords: [number, number, number];
       if (layerAxis === 'y') {
         coords = [

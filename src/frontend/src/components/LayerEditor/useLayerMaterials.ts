@@ -1,3 +1,4 @@
+// This file contains the logic for the layer materials for the layer editor
 import { useCallback, useEffect, useState } from 'react';
 import {
   DEFAULT_LAYER_MATERIALS,
@@ -6,10 +7,12 @@ import {
 
 const STORAGE_PREFIX = 'layer-editor-material-palette:';
 
+// The storage key for the layer materials
 function storageKey(projectName: string): string {
   return `${STORAGE_PREFIX}${encodeURIComponent(projectName.trim())}`;
 }
 
+// Merges the stored layer materials with the default layer materials
 function mergeWithDefaults(stored: LayerMaterial[] | null): LayerMaterial[] {
   const byId = new Map<number, LayerMaterial>();
   for (const m of DEFAULT_LAYER_MATERIALS) {
@@ -29,6 +32,7 @@ function mergeWithDefaults(stored: LayerMaterial[] | null): LayerMaterial[] {
   return Array.from(byId.values()).sort((a, b) => a.id - b.id);
 }
 
+// Loads the layer materials from the storage
 function loadFromStorage(projectName: string): LayerMaterial[] {
   if (!projectName.trim()) return [...DEFAULT_LAYER_MATERIALS];
   try {
@@ -42,24 +46,28 @@ function loadFromStorage(projectName: string): LayerMaterial[] {
   }
 }
 
+// Saves the layer materials to the storage
 function saveToStorage(projectName: string, materials: LayerMaterial[]) {
   if (!projectName.trim()) return;
   try {
     localStorage.setItem(storageKey(projectName), JSON.stringify(materials));
   } catch {
-    /* ignore quota / private mode */
+    // ignore
   }
 }
 
+// The hook for the layer materials
 export function useLayerMaterials(projectName: string) {
   const [materials, setMaterials] = useState<LayerMaterial[]>(() =>
     loadFromStorage(projectName),
   );
 
+  // Loads the layer materials from the storage when the project name changes.
   useEffect(() => {
     setMaterials(loadFromStorage(projectName));
   }, [projectName]);
 
+  // Sets the color of a material
   const setMaterialColor = useCallback(
     (id: number, color: string) => {
       setMaterials((prev) => {
@@ -73,6 +81,7 @@ export function useLayerMaterials(projectName: string) {
     [projectName],
   );
 
+  // Adds a material
   const addMaterial = useCallback(
     (id: number, color: string): boolean => {
       if (!Number.isInteger(id) || id < 1) return false;
@@ -92,7 +101,7 @@ export function useLayerMaterials(projectName: string) {
     [projectName],
   );
 
-  /** Ensures IDs used by voxels on the current layer appear in the palette (neutral color if new). */
+  // Ensures IDs used by voxels on the current layer appear in the palette 
   const ensureMaterialIdsForVoxels = useCallback(
     (materialIds: Iterable<number>) => {
       setMaterials((prev) => {

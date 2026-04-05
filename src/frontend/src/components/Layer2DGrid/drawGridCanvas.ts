@@ -1,6 +1,7 @@
 // This file is used to draw the grid canvas
 import type { LayerResponse, LayerVoxel } from '../../utils/api';
 
+// The type for the voxel position
 export interface VoxelPosition {
   x: number;
   y: number;
@@ -10,6 +11,7 @@ export interface VoxelPosition {
   index: number;
 }
 
+// The type for the empty cell position
 export interface EmptyCellPosition {
   x: number;
   y: number;
@@ -19,11 +21,11 @@ export interface EmptyCellPosition {
   gridY: number;
 }
 
-// References: //HEAVILY INFLUENCED BY THIS REPO: https://github.com/netdur/canvas.layout.ts
+// References: //HEAVILY INFLUENCED BY THIS REPO: https://github.com/netdur/canvas.layout.ts (MIT License)
 
 
 // Ray-casting algorithm: counts how many polygon edges a horizontal ray from
-// (px, py) crosses. An odd count means the point is inside the polygon.
+// (px, py) crosses. An odd count means the point is inside the polygon
 export function isPointInPolygon(
   px: number,
   py: number,

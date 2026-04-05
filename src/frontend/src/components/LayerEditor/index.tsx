@@ -190,7 +190,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       selectedLayerData != null
         ? layers.findIndex((l) => l.index === selectedLayerData.layer_index)
         : -1;
-    // layers is sorted ascending by index, so a higher array position = higher layer index. "Up" moves toward the end of the array; "Down" toward the start.
+    // layers is sorted ascending by index, so a higher array position = higher layer index. "Up" moves toward the end of the array; "Down" toward the start
     const canGoUp = currentIdx >= 0 && currentIdx < layers.length - 1;
     const canGoDown = currentIdx > 0;
 
