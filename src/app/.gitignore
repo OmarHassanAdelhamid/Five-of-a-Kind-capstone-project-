@@ -1,2 +1,4 @@
 node_modules/
-release/
+# Keep distributables; ignore unpacked app trees and builder metadata
+release/*
+!release/*.dmg
