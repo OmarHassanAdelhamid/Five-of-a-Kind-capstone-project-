@@ -202,3 +202,43 @@ def test_reset_magnetization():
                                          (4, 4, 4, 4.0, 4.0, 4.0, 3, 0.0, 0.0, 0.0), # should reset to defaults.
                                          (5, 5, 5, 5.0, 5.0, 5.0, 3, 0.0, 0.0, 0.0)]
 
+def test_update_magnetization_non_existent_voxel():
+    em.update_voxel_magnetization(filepath, [(99, 99, 99)], 45.0, 90.0)
+
+    # DB should be identical to what it was before this call
+    rows = _get_all_voxels(filepath)
+    indices = [(r[0], r[1], r[2]) for r in rows]
+    assert (99, 99, 99) not in indices
+    # ensure all existing voxels are unaffected
+    for row in rows:
+        assert row[0] != 99 and row[1] != 99 and row[2] != 99
+
+def test_update_material_non_existent_voxel():
+    em.update_voxel_materials(filepath, [(99, 99, 99)], 3)
+
+    rows = _get_all_voxels(filepath)
+    indices = [(r[0], r[1], r[2]) for r in rows]
+    assert (99, 99, 99) not in indices
+
+def test_reset_material_and_magnetization_simultaneously():
+    # Precondition: set non-default values for both
+    em.update_voxel_materials(filepath, [(0, 0, 0), (1, 1, 1)], 5)
+    em.update_voxel_magnetization(filepath, [(0, 0, 0), (1, 1, 1)], 90.0, 180.0)
+
+    # Verify non-default values are actually set
+    before = _get_all_voxels(filepath)
+    assert before[0][6] == 5       # material
+    assert before[0][8] == 90.0    # polar
+    assert before[0][9] == 180.0   # azimuth
+
+    # Reset both in one combined call sequence (as TC49 describes)
+    em.reset_voxel_materials(filepath, [(0, 0, 0), (1, 1, 1)])
+    em.reset_voxel_magnetizations(filepath, [(0, 0, 0), (1, 1, 1)])
+
+    # Assert both are default in a single read
+    after = _get_all_voxels(filepath)
+    for row in after[:2]:  # only check the two voxels we touched
+        mat, magnet_polar, magnet_azimuth = row[6], row[8], row[9]
+        assert mat == 1
+        assert magnet_polar == 0.0
+        assert magnet_azimuth == 0.0

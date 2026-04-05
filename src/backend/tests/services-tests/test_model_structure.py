@@ -152,6 +152,29 @@ def test_reset_magnetization_on_existing_voxel() -> None:
         assert prop_retrieved[0] == 4
         assert prop_retrieved[1:4] == DEFAULT_MAGNET  
 
+@pytest.mark.dependency(depends=["init-db"])
+def test_set_material_label_associates_label_with_id() -> None:
+    with VoxelDB(TEST_PATH / TEST_FILE) as db:
+        db.set_material_label(1, "Steel")
+        retrieved = db.get_material_label(1)
+        assert retrieved == "Steel"
+
+
+@pytest.mark.dependency(depends=["init-db"])
+def test_set_material_label_multiple_ids() -> None:
+    with VoxelDB(TEST_PATH / TEST_FILE) as db:
+        db.set_material_label(1, "Steel")
+        db.set_material_label(2, "Copper")
+        assert db.get_material_label(1) == "Steel"
+        assert db.get_material_label(2) == "Copper"
+
+
+@pytest.mark.dependency(depends=["init-db"])
+def test_get_material_label_returns_none_for_unlabelled_id() -> None:
+    with VoxelDB(TEST_PATH / TEST_FILE) as db:
+        assert db.get_material_label(99) is None
+
+
 @pytest.mark.dependency(depends=["init-db", "final"])
 def test_centre_structure_typical() -> None:
     with VoxelDB(TEST_PATH / TEST_FILE) as db:
