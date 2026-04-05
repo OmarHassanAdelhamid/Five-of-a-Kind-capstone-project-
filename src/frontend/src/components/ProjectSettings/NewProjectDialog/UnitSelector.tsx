@@ -7,10 +7,8 @@ interface UnitSelectorProps {
 
 export const UnitSelector = ({ value, onChange }: UnitSelectorProps) => (
   <div className="dialog-section">
-    <p className="dialog-hint-white">
-      <strong>
-        Reference units for export in which all measurements are expressed as:
-      </strong>
+    <p className="dialog-section-title">
+      Reference units for export (measurements expressed as)
     </p>
     <div className="radio-row">
       {(['µm', 'mm', 'cm'] as UnitOption[]).map((u) => (

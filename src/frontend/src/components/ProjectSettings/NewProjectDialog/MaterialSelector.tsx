@@ -35,9 +35,7 @@ export const MaterialSelector = ({
 
   return (
     <div className="dialog-section dialog-section--material">
-      <p className="dialog-hint-white">
-        <strong>Default material ID for new voxels:</strong>
-      </p>
+      <p className="dialog-section-title">Default material ID for new voxels</p>
       <p className="dialog-hint dialog-hint--subtle">
         Stored as an integer in the project (e.g. 1, 2, 3). Must be ≥ 1.
       </p>

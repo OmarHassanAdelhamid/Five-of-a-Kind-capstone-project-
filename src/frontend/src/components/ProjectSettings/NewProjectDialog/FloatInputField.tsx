@@ -28,9 +28,7 @@ export const FloatInputField = ({
 
   return (
     <div className="dialog-section">
-      <p className="dialog-hint-white">
-        <strong>{label}</strong>
-      </p>
+      <p className="dialog-section-title">{label}</p>
       <div className="inline-row">
         <input
           id={id}
@@ -38,7 +36,7 @@ export const FloatInputField = ({
           inputMode="decimal"
           value={value}
           onChange={handleChange}
-          className={className}
+          className={['dialog-input', className].filter(Boolean).join(' ')}
         />
         {!isValid && <p className="dialog-error">{errorMessage}</p>}
       </div>

@@ -243,13 +243,16 @@ body,
 }
 
 .welcome-modal-body {
-  padding: 24px;
+  padding: 20px;
 }
 
 .welcome-prompt {
   margin: 0 0 1.25rem 0;
-  font-size: 0.95rem;
-  color: #cbd5f5;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   text-align: center;
 }
 
@@ -355,6 +358,13 @@ body,
   background: rgba(56, 189, 248, 0.25);
 }
 
+.welcome-list-item--centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
 .welcome-list-divider {
   height: 1px;
   background: rgba(148, 163, 184, 0.3);
@@ -443,6 +453,63 @@ body,
 
 .dialog-section:last-child {
   margin-bottom: 0;
+}
+
+.dialog-section-title {
+  margin: 0 0 0.65rem 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1.35;
+}
+
+.dialog-divider {
+  border: none;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  margin: 0 0 1.25rem 0;
+}
+
+.dialog-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.9rem;
+  color: #e2e8f0;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 6px;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.dialog-input:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.dialog-input:focus {
+  border-color: rgba(56, 189, 248, 0.65);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+.dialog-dimensions-value {
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.95rem;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  color: #e2e8f0;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 6px;
+}
+
+.dialog-hint-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-weight: 600;
+  color: #38bdf8;
 }
 
 .dialog-section--material {
@@ -749,35 +816,114 @@ header code {
   gap: 1rem;
 }
 
-.model-selector {
+/* Project settings: model / project pickers (shared with tests & embedded UIs) */
+.project-settings-block {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.35rem;
-  color: #cbd5f5;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.75rem;
+  align-items: stretch;
+  gap: 0.45rem;
+  margin-top: 1rem;
 }
 
-.model-selector select {
-  min-width: min(260px, 70vw);
-  padding: 0.6rem 0.9rem;
-  border-radius: 0.75rem;
-  border: 1px solid rgba(148, 163, 184, 0.45);
-  background: rgba(15, 23, 42, 0.65);
-  color: #e2e8f0;
-  letter-spacing: 0.04em;
+.project-settings-block:first-child {
+  margin-top: 0;
+}
+
+.project-settings-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.project-settings-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.project-settings-select,
+.project-settings-input {
+  flex: 1 1 12rem;
+  min-width: min(200px, 100%);
+  padding: 0.6rem 0.75rem;
   font-size: 0.9rem;
+  color: #e2e8f0;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 6px;
   outline: none;
   transition:
-    border-color 0.18s ease,
-    box-shadow 0.18s ease;
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
-.model-selector select:focus {
-  border-color: rgba(56, 189, 248, 0.75);
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+.project-settings-select--full {
+  min-width: min(260px, 70vw);
+  width: 100%;
+}
+
+.project-settings-select:hover,
+.project-settings-input:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.project-settings-select:focus,
+.project-settings-input:focus {
+  border-color: rgba(56, 189, 248, 0.65);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+.project-settings-select option {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.project-settings-btn-primary {
+  flex-shrink: 0;
+  padding: 0.6rem 1.1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #0f172a;
+  background: linear-gradient(
+    135deg,
+    rgba(251, 146, 60, 0.95),
+    rgba(234, 88, 12, 0.9)
+  );
+  box-shadow: 0 2px 8px rgba(251, 146, 60, 0.25);
+  transition:
+    filter 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.project-settings-btn-primary:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.project-settings-btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: none;
+}
+
+.project-settings-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.project-settings-status {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.8rem;
+  color: #86efac;
 }
 
 .partition-row {
@@ -1870,7 +2016,8 @@ footer .metadata {
     min-height: clamp(360px, 55vh, 520px);
   }
 
-  .model-selector select {
+  .project-settings-select--full,
+  .project-settings-select {
     min-width: 100%;
   }
 

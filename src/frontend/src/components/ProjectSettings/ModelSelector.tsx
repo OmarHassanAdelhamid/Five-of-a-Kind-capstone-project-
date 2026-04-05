@@ -21,13 +21,16 @@ export const ModelSelector = ({
   }
 
   return (
-    <div className="model-selector">
-      <label htmlFor="model-select">Active model</label>
+    <div className="project-settings-block model-selector">
+      <label className="project-settings-label" htmlFor="model-select">
+        Active model (STL)
+      </label>
       <select
         id="model-select"
         value={selectedModel ?? ''}
         onChange={handleChange}
         disabled={disabled || models.length === 0}
+        className="project-settings-select project-settings-select--full"
       >
         {models.length === 0 && <option value="">No models available</option>}
         {models.map((model) => (

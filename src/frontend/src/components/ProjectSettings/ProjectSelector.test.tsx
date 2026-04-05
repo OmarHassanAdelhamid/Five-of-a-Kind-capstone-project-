@@ -13,7 +13,7 @@ describe('ProjectSelector', () => {
       />,
     );
     expect(getByRole('combobox')).toHaveValue('proj1');
-    expect(getByText('Load Voxels')).toBeInTheDocument();
+    expect(getByRole('button', { name: /load voxels/i })).toBeInTheDocument();
   });
 
   it('renders text input when no projects', () => {
@@ -28,9 +28,9 @@ describe('ProjectSelector', () => {
     expect(getByPlaceholderText('Enter project name')).toBeInTheDocument();
   });
 
-  it('calls onLoadVoxels when Load Voxels clicked', async () => {
+  it('calls onLoadVoxels when Load voxels clicked', async () => {
     const onLoadVoxels = jest.fn();
-    const { getByText } = render(
+    const { getByRole } = render(
       <ProjectSelector
         availableProjects={['p1']}
         projectName="p1"
@@ -38,12 +38,12 @@ describe('ProjectSelector', () => {
         onLoadVoxels={onLoadVoxels}
       />,
     );
-    await userEvent.click(getByText('Load Voxels'));
+    await userEvent.click(getByRole('button', { name: /load voxels/i }));
     expect(onLoadVoxels).toHaveBeenCalled();
   });
 
-  it('Load Voxels disabled when projectName empty', () => {
-    const { getByText } = render(
+  it('Load voxels disabled when projectName empty', () => {
+    const { getByRole } = render(
       <ProjectSelector
         availableProjects={[]}
         projectName=""
@@ -51,7 +51,7 @@ describe('ProjectSelector', () => {
         onLoadVoxels={jest.fn()}
       />,
     );
-    expect(getByText('Load Voxels').closest('button')).toBeDisabled();
+    expect(getByRole('button', { name: /load voxels/i })).toBeDisabled();
   });
 
   it('shows voxel count when provided', () => {

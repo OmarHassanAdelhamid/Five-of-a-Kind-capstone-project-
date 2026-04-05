@@ -215,13 +215,8 @@ export const WelcomeModal = ({
 
                 <button
                   type="button"
-                  className="welcome-list-item welcome-list-item-new"
+                  className="welcome-list-item welcome-list-item-new welcome-list-item--centered"
                   onClick={handleNewProjectClick}
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
                 >
                   Create New Project
                 </button>
@@ -280,13 +275,8 @@ export const WelcomeModal = ({
                   
                   <button
                     type="button"
-                    className="welcome-list-item welcome-list-item-new"
+                    className="welcome-list-item welcome-list-item-new welcome-list-item--centered"
                     onClick={handleSelectExistingClick}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
                   >
                     Create New Project
                   </button>

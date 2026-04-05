@@ -25,16 +25,11 @@ export const ProjectSelector = ({
 
   return (
     <>
-      <div className="model-selector" style={{ marginTop: '1rem' }}>
-        <label htmlFor="project-name">Project Name (for voxelized data)</label>
-        <div
-          style={{
-            display: 'flex',
-            gap: '0.5rem',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
+      <div className="project-settings-block">
+        <label className="project-settings-label" htmlFor="project-name">
+          Project (voxelized data)
+        </label>
+        <div className="project-settings-row">
           {availableProjects.length > 0 ? (
             <select
               id="project-name"
@@ -42,18 +37,9 @@ export const ProjectSelector = ({
               onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                 onProjectNameChange(e.target.value)
               }
-              style={{
-                padding: '0.6rem 0.9rem',
-                borderRadius: '0.75rem',
-                border: '1px solid rgba(148, 163, 184, 0.45)',
-                background: 'rgba(15, 23, 42, 0.65)',
-                color: '#e2e8f0',
-                fontSize: '0.9rem',
-                outline: 'none',
-                minWidth: '200px',
-              }}
+              className="project-settings-select"
             >
-              <option value="">Select a project...</option>
+              <option value="">Select a project…</option>
               {availableProjects.map((proj) => (
                 <option key={proj} value={proj}>
                   {proj}
@@ -70,63 +56,29 @@ export const ProjectSelector = ({
               }
               placeholder="Enter project name"
               onKeyDown={handleKeyDown}
-              style={{
-                padding: '0.6rem 0.9rem',
-                borderRadius: '0.75rem',
-                border: '1px solid rgba(148, 163, 184, 0.45)',
-                background: 'rgba(15, 23, 42, 0.65)',
-                color: '#e2e8f0',
-                fontSize: '0.9rem',
-                outline: 'none',
-                minWidth: '200px',
-              }}
+              className="project-settings-input"
             />
           )}
           <button
+            type="button"
             onClick={onLoadVoxels}
             disabled={!projectName.trim() || disabled}
-            style={{
-              padding: '0.6rem 1.2rem',
-              borderRadius: '0.75rem',
-              border: 'none',
-              background:
-                'linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(220, 38, 38, 0.8))',
-              color: '#fff',
-              fontSize: '0.9rem',
-              fontWeight: 600,
-              cursor:
-                projectName.trim() && !disabled ? 'pointer' : 'not-allowed',
-              opacity: projectName.trim() && !disabled ? 1 : 0.5,
-              transition: 'opacity 0.2s',
-            }}
+            className="project-settings-btn-primary"
           >
-            Load Voxels
+            Load voxels
           </button>
         </div>
         {availableProjects.length === 0 && (
-          <p
-            style={{
-              color: '#94a3b8',
-              fontSize: '0.75rem',
-              marginTop: '0.25rem',
-            }}
-          >
-            No projects available. Create one by voxelizing an STL file first.
+          <p className="project-settings-hint">
+            No projects yet. Voxelize an STL from the File menu first.
           </p>
         )}
       </div>
       {voxelCount !== undefined && voxelCount > 0 && (
-        <p
-          style={{
-            color: '#bef264',
-            fontSize: '0.85rem',
-            marginTop: '0.5rem',
-          }}
-        >
-          Loaded {voxelCount} voxel coordinates
+        <p className="project-settings-status" role="status">
+          Loaded {voxelCount.toLocaleString()} voxel coordinates
         </p>
       )}
     </>
   )
 }
-
