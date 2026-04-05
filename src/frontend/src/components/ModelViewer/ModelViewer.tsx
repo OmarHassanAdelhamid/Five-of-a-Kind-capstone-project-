@@ -17,11 +17,12 @@ import {
   disposeScene,
   type SceneSetup,
   type VoxelData,
-} from '../utils/threeUtils';
-import { API_BASE_URL } from '../utils/constants';
-import { StatusMessage } from './StatusMessage';
-import { LayerEditor, type LayerEditorHandle } from './LayerEditor';
-import { PartitionsPanel } from './PartitionsPanel';
+} from '../../utils/threeUtils';
+import { API_BASE_URL } from '../../utils/constants';
+import { StatusMessage } from '../Messages/StatusMessage';
+import { Footer } from '../Messages/Footer';
+import { LayerEditor, type LayerEditorHandle } from '../LayerEditor';
+import { PartitionsPanel } from '../PartitionPanel/PartitionsPanel';
 
 //HEAVILY INFLUENCED BY STL LOADER EXAMPLE https://sbcode.net/threejs/loaders-stl/
 
@@ -503,7 +504,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
           voxelCoordinates,
           voxelSize,
           undefined,
-          instancedMeshRef.current, 
+          instancedMeshRef.current,
         );
         instancedMeshRef.current = mesh;
         instanceIdMapRef.current = instanceIdMap;
@@ -599,7 +600,6 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
                 Array.from(selectedVoxelIndicesRef.current),
               );
 
-
               if (currentSelected.has(voxelInfo.index)) {
                 currentSelected.delete(voxelInfo.index);
               } else {
@@ -611,7 +611,6 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
               }
 
               if (onVoxelSelectRef.current) {
-
                 if (currentSelected.has(voxelInfo.index)) {
                   currentSelected.delete(voxelInfo.index);
                 } else {
@@ -619,7 +618,9 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
                 }
 
                 if (onVoxelsSelectRef.current) {
-                  onVoxelsSelectRef.current(new Set(Array.from(currentSelected)));
+                  onVoxelsSelectRef.current(
+                    new Set(Array.from(currentSelected)),
+                  );
                 }
 
                 if (onVoxelSelectRef.current) {
@@ -861,20 +862,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
           message={bannerMessage}
           selectedModel={selectedModel}
         />
-        <div className="viewer-instructions">
-          <p className="instruction-text">
-            {voxelCoordinates.length > 0 ? (
-              <>
-                <strong>Click</strong> to select layer (opens Layer Editor) •{' '}
-                <strong>Ctrl/Cmd+Click</strong> to select multiple voxels
-              </>
-            ) : (
-              <>
-                <strong>Ctrl/Cmd+Click</strong> to select multiple voxels
-              </>
-            )}
-          </p>
-        </div>
+        <Footer hasVoxels={voxelCoordinates.length > 0} />
         {(selectedVoxel || selectedVoxelIndices.size > 0) && (
           <div className="voxel-info">
             <h4>

@@ -9,7 +9,7 @@ describe('ModelSelector', () => {
         models={['a.stl', 'b.stl']}
         selectedModel="a.stl"
         onModelChange={jest.fn()}
-      />
+      />,
     );
     expect(getByRole('combobox')).toHaveValue('a.stl');
     expect(getByText('a.stl')).toBeInTheDocument();
@@ -23,7 +23,7 @@ describe('ModelSelector', () => {
         models={['a.stl', 'b.stl']}
         selectedModel="a.stl"
         onModelChange={onModelChange}
-      />
+      />,
     );
     await userEvent.selectOptions(getByRole('combobox'), 'b.stl');
     expect(onModelChange).toHaveBeenCalledWith('b.stl');
@@ -35,7 +35,7 @@ describe('ModelSelector', () => {
         models={[]}
         selectedModel={null}
         onModelChange={jest.fn()}
-      />
+      />,
     );
     expect(getByText('No models available')).toBeInTheDocument();
   });
@@ -47,7 +47,7 @@ describe('ModelSelector', () => {
         selectedModel="a.stl"
         onModelChange={jest.fn()}
         disabled
-      />
+      />,
     );
     expect(getByRole('combobox')).toBeDisabled();
   });

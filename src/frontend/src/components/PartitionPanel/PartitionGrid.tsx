@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import type { Partition } from '../utils/api'
-
+import type { Partition } from '../../utils/api';
 
 interface PartitionGridProps {
   partitions: Partition[];
@@ -20,7 +19,7 @@ export const PartitionGrid = ({
     const mount = mountRef.current;
     if (!mount) return;
     mount.innerHTML = '';
-    
+
     const scene = new THREE.Scene();
 
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
@@ -40,7 +39,6 @@ export const PartitionGrid = ({
 
     // Create grid of cubes
     const geometry = new THREE.BoxGeometry(2, 2, 2);
-  
 
     const cubeObjects: THREE.Mesh[] = [];
     const cubeSpacing = 2;
@@ -59,7 +57,7 @@ export const PartitionGrid = ({
       cube.position.set(
         partition.x * cubeSpacing,
         partition.y * cubeSpacing,
-        partition.z * cubeSpacing
+        partition.z * cubeSpacing,
       );
 
       const edges = new THREE.EdgesGeometry(geometry);
@@ -71,7 +69,7 @@ export const PartitionGrid = ({
       const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
 
       cube.add(edgeLines);
-      
+
       cube.userData.partitionName = partition.name;
       scene.add(cube);
       cubeObjects.push(cube);
