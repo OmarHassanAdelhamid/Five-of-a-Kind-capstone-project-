@@ -2,6 +2,8 @@ import { render, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import * as api from './utils/api';
+import React from 'react';
+import type { LayerEditorHandle } from './components/LayerEditor';
 
 jest.mock('./utils/api', () => ({
   fetchAvailableModels: jest.fn(),
@@ -14,8 +16,18 @@ jest.mock('./utils/api', () => ({
   updateHistory: jest.fn(),
 }));
 
-jest.mock('./components/ModelViewer/ModelViewer', () => ({
-  ModelViewer: () => <div data-testid="model-viewer">ModelViewer</div>,
+const mockSelectAllInLayer = jest.fn();
+jest.mock('./components/ModelViewer/ModelViewer.tsx', () => ({
+  ModelViewer: React.forwardRef(
+    (_props: unknown, ref: React.Ref<LayerEditorHandle>) => {
+      React.useImperativeHandle(ref, () => ({
+        selectAllInLayer: mockSelectAllInLayer,
+        getSelectionProperties: () => null,
+        applyPaste: async () => {},
+      }));
+      return <div data-testid="model-viewer">ModelViewer</div>;
+    },
+  ),
 }));
 
 describe('App', () => {
@@ -32,6 +44,22 @@ describe('App', () => {
 
   afterEach(() => {
     alertMock.mockRestore();
+  });
+  it('keyboard Ctrl+A calls selectAllInLayer on the viewer ref', async () => {
+    mockSelectAllInLayer.mockClear();
+    await act(async () => {
+      render(<App />);
+    });
+    await act(async () => {
+      window.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key: 'a',
+          ctrlKey: true,
+          bubbles: true,
+        }),
+      );
+    });
+    expect(mockSelectAllInLayer).toHaveBeenCalledTimes(1);
   });
 
   it('renders and fetches models on mount', async () => {

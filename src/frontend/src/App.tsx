@@ -13,10 +13,12 @@ import {
   uploadSTLFile,
   voxelizeModel,
   downloadVoxelCSV,
+  validateExport,
   updateHistory,
   clearHistory,
   type VoxelPropertiesClipboard,
 } from './utils/api';
+import { ExportWarningDialog } from './components/ExportWarningDialog/ExportWarningDialog';
 import type { LayerEditorHandle } from './components/LayerEditor';
 
 function App() {
@@ -49,6 +51,7 @@ function App() {
   const [layerAxis] = useState<'z' | 'x' | 'y'>('y');
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
   const [isPartitionsPanelOpen, setIsPartitionsPanelOpen] = useState(false);
+  const [exportWarnings, setExportWarnings] = useState<string[]>([]);
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
   const [welcomeInitialStep, setWelcomeInitialStep] = useState<
     | 'choice'
@@ -247,14 +250,14 @@ function App() {
     }
   }, [projectName, selectedPartition]);
 
-  const handleDownloadCSV = useCallback(async () => {
+  const handleDownloadCSV = useCallback(async (force = false) => {
     if (!projectName.trim()) {
       alert('Please select a project to download.');
       return;
     }
 
     try {
-      const blob = await downloadVoxelCSV(projectName, projectName); // eventually change so that user can input export name?
+      const blob = await downloadVoxelCSV(projectName, projectName, force);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -435,6 +438,20 @@ function App() {
   const handleExport = useCallback(async () => {
     if (!projectName.trim()) {
       alert('Please select a project to export.');
+      return;
+    }
+    try {
+      const result = await validateExport(projectName);
+      if (!result.valid) {
+        setExportWarnings(result.warnings);
+        return;
+      }
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : 'Could not validate export. Please try again.',
+      );
       return;
     }
     await handleDownloadCSV();
@@ -763,6 +780,16 @@ function App() {
         selectedPartition={selectedPartition}
         onPartitionSelect={handlePartitionSelect}
       />
+      {exportWarnings.length > 0 && (
+        <ExportWarningDialog
+          warnings={exportWarnings}
+          onConfirm={() => {
+            setExportWarnings([]);
+            handleDownloadCSV(true);
+          }}
+          onCancel={() => setExportWarnings([])}
+        />
+      )}
       <ModelViewer
         ref={modelViewerRef}
         selectedModel={selectedModel}

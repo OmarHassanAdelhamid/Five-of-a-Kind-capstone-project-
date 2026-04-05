@@ -21,36 +21,35 @@ were already tested
 '''
 
 def test_user_settings_nm_cm():
-    """Test set_user_req: nm scale multiplies extents by 1e6, cm voxel units scale vox_len by 0.1."""
+    """Test set_user_req calls apply_scale with the given factor and returns the mesh."""
     mesh = MagicMock()
-    mesh.extents = np.array([1.0, 2.0, 3.0])
-    new_mesh, vox_len = pms.set_user_req(mesh, "nm", "cm", 0.1)
+    result = pms.set_user_req(mesh, 1e6)
     mesh.apply_scale.assert_called_once_with(1e6)
-    assert new_mesh is mesh
-    assert vox_len == pytest.approx(0.01)
+    assert result is mesh
 
 
 def test_user_settings_cm_stl():
-    """Test set_user_req: ref_stl cm applies scale 0.1."""
+    """Test set_user_req calls apply_scale with factor 0.1 and returns the mesh."""
     mesh = MagicMock()
-    new_mesh, vox_len = pms.set_user_req(mesh, "cm", "mm", 1.0)
+    result = pms.set_user_req(mesh, 0.1)
     mesh.apply_scale.assert_called_once_with(0.1)
-    assert vox_len == 1.0
+    assert result is mesh
 
 
 def test_user_settings_mm_no_scale():
-    """Test set_user_req: mm ref_stl and ref_vox leave mesh and vox_len unchanged."""
+    """Test set_user_req calls apply_scale with factor 1.0 and returns the mesh."""
     mesh = MagicMock()
-    new_mesh, vox_len = pms.set_user_req(mesh, "mm", "mm", 0.5)
-    mesh.apply_scale.assert_not_called()
-    assert vox_len == 0.5
+    result = pms.set_user_req(mesh, 1.0)
+    mesh.apply_scale.assert_called_once_with(1.0)
+    assert result is mesh
 
 
 def test_user_settings_nm_vox_units():
-    """Test set_user_req: ref_vox nm scales vox_len by 1e6."""
+    """Test set_user_req calls apply_scale with a large scale factor."""
     mesh = MagicMock()
-    new_mesh, vox_len = pms.set_user_req(mesh, "mm", "nm", 0.001)
-    assert vox_len == pytest.approx(1000.0)
+    result = pms.set_user_req(mesh, 0.5)
+    mesh.apply_scale.assert_called_once_with(0.5)
+    assert result is mesh
 
 def test_path_voxel_db():
     '''tests path for voxel database creation to ensure all commands are properly executed'''

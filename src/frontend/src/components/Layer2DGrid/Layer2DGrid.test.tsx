@@ -1,4 +1,4 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Layer2DGrid } from '../Layer2DGrid';
 
@@ -330,5 +330,54 @@ describe('Layer2DGrid', () => {
     expect(getByRole('button', { name: /click/i }).className).toContain(
       'active',
     );
+  });
+
+  it('+ key increases zoom and zoom wrapper transform updates', async () => {
+    const { container } = render(
+      <Layer2DGrid
+        layerData={mockLayerData}
+        onLayerUp={jest.fn()}
+        onLayerDown={jest.fn()}
+      />,
+    );
+    const wrapper = container.querySelector(
+      '.layer-2d-grid-zoom-wrapper',
+    ) as HTMLElement;
+    // initial zoom is 1
+    expect(wrapper.style.transform).toBe('scale(1)');
+
+    await act(async () => {
+      window.dispatchEvent(
+        new KeyboardEvent('keydown', { key: '+', bubbles: true }),
+      );
+    });
+    // zoom increases by 0.25 → should be scale(1.25)
+    expect(wrapper.style.transform).toBe('scale(1.25)');
+  });
+
+  it('- key decreases zoom and zoom wrapper transform updates', async () => {
+    const { container } = render(
+      <Layer2DGrid
+        layerData={mockLayerData}
+        onLayerUp={jest.fn()}
+        onLayerDown={jest.fn()}
+      />,
+    );
+    await act(async () => {
+      window.dispatchEvent(
+        new KeyboardEvent('keydown', { key: '+', bubbles: true }),
+      );
+    });
+    const wrapper = container.querySelector(
+      '.layer-2d-grid-zoom-wrapper',
+    ) as HTMLElement;
+    expect(wrapper.style.transform).toBe('scale(1.25)');
+
+    await act(async () => {
+      window.dispatchEvent(
+        new KeyboardEvent('keydown', { key: '-', bubbles: true }),
+      );
+    });
+    expect(wrapper.style.transform).toBe('scale(1)');
   });
 });
