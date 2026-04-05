@@ -340,7 +340,7 @@ function App() {
         modelUnits: 'µm' | 'mm' | 'cm';
         scaleFactor: number;
         voxelSize: number;
-        defaultMaterial: string;
+        defaultMaterial: number;
       },
       onProgress?: (message: string) => void,
     ) => {

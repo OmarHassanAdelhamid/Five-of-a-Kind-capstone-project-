@@ -5,5 +5,5 @@ export interface ConfirmPayload {
   modelUnits: UnitOption;
   scaleFactor: number;
   voxelSize: number;
-  defaultMaterial: string;
+  defaultMaterial: number;
 }

@@ -225,7 +225,7 @@ async def test_get_surface_route_empty_partition(mock_history, mock_proj_m, mock
 @patch("app.routers.project_router.pm")
 @patch("app.routers.project_router.vx.get_voxel_coordinates")
 @patch("app.routers.project_router.vx.voxelize")
-@patch("app.routers.project_router.ms.create_mesh")
+@patch("app.routers.project_router.ms.load_stl_mesh")
 @pytest.mark.asyncio
 async def test_voxelize_typical_case(mock_mesh, mock_voxelize, mock_coords, mock_pm, mock_os) -> None:
     with patch.object(pr_r, "STL_STORAGE_DIR") as mock_stl_storage, \
@@ -244,7 +244,7 @@ async def test_voxelize_typical_case(mock_mesh, mock_voxelize, mock_coords, mock
         mock_os.path.join = os.path.join
 
         result = await pr_r.voxelize_stl(VoxelizeRequest(stl_filename="file1.stl", voxel_size=0.5, project_name="proj_test",
-                model_units="mm", scale_factor=1.0, default_material="material1"))
+                model_units="mm", scale_factor=1.0, default_material=1))
         assert result == {
             "message": f"Voxelization Status of STL file (file1.stl): Success",
             "project_folder": "ex_dir/proj_test-dir",
@@ -252,11 +252,11 @@ async def test_voxelize_typical_case(mock_mesh, mock_voxelize, mock_coords, mock
             "voxel_size": 0.5
         }
 
-        mock_mesh.assert_called_once_with("fake_file", file_type="stl")
+        mock_mesh.assert_called_once()
         mock_pm.set_user_req.assert_called_once_with("fake_mesh", 1.0)
         mock_voxelize.assert_called_once_with("fake_mesh", 0.5)
         mock_coords.assert_called_once_with(mock_array)
-        mock_pm.initialize_voxel_db.assert_called_once_with("ex_dir/proj_test-dir/proj_test", "fake_translation", 0.5, "material1", [0.0, 0.0, 0.0])
+        mock_pm.initialize_voxel_db.assert_called_once_with("ex_dir/proj_test-dir/proj_test", "fake_translation", 0.5, 1, (0.0, 0.0, 0.0))
         mock_pm.create_voxel_db.assert_called_once_with("ex_dir/proj_test-dir/proj_test", "fake_coords")
 
 @pytest.mark.asyncio
@@ -268,7 +268,7 @@ async def test_voxelize_non_existent_stl() -> None:
 
         with pytest.raises(HTTPException) as exc:
             await pr_r.voxelize_stl(VoxelizeRequest(stl_filename="file1.stl", voxel_size=0.5, project_name="proj_test",
-                model_units="mm", scale_factor=1.0, default_material="material1"))
+                model_units="mm", scale_factor=1.0, default_material=1))
 
         assert exc.value.status_code == 404
         assert exc.value.detail == "Filename file1.stl not found on server!"

@@ -17,7 +17,8 @@ interface NewProjectDialogProps {
     payload: ConfirmPayload,
     onProgress?: (message: string) => void,
   ) => void | Promise<void>;
-  initialMaterials?: string[];
+  /** Initial material IDs shown in the dropdown (default 1–3). */
+  initialMaterialIds?: number[];
 }
 
 export const NewProjectDialog = ({
@@ -25,12 +26,12 @@ export const NewProjectDialog = ({
   stlFileName,
   onClose,
   onConfirm,
-  initialMaterials = ['material1', 'material2', 'material3'],
+  initialMaterialIds = [1, 2, 3],
 }: NewProjectDialogProps) => {
   const form = useNewProjectForm(
     isOpen,
     stlFileName,
-    initialMaterials,
+    initialMaterialIds,
     onClose,
     onConfirm,
   );
@@ -38,7 +39,10 @@ export const NewProjectDialog = ({
   if (!isOpen) return null;
 
   return (
-    <div className="dialog-overlay" onClick={form.isCreating ? undefined : onClose}>
+    <div
+      className="dialog-overlay"
+      onClick={form.isCreating ? undefined : onClose}
+    >
       <div className="dialog-content" onClick={(e) => e.stopPropagation()}>
         <DialogHeader isCreating={form.isCreating} onClose={onClose} />
         {form.isCreating && (
@@ -86,10 +90,10 @@ export const NewProjectDialog = ({
             />
 
             <MaterialSelector
-              materials={form.materials}
-              selectedMaterial={form.selectedMaterial}
-              onMaterialsChange={form.setMaterials}
-              onSelectedChange={form.setSelectedMaterial}
+              materialIds={form.materialIds}
+              selectedMaterialId={form.selectedMaterialId}
+              onMaterialIdsChange={form.setMaterialIds}
+              onSelectedChange={form.setSelectedMaterialId}
             />
           </div>
 

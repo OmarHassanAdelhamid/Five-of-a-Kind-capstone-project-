@@ -199,7 +199,7 @@ export interface VoxelizeRequest {
   project_name: string
   model_units: UnitOption
   scale_factor: number
-  default_material: string
+  default_material: number
 }
 
 export interface VoxelizeResponse {
@@ -216,7 +216,7 @@ export const voxelizeModel = async (
     projectName: string
     modelUnits: 'µm' | 'mm' | 'cm'
     scaleFactor: number
-    defaultMaterial: string
+    defaultMaterial: number
   }
 ): Promise<VoxelizeResponse> => {
   const requestBody: VoxelizeRequest = {

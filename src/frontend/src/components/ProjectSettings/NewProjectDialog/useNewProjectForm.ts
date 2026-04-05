@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { fetchSTLDimensions } from '../../../utils/api';
 import type { UnitOption, ConfirmPayload } from './types';
 
+const DEFAULT_MATERIAL_IDS = [1, 2, 3];
+
 export const useNewProjectForm = (
   isOpen: boolean,
   stlFileName: string,
-  initialMaterials: string[],
+  initialMaterialIds: number[],
   onClose: () => void,
   onConfirm: (
     payload: ConfirmPayload,
@@ -14,8 +16,8 @@ export const useNewProjectForm = (
 ) => {
   const [suffix, setSuffix] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const initialMaterialsRef = useRef(initialMaterials);
-  initialMaterialsRef.current = initialMaterials;
+  const initialMaterialIdsRef = useRef(initialMaterialIds);
+  initialMaterialIdsRef.current = initialMaterialIds;
 
   const [modelDimensions, setModelDimensions] = useState<{
     x: number;
@@ -26,9 +28,11 @@ export const useNewProjectForm = (
   const [modelUnits, setModelUnits] = useState<UnitOption>('mm');
   const [scaleFactor, setScaleFactor] = useState<string>('1');
   const [voxelSizeText, setVoxelSizeText] = useState<string>('1');
-  const [materials, setMaterials] = useState<string[]>(initialMaterials);
-  const [selectedMaterial, setSelectedMaterial] = useState<string>(
-    initialMaterials[0] ?? 'material1',
+  const [materialIds, setMaterialIds] = useState<number[]>(
+    initialMaterialIds.length ? [...initialMaterialIds].sort((a, b) => a - b) : [...DEFAULT_MATERIAL_IDS],
+  );
+  const [selectedMaterialId, setSelectedMaterialId] = useState<number>(
+    initialMaterialIds[0] ?? 1,
   );
   const [isCreating, setIsCreating] = useState(false);
   const [progressMessage, setProgressMessage] = useState<string>('');
@@ -37,12 +41,18 @@ export const useNewProjectForm = (
     if (isOpen) {
       if (inputRef.current) inputRef.current.focus();
       setSuffix('');
-      const mats = initialMaterialsRef.current;
+      const mats = initialMaterialIdsRef.current;
       setModelUnits('mm');
       setScaleFactor('1');
       setVoxelSizeText('1');
-      setSelectedMaterial(mats[0] ?? 'material1');
-      setMaterials(mats.length ? mats : ['material1', 'material2', 'material3']);
+      const normalized =
+        mats.length > 0
+          ? [...new Set(mats.filter((id) => Number.isInteger(id) && id >= 1))].sort(
+              (a, b) => a - b,
+            )
+          : [...DEFAULT_MATERIAL_IDS];
+      setMaterialIds(normalized);
+      setSelectedMaterialId(normalized[0] ?? 1);
     }
   }, [isOpen]);
 
@@ -102,7 +112,7 @@ export const useNewProjectForm = (
           modelUnits,
           scaleFactor: sf,
           voxelSize: vs,
-          defaultMaterial: selectedMaterial,
+          defaultMaterial: selectedMaterialId,
         },
         setProgressMessage,
       );
@@ -132,10 +142,10 @@ export const useNewProjectForm = (
     setScaleFactor,
     voxelSizeText,
     setVoxelSizeText,
-    materials,
-    setMaterials,
-    selectedMaterial,
-    setSelectedMaterial,
+    materialIds,
+    setMaterialIds,
+    selectedMaterialId,
+    setSelectedMaterialId,
     isCreating,
     progressMessage,
     baseName,

@@ -193,7 +193,6 @@ async def voxelize_stl(request: VoxelizeRequest):
     project_name = request.project_name
     model_units = request.model_units
     scale_factor = request.scale_factor
-    default_material = request.default_material
     stl_path = STL_STORAGE_DIR / stl_filename
 
     mesh = ms.load_stl_mesh(stl_path)
