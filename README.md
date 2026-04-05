@@ -31,9 +31,20 @@ Pre-built **Apple Silicon (ARM64)** disk image (the file is stored with **Git LF
 
 To get the DMG with Git instead: `git lfs install`, clone the repo, then `git lfs pull` (or clone with LFS enabled so `src/app/release/*.dmg` is fetched automatically).
 
-1. Open the DMG, drag **Autovox** into **Applications**, then launch it from there.
-2. The build is **not Apple-notarized**; if macOS blocks it, open **System Settings → Privacy & Security** and choose to open it anyway.
+**Install**
+
+1. Open the DMG, drag **Autovox** into **Applications**.
+2. The build is **not signed or notarized** by Apple. The first time you open it, use **Control+click** (or right-click) → **Open** → **Open**, or go to **System Settings → Privacy & Security** and choose **Open Anyway** after a failed launch.
 3. On **first run**, the app may ask for **Python 3.9+** (or use the setup flow) so it can create a local environment and install the bundled FastAPI backend.
+
+**“Autovox is damaged and can’t be opened” (move to Trash)**  
+That text is often **Gatekeeper**, not a corrupted download. macOS applies a **quarantine** flag to files from the internet; unsigned apps can be blocked this way. From **Terminal**:
+
+```bash
+xattr -cr /Applications/Autovox.app
+```
+
+If the app lives somewhere else, use that path instead (you can run the same command on `Autovox.app` while it is still on the DMG before copying). Then open the app again (Control+click → **Open** if needed).
 
 To produce a fresh DMG from source, see `src/app/package.json` (`npm run pack` from `src/app` after installing dependencies).
 
