@@ -3,6 +3,7 @@
 import {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
@@ -11,7 +12,8 @@ import type { LayerResponse, VoxelPropertiesClipboard } from '../../utils/api';
 import { Layer2DGrid } from '../Layer2DGrid';
 import { useLayerData } from './hooks/useLayerData';
 import { useVoxelEditor } from './hooks/useVoxelEditor';
-import { VoxelPropertiesPanel, MATERIALS } from './VoxelPropertiesPanel';
+import { VoxelPropertiesPanel } from './VoxelPropertiesPanel';
+import { useLayerMaterials } from './useLayerMaterials';
 
 // Props for the LayerEditor component
 export interface LayerEditorHandle {
@@ -61,6 +63,22 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       (z: number) => loadLayerRef.current(z),
       [],
     );
+
+    const {
+      materials,
+      setMaterialColor,
+      addMaterial,
+      ensureMaterialIdsForVoxels,
+    } = useLayerMaterials(projectName);
+
+    useEffect(() => {
+      if (!selectedLayerData?.voxels?.length) return;
+      const ids = new Set<number>();
+      for (const v of selectedLayerData.voxels) {
+        if (v.material != null && v.material >= 1) ids.add(v.material);
+      }
+      ensureMaterialIdsForVoxels(ids);
+    }, [selectedLayerData, ensureMaterialIdsForVoxels]);
 
     // Voxel editor hooks
     const {
@@ -219,7 +237,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
               width={500}
               height={400}
               materialColors={Object.fromEntries(
-                MATERIALS.map((m) => [m.id, m.color]),
+                materials.map((m) => [m.id, m.color]),
               )}
               onVoxelSelect={handleVoxelSelect}
               onVoxelsSelect={handleVoxelsSelect}
@@ -256,6 +274,9 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
           </div>
 
           <VoxelPropertiesPanel
+            materials={materials}
+            onMaterialColorChange={setMaterialColor}
+            onAddMaterialId={addMaterial}
             selectedVoxelIndices={selectedVoxelIndices}
             selectedVoxel={selectedVoxel ?? null}
             selectedVoxelIndex={
