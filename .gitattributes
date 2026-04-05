@@ -1,2 +1,2 @@
-# DMG exceeds GitHub's 100 MiB plain-blob limit
-src/app/release/*.dmg filter=lfs diff=lfs merge=lfs -text
+# macOS app zip exceeds GitHub's 100 MiB plain-blob limit
+src/app/release/*-mac.zip filter=lfs diff=lfs merge=lfs -text

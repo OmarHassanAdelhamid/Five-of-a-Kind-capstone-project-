@@ -1,4 +1,4 @@
 node_modules/
-# Only the macOS DMG is tracked; unpacked app and builder outputs stay local
+# Tracked distributable: macOS zip (contains Autovox.app). Other release output stays local.
 release/*
-!release/*.dmg
+!release/*-mac.zip

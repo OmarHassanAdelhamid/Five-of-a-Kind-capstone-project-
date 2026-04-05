@@ -24,37 +24,36 @@ AutoVox is a full-stack web application that **converts standard STL mesh files 
 
 ## macOS desktop app (download)
 
-Pre-built **Apple Silicon (ARM64)** disk image (the file is stored with **Git LFS**; the plain `/raw/` URL only shows a tiny pointer, not the installer).
+Pre-built **Apple Silicon (ARM64)** app is shipped as a **zip** that contains **`Autovox.app`** (not a DMG). The archive may be stored with **Git LFS**; use GitHub’s file page to download the real zip, not a `/raw/` URL (that can show an LFS pointer).
 
-1. Open **[`Autovox-0.1.0-arm64.dmg` on GitHub](https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/src/app/release/Autovox-0.1.0-arm64.dmg)**.
-2. Click **Download raw file** (or the **⋯** menu → **Download**) — that downloads the real ~109 MB disk image.
-
-To get the DMG with Git instead: `git lfs install`, clone the repo, then `git lfs pull` (or clone with LFS enabled so `src/app/release/*.dmg` is fetched automatically).
+1. Open **[`Autovox-0.1.0-arm64-mac.zip` on GitHub](https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/src/app/release/Autovox-0.1.0-arm64-mac.zip)**.
+2. Click **Download raw file** (or **⋯** → **Download**).
 
 **Install**
 
-1. Open the DMG, drag **Autovox** into **Applications**.
-2. The build is **not signed or notarized** by Apple. The first time you open it, use **Control+click** (or right-click) → **Open** → **Open**, or go to **System Settings → Privacy & Security** and choose **Open Anyway** after a failed launch.
-3. On **first run**, the app may ask for **Python 3.9+** (or use the setup flow) so it can create a local environment and install the bundled FastAPI backend.
+1. Unzip the download — you get **`Autovox.app`**.
+2. Drag **Autovox** into **Applications** (or run it from **Downloads**).
+3. The build is **not signed or notarized** by Apple. The first time you open it, use **Control+click** → **Open** → **Open**, or **System Settings → Privacy & Security** → **Open Anyway** after a blocked launch.
+4. On **first run**, the app may ask for **Python 3.9+** (or use the setup flow) so it can create a local environment and install the bundled FastAPI backend.
+
+With Git: `git lfs install`, clone, then `git lfs pull` if the zip is tracked with LFS.
 
 **“Autovox is damaged and can’t be opened” (move to Trash)**  
-That text is often **Gatekeeper**, not a corrupted download. macOS applies a **quarantine** flag to files from the internet; unsigned apps can be blocked this way.
-
-**Important:** A DMG is a **read-only** volume. Do **not** run `xattr` on `Autovox.app` while it is still under `/Volumes/...` — you will see `Read-only file system` errors. **Drag the app to Applications (or Desktop) first**, then clear attributes on the **copy**:
+Usually **Gatekeeper / quarantine** on unsigned builds, not a bad download. After unzipping, clear quarantine on the app (or the zip before unzipping), then open again:
 
 ```bash
+xattr -cr ~/Downloads/Autovox.app
+# or, if you moved it:
 xattr -cr /Applications/Autovox.app
 ```
 
-(If you put it somewhere else, use that path instead.) Then open **Autovox** again — **Control+click** → **Open** → **Open** if macOS still asks.
-
-Optional: clear quarantine on the downloaded disk image before you open it (path may differ):
+Optional before unzip:
 
 ```bash
-xattr -d com.apple.quarantine ~/Downloads/Autovox-0.1.0-arm64.dmg
+xattr -d com.apple.quarantine ~/Downloads/Autovox-0.1.0-arm64-mac.zip
 ```
 
-To produce a fresh DMG from source, see `src/app/package.json` (`npm run pack` from `src/app` after installing dependencies).
+To rebuild the zip from source: from `src/app`, run `npm install` (once) then `npm run pack` (`electron-builder` writes `release/Autovox-0.1.0-arm64-mac.zip` and an unpacked `release/mac-arm64/Autovox.app` for local testing only — only the **zip** is meant for sharing).
 
 ---
 
