@@ -38,13 +38,21 @@ To get the DMG with Git instead: `git lfs install`, clone the repo, then `git lf
 3. On **first run**, the app may ask for **Python 3.9+** (or use the setup flow) so it can create a local environment and install the bundled FastAPI backend.
 
 **“Autovox is damaged and can’t be opened” (move to Trash)**  
-That text is often **Gatekeeper**, not a corrupted download. macOS applies a **quarantine** flag to files from the internet; unsigned apps can be blocked this way. From **Terminal**:
+That text is often **Gatekeeper**, not a corrupted download. macOS applies a **quarantine** flag to files from the internet; unsigned apps can be blocked this way.
+
+**Important:** A DMG is a **read-only** volume. Do **not** run `xattr` on `Autovox.app` while it is still under `/Volumes/...` — you will see `Read-only file system` errors. **Drag the app to Applications (or Desktop) first**, then clear attributes on the **copy**:
 
 ```bash
 xattr -cr /Applications/Autovox.app
 ```
 
-If the app lives somewhere else, use that path instead (you can run the same command on `Autovox.app` while it is still on the DMG before copying). Then open the app again (Control+click → **Open** if needed).
+(If you put it somewhere else, use that path instead.) Then open **Autovox** again — **Control+click** → **Open** → **Open** if macOS still asks.
+
+Optional: clear quarantine on the downloaded disk image before you open it (path may differ):
+
+```bash
+xattr -d com.apple.quarantine ~/Downloads/Autovox-0.1.0-arm64.dmg
+```
 
 To produce a fresh DMG from source, see `src/app/package.json` (`npm run pack` from `src/app` after installing dependencies).
 
