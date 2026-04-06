@@ -499,31 +499,62 @@ Topics to discuss include the following:
 This section details what technologies are expected to be utilized in the project; it is subject
 to change as the project progresses and difficulties are found.\\
 
-The implementation of this project will be primarily web-based, with a
-browser-accessible frontend and a local server backend with local saves on the client machine. The frontend will be
-developed using \textbf{TypeScript} and \textbf{React}, with
-\textbf{Redux Toolkit} for state management. For 3D voxel visualization and
-interaction, the project expects to use \textbf{Three.js}, integrated with
-React for rendering and manipulation.
+\subsection{Languages}
 
-On the backend, the project anticipates using \textbf{Python} with
-\textbf{FastAPI} to provide REST endpoints for validating and normalizing voxel
-data, as well as managing persistence. A local instance of
-\textbf{PostgreSQL} is expected for structured storage of voxel geometries,
-materials, and related metadata.
+\textbf{\textit{TypeScript (with React) — For Frontend Development}}
+\begin{itemize}
+  \item React is a widely used and well-developed library that enables the development of responsive, modular, and component-based user interfaces.
+  \item TypeScript enhances code maintainability through type safety and improved error detection compared to JavaScript.
+  \item These features are especially important as the system is expected to evolve alongside the magnetic 3D printer, requiring a scalable and maintainable code.
+\end{itemize}
 
-For code quality, the frontend will adopt \textbf{ESLint} as a linter, with
-\textbf{Jest} for unit and integration testing. The backend will rely on
-\textbf{pytest} for automated testing, with a tentative coverage goal of
-approximately 80\%. Code coverage reporting will be handled with tools such as
-\textbf{Istanbul}.
+\textbf{\textit{Python — For Backend Development}}
+\begin{itemize}
+  \item Python integrates well with frameworks such as FastAPI, allowing for efficient development of RESTful APIs.
+  \item The language provides strong support for scientific and computational libraries, which are beneficial for handling voxel data and model processing.
+  \item Python is widely used in the industry, which makes it a practical and easy choice for development and future expansion. It is also a well-known language within our group.
+\end{itemize}
 
-Version control and project management will be conducted through
-\textbf{git}, \textbf{GitHub}, and \textbf{GitHub Projects}, which will serve
-as the central platforms for collaboration, task tracking, and issue
-management. Continuous integration will be performed using
-\textbf{GitHub Actions}, with automated checks for linting, tests, and coverage
-included in the pipeline.
+\subsection{External Libraries}
+
+To support complex functionality, the team will leverage the following external libraries:\\
+
+\textbf{\textit{Three.js — For 3D Visualization Implementation}}
+\begin{itemize}
+  \item It is one of the most widely used libraries for real-time web-based 3D graphics.
+  \item It integrates well with React, making it suitable for building interactive voxel-based visualizations.
+\end{itemize}
+
+\textbf{\textit{Redux Toolkit — For State Management}}
+\begin{itemize}
+  \item It enables predictable and scalable management of application state.
+  \item As the interface becomes more complex, it simplifies state management compared to relying solely on local component state.
+\end{itemize}
+
+\textbf{\textit{FastAPI — For Backend Framework}}
+\begin{itemize}
+  \item It allows backend REST endpoints to be built for validating and normalizing voxel data within the system.
+  \item It provides high performance and automatic API documentation.
+  \item It integrates well with Python-based data processing workflows.
+\end{itemize}
+
+\subsection{Data Storage}
+
+\textbf{\textit{PostgreSQL — Local Instance, For Structured Storage}}
+\begin{itemize}
+  \item It supports relational data models, making it well-suited for storing voxel geometries and associated metadata.
+  \item It provides strong querying capabilities and data consistency compared to file-based storage approaches, which is important for handling large datasets derived from high voxel counts.
+  \item It allows for future scalability if the system expands beyond local usage.
+\end{itemize}
+
+\subsection{Linter Tools \& Unit Testing}
+
+For code quality, the frontend will adopt \textbf{ESLint} as a linter, with \textbf{Jest} for unit and integration testing. The backend will rely on \textbf{pytest} for automated testing, with a tentative coverage goal of approximately 80\%. Code coverage reporting will be handled using tools such as \textbf{Istanbul}. These tools were selected because several members of the team are familiar with them and they are compatible with the chosen frontend and backend technologies.
+
+\subsection{Version Control and Project Management}
+
+Version control and project management will be conducted using \textbf{git}, \textbf{GitHub}, and \textbf{GitHub Projects}, which will serve as the central platforms for collaboration, task tracking, and issue management. Continuous integration will be implemented using \textbf{GitHub Actions}, with automated checks for linting, tests, and coverage included in the pipeline. These were chosen due to the team’s familiarity with them.
+
 
 \section{Coding Standard}
 
