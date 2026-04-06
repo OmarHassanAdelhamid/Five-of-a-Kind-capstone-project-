@@ -441,9 +441,17 @@ CAD file, we will then:
 There are two primary risks associated with this demo:
 
 \begin{enumerate}
-  \item \textbf{Unfamiliarity with dependencies may result in difficuties with file conversion.} As time worked on the project increases, so will familiarity, but for the proof of concept, group members will be largely unfamiliar with both libraries needed to work with CAD files and Dr. Onaizah's current codebase. Given that this file converting pipeline is a key feature of the sofware to be developed, demonstrating that a simple file can be converted successfully will be the major part of the demo.
-  \item \textbf{File converting time is longer than converting the model manually.} While stakeholders have stated that process automation is the ultimate goal, the fact remains that our software should be reasonably more efficient than the current solution which requires re-building the model by hand. If the software that is built does not provide a more efficient process, our group will need to re-analyse how the files are converted from the CAD file into our software. This may require further investigation into different methods of handling the initial files that will potentially speed up the process, or reconsidering if the scope regarding voxel customisability should be paired back for initial iterations. For the demo, we plan to show that a simple CAD file can be converted in a similarly short amount of time.
+  \item \textbf{Unfamiliarity with dependencies may result in difficuties with file conversion.} As time worked on the project increases, so will familiarity, but for the proof of concept, group members will be largely unfamiliar with both libraries needed to work with CAD files and Dr. Onaizah’s current codebase.
+  \begin{itemize}
+    \item[] \textit{Relevant Risk Mitigation Considerations:} If there is difficulty converting the file due to limited knowledge of the required dependencies, the group will need to reassess how CAD files are processed within the system. This may require additional time spent understanding and experimenting with the libraries used for CAD file handling as well as further analysis of Dr. Onaizah’s existing codebase. The team may also need to review relevant documents and seek out existing examples to deepen our knowledge of the file conversion process. For the demo, the primary objective will be to demonstrate that a simple CAD file can be successfully converted, validating the core functionality of the pipeline. 
+  \end{itemize}
+  \item \textbf{File converting time is longer than converting the model manually.} While stakeholders have stated that process automation is the ultimate goal, the fact remains that our software should be reasonably more efficient than the current solution, which requires rebuilding the model by hand.
+  \begin{itemize}
+    \item[] \textit{Relevant Risk Mitigation Considerations:} If the software that is built does not provide a more efficient process, our group will need to reanalyze how the files are converted from the CAD file into our software. This may require further investigation into different methods of handling the initial files that will potentially speed up the process. This may include strategies such as optimizing mesh before conversion, using more efficient file formats, parallelizing the voxelization process, or optimizing how files are loaded and parsed. It may also require reconsidering if the scope regarding voxel customizability should be paired back for initial iterations. For the demo, we plan to show that a simple CAD file can be converted in a similarly short amount of time.
+  \end{itemize}
+
 \end{enumerate}
+
 
 A secondary risk is that rendering the model in 3D may be slow. Initial iterations may be laggy 
 due to lack of group experience with 3D rendering. High memory usage may result from 
