@@ -1,9 +1,14 @@
 # pyright: reportMissingImports=false
 
 """
-FastAPI application entry point.
-"""
+AutoVox API process: exposes HTTP routes for STL assets, voxel projects, editing, and export,
+and wires CORS so the desktop or Vite dev UI can call the backend from localhost.
 
+Course / submission fill-ins:
+    @author Daniel Maurer, Khalid Farag, Andrew Bovbel
+    @lastModified TODO: 2026/02/08
+
+"""
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,7 +22,7 @@ from app.routers import stl_router, project_router, edit_router, export_router
 
 app = FastAPI()
 
-# Allow all localhost origins in development using regex
+# Cross-origin rules for browser clients (dev defaults; production can override via env in config).
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
@@ -27,6 +32,7 @@ app.add_middleware(
     allow_headers=CORS_HEADERS,
 )
 
+# HTTP surface area: sample STLs, project lifecycle, layer edits, CSV export.
 app.include_router(stl_router.router)
 app.include_router(project_router.router)
 app.include_router(edit_router.router)

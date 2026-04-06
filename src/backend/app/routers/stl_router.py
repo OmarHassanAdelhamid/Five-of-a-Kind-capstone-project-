@@ -1,8 +1,15 @@
 """
-Routes for STL model management.
+HTTP API for sample STL assets: list, upload, measure bounding size, and download binary STL files.
+
+Course / submission fill-ins:
+    @author Daniel Maurer, Olivia Reich, Khalid Farag, Andrew Bovbel
+    @lastModified 2026/03/23
+
+Repository history (earliest commit touching this file): 340a236 2026-01-22 Khalid Farag
+Provenance: git log --follow -- src/backend/app/routers/stl_router.py
 """
 
-from pathlib import Path #!!
+from pathlib import Path
 from typing import List
 
 from fastapi import APIRouter, HTTPException, UploadFile
@@ -16,13 +23,14 @@ router = APIRouter(prefix="/api/stl", tags=["stl"])
 
 @router.get("", response_model=dict[str, List[str]]) # POSSIBLE DUPLICATE OF BELOW FUNC?
 def list_stl_models():
-    """List all available STL models."""
+    """List all available STL models. Same filenames as ``/list-stl``, wrapped as ``{\"models\": [...]}`` for object-shaped clients."""
     models = sorted(p.name for p in STL_STORAGE_DIR.glob("*.stl"))
     return {"models": models}
 
 @router.get("/list-stl", response_model=list[str])
 async def get_available_stl():
-    """
+    """Plain list of STL filenames under shared storage (no wrapper object).
+
     Handles request to list all available STL files in the sample file directory.
 
     Returns:
@@ -33,7 +41,8 @@ async def get_available_stl():
 
 @router.post("/upload-stl")
 async def upload_stl_model(stl_file: UploadFile): 
-    """
+    """Persist a user-uploaded STL into shared storage for later voxelization.
+
     Handles request to add an STL file into the sample file directory.
 
     Args:
@@ -53,6 +62,7 @@ async def upload_stl_model(stl_file: UploadFile):
 
 @router.get("/dimensions")
 async def get_stl_dimensions(stl_filename: str):
+    """Axis-aligned extent of the named STL for UI scaling and previews."""
     stl_path = STL_STORAGE_DIR / stl_filename
 
     mesh = ms.load_stl_mesh(stl_path)
@@ -69,7 +79,7 @@ async def get_stl_dimensions(stl_filename: str):
 
 @router.get("/{filename}")
 def get_stl_model(filename: str):
-    """Get an STL model file."""
+    """Get an STL model file. Served as a download/stream for 3D viewing."""
     file_path = _resolve_model_path(filename)
     return FileResponse(
         path=file_path,
