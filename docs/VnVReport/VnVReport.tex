@@ -48,6 +48,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 March 9, 2026 & 1.0 & Initial release\\
+April 6, 2026 & 2.0 & Final Revisions\\
 \bottomrule
 \end{tabularx}
 
@@ -95,7 +96,7 @@ This document presents the Verification and Validation (VnV) Report for \prognam
 \section{Functional Requirements Evaluation}
 \label{sec:fr-eval}
 
-The following subsections report on each functional test case defined in the VnV Plan (Section~2 System Tests). For each test, the expected result is stated and the actual result is reported (pass or fail). For results see ~\ref{sec:unit-testing} and Section~\ref{sec:automated-testing}.
+The following subsections report on each functional test case defined in the VnV Plan (Section~2 System Tests). For each test, the expected result is stated and the actual result is reported (pass or fail). For results see Section~\ref{sec:unit-testing} and Section~\ref{sec:automated-testing}.
 
 \subsection{CAD File Import and Project Management Tests (Import Manager)}
 
@@ -267,7 +268,7 @@ The following subsections report on each functional test case defined in the VnV
 \section{Nonfunctional Requirements Evaluation}
 
 The non-functional requirements defined in the SRS were evaluated using the corresponding test groups defined in the VnV Plan. 
-In particular, tests labeled \texttt{test-US} correspond to usability evaluation, tests labeled \texttt{test-PS} correspond to performance evaluation, and tests labeled \texttt{test-CO} correspond to compliance testing. 
+In particular, tests labeled \texttt{test-US} correspond to usability evaluation, tests labeled \texttt{test-PS} correspond to performance evaluation, and tests labeled \texttt{test-CO} correspond to portability testing. 
 The results of these evaluations are summarized in the following subsections.
 
 \subsection{Usability}
@@ -444,13 +445,13 @@ The results demonstrate that the system scales appropriately with increasing vox
 Core editing operations such as voxel selection and modification were executed with minimal latency, allowing users to interact with the voxel editor without noticeable delay. Export operations required slightly more processing time due to file writing and data serialization but remained within acceptable limits.
 
 Overall, the results confirm that the system satisfies the performance requirements defined in the VnV plan, demonstrating stable operation, scalable processing behaviour, and acceptable hardware resource usage across a range of model sizes.
-\subsection{Compliance}
+\subsection{Portability}
 
 \subsubsection{Methodology}
 
-Compliance testing was performed according to the procedures defined in the VnV plan (tests \texttt{test-CO-1} through \texttt{test-CO-4}). The evaluation focused on verifying operating system compatibility, file import and export compatibility, project file reliability during unexpected interruptions, and adherence to coding standards.
+Portability testing was performed according to the procedures defined in the VnV plan (tests \texttt{test-CO-1} through \texttt{test-CO-4}). The evaluation focused on verifying operating system compatibility, file import and export compatibility, project file reliability during unexpected interruptions, and adherence to coding standards.
 
-Compliance testing followed the procedures defined in the VnV Plan through tests \texttt{test-CO-1} to \texttt{test-CO-4}, covering operating system compatibility, file compatibility, project file fail-safe behaviour, and PEP8 coding standard compliance.
+Portability testing followed the procedures defined in the VnV Plan through tests \texttt{test-CO-1} to \texttt{test-CO-4}, covering operating system compatibility, file compatibility, project file fail-safe behaviour, and PEP8 coding standard compliance.
 
 \subsubsection{Results}
 
@@ -464,7 +465,7 @@ Finally, static analysis was conducted on the codebase using a linting tool to v
 
 \subsubsection{Discussion}
 
-The compliance tests demonstrate that the application satisfies the compatibility and reliability requirements defined in the VnV plan. The system operates correctly across supported operating systems, maintains file integrity during unexpected interruptions, and adheres to recognized Python coding standards. These results confirm that the system meets the specified compliance requirements.
+The portability tests demonstrate that the application satisfies the compatibility and reliability requirements defined in the VnV plan. The system operates correctly across supported operating systems, maintains file integrity during unexpected interruptions, and adheres to recognized Python coding standards. These results confirm that the system meets the specified portability requirements.
 
 \subsection{Maintainability}
 
@@ -514,28 +515,28 @@ For each test case, the tables below provide: \textbf{test case name} (TC id), \
 \subsection{Import Manager Tests}
 \newcounter{testcase}
 \newcommand{\testcount}{\stepcounter{testcase}\thetestcase}
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{2}
 
 \subsubsection{CAD File Import and Project Management}
 Table~\ref{table:im_cad_tests} gives the results for STL file import and project management tests (TC1--TC5).
 
 \begin{longtable}{c
-    >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{1cm}
+    >{\raggedright\arraybackslash}p{2.5cm}
     >{\raggedright\arraybackslash}p{3.5cm}
-  >{\raggedright\arraybackslash}p{2.5cm} c}
+  >{\raggedright\arraybackslash}p{5cm} c}
   \caption{Import Manager: STL File Import and Project Management Test Cases}
   \label{table:im_cad_tests} \\
   \toprule
   \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \textbf{Expected Result} & \textbf{Assertions} & \textbf{Result} \\
   \midrule
   \endfirsthead
 
   \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
   \toprule
   \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \textbf{Expected Result} & \textbf{Assertions} & \textbf{Result} \\
   \midrule
   \endhead
 
@@ -545,11 +546,11 @@ Table~\ref{table:im_cad_tests} gives the results for STL file import and project
   \bottomrule
   \endlastfoot
 
-  TC1 & F211 & Provide a valid STL file to system through file settings panel & STL file is uploaded successfully to the system, and saved to the sample file directory & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC2 & F211 & Browse all uploaded STL files in the sample file directory & System displays a list of all uploaded STL files in the sample file directory & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC3 & F211 & Browse all uploaded STL files, without ever uploading a STL file & System displays an empty list of uploaded STL files & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC4 & F211 & Provide a file with unsupported format (e.g.\ .txt, .jpg, .pdf) to system through file settings panel & System rejects the file and displays an error indicating unsupported format & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC5 & F212 & Open a previously uploaded STL file & System loads the STL file from the sample file directory & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\
+  TC1 & F211 & Provide a valid STL file to the system through the file settings panel & STL file is uploaded successfully to the system, and saved to the sample file directory & Assertions were made that once STL is uploaded, the system will save it to the sample file directory. & \cellcolor{green} Pass \\ \midrule
+  TC2 & F211 & Browse all uploaded STL files in the sample file directory & System displays a list of all uploaded STL files in the sample file directory & Assertions were made in the backend to verify that the system displays a list of all uploaded STL files in the sample file directory. & \cellcolor{green} Pass \\ \midrule 
+  TC3 & F211 & Browse all uploaded STL files, without ever uploading a STL file & System displays an empty list of uploaded STL files & Assertions were made that if the file directory is empty, the system will display an empty list. & \cellcolor{green} Pass \\ \midrule
+  TC4 & F211 & Provide a file with unsupported format (e.g.\ .txt, .jpg, .pdf) to system through file settings panel & System rejects the file and displays an error indicating unsupported format & Assertions were made in the frontend that once user attempts to upload a file with an unsupported format, the system will display an error indicating the file format is unsupported. & \cellcolor{green} Pass \\ \midrule
+  TC5 & F212 & Open a previously uploaded STL file & System loads the STL file from the sample file directory & Assertions were made in the backend to verify that the system loads the STL file from the sample file directory. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsubsection{Model Configuration and Slicing}
@@ -557,21 +558,21 @@ Table~\ref{table:im_config_tests} gives the results for model configuration and 
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{4.2cm}
-    >{\raggedright\arraybackslash}p{3.5cm}
-  >{\raggedright\arraybackslash}p{2.5cm} c}
+    >{\raggedright\arraybackslash}p{3cm}
+    >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{5cm} c}
   \caption{Import Manager: Model Configuration and Slicing Test Cases}
   \label{table:im_config_tests} \\
   \toprule
   \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \textbf{Expected Result} & \textbf{Assertions} & \textbf{Result} \\
   \midrule
   \endfirsthead
 
   \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
   \toprule
   \textbf{TC} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \textbf{Expected Result} & \textbf{Assertions} & \textbf{Result} \\
   \midrule
   \endhead
 
@@ -581,13 +582,13 @@ Table~\ref{table:im_config_tests} gives the results for model configuration and 
   \bottomrule
   \endlastfoot
 
-  TC6 & F213 & Specify custom voxel size & System applies the dimensions and slices the model into voxels of the requested size & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC7 & F214 & Specify custom geometric model size & System scales the model to desired model size before slicing & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC8 & F216 & Import a model containing more than MAX\_VOXELS voxels. & System partitions the model into display sections not exceeding MAX\_VOXELS & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC9 & F216 & Import a model containing less than MAX\_VOXELS voxels & System returns only one partition with all voxels visible& All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC10 & F216 & Delete a partition with no voxels & System deletes the partition and returns the model to the previous state & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC11 & F213, F214, F215 & Voxelize uploaded STL model into voxels& System voxelizes the model into voxels of the requested size using Triangle Meshes & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC12 & F213, F214, F215 & Voxelize non-existing STL model into voxels& System returns an error indicating the STL model does not exist & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\
+  TC6 & F213 & Specify custom voxel size & System applies the dimensions and slices the model into voxels of the requested size & Assertions were done to verify the voxelized model has the same voxel size as the specified voxel size  & \cellcolor{green} Pass \\ \midrule
+  TC7 & F214 & Specify custom geometric model size & System scales the model to desired model size before slicing & Assertions were made to verify the scale factor of the final mesh is equal to the specified geometric model size multiplied by the original model& \cellcolor{green} Pass \\ \midrule
+  TC8 & F216 & Import a model containing more than MAX\_VOXELS voxels. & System partitions the model into display sections not exceeding MAX\_VOXELS & Assertions were made to verify that the number of partitions that are made which should equal 8 for a model with MAX\_VOXELS voxels& \cellcolor{green} Pass \\ \midrule
+  TC9 & F216 & Import a model containing less than MAX\_VOXELS voxels & System returns only one partition with all voxels visible & Assertions were made to verify that the number of partitions that are made which should equal 1 for a model with less than MAX\_VOXELS voxels & \cellcolor{green} Pass \\ \midrule
+  TC10 & F216 & Delete a partition with no voxels & System deletes the partition and returns the model to the previous state & Asserts partition count drops from 8 to 4 after empty partitions are removed; asserts all original voxels remain intact across the surviving partitions. & \cellcolor{green} Pass \\ \midrule
+  TC11 & F213, F214, F215 & Voxelize uploaded STL model into voxels& System voxelizes the model into voxels of the requested size using Triangle Meshes & Asserts verify that each stage of the voxelization pipeline, mesh creation, voxelization, coordinate extraction, and database initialization, all executed exactly once, and that the resulting project contains the correct number of voxels. & \cellcolor{green} Pass \\ \midrule
+  TC12 & F213, F214, F215 & Voxelize non-existing STL model into voxels& System returns an error indicating the STL model does not exist & Asserts are done to ensure system returns a 404 error code in case of non-existing file, and message saying "File.stl not found on server" & \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsection{Visualization Manager Tests}
@@ -597,9 +598,9 @@ Table~\ref{table:vm_rendering_tests} gives the results for 3D model rendering an
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{4.2cm}
-    >{\raggedright\arraybackslash}p{3.5cm}
-  >{\raggedright\arraybackslash}p{2.5cm} c}
+    >{\raggedright\arraybackslash}p{3cm}
+    >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{5cm} c}
   \caption{Visualization Manager: 3D Model Rendering and Display Test Cases}
   \label{table:vm_rendering_tests} \\
   \toprule
@@ -621,10 +622,10 @@ Table~\ref{table:vm_rendering_tests} gives the results for 3D model rendering an
   \bottomrule
   \endlastfoot
 
-  TC13 & F221 & Import a STL model into the system & System renders a non-voxelized 3D STL model using Three.js & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC14 & F221 & Open a voxelized project from file directory & System renders a voxelized 3D model using Three.js broken down into layers & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC15 & F222 & Open a voxelized project from file directory where the number of voxles is greater than MAX\_VOXELS & System displays a partitions panel with more than 1 partition & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC16 & F222 & Open a voxelized project from file directory where the number of voxles is less than MAX\_VOXELS & System displays a partitions panel with only 1 partition & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\
+  TC13 & F221 & Import a STL model into the system & System renders a non-voxelized 3D STL model using Three.js & Asserts verify the status changes, starting with \texttt{`loading'} and then \texttt{`ready'} when a model is provided. & \cellcolor{green} Pass \\ \midrule
+  TC14 & F221 & Open a voxelized project from file directory & System renders a voxelized 3D model using Three.js broken down into layers & Asserts in frontend verify that opening a voxelized project triggers partition retrieval, loads the selected partition's voxel data, and renders the 3D model when coordinates are available. & \cellcolor{green} Pass \\ \midrule
+  TC15 & F222 & Open a voxelized project from the file directory where the number of voxels is greater than MAX\_VOXELS & System displays a partitions panel with more than 1 partition & Asserts in frontend verify that partitions are retrieved for the selected project and that multiple partition names are displayed in the partitions panel. & \cellcolor{green} Pass \\ \midrule
+  TC16 & F222 & Open a voxelized project from the file directory where the number of voxels is less than MAX\_VOXELS & System displays a partitions panel with only 1 partition &Asserts in frontend show that no partitions are returned from the backend and ``No partitions found" message shown. & \cellcolor{green} Pass \\
 
 \end{longtable}
 
@@ -633,9 +634,9 @@ Table~\ref{table:vm_layer_tests} gives the results for layer focus and voxel sel
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{4.2cm}
-    >{\raggedright\arraybackslash}p{3.5cm}
-  >{\raggedright\arraybackslash}p{2.5cm} c}
+    >{\raggedright\arraybackslash}p{3cm}
+    >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{5cm} c}
   \caption{Visualization Manager: Layer Focus and Voxel Selection Test Cases}
   \label{table:vm_layer_tests} \\
   \toprule
@@ -657,14 +658,14 @@ Table~\ref{table:vm_layer_tests} gives the results for layer focus and voxel sel
   \bottomrule
   \endlastfoot
 
-  TC17 & F222 & Pick a specific partition to focus on from the partitions panel. & The selected partition is isolated and displayed as a 3D view without any other partitions. & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC18 & F223 & Rotate the model using interface controls. & Model rotates smoothly and intuitively & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC19 & F223 & Zoom the model using interface controls. & Model zooms smoothly and intuitively & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC20 & F224 & Select a specific layer to focus on from the 3D model display. & Selected layer is isolated, layer editor is opened displaying the layer voxels and properties in a 2D view. & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC21 & F225 & Select individual voxel within the focused layer from the layer editor. & The selected voxel is highlighted in the 2D layer view & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC22 & F225 & Select multiple voxels within the focused layer from the layer editor using lasso selection. & The selected voxels are highlighted in the 2D layer view & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC23 & F225 & Select all voxels in the partition on the 3D view (CTRL+A) & All voxels in the partition are highlighted in the 3D view & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC24 & F225 & Select all voxels in the layer on the 2D layer view (CTRL+A) & All voxels in the layer are highlighted in the 2D layer view & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\
+  TC17 & F222 & Pick a specific partition to focus on from the partitions panel. & The selected partition is isolated and displayed as a 3D view without any other partitions. & Assertions made to verify that when selecting a partition from the list of partitions, the correct partition is rendered. & \cellcolor{green} Pass \\ \midrule
+  TC18 & F223 & Rotate the model using interface controls. & Model rotates smoothly and intuitively & Asserts verify that the camera is updated correctly in response to a window resize event, confirming the rendering pipeline adjusts to viewport changes. & \cellcolor{green} Pass \\ \midrule
+  TC19 & F223 & Zoom the model using interface controls. & Model zooms smoothly and intuitively & Asserts verify that the model zooms in when the `+' key is pressed and zooms back out when the `-' key is pressed. & \cellcolor{green} Pass \\ \midrule
+  TC20 & F224 & Select a specific layer to focus on from the 3D model display. & Selected layer is isolated, layer editor is opened displaying the layer voxels and properties in a 2D view. & Asserts verify that selecting a layer fetches the correct layer data and opens the layer editor displaying the selected layer. & \cellcolor{green} Pass \\ \midrule
+  TC21 & F225 & Select individual voxel within the focused layer from the layer editor. & The selected voxel is highlighted in the 2D layer view & Asserts verify that after selecting a voxel, the selection properties are not null and the voxel's material is correctly reported. & \cellcolor{green} Pass \\ \midrule
+  TC22 & F225 & Select multiple voxels within the focused layer from the layer editor using lasso selection. & The selected voxels are highlighted in the 2D layer view & Asserts verify that clicking the Lasso button activates lasso selection mode in the layer editor. & \cellcolor{green} Pass \\ \midrule
+  TC23 & F225 & Select all voxels in the partition on the 3D view (CTRL+A) & All voxels in the partition are highlighted in the 3D view & Asserts verify that pressing Ctrl+A triggers the select all action in the 3D view exactly once. & \cellcolor{green} Pass \\ \midrule
+  TC24 & F225 & Select all voxels in the layer on the 2D layer view (CTRL+A) & All voxels in the layer are highlighted in the 2D layer view & Asserts verify that pressing Ctrl+A in the 2D layer view selects all voxels and their properties are correctly accessible. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsubsection{Material and Magnetization Tracking}
@@ -672,9 +673,9 @@ Table~\ref{table:vm_tracking_tests} gives the results for material and magnetiza
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{4.2cm}
-    >{\raggedright\arraybackslash}p{3.5cm}
-  >{\raggedright\arraybackslash}p{2.5cm} c}
+    >{\raggedright\arraybackslash}p{3cm}
+    >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{5cm} c}
   \caption{Visualization Manager: Material and Magnetization Tracking Test Cases}
   \label{table:vm_tracking_tests} \\
   \toprule
@@ -696,22 +697,22 @@ Table~\ref{table:vm_tracking_tests} gives the results for material and magnetiza
   \bottomrule
   \endlastfoot
 
-  TC25 & F226 & Assign material IDs to a voxel or multiple voxels in the layer editor. & The color of the voxels are updated to the assigned material color. & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC26 & F227 & Assign magnetization to a voxel or multiple voxels in the layer editor. & The voxels assigned will be highlighted with a X-arrow icon indicating magnetization. & All assertions are met and passed by frontend unit test & \cellcolor{green} Pass \\
+  TC25 & F226 & Assign material IDs to a voxel or multiple voxels in the layer editor. & The color of the voxels is updated to the assigned material color. & Asserts verify that assigning a material ID to selected voxels sends the correct update request to the backend with the new material and target partition. & \cellcolor{green} Pass \\ \midrule
+  TC26 & F227 & Assign magnetization to a voxel or multiple voxels in the layer editor. & The voxels assigned will be highlighted with an X icon indicating magnetization. & Asserts verify that assigning a magnetization vector to selected voxels sends the correct update request to the backend with the new magnetization and target partition. & \cellcolor{green} Pass \\
 
 \end{longtable}
 
 \subsection{Editing Manager Tests}
-The Editing Manager tests are organized into three subsections: editing a voxel (TC27--TC49), utilizing the history manager (TC50--TC58), and saving project (TC59--TC62).
+The Editing Manager tests are organized into three subsections: editing a voxel (TC27--TC48), utilizing the history manager (TC49--TC57), and saving project (TC58--TC61).
 
 \subsubsection{Editing a voxel}
-Table~\ref{table:em_voxel_tests} gives the results for voxel editing tests (TC27--TC49): magnetization and material assignment, layer access, and adding, deleting, or resetting voxels.
+Table~\ref{table:em_voxel_tests} gives the results for voxel editing tests (TC27--TC48): magnetization and material assignment, layer access, and adding, deleting, or resetting voxels.
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{3.8cm}
-    >{\raggedright\arraybackslash}p{3.5cm}
-  >{\raggedright\arraybackslash}p{2.2cm} c}
+    >{\raggedright\arraybackslash}p{3cm}
+    >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{4.5cm} c}
   \caption{Editing Manager: Editing a voxel (system and backend)}
   \label{table:em_voxel_tests} \\
   \toprule
@@ -733,39 +734,38 @@ Table~\ref{table:em_voxel_tests} gives the results for voxel editing tests (TC27
   \bottomrule
   \endlastfoot
 
-  TC27 & F231 & Update magnetization of a single voxel (e.g.\ x=1.0, y=0.0, z=0.0). & System saves the magnetization vector of the voxel to the database & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC28 & F231 & Update magnetization of a multiple voxels (e.g.\ x=1.0, y=0.0, z=0.0). & System saves the magnetization vector of the voxels to the database & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC29 & F231 & Update magnetization of a non-existing voxel (e.g.\ x=1.0, y=0.0, z=0.0). & System returns an error indicating the voxel does not exist & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC30 & F231 & Update magnetization of a voxel with invalid magnetization vector (e.g.\ x=1.0, y=0.0, z=0.0). & System returns an error indicating the magnetization vector is invalid & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC31 & F232 & Create a favourite magnetization vector (e.g.\ x=1.0, y=0.0, z=0.0). & System saves the magnetization vector to the favourite bar & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC32 & F233 & Assign material ID to a single voxel (e.g.\ 2). & System saves the material ID to the voxel and in the database & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC33 & F233 & Assign material ID to a multiple voxels (e.g.\ 2). & System saves the material ID to the voxels and in the database & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC34 & F233 & Assign material ID to a non-existing voxel (e.g.\ 2). & System returns an error indicating the voxel does not exist & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule 
-  TC35 & F231, F233 & Assign material ID to a voxel and magnetization to a voxel (e.g.\ 2, x=1.0, y=0.0, z=0.0). & System saves the material ID and magnetization vector to the voxel and in the database & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC36 & F234 & Assign label ``Steel'' to material ID 1. & Material ID 1 is associated with the label ``Steel'' in the database. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC37 & F235 & Copy assigned properties from one layer to another layer. & Target layer voxels receive the same material and magnetization properties as the source. & All assertions are met and passed by backend and frontend unit test & \cellcolor{green} Pass \\ \midrule 
-  TC38 & F238 & Get list of layers in the project. & The list of layers is returned. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC39 & F238 & Get specific layer in the project based on the layer index and axis. & The specific layer is returned. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC40 & F238 & Get specific layer with non-existing layer index. & System returns an error indicating the layer index does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC41 & F238 & Get specific layer with non-existing axis. & System returns an error indicating the axis does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC42 & F238 & Get specific layer with non-existing project. & System returns an error indicating the project does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC43 & F238 & Get specific layer with non-existing partition. & System returns an error indicating the partition does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC44 & F239 & Add a new voxel at new indices. & A new voxel is added to the database at the new indices with default material and magnetization. & All assertions are met and passed by backend and frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC45 & F239 & Delete an existing voxel. & A voxel is removed from the database at the existing indices. & All assertions are met and passed by backend and frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC46 & F239 & Delete a non-existent voxel. & System returns an error indicating the voxel does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC47 & F2310 & Reset materials on selected voxels. & The voxels are reset to the default material in the database. & All assertions are met and passed by backend and frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC48 & F2310 & Reset magnetizations on selected voxels. & The voxels are reset to the default magnetization in the database. & All assertions are met and passed by backend and frontend unit test & \cellcolor{green} Pass \\ \midrule
-  TC49 & F2310 & Reset materials and magnetizations on selected voxels. & The voxels are reset to the default material and magnetization in the database. & All assertions are met and passed by backend and frontend unit test & \cellcolor{green} Pass \\
+  TC27 & F231 & Update magnetization of a single voxel (e.g.\ x=1.0, y=0.0, z=0.0). & System saves the magnetization vector of the voxel to the database & Asserts verify that the target voxel's magnetization is updated correctly in the database while all other voxels remain unchanged. & \cellcolor{green} Pass \\ \midrule
+  TC28 & F231 & Update magnetization of multiple voxels (e.g.\ x=1.0, y=0.0, z=0.0). & System saves the magnetization vector of the voxels to the database & Asserts verify that all targeted voxels have their magnetization updated correctly in the database while all other voxels remain unchanged. & \cellcolor{green} Pass \\ \midrule
+  TC29 & F231 & Update magnetization of a non-existing voxel (e.g.\ x=1.0, y=0.0, z=0.0). & System returns an error indicating the voxel does not exist & Asserts verify that attempting to update a non-existent voxel does not create any new entry in the database and leaves all existing voxels unaffected. & \cellcolor{green} Pass \\ \midrule
+  TC30 & F231 & Update magnetization of a voxel with invalid magnetization vector (e.g.\ x=1.0, y=0.0, z=0.0). & System returns an error indicating the magnetization vector is invalid & Asserts verify that an error is raised when the polar angle is outside the valid range (0--180) or the azimuth angle is outside the valid range (0--360). & \cellcolor{green} Pass \\ \midrule
+  TC31 & F233 & Assign material ID to a single voxel (e.g.\ 2). & System saves the material ID to the voxel and in the database & Asserts verify that the target voxel's material is updated correctly in the database, the change is recorded in the history, and a success response is returned. & \cellcolor{green} Pass \\ \midrule
+  TC32 & F233 & Assign material ID to multiple voxels (e.g.\ 2). & System saves the material ID to the voxels and in the database & Asserts verify that all targeted voxels have their material updated correctly in the database, the change is recorded in the history, and a success response is returned. & \cellcolor{green} Pass \\ \midrule
+  TC33 & F233 & Assign material ID to a non-existing voxel (e.g.\ 2). & System returns an error indicating the voxel does not exist & Asserts verify that attempting to assign a material to a non-existent voxel does not modify the database. & \cellcolor{green} Pass \\ \midrule 
+  TC34 & F231, F233 & Assign material ID to a voxel and magnetization to a voxel (e.g.\ 2, x=1.0, y=0.0, z=0.0). & System saves the material ID and magnetization vector to the voxel and in the database & Asserts verify that material and magnetization are saved correctly when assigned together, and that providing both simultaneously in a single update request is rejected with an error. & \cellcolor{green} Pass \\ \midrule
+  TC35 & F234 & Add label ``Steel'' to material IDs. & The label ``Steel'' is added to the next available material ID in the database. & Asserts verify that adding a label ``Steel'' stores the association in the database and asserts that retrieving the label's associated material ID returns ``Steel'' & \cellcolor{green} Pass \\ \midrule
+  TC36 & F235 & Copy assigned properties from one layer to another layer. & Target layer voxels receive the same material and magnetization properties as the source. & Asserts verify that pasting copied properties onto a layer sends the correct material update to the backend for the target partition. & \cellcolor{green} Pass \\ \midrule 
+  TC37 & F238 & Get the list of layers in the project. & The list of layers is returned. & Asserts verify that the layer list response contains the correct number of layers and their corresponding index--coordinate pairs for each axis. & \cellcolor{green} Pass \\ \midrule
+  TC38 & F238 & Get a specific layer in the project based on the layer index and axis. & The specific layer is returned. & Asserts verify that the correct set of voxels is returned for the requested layer index and axis, and that the response includes the correct voxel count. & \cellcolor{green} Pass \\ \midrule
+  TC39 & F238 & Get specific layer with non-existing layer index. & System returns an error indicating the layer index does not exist. & Asserts verify that requesting a layer at a non-existent index returns a 404 error and an empty voxel list. & \cellcolor{green} Pass \\ \midrule
+  TC40 & F238 & Get specific layer with non-existing axis. & System returns an error indicating the axis does not exist. & Asserts verify that a request with an invalid axis value is rejected with a validation error before reaching the service layer. & \cellcolor{green} Pass \\ \midrule
+  TC41 & F238 & Get specific layer with non-existing project. & System returns an error indicating the project does not exist. & Asserts verify that requesting a layer from a non-existent project returns a 404 error. & \cellcolor{green} Pass \\ \midrule
+  TC42 & F238 & Get specific layer with non-existing partition. & System returns an error indicating the partition does not exist. & Asserts verify that requesting a layer from a non-existent partition returns a 404 error. & \cellcolor{green} Pass \\ \midrule
+  TC43 & F239 & Add a new voxel at new indices. & A new voxel is added to the database at the new indices with default material and magnetization. & Asserts verify that newly added voxels appear in the database with default material and magnetization, and that the addition is recorded in the history. & \cellcolor{green} Pass \\ \midrule
+  TC44 & F239 & Delete an existing voxel. & A voxel is removed from the database at the existing indices. & Asserts verify that deleted voxels are removed from the database and the deletion is recorded in the history. & \cellcolor{green} Pass \\ \midrule
+  TC45 & F239 & Delete a non-existent voxel. & System returns an error indicating the voxel does not exist. & Asserts verify that attempting to delete a non-existent voxel leaves the database unchanged. & \cellcolor{green} Pass \\ \midrule
+  TC46 & F2310 & Reset materials on selected voxels. & The voxels are reset to the default material in the database. & Asserts verify that selected voxels have their material reset to the default value, magnetization remains unchanged, and the reset is recorded in the history. & \cellcolor{green} Pass \\ \midrule
+  TC47 & F2310 & Reset magnetizations on selected voxels. & The voxels are reset to the default magnetization in the database. & Asserts verify that selected voxels have their magnetization reset to the default value in the database, and the reset is recorded in the history. & \cellcolor{green} Pass \\ \midrule
+  TC48 & F2310 & Reset materials and magnetizations on selected voxels. & The voxels are reset to the default material and magnetization in the database. & Asserts verify that both material and magnetization are simultaneously reset to their default values for all selected voxels. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsubsection{Utilizing the history manager}
-Table~\ref{table:em_history_tests} gives the results for history manager tests (TC50--TC58): undo, redo, and clear history.
+Table~\ref{table:em_history_tests} gives the results for history manager tests (TC49--TC57): undo, redo, and clear history.
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{3.8cm}
-    >{\raggedright\arraybackslash}p{3.5cm}
-  >{\raggedright\arraybackslash}p{2.2cm} c}
+    >{\raggedright\arraybackslash}p{3cm}
+    >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{4.5cm} c}
   \caption{Editing Manager: Utilizing the history manager (backend)}
   \label{table:em_history_tests} \\
   \toprule
@@ -787,25 +787,25 @@ Table~\ref{table:em_history_tests} gives the results for history manager tests (
   \bottomrule
   \endlastfoot
 
-  TC50 & F237 & Undo any updates made to a voxel. & The changes are undone and the voxel returns to the previous state. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC51 & F237 & Redo any undone updates to a voxel. & The changes are redone and the voxel returns to the previous state. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC52 & F237 & Undo any added voxels. & The voxels are removed from the database. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC53 & F237 & Redo any deleted voxels. & The voxels are added back to the database. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC54 & F237 & Undo any reset material on a voxel. & The voxel is reset to the default material. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC55 & F237 & Redo any reset material on a voxel. & The voxel is reset to the default material. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC56 & F237 & Undo when history empty. & System returns an error indicating the history is empty & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC57 & F237 & Redo when redo stack empty. & System returns an error indicating the redo stack is empty & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC58 & F237 & Clear history. & Both history and redo stacks empty. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\
+  TC49 & F237 & Undo any updates made to a voxel. & The changes are undone and the voxel returns to the previous state. & Asserts verify that undoing a voxel update restores the previous state in the database, moves the change to the redo stack, and returns a success response. & \cellcolor{green} Pass \\ \midrule
+  TC50 & F237 & Redo any undone updates to a voxel. & The changes are redone and the voxel returns to the previous state. & Asserts verify that redoing an undone update reapplies the change to the database, clears the redo stack, and returns a success response. & \cellcolor{green} Pass \\ \midrule
+  TC51 & F237 & Undo any added voxels. & The voxels are removed from the database. & Asserts verify that undoing an add operation removes the previously added voxels from the database and returns a success response. & \cellcolor{green} Pass \\ \midrule
+  TC52 & F237 & Redo any deleted voxels. & The voxels are added back to the database. & Asserts verify that redoing a delete operation restores the previously removed voxels to the database and returns a success response. & \cellcolor{green} Pass \\ \midrule
+  TC53 & F237 & Undo any reset material on a voxel. & The voxel is reset to the default material. & Asserts verify that undoing a reset material operation restores the original voxel data and returns a success response. & \cellcolor{green} Pass \\ \midrule
+  TC54 & F237 & Redo any reset material on a voxel. & The voxel is reset to the default material. & Asserts verify that redoing a reset material operation re-applies the reset and returns a success response. & \cellcolor{green} Pass \\ \midrule
+  TC55 & F237 & Undo when the history is empty. & System returns an error indicating the history is empty & Asserts verify that attempting to undo with an empty history raises an error and returns a 400 response. & \cellcolor{green} Pass \\ \midrule
+  TC56 & F237 & Redo when the redo stack is empty. & System returns an error indicating the redo stack is empty & Asserts verify that attempting to redo with an empty redo stack raises an error and returns a 400 response. & \cellcolor{green} Pass \\ \midrule
+  TC57 & F237 & Clear history. & Both history and redo stacks are empty. & Asserts verify that clearing the history empties both the undo and redo stacks, and that recording a new change after an undo also clears the redo stack. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsubsection{Saving project}
-Table~\ref{table:em_save_tests} gives the results for saving project tests (TC59--TC62).
+Table~\ref{table:em_save_tests} gives the results for saving project tests (TC58--TC61).
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{3.8cm}
-    >{\raggedright\arraybackslash}p{3.5cm}
-  >{\raggedright\arraybackslash}p{2.2cm} c}
+    >{\raggedright\arraybackslash}p{3cm}
+    >{\raggedright\arraybackslash}p{3cm}
+  >{\raggedright\arraybackslash}p{4.5cm} c}
   \caption{Editing Manager: Saving project (backend)}
   \label{table:em_save_tests} \\
   \toprule
@@ -827,22 +827,22 @@ Table~\ref{table:em_save_tests} gives the results for saving project tests (TC59
   \bottomrule
   \endlastfoot
 
-  TC59 & F236 & Save the project automatically. & The project is saved to the database. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC60 & F2311 & Save the project manually. & The project is saved to the database. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC61 & F2311 & Save a non-existent project. & System returns an error indicating the project does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC62 & F2311 & Save a project with invalid data. & System returns an error indicating the project data is invalid. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\
+  TC58 & F236 & Save the project automatically. & The project is saved to the database. & Asserts verify that the project is saved to the database when the user makes changes and the auto-save feature is enabled. & \cellcolor{green} Pass \\ \midrule
+  TC59 & F2311 & Save the project manually. & The project is saved to the database. & Asserts verify that saving a project triggers a file download and confirms the filename in a success message. & \cellcolor{green} Pass \\ \midrule
+  TC60 & F2311 & Save a non-existent project. & System returns an error indicating the project does not exist. & Asserts verify that attempting to save without a loaded project displays an appropriate error message via both the menu and the keyboard shortcut. & \cellcolor{green} Pass \\ \midrule
+  TC61 & F2311 & Save a project with invalid data. & System returns an error indicating the project data is invalid. & Asserts verify that a failed save operation displays an error message to the user. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsection{Export Manager Tests}
 
 \subsubsection{Export Validation and File Export}
-Table~\ref{table:xm_tests} gives the results for export validation and file export (TC63--TC72).
+Table~\ref{table:xm_tests} gives the results for export validation and file export (TC62--TC70).
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.8cm}
-    >{\raggedright\arraybackslash}p{4.2cm}
-    >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
+    >{\raggedright\arraybackslash}p{3.5cm}
+    >{\raggedright\arraybackslash}p{3.5cm}
+  >{\raggedright\arraybackslash}p{5cm} c}
   \caption{Export Manager Test Cases}
   \label{table:xm_tests} \\
   \toprule
@@ -864,16 +864,15 @@ Table~\ref{table:xm_tests} gives the results for export validation and file expo
   \bottomrule
   \endlastfoot
 
-  TC63 & F241 & Validate all voxels have magnetization. & System checks if all voxels have magnetization and returns an error if any voxels are missing magnetization. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC64 & F241 & Validate all voxels have material. & System checks if all voxels have material and returns an error if any voxels are missing material. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC65 & F242 & Export CSV file of an existing project. & System exports a CSV file with all voxel metadata. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC66 & F242 & Export CSV file of a non-existent project. & System returns an error indicating the project does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC67 & F242 & Export CSV file of a project with invalid data. & System returns an error indicating the project data is invalid. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC68 & F243 & Export project file of an existing project. & System exports a project file with all project data. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC69 & F243 & Export project file of a non-existent project. & System returns an error indicating the project does not exist. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC70 & F243 & Export project file of a project with invalid data. & System returns an error indicating the project data is invalid. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC71 & F245 & Export model with summary option enabled. & System exports a model file with a summary of the model. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\ \midrule
-  TC72 & F241 & Export operation is interrupted (simulated failure). & Original project data remains intact and unaltered. & All assertions are met and passed by backend unit test & \cellcolor{green} Pass \\
+  TC62 & F241 & Validate all voxels have magnetization. & System checks if all voxels have magnetization and returns an error if any voxels are missing magnetization. & Asserts verify that validation fails when any voxel has both polar and azimuth magnetization angles at their default (unset) value of zero, whether for a single voxel or all voxels in the project. & \cellcolor{green} Pass \\ \midrule
+  TC63 & F241 & Validate all voxels have material. & System checks if all voxels have material and returns an error if any voxels are missing material. & Asserts verify that validation fails when any voxel has a material ID of zero (unassigned), whether for a single voxel or all voxels in the project, and that validation passes when all voxels have valid materials and magnetization. & \cellcolor{green} Pass \\ \midrule
+  TC64 & F242 & Export CSV file of an existing project. & System exports a CSV file with all voxel metadata. & Asserts verify that the exported CSV contains the correct column headers and voxel data rows, is returned as a downloadable attachment with the correct filename, and the export function completes successfully. & \cellcolor{green} Pass \\ \midrule
+  TC65 & F242 & Export CSV file of a non-existent project. & System returns an error indicating the project does not exist. & Asserts verify that attempting to export a non-existent project returns a 404 error. & \cellcolor{green} Pass \\ \midrule
+  TC66 & F242 & Export CSV file of a project with invalid data. & System returns an error indicating the project data is invalid. & Asserts verify that exporting a project with incomplete voxel data returns a 400 error, and that the export function returns false for an empty project directory. & \cellcolor{green} Pass \\ \midrule
+  TC67 & F243 & Export project file of an existing project. & System exports a project file with all project data. & Asserts verify that the project file is exported successfully with the correct column headers, data rows, and downloadable attachment headers. & \cellcolor{green} Pass \\ \midrule
+  TC68 & F243 & Export project file of a non-existent project. & System returns an error indicating the project does not exist. & Asserts verify that attempting to export a non-existent project file returns a 404 error. & \cellcolor{green} Pass \\ \midrule
+  TC69 & F243 & Export project file of a project with invalid data. & System returns an error indicating the project data is invalid. & Asserts verify that a database error during export returns a 500 error response. & \cellcolor{green} Pass \\ \midrule
+  TC70 & F241 & Export operation is interrupted (simulated failure). & The original project data remains intact and unaltered. & Asserts verify that when an export operation fails, any temporary files are cleaned up and the original project data remains intact. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \section{Changes Due to Testing}
@@ -886,7 +885,7 @@ During the VnV process, several changes to the project that were made based on t
 Feedback from usability testing led to the following usability and user-input changes:
 
 \begin{itemize}
-  \item \textbf{Project and file menus:} A project popup after selecting a file to show existing projects, improving feedback and selection, as it was not clear where to naviagte to open a project.
+  \item \textbf{Project and file menus:} A project popup after selecting a file to show existing projects, improving feedback and selection, as it was not clear where to navigate to open a project.
   \item \textbf{Layer editor:} The magnitude control in the layer editor was removed to reduce clutter and confusion and as it was not used by the stakeholders.
   \item \textbf{File and material naming:} File naming was reviewed to handle spaces and to indicate when a file with the same name already exists. Material naming in settings was reviewed for clarity and consistency.
   \item \textbf{Magnetization display:} A checkmark or toggle was added to show or hide magnetization, giving users control over what is displayed.
@@ -898,7 +897,7 @@ Feedback from usability testing led to the following usability and user-input ch
 The following changes address the sequence of user actions and overall flow from opening a file to working with partitions:
 
 \begin{itemize}
-  \item \textbf{Partition visibility:} The cause of partitions not showing immediately was investigated and addressed so that partitions appear promptly after selecting a project or confirguring a new one.
+  \item \textbf{Partition visibility:} The cause of partitions not showing immediately was investigated and addressed so that partitions appear promptly after selecting a project or configuring a new one.
   \item \textbf{Reduced redundancy:} When a file is already open, re-selecting or re-confirming the same file is no longer required for subsequent actions where possible.
 \end{itemize}
 
@@ -919,10 +918,11 @@ Usability testing also highlighted potential enhancements for future work:
   \item \textbf{Partition logic:} Revisit or extend partition logic to support more flexible partitioning strategies and user control.
   \item \textbf{Lasso tool:} Consider a lasso (or similar) selection tool to add voxels in a more intuitive way.
   \item \textbf{Export Model Summary:} Add a model summary to the export model file to allow users to see what changes were made to the model.
+  \item \textbf{Favourite Magnetization Vectors:} Add a favourite magnetization vectors feature to the system to allow users to save and reuse frequently used magnetization vectors.
   \item \textbf{Export Progress Trackers:} Test the export performance of the system to ensure it meets the requirements and improve the progress tracker.
 \end{itemize}
 
-Overall, the testing phase was successfull and played a crucial role in the development of the system. It allowed for the identification of issues and the implementation of improvements, ensuring the system is of high quality and meets the requirements of the stakeholders.
+Overall, the testing phase was successful and played a crucial role in the development of the system. It allowed for the identification of issues and the implementation of improvements, ensuring the system is of high quality and meets the requirements of the stakeholders.
 
 \section{Automated Testing}\label{sec:automated-testing}
 
@@ -1020,13 +1020,13 @@ TC27 & \xbox & \obox & \obox & \obox & \obox & \obox \\
 TC28 & \xbox & \obox & \obox & \obox & \obox & \obox \\
 TC29 & \xbox & \obox & \obox & \obox & \obox & \obox \\
 TC30 & \xbox & \obox & \obox & \obox & \obox & \obox \\
-TC31 & \obox & \xbox & \obox & \obox & \obox & \obox \\
+TC31 & \obox & \obox & \xbox & \obox & \obox & \obox \\
 TC32 & \obox & \obox & \xbox & \obox & \obox & \obox \\
 TC33 & \obox & \obox & \xbox & \obox & \obox & \obox \\
-TC34 & \obox & \obox & \xbox & \obox & \obox & \obox \\
-TC35 & \xbox & \obox & \xbox & \obox & \obox & \obox \\
-TC36 & \obox & \obox & \obox & \xbox & \obox & \obox \\
-TC37 & \obox & \obox & \obox & \obox & \xbox & \obox \\
+TC34 & \xbox & \obox & \xbox & \obox & \obox & \obox \\
+TC35 & \obox & \obox & \obox & \xbox & \obox & \obox \\
+TC36 & \obox & \obox & \obox & \obox & \xbox & \obox \\
+TC37 & \obox & \obox & \obox & \obox & \obox & \xbox \\
 TC38 & \obox & \obox & \obox & \obox & \obox & \xbox \\
 TC39 & \obox & \obox & \obox & \obox & \obox & \xbox \\
 TC40 & \obox & \obox & \obox & \obox & \obox & \xbox \\
@@ -1035,7 +1035,6 @@ TC42 & \obox & \obox & \obox & \obox & \obox & \xbox \\
 TC43 & \obox & \obox & \obox & \obox & \obox & \xbox \\
 TC44 & \obox & \obox & \obox & \obox & \obox & \xbox \\
 TC45 & \obox & \obox & \obox & \obox & \obox & \xbox \\
-TC46 & \obox & \obox & \obox & \obox & \obox & \xbox \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1053,22 +1052,22 @@ Table~\ref{tab:report-emt-2} shows the trace between Editing Manager test cases 
 \textbf{Reqs:}
 & F238 & F239 & F2310 & F2311 \\
 \midrule
+TC46 & \xbox & \obox & \obox & \obox \\
 TC47 & \xbox & \obox & \obox & \obox \\
 TC48 & \xbox & \obox & \obox & \obox \\
 TC49 & \xbox & \obox & \obox & \obox \\
 TC50 & \xbox & \obox & \obox & \obox \\
 TC51 & \xbox & \obox & \obox & \obox \\
-TC52 & \xbox & \obox & \obox & \obox \\
+TC52 & \obox & \xbox & \obox & \obox \\
 TC53 & \obox & \xbox & \obox & \obox \\
 TC54 & \obox & \xbox & \obox & \obox \\
-TC55 & \obox & \xbox & \obox & \obox \\
+TC55 & \obox & \obox & \xbox & \obox \\
 TC56 & \obox & \obox & \xbox & \obox \\
 TC57 & \obox & \obox & \xbox & \obox \\
-TC58 & \obox & \obox & \xbox & \obox \\
+TC58 & \obox & \obox & \obox & \xbox \\
 TC59 & \obox & \obox & \obox & \xbox \\
 TC60 & \obox & \obox & \obox & \xbox \\
 TC61 & \obox & \obox & \obox & \xbox \\
-TC62 & \obox & \obox & \obox & \xbox \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1086,16 +1085,15 @@ Table~\ref{tab:report-xmt} shows the trace between Export Manager test cases and
 \textbf{Reqs:}
 & F241 & F242 & F243 & F244 & F245 \\
 \midrule
+TC62 & \xbox & \obox & \obox & \obox & \obox \\
 TC63 & \xbox & \obox & \obox & \obox & \obox \\
-TC64 & \xbox & \obox & \obox & \obox & \obox \\
+TC64 & \obox & \xbox & \obox & \obox & \obox \\
 TC65 & \obox & \xbox & \obox & \obox & \obox \\
 TC66 & \obox & \xbox & \obox & \obox & \obox \\
-TC67 & \obox & \xbox & \obox & \obox & \obox \\
+TC67 & \obox & \obox & \xbox & \obox & \obox \\
 TC68 & \obox & \obox & \xbox & \obox & \obox \\
 TC69 & \obox & \obox & \xbox & \obox & \obox \\
-TC70 & \obox & \obox & \xbox & \obox & \obox \\
-TC71 & \obox & \obox & \obox & \obox & \xbox \\
-TC72 & \xbox & \obox & \obox & \obox & \obox \\
+TC70 & \xbox & \obox & \obox & \obox & \obox \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1187,7 +1185,7 @@ TC64 & \xbox & \xbox & \obox \\
 TC65 & \xbox & \xbox & \obox \\
 TC66 & \xbox & \xbox & \obox \\
 TC67 & \xbox & \xbox & \obox \\
-CO-3 (Compliance Test) & \xbox & \obox & \obox \\
+CO-3 (Portability Test) & \xbox & \obox & \obox \\
 US-2 (Usability Test) & \obox & \xbox & \obox \\
 PS-2 (Performance Test) & \obox & \xbox & \obox \\
 Not Explicitly Tested & \obox & \obox & \xbox \\ 
@@ -1292,13 +1290,13 @@ TC27 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
 TC28 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
 TC29 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
 TC30 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
-TC31 & \xbox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
+TC31 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
 TC32 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
 TC33 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
 TC34 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
-TC35 & \xbox & \xbox & \obox & \obox & \obox & \obox & \xbox \\
-TC36 & \xbox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
-TC37 & \xbox & \xbox & \xbox & \xbox & \obox & \obox & \xbox \\
+TC35 & \xbox & \xbox & \obox & \obox & \xbox & \obox & \obox \\
+TC36 & \xbox & \xbox & \xbox & \xbox & \obox & \obox & \xbox \\
+TC37 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
 TC38 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
 TC39 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
 TC40 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
@@ -1307,7 +1305,6 @@ TC42 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
 TC43 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
 TC44 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
 TC45 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
-TC46 & \xbox & \xbox & \xbox & \obox & \obox & \obox & \obox \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1324,22 +1321,22 @@ Table~\ref{tab:report-tm-edit-2} shows the trace between Editing Manager test ca
 \toprule
 \textbf{TC} & M4 & M5 & M7 & M10 & M14 \\
 \midrule
+TC46 & \obox & \xbox & \xbox & \xbox & \xbox \\
 TC47 & \obox & \xbox & \xbox & \xbox & \xbox \\
 TC48 & \obox & \xbox & \xbox & \xbox & \xbox \\
 TC49 & \obox & \xbox & \xbox & \xbox & \xbox \\
 TC50 & \obox & \xbox & \xbox & \xbox & \xbox \\
 TC51 & \obox & \xbox & \xbox & \xbox & \xbox \\
-TC52 & \obox & \xbox & \xbox & \xbox & \xbox \\
+TC52 & \obox & \xbox & \xbox & \obox & \xbox \\
 TC53 & \obox & \xbox & \xbox & \obox & \xbox \\
 TC54 & \obox & \xbox & \xbox & \obox & \xbox \\
 TC55 & \obox & \xbox & \xbox & \obox & \xbox \\
 TC56 & \obox & \xbox & \xbox & \obox & \xbox \\
 TC57 & \obox & \xbox & \xbox & \obox & \xbox \\
-TC58 & \obox & \xbox & \xbox & \obox & \xbox \\
+TC58 & \xbox & \obox & \obox & \obox & \obox \\
 TC59 & \xbox & \obox & \obox & \obox & \obox \\
 TC60 & \xbox & \obox & \obox & \obox & \obox \\
 TC61 & \xbox & \obox & \obox & \obox & \obox \\
-TC62 & \xbox & \obox & \obox & \obox & \obox \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1356,16 +1353,15 @@ Table~\ref{tab:report-tm-export} shows the trace between Export Manager test cas
 \toprule
 \textbf{TC} & M9 & M11 & M12 & M13 & M14 & M16 \\
 \midrule
+TC62 & \xbox & \xbox & \obox & \obox & \xbox & \obox \\
 TC63 & \xbox & \xbox & \obox & \obox & \xbox & \obox \\
-TC64 & \xbox & \xbox & \obox & \obox & \xbox & \obox \\
+TC64 & \obox & \obox & \xbox & \obox & \xbox & \xbox \\
 TC65 & \obox & \obox & \xbox & \obox & \xbox & \xbox \\
 TC66 & \obox & \obox & \xbox & \obox & \xbox & \xbox \\
-TC67 & \obox & \obox & \xbox & \obox & \xbox & \xbox \\
+TC67 & \obox & \obox & \xbox & \obox & \xbox & \obox \\
 TC68 & \obox & \obox & \xbox & \obox & \xbox & \obox \\
 TC69 & \obox & \obox & \xbox & \obox & \xbox & \obox \\
-TC70 & \obox & \obox & \xbox & \obox & \xbox & \obox \\
-TC71 & \obox & \obox & \xbox & \obox & \xbox & \xbox \\
-TC72 & \xbox & \xbox & \obox & \obox & \xbox & \obox \\
+TC70 & \xbox & \xbox & \obox & \obox & \xbox & \obox \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1427,7 +1423,7 @@ graduate attribute of Reflection.
 
 \subsubsection*{1. What went well while writing this deliverable?}
 \bigskip\bigskip
-\textbf{Omar: } The main thing that went well was connecting the VnV plan with the VnV report. The plan already defined the tests clearly, so it was straightforward to structure the report around usability, performance, compliance, maintainability, and security. The usability testing also went well since we were able to get feedback from both technical and non-technical users, which helped validate that the interface and main features were intuitive.
+\textbf{Omar: } The main thing that went well was connecting the VnV plan with the VnV report. The plan already defined the tests clearly, so it was straightforward to structure the report around usability, performance, portability, maintainability, and security. The usability testing also went well since we were able to get feedback from both technical and non-technical users, which helped validate that the interface and main features were intuitive.
 \newline
 \newline
 \textbf{Daniel: } I worked on the backend unit tests, as well as the organization of the usability test with our supervisor and her graduate students, which both went fairly smoothly in spite of the time crunch. The reorganization of the backend into cohesive modules and functions that I participated in was extremely helpful when generating all unit test cases, as well as their relative simplicity. The structure of the usability test - providing as little instruction as possible - also made it easy to identify parts of the software that still need work in terms of understandability.
@@ -1439,7 +1435,7 @@ graduate attribute of Reflection.
 \textbf{Olivia: } During this deliverable, I helped write some of the backend unit tests and was the primary person writing the usability report after usability testing, which was conducted by all group members. Due to the nature of this deliverable, I think that it really helped us narrow down some of the major areas that require improvement and further development as well as build confidence in the code that was already developed. With the final deadlines quickly approaching, there is a lot to do in very little time. Therefore, this type of direction is important to ensure that we make the best use out of the time we have remaining. 
 \newline
 \newline
-\textbf{Khalid: } I worked on the unit tests and tracibility between the test cases and the requirements. Having the tracibility between the functional requirements and modules in the MIS document was very helpful in ensuring that all the test cases were covered and that the test cases were testing the correct functionality. It was also helpful to have the tracibility between the test cases and the modules in the VnV Plan document. Overall, this deliverable went really well as everything was clearly defined and we were able to complete it on time. Another thing that was helpful was the fact that I didn't have much university work to do at the same time, so I was able to focus on this deliverable and get it done on time.
+\textbf{Khalid: } I worked on the unit tests and traceability between the test cases and the requirements. Having the traceability between the functional requirements and modules in the MIS document was very helpful in ensuring that all the test cases were covered and that the test cases were testing the correct functionality. It was also helpful to have the traceability between the test cases and the modules in the VnV Plan document. Overall, this deliverable went really well as everything was clearly defined and we were able to complete it on time. Another thing that was helpful was the fact that I didn't have much university work to do at the same time, so I was able to focus on this deliverable and get it done on time.
 
 \subsubsection*{2. What pain points did you experience during this deliverable, and how
 did you resolve them?}

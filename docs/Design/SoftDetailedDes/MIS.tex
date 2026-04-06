@@ -12,6 +12,7 @@
 \usepackage{longtable}
 \usepackage{xfrac}
 \usepackage{tabularx}
+\usepackage{array}
 \usepackage{float}
 \usepackage{siunitx}
 \usepackage{booktabs}
@@ -103,13 +104,17 @@ multiple assignment statement and conditional rules follow the form $(c_1
 
 The following table summarizes the primitive data types used by \progname. 
 
-\begin{center}
+\begin{table}[H]
+\centering
 \renewcommand{\arraystretch}{1.2}
 \noindent 
-\begin{tabular}{l l p{7.5cm}} 
-\toprule 
+\caption{Datatypes Summary}\label{TblDT}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{4cm}
+                |>{\raggedright\arraybackslash}p{4cm}
+                |>{\raggedright\arraybackslash}p{7.5cm}|}
+\hline
 \textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
-\midrule
+\hline
 character & char & a single symbol or digit\\
 string & str & a sequence of characters\\
 integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
@@ -126,9 +131,9 @@ tuple & tuple[T$_1$, T$_2$, \ldots] or tuple[T] & an ordered collection of value
 three-dimensional array & array3d[type] & an ordered, three-dimensional set where each entry can be referenced via integers starting from 0\\
 void & void & indicates no return value\\
 current instance & self & a reference to the current instance of a module\\
-\bottomrule
-\end{tabular} 
-\end{center}
+\hline
+\end{tabular}
+\end{table}
 
 \noindent
 The specification of \progname \ uses some derived data types: sequences, strings, and
@@ -138,9 +143,9 @@ different types. In addition, \progname \ uses functions, which
 are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification.
 
-Finally, \progname uses some enums and refers to some derived types via other aliases for 
+Finally, \progname \ uses some enums and refers to some derived types via other aliases for 
 ease of notation and understanding. For instance, Vector3D and Voxel are both aliases for a tuple
-with 3 real values; UIEvent, VisualUpdate, Action, and propertyName are each enums.  
+with 3 real values; UIEvent, VisualUpdate, Action, propertyName, and DataType are each enums.  
 
 \section{Module Decomposition}
 
@@ -181,7 +186,6 @@ The following table is taken directly from the Module Guide document for this pr
   \end{tabular}
   \end{table}
 \newpage
-~\newpage
 
 \section{MIS of Input Interpreter (M1)}\label{Module1}
 
@@ -610,16 +614,17 @@ The InteractionController module manages the process of raw events from interact
 \subsubsection{Exported Constants}
 \begin{itemize}
   \item \texttt{UI\_EVENTS: list[UIEvent]} - identifies all supported UI events that can be detected from user interaction.
-  \item \texttt{UI\_ACTIONS: : list[UIAction]} - identifies all supported interactions that can be derived from UI events.
+  \item \texttt{UI\_ACTIONS: list[UIAction]} - identifies all supported interactions that can be derived from UI events.
 \end{itemize}
 
 \subsubsection{Exported Access Programs}
 \begin{center}
 \renewcommand{\arraystretch}{1.55}
-\begin{tabular}{p{4cm} p{4cm} p{3cm} p{3cm}}
+\begin{tabular}{p{4.5cm} p{4cm} p{4cm} p{3cm}}
 \toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \midrule
+\texttt{InteractionController} & \texttt{initialView: View} & \texttt{self} & None \\ 
 \texttt{interpretEvent} & \texttt{event: UIEvent} & \texttt{list[VisualUpdate]} & None \\
 \bottomrule
 \end{tabular}
@@ -644,6 +649,13 @@ None.
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
+\texttt{InteractionController(initialView: View) -> self}
+\begin{itemize}
+  \item \textbf{Transition:} Creates a new InteractionController object and initializes the first view the user begins on.
+  \item \textbf{Output:} \texttt{self} - a reference to itself
+  \item \textbf{Exceptions:} None
+\end{itemize}
+
 \texttt{interpretEvent(event: UIEvent) -> list[VisualUpdate]}
 \begin{itemize}
   \item \textbf{Transition:} translates a \texttt{UIEvent} into a set of \texttt{VisualUpdate}s to be carried out by the \texttt{VisualizationStateManager}, and orchestrates/begins any processes on the model, project, or related to exporting.
@@ -651,7 +663,7 @@ None.
     \item parses \texttt{UIEvent}
     \item if no model/project actions are being taken, returns a list of \texttt{VisualUpdates}
     \item if edits to the model are made, additionally calls \texttt{handleModelUpdate}
-    \item if requests to save/load a project or workspace are made, additionally calls \texttt{handleProjectUpdate}
+    \item if requests to save/load a project or workspace are made, additionally calls \\ \texttt{handleProjectUpdate}
     \item if requests to export model are made, additionally calls \texttt{handleExportUpdate}
   \end{itemize}
   \item \textbf{Output:} \texttt{list[VisualUpdate]} for the \texttt{VisualizationStateManager} to execute
@@ -731,11 +743,12 @@ The VisualizationManager module maintains visualization-related state associated
 \subsubsection{Exported Access Programs}
 \begin{center}
 \renewcommand{\arraystretch}{1.55}
-\begin{tabular}{p{4cm} p{6cm} p{3cm} p{2.5cm}}
+\begin{tabular}{p{5.5cm} p{3cm} p{3cm} p{2.5cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\ \hline
-\texttt{getCurrentView} & None & str & None \\
-\texttt{setView} & state: str & void & None \\
+\texttt{VisualizationStateManager} & None & \texttt{self} & None \\
+\texttt{getCurrentView} & None & \texttt{str} & None \\
+\texttt{setView} & \texttt{state: str} & \texttt{void} & None \\
 \hline
 \end{tabular}
 \end{center}
@@ -784,6 +797,12 @@ The VisualizationManager module maintains visualization-related state associated
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
+VisualizationStateManager() $\rightarrow$ self
+\begin{itemize}
+  \item Transition: Creates a new VisualizationStateManager object and initializes all state variables to default values
+  \item Output: self - a reference to itself
+  \item Exceptions: None.
+\end{itemize}
 
 getCurrentView() $\rightarrow$ str
 \begin{itemize}
@@ -829,6 +848,7 @@ The ModelManager module manages and mutates the voxel-based 3D model. It provide
 \toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \midrule
+\texttt{ModelManager} & voxelGrid: ModelStructure & self & None \\
 \texttt{addVoxel} & coord: Any, material: Any, mag: Any & void & InvalidInputError \\
 \texttt{removeVoxel} & coord: Any & void & NotFoundError \\
 \texttt{modifyVoxel} & coord: Any, newData: Any & void & NotFoundError \\
@@ -844,7 +864,7 @@ The ModelManager module manages and mutates the voxel-based 3D model. It provide
 
 \subsubsection{State Variables}
 \begin{itemize}
-  \item \texttt{voxelGrid}: VoxelGrid — stores all voxel elements and layer mapping.
+  \item \texttt{voxelGrid}: ModelStructure — stores all voxel elements and layer mapping.
   \item \texttt{metadata}: dict — contains file name, author, timestamp, etc.
   \item \texttt{unsavedChanges}: bool — true if edits have occurred since last save.
 \end{itemize}
@@ -862,6 +882,13 @@ The ModelManager module manages and mutates the voxel-based 3D model. It provide
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
+
+ModelManager(voxelGrid: ModelStructure) $\rightarrow$ self
+\begin{itemize}
+  \item Transition: Creates a new ModelManager object and loads an initial ModelStructure to be operated on
+  \item Output: self - a reference to itself
+  \item Exceptions: None.
+\end{itemize}
 
 addVoxel(coord: Any, material: Any, mag: Any) $\rightarrow$ void
 \begin{itemize}
@@ -1021,6 +1048,7 @@ The HistoryManager module maintains the complete change history of the 3D voxel 
 \toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \midrule
+\texttt{HistoryManager} & None & \texttt{self} & None \\
 \texttt{recordChange} & \texttt{delta: modelDelta} & None & None \\
 \texttt{undoRequest} & None & \texttt{delta: modelDelta} & \texttt{EmptyHistoryError} \\
 \texttt{redoRequest} & None & \texttt{delta: modelDelta} & \texttt{EmptyHistoryError} \\
@@ -1048,6 +1076,12 @@ None.
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
+\texttt{HistoryManager() -> self}
+\begin{itemize}
+  \item \textbf{Transition:} Creates new HistoryManager object and initializes history and redo stacks.
+  \item \textbf{Output:} \texttt{self} - a reference to itself
+  \item \textbf{Exceptions:} None
+\end{itemize}
 \texttt{recordChange(delta: modelDelta) -> None}
 \begin{itemize}
   \item \textbf{Transition:} adds passed change to \texttt{historyStack}, and calls \texttt{clearRedo()}
@@ -1323,6 +1357,11 @@ The HighlightManager module manages the voxel highlights in accordance with visu
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
 
+\texttt{HighlightManager} &
+highlightColourMap: dict[str] = str &
+self &
+None \\
+
 \texttt{getHighlight} &
 semanticKey: str &
 ColourValue &
@@ -1362,11 +1401,18 @@ None
 
 \subsubsection{Assumptions}
 \begin{itemize}
-  \item Semantic keys must correspond to valid entries maintained by the TrackingManager.
+  \item Semantic keys must correspond to valid entries stored within ModelStructure and elsewhere.
   \item Colour values are valid colour representations.
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
+
+HighlightManager(highlightColourMap: dict[str] = str) $\rightarrow$ self
+\begin{itemize}
+  \item Transition: Creates new HighlightManager object and initializes highlight mapping dictionary
+  \item Output: self -  a reference to itself.
+  \item Exceptions: None.
+\end{itemize}
 
 getHighlight(semanticKey: str) $\rightarrow$ str
 \begin{itemize}
@@ -1425,7 +1471,7 @@ The ExportValidation module validates export readiness by checking export file f
 
 \begin{center}
 \renewcommand{\arraystretch}{1.55}
-\begin{tabular}{p{5cm} p{5cm} p{3.5cm} p{2cm}}
+\begin{tabular}{p{6cm} p{4cm} p{3.5cm} p{2cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
@@ -1914,6 +1960,7 @@ The ExportStructure module defines and implements the internal data structure fo
 \toprule
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \midrule
+\texttt{ExportStructure} & None & self & None \\ 
 \texttt{defineStructure} & format: str & dict[str] = Any & UnsupportedFormatError \\
 \texttt{getFieldOrder} & format: str & list[str] & UnsupportedFormatError \\
 \texttt{getFieldType} & fieldName: str & Any & InvalidFieldError \\
@@ -1944,6 +1991,13 @@ None
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
+
+ExportStructure() $\rightarrow$ self
+\begin{itemize}
+  \item Transition: Creates a new ExportStructure object
+  \item Output: self - a reference to itself
+  \item Exceptions: None.
+\end{itemize}
 
 defineStructure(format: str) $\rightarrow$ dict[str] = Any
 \begin{itemize}
@@ -2100,6 +2154,6 @@ Several alternative design approaches were considered. A monolithic design, wher
 
 To increase the likelihood that our peers would be able to produce usable and insightful code, we chose one of the more straightforward modules. In the end, I think that was the best choice, as their team was able to understand and closely follow our MIS documentation. When comparing our MIS and their module implementation, the resemblance between the two is evident. It was also nice to see that the module they provided us with does feel like a solid basis for the logic we were aiming to implement. I could see our team using it as a starting point to extrapolate on when looking to integrate this module into our program. 
 
-Overall, the group that implemented our module didn’t have many questions, which is a promising indicator that documentation was clear and easy to understand. The only time they reached out was to see if there were any sections in the other documentation that we had done (outside the MIS) that would be helpful to review. We did provide them a few sections in the SRS (S2.2.3, S.4.2, & S.4.4) as a reference in case they wanted greater detail for how the module would be used. We also took this opportunity to clarify that ultimately this module should focus on the backend, with its functionality being invoked by a separate frontend-focused module. Reflecting back, the clarity of our documentation could be improved by explicitly indicating whether each module is frontend- or backend-focused. For example, the short section 13.1 of the MIS does state that it is tracking incremental changes triggered by user modification. In retrospect, phrasing such as “triggered by user modification” may be interpreted as implying frontend involvement. Cases like this are instances where being mindful of wording within each module description would add further clarity and would likely reduce the chance of oversight. It is important to remember that even if someone is able to review and understand the entire MIS, it can still be difficult to remember all the details on how the modules interact as an outsider who doesn’t intuitively know how the program operates. 
+Overall, the group that implemented our module didn’t have many questions, which is a promising indicator that documentation was clear and easy to understand. The only time they reached out was to see if there were any sections in the other documentation that we had done (outside the MIS) that would be helpful to review. We did provide them a few sections in the SRS (S2.2.3, S.4.2, \& S.4.4) as a reference in case they wanted greater detail for how the module would be used. We also took this opportunity to clarify that ultimately this module should focus on the backend, with its functionality being invoked by a separate frontend-focused module. Reflecting back, the clarity of our documentation could be improved by explicitly indicating whether each module is frontend- or backend-focused. For example, the short section 13.1 of the MIS does state that it is tracking incremental changes triggered by user modification. In retrospect, phrasing such as “triggered by user modification” may be interpreted as implying frontend involvement. Cases like this are instances where being mindful of wording within each module description would add further clarity and would likely reduce the chance of oversight. It is important to remember that even if someone is able to review and understand the entire MIS, it can still be difficult to remember all the details on how the modules interact as an outsider who doesn’t intuitively know how the program operates. 
 
 \end{document}

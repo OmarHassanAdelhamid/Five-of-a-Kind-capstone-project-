@@ -22,6 +22,41 @@ AutoVox is a full-stack web application that **converts standard STL mesh files 
 
 ---
 
+## macOS desktop app (download)
+
+Pre-built **Apple Silicon (ARM64)** app is shipped as a **zip** that contains **`Autovox.app`** (not a DMG). The archive may be stored with **Git LFS**; use GitHub’s file page to download the real zip, not a `/raw/` URL (that can show an LFS pointer).
+
+1. Open **[`Autovox-0.1.0-arm64-mac.zip` on GitHub](https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/blob/main/src/app/release/Autovox-0.1.0-arm64-mac.zip)**.
+2. Click **Download raw file** (or **⋯** → **Download**).
+
+**Install**
+
+1. Unzip the download — you get **`Autovox.app`**.
+2. Drag **Autovox** into **Applications** (or run it from **Downloads**).
+3. The build is **not signed or notarized** by Apple. The first time you open it, use **Control+click** → **Open** → **Open**, or **System Settings → Privacy & Security** → **Open Anyway** after a blocked launch.
+4. On **first run**, the app may ask for **Python 3.9+** (or use the setup flow) so it can create a local environment and install the bundled FastAPI backend.
+
+With Git: `git lfs install`, clone, then `git lfs pull` if the zip is tracked with LFS.
+
+**“Autovox is damaged and can’t be opened” (move to Trash)**  
+Usually **Gatekeeper / quarantine** on unsigned builds, not a bad download. After unzipping, clear quarantine on the app (or the zip before unzipping), then open again:
+
+```bash
+xattr -cr ~/Downloads/Autovox.app
+# or, if you moved it:
+xattr -cr /Applications/Autovox.app
+```
+
+Optional before unzip:
+
+```bash
+xattr -d com.apple.quarantine ~/Downloads/Autovox-0.1.0-arm64-mac.zip
+```
+
+To rebuild the zip from source: from `src/app`, run `npm install` (once) then `npm run pack` (`electron-builder` writes `release/Autovox-0.1.0-arm64-mac.zip` and an unpacked `release/mac-arm64/Autovox.app` for local testing only — only the **zip** is meant for sharing).
+
+---
+
 ## Features
 
 - **STL Import** — Upload any `.stl` file and automatically voxelize the mesh at a configurable resolution
@@ -61,6 +96,7 @@ AutoVox/
 │       └── app/
 │           ├── routers/       # stl, project, edit, export endpoints
 │           └── services/      # voxelization, editing, history, export
+│   └── app/               # Electron desktop app; release DMG under release/
 ├── docs/                  # SRS, design docs, VnV plans (LaTeX)
 └── refs/                  # Reference papers and materials
 ```

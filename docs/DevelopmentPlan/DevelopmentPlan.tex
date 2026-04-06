@@ -31,6 +31,7 @@ Sept. 21, 2025 & Khalid Farag & First Draft of Project Decomposition and Schedul
 Sept. 21, 2025 & Andrew Bovbel & First Draft of Expected Technologies and Coding Standard\\
 Sept. 21, 2025 & All & Team Charter\\
 Sept. 22, 2025 & All & Final Revisions to respective sections\\
+April 2nd, 2026 & Khalid Farag & Final Changes to Development Plan\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -178,9 +179,27 @@ not necessary at this stage.  In a student team the role of the individuals will
 likely change throughout the year.}
 \fi
 
-The following are roles that each team member will pick up throughout the year, or according to the situation.
-Therefore, specific individuals are not listed here. In addition, multiple members may take on the same role (eg. in the
-case of Domain Expert).\\
+The following table outlines the initial role assignments for each team member at the start of the project.
+Roles may rotate or shift throughout the year as the project evolves and according to the situation.
+Multiple members may take on the same role (e.g.\ in the case of Domain Expert and Code Reviewer).
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+  \toprule
+  \textbf{Role} & \textbf{Team Member(s)} \\
+  \midrule
+  Team Manager        & Omar Hassan Adelhamid \\
+  Notetaker           & Daniel Maurer \\
+  Meeting Chair       & Daniel Maurer \\
+  Document Reviewer   & Khalid Farag \\
+  Code Reviewer       & Andrew Bovbel, Olivia Reich, Daniel Maurer \\
+  Communication Officer & Omar Hassan Adelhamid \\
+  Domain Expert       & Khalid Farag, Olivia Reich, Andrew Bovbel \\
+  \bottomrule
+\end{tabularx}
+\end{center}
+
+The following are descriptions of each role that team members will take on throughout the year.\\
 
 \textit{Team Manager} - The individual who takes on this role will take the lead on keeping the team on track. They
 will closely monitor the deadlines and ensure that the team is on track with meeting the course deadlines as well as
@@ -234,18 +253,29 @@ to assist in any technical review related to their subject matter of expertise.
 \end{itemize}
 \fi
 
-This section details how Git will be used throughout the project, as well as how Continuous Integration/Deployment will
-be implemented.\\
+This section details how Git will be used throughout the project, as well as how Continuous Integration/Deployment will be implemented. Git will be utilized as the primary, centralized collaboration space for both project
+source code and its related documentation. The repository will maintain one permanent protected branch:
 
-Git will be utilized as the primary, centralized collaboration space for both project
-source code and its related documentation. Members will create new branches for each
-feature to be implemented, as well as per each member (eg. branches will not be shared). 
-Commits should each contain a descriptive message of all edits, and ideally not lump together various changes. 
+\begin{itemize}
+  \item \texttt{main} --- the stable branch representing the latest submitted or
+  release-ready state of the project. Direct pushes are not permitted; all changes
+  must arrive via a reviewed pull request from a short-lived branch.
+\end{itemize}
+
+All other branches are short-lived and must follow the naming convention
+\texttt{<name>-<description>}, where \texttt{name} is the author's first name and
+\texttt{description} is a brief \texttt{kebab-case} summary of the work (2--4 words).
+Branches will not be shared between members; each member creates their own branch
+for each unit of work. For example, a branch by Khalid to implement voxel rendering
+would be named \texttt{khalid-voxel-rendering}. Once the work on a branch is complete
+and its pull request is merged into \texttt{main}, the branch should be deleted.\\
+
+Commits should each contain a descriptive message of all edits, and ideally not lump together various changes.
 When a member is complete with their work on a given branch, they will create a pull request
-with an appropriate description describing changes, related labels, and reviewers. 
-For instance, an acceptable reviewer could be someone working on a related feature, 
+with an appropriate description describing changes, related labels, and reviewers.
+For instance, an acceptable reviewer could be someone working on a related feature,
 or the group if it affects everyone. Labels should give an estimate of how long it might take to
-review. Each pull request should also be linked to a given issue (eg. via closes \#20). Comments within pull 
+review. Each pull request should also be linked to a given issue (eg.\ via \texttt{closes \#20}). Comments within pull
 requests will also be taken advantage of, allowing feedback to be directly linked to source
 code or documentation.
 
@@ -262,24 +292,20 @@ Additionally, for general issues, new general labels will be created:
 
 \begin{itemize}
   \item documentation
-  \item code
-  \item question
-  \item easy / hard
-  \item bug-fix
-  \item need help
+  \item bug
+  \item Peer Implementation
+  \item enhancement
+  \item lecture
+  \item meeting
+  \item reflection
 \end{itemize}
 
 For larger tasks, specific labels will be created to allow for quick searching through issues.
 
-All issues should also contain a reasonable description describing the bug / feature / 
-section of documentation. As a rule of thumb, issues should not be the full task but rather
-manageable, assignable chunks of it (eg. Finish Requirements Doc is a bad issue; Finish a specific 
-section of the Doc would be better). Similar to pull requests, issues will also be given assignees, 
-who will also be responsible for managing issue movement in the GitHub project (eg. moving from 
-In Progress to In Review).
+All issues should also contain a reasonable description describing the bug/feature/section of documentation.
+As a rule of thumb, issues should not be the full task but rather manageable, assignable chunks of it (eg. Finish Requirements Doc is a bad issue; Finish a specific section of the Doc would be better). Similar to pull requests, issues will also be given assignees, who will also be responsible for managing issue movement in the GitHub project (eg. moving from In Progress to In Review).
 
-To incorporate continuous integration, upon each push/pull request, all tests in the test suite
-will be run automatically via GitHub Actions.
+To incorporate continuous integration, upon each push/pull request, all tests in the test suite will be run automatically via GitHub Actions.
 
 \section{Project Decomposition and Scheduling}
 
@@ -296,20 +322,66 @@ for deadlines.}
 
 This section details how the project will be decomposed into manageable pieces and how these parts are scheduled.\\
 
-The team will use Github Projects as the central platform to monitor the progress of the project. This tool will help ensure that issues/tasks are organized, responsibilities are clear, and the project is on track. The link to the Github project is here: \href{https://github.com/users/OmarHassanAdelhamid/projects/2/views/1}{Github Project}.
+The team will use GitHub Projects as the central platform to monitor the progress of the project. This tool will help ensure that issues/tasks are organized, responsibilities are clear, and the project is on track. The link to the GitHub project is here: \href{https://github.com/users/OmarHassanAdelhamid/projects/2/views/1}{GitHub Project}.
 
-\subsection{Github Projects}
-\begin{itemize}
-  \item Github Projects will be used to plan, manage, and track the workflow by creating issues and organizing them through the different stages of the project.
-  \item Each issue will be labeled appropriately to help organize them and provide clarity on the progress of the project.
-  \item Issues will be assigned to team members to clearly identify ownership and responsibility.
-  \item Issues will be linked to different project stages to show how tasks move through the development cycle
-  \item Issues on the project will be linked to the different deliverables of the project to help track the progress of the project.
-\end{itemize}
+\subsection{GitHub Projects}
+
+GitHub Projects will be used to plan, manage, and track the workflow by creating issues and
+organizing them through the different stages of the project. The project board will use the
+following columns, through which every issue must progress in order:
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+  \toprule
+  \textbf{Column} & \textbf{Description} \\
+  \midrule
+  Backlog     & All identified tasks that have not yet been scheduled for the current
+                iteration. Issues are created here first. \\
+  In Progress & Tasks actively being worked on. An issue should move here when a
+                corresponding branch is created. \\
+  In Review   & Tasks whose pull request has been opened and is awaiting code or
+                document review. \\
+  Done        & Tasks whose pull request has been approved and merged. \\
+  Meetings    & Meetings that have been scheduled either between the team or with the supervisor and are recorded in the GitHub project. \\
+  Lectures    & Lectures that have been attended and are recorded in the GitHub project. \\
+  \bottomrule
+\end{tabularx}
+\end{center}
 
 \subsection{Project Scheduling}
 
-The project will be scheduled based on the capstone deliverables, the team will prioritize the deliverables and schedule them accordingly. At each deliverable, the sections will be broken down into smaller tasks and these tasks will be assigned to team members. The project will be scheduled to be completed in a timely manner, and to be completed to a high quality. Below is a table of the project deliverables and their corresponding due dates.
+The project will be scheduled based on the capstone deliverables, the team will prioritize the deliverables and schedule them accordingly. At each deliverable, the work will be decomposed and assigned to team members, then tracked through GitHub Projects until completion. Below is a table of the project deliverables and their corresponding due dates.
+
+\subsubsection*{Task Decomposition Strategy}
+
+Tasks will be decomposed differently depending on the nature of the deliverable:
+
+\begin{itemize}
+  \item \textbf{Documentation deliverables} will be broken down by section or subsection, ensuring each piece is small enough to review and merge independently.
+  \item \textbf{Software deliverables} will be broken down by feature or module, so that each GitHub issue maps to a well-scoped, independently testable unit of work.
+\end{itemize}
+
+\subsubsection*{Task Distribution and Skill Development}
+
+Tasks will be distributed among team members with two competing goals in mind: leveraging existing strengths to maintain quality, and making sure each team member gets to work on a variety of tasks. Assigning the same individual to the same type of task throughout the entire project risks leaving other members without a working understanding of critical system components. To address this:
+
+\begin{itemize}
+  \item \textbf{Pairing will be used for high-complexity or unfamiliar tasks.} When a team member is assigned a task outside their current skillset, they will be paired with a domain expert who can provide guidance without owning the work outright.
+  \item \textbf{Task assignments will be made collectively during team meetings} so that all members have visibility into who is doing what, and can flag any issues early.
+\end{itemize}
+
+\subsubsection*{Ensuring Task Completion}
+
+To reduce the risk of assigned tasks going incomplete or being rushed at the last minute, the team will adopt the following practices:
+
+\begin{itemize}
+  \item \textbf{Internal deadlines} will be set at least two to three days before each official course deadline, providing buffer for issues and reviews.
+  \item \textbf{Check-ins} will be held during the weekly team meeting to bring up any blockers on in-progress issues before they become critical.
+  \item \textbf{If a team member anticipates missing an internal deadline}, they are expected to communicate this as early as possible in the team chat so that the task can be re-assigned or supported by another member.
+\end{itemize}
+
+\subsubsection*{Project Deliverables and Due Dates}
+Below is a table of the project deliverables and their corresponding due dates.
 
 \begin{center}
   \begin{tabularx}{\textwidth}{Xc}
@@ -350,7 +422,7 @@ Our POC Demonstration Plan will begin with a pre-existing CAD file. Taking this
 CAD file, we will then:
 
 \begin{enumerate}
-  \item \textbf{Show the process of importing the file into our software.} This would include converting the file properly and showing the key feature of 'slicing' the model into voxels.
+  \item \textbf{Show the process of importing the file into our software.} This would include converting the file properly and showing the key feature of `slicing' the model into voxels.
   \item \textbf{Demonstrate that the software can load and render simple voxel models.} A simple render of a small model will be shown of both the CAD file and the voxelised output. Magnetization of voxels will be left out of this demo.
   \item \textbf{Show the process of exporting the file into a standard format.} This includes converting the project file successfully into a format deemed acceptable by the existing 3D printing software.
 \end{enumerate}
@@ -519,9 +591,9 @@ interviews, or to get an A+, etc.}
 
 Besides our overall goal of achieving an A+ for this project, as a group we hope to 
 contribute to a final product that genuinely assists Dr. Onaizah and her team in their 
-studies and is potentially useful outside of this context. Additionally, project success 
-and the value of the work experience is a useful asset we each can list as prior 
-experience in interviews. 
+studies and is potentially useful outside of this context. Additionally, we aim to build 
+a project of sufficient quality to strengthen each team member's portfolio and increase 
+their appeal to recruiters and future employers.
 
 \subsection*{Attendance}
 
