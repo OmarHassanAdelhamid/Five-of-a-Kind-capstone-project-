@@ -1,6 +1,9 @@
-# Project Name Source Code
+# AutoVox source (`src/`)
 
-Key Overall Structure (POC):
+| Directory | Role |
+| --------- | ---- |
+| `frontend/` | React 19 + TypeScript + Vite. UI components (`components/`), API client and helpers (`utils/`). Run with `npm install` and `npm run dev` from `frontend/`. |
+| `backend/` | FastAPI application. Entry point `app/main.py`; HTTP routers under `app/routers/`; domain logic under `app/services/`. Run with Uvicorn per the root [README.md](../README.md). |
+| `app/` | Electron desktop wrapper. Bundles the built frontend and Python backend for distribution. See [INSTALL.md](../INSTALL.md) for `npm run pack` and development (`npm run dev`). |
 
-- ```frontend``` Contains the Node server, initialized via template. Primary typescript for the interface is contained within ```src```. 
-- ```backend``` Contains the API for the Python backend, utilizing FastAPI. The primary API is within ```app/main.py```, with the services it calls upon in ```app/services```. For the POC, sample STL and converted project files exist within ```app``` as well in respective folders.
+Automated tests live next to each stack: Jest in `frontend/`, pytest in `backend/`.
