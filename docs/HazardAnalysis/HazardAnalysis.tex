@@ -238,6 +238,8 @@ Export Manager & File format is exported in the incorrect format & \textbullet{}
 \hline
 Full System & User progress is lost & \textbullet{} Unexpected software bug that causes the system to crash, which causes the system to lose its state. \newline \textbullet{} The user experiences a hardware malfunction (e.g., power loss, memory failure), which causes the system to lose its state. & \textbullet{} User loses signifcant work and would need to re-do the work. \newline \textbullet{} User will start getting frustrated and lose trust in the system. \newline \textbullet{} User will lose signicant time in the total workflow of their design due to the need to re-do the work. & The system shall implement a auto-saving mechanism to periodically save the state of the user's process to allow for recovery in case of a system shutdown or failure. & F236, NF241, SCR6, SCR7 & H6 \\
 \hline
+Editing Manger and Export Manager & Exported file contains incorrect magnetization vectors or material IDs. & \textbullet{} Unexpected software bug that allows user to input invalid values & \textbullet{} The custom 3D printer software cannot read the file correctly due to the unexpected value, causing the program to crash or malfunction. \newline \textbullet{} Considerable time can be wasted if the error is not caught by the user. & The system should validate that magnetization vectors and material IDs conform to expectations before exporting, or restrict the user input space. & F231, F233, F241, SCR4 & H7 \\
+\hline
 \end{tabular}
 \end{table}
 \end{landscape}
@@ -303,8 +305,8 @@ Note that \autoref{tab:sym} includes constants from SRS S.2, with the addition o
 
 \item \hypertarget{scr4}{}\emph{The system shall validate all magnetization and material properties before exporting the file containing the metadata for all voxels.}\\
     \quad {\bf Rationale:} Missing these important information can cause excessive time and material waste, and in some cases can cause printer failures.\\
-    \quad {\bf Fit Criterion:} \texttt{EXPORT\_COMPLETENESS\_THRESH} of exported files must contain complete magnetization and material property data for all voxels.\\
-    \quad {\bf Associated Hazards:} H4\\
+    \quad {\bf Fit Criterion:} \texttt{EXPORT\_COMPLETENESS\_THRESH} of exported files must contain complete and correct magnetization and material property data for all voxels.\\
+    \quad {\bf Associated Hazards:} H4, H7\\
     \quad {\bf Priority:} Low
 
 \item \hypertarget{scr5}{}\emph{The system shall validate the metadata file format and structure before exporting the file, ensuring that it is compatible with the next system that will read the file.}\\
