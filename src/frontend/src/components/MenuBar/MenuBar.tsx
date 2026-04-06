@@ -1,3 +1,9 @@
+/**
+ * Top application menu bar composing File, Edit, View, Selection, and Help tabs.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import { useState, useRef, useEffect } from 'react';
 import { FileTab } from './FileTab/FileTab';
 import { EditTab } from './EditTab/EditTab';

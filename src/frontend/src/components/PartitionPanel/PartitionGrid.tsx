@@ -1,4 +1,9 @@
-// This component is used to display the partition grid of the partition panel (3D grid of partitions)
+/**
+ * Responsive grid of partition tiles with selection state for the partitions panel.
+ *
+ * @author Khalid Farag, Olivia Reich
+ * @lastModified 2026/04/05
+ */
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import type { Partition } from '../../utils/api';

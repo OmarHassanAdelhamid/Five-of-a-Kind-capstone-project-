@@ -1,5 +1,9 @@
-// This component is used to display the project selector (select a project from the list of available projects)
-
+/**
+ * Dropdown for choosing which saved project folder is open.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import type { ChangeEvent } from 'react';
 
 // Props for the ProjectSelector component

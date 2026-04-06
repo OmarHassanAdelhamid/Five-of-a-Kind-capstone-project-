@@ -1,4 +1,9 @@
-// This component is used to display the unit selector (µm, mm, cm)
+/**
+ * Physical unit selector (e.g. µm, mm, cm) paired with scale inputs.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/05
+ */
 import type { UnitOption } from './types';
 
 // Props for the UnitSelector component

@@ -1,5 +1,9 @@
-// This component is used to display the model dimensions (x, y, z)
-
+/**
+ * Read-only display of bounding-box dimensions for the chosen STL.
+ *
+ * @author Khalid Farag, Olivia Reich
+ * @lastModified 2026/04/05
+ */
 // Props for the ModelDimensionsDisplay component
 interface ModelDimensionsDisplayProps {
   dimensions: { x: number; y: number; z: number } | null;

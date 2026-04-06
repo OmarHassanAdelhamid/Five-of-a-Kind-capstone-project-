@@ -1,4 +1,9 @@
-// This file contains the default layer materials for the layer editor
+/**
+ * Default material IDs and display metadata used when listing materials in the layer editor.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/05
+ */
 export type LayerMaterial = {
   id: number;
   name: string;

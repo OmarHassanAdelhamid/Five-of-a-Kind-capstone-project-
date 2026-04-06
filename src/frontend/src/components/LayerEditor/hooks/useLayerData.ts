@@ -1,5 +1,9 @@
-// This hook is used to load and manage layer data for the LayerEditor component
-
+/**
+ * Fetches and holds the active layer slice from the API for the layer editor.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/03
+ */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   fetchLayers,

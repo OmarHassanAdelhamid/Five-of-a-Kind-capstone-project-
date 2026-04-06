@@ -1,4 +1,9 @@
-// This file contains the logic for the layer materials for the layer editor
+/**
+ * Hook for the layer editor material list, including optional custom materials.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/05
+ */
 import { useCallback, useEffect, useState } from 'react';
 import {
   DEFAULT_LAYER_MATERIALS,

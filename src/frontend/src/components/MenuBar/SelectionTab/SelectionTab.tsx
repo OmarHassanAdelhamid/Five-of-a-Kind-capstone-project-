@@ -1,4 +1,9 @@
-// This component is used to display the selection tab of the menu bar (select all, reset selected voxels)
+/**
+ * Selection menu: highlight all, invert, and partition/layer-related selection actions.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import type { BaseTabProps } from '../types';
 
 // Props for the SelectionTab component

@@ -1,4 +1,9 @@
-// This component is used to display the view tab of the menu bar (open partition menu, open layer menu, highlight all)
+/**
+ * View menu: toggles for layer view, partitions, and related UI.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import type { BaseTabProps } from '../types';
 
 // Props for the ViewTab component

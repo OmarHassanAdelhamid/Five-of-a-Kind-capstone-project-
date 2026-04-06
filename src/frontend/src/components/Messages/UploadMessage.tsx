@@ -1,5 +1,9 @@
-// This component is used to display the upload message of the model viewer (idle, uploading, success, error)
-
+/**
+ * Inline upload progress and result messaging for STL imports.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 // Props for the UploadMessage component
 interface UploadMessageProps {
   uploadState: 'idle' | 'uploading' | 'success' | 'error';

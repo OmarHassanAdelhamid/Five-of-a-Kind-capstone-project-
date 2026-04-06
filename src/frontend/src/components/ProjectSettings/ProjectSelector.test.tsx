@@ -1,3 +1,9 @@
+/**
+ * Tests for the project selector control.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ProjectSelector } from './ProjectSelector';

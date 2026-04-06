@@ -1,5 +1,9 @@
-// This hook is used to edit the voxels in a layer
-
+/**
+ * Bulk voxel edits (add, delete, update, resets) and undo/redo against the API.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/05
+ */
 import { useCallback, useEffect, useState } from 'react';
 import {
   updateVoxels,

@@ -1,5 +1,9 @@
-// This dialog is used to warn the user about the issues that were found during the export process
-
+/**
+ * Modal that lists export validation warnings and asks the user to confirm or cancel export.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/05
+ */
 // Props for the ExportWarningDialog component
 interface ExportWarningDialogProps {
   warnings: string[];

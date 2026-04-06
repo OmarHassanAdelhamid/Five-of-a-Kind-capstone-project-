@@ -1,5 +1,10 @@
-// This component is used to display the voxel properties panel
-
+/**
+ * Side panel for viewing and editing material and magnetization on the current voxel
+ * selection.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/05
+ */
 import { useId, useState } from 'react';
 import type { LayerVoxel } from '../../utils/api';
 import type { LayerMaterial } from './layerMaterialsDefaults';

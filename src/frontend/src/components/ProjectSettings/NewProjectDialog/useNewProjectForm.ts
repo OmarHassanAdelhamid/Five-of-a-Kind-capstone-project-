@@ -1,4 +1,9 @@
-// This component is used to display the new project form (project name, model dimensions, scale factor, voxel size, material selector)
+/**
+ * Form state, validation, and derived values for creating a project from an STL.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/05
+ */
 import { useState, useEffect, useRef } from 'react';
 import { fetchSTLDimensions } from '../../../utils/api';
 import type { UnitOption, ConfirmPayload } from './types';

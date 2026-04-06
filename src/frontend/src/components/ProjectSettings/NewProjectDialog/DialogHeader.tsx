@@ -1,5 +1,9 @@
-// This component is used to display the dialog header (new project, close)
-
+/**
+ * Title/header region for the new-project dialog.
+ *
+ * @author Khalid Farag, Olivia Reich
+ * @lastModified 2026/04/05
+ */
 interface DialogHeaderProps {
   isCreating: boolean;
   onClose: () => void;

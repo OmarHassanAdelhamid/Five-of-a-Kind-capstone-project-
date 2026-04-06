@@ -1,4 +1,9 @@
-// This component is used to display the help tab of the menu bar (view manual, license, privacy statement, about version, credits)
+/**
+ * Help menu: documentation and about entry points.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import type { BaseTabProps } from '../types';
 
 // Props for the HelpTab component

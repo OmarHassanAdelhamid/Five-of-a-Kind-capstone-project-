@@ -1,3 +1,9 @@
+/**
+ * Tests for the partitions side panel.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PartitionsPanel } from '../../components/PartitionPanel/PartitionsPanel';

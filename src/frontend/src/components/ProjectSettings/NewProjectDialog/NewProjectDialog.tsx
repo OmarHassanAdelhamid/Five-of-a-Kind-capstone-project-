@@ -1,4 +1,10 @@
-// This component is used to display the new project dialog (project name, model dimensions, scale factor, voxel size, material selector)
+/**
+ * Full-screen dialog to name a project, set units/scale/voxel size, and pick default
+ * material.
+ *
+ * @author Khalid Farag, Olivia Reich
+ * @lastModified 2026/04/05
+ */
 import { useNewProjectForm } from './useNewProjectForm';
 import { DialogHeader } from './DialogHeader';
 import { CreatingProgressOverlay } from './CreatingProgressOverlay';

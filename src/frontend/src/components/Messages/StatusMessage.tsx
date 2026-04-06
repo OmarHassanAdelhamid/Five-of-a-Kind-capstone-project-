@@ -1,5 +1,9 @@
-// This component is used to display the status message of the model viewer (loading, ready, error)
-
+/**
+ * Primary status message shown under the main toolbar.
+ *
+ * @author Khalid Farag, Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 // Props for the StatusMessage component
 interface StatusMessageProps {
   status: 'loading' | 'ready' | 'error';

@@ -1,4 +1,9 @@
-// This component is used to display the welcome modal (select a model, select a project, select a file, select a previous project)
+/**
+ * First-run / welcome modal with shortcuts to create or open a project.
+ *
+ * @author Khalid Farag, Olivia Reich
+ * @lastModified 2026/04/05
+ */
 import { useEffect, useRef, useState } from 'react';
 
 type WelcomeStep =

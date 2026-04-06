@@ -1,4 +1,9 @@
-// This component is used to display the file tab of the menu bar (open file, open project, save, save as, export)
+/**
+ * File menu: new/open project, save, export, and related shortcuts.
+ *
+ * @author Khalid Farag, Andrew Bovbel, Olivia Reich
+ * @lastModified 2026/04/05
+ */
 import { useState } from 'react';
 import type { BaseTabProps } from '../types';
 

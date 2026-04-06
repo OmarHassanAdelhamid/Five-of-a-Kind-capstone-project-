@@ -1,5 +1,9 @@
-// This component is used to display the partitions panel (list of partitions)
-
+/**
+ * Side panel listing project partitions, rename flow, and partition selection.
+ *
+ * @author Khalid Farag, Olivia Reich, Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import { useEffect, useState } from 'react';
 import { fetchPartitions, renamePartition } from '../../utils/api';
 import { PartitionGrid } from './PartitionGrid';

@@ -1,4 +1,9 @@
-// This component is used to display the upload button (upload a STL file)
+/**
+ * Control to open the file picker and upload an STL to the server.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import type { ChangeEvent } from 'react';
 
 // Props for the UploadButton component

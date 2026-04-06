@@ -1,4 +1,9 @@
-// This component is used to display the model selector (select a model from the list of available models)
+/**
+ * Dropdown (and related UI) for choosing which uploaded STL is active.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import type { ChangeEvent } from 'react';
 
 // Props for the ModelSelector component

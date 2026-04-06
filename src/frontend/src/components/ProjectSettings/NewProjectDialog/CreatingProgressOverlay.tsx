@@ -1,4 +1,9 @@
-// Props for the CreatingProgressOverlay component
+/**
+ * Blocking overlay with progress text while a new project is being created.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/05
+ */
 interface CreatingProgressOverlayProps {
   message: string;
 }

@@ -1,3 +1,9 @@
+/**
+ * Tests for the 3D ModelViewer viewport.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/04
+ */
 import React from 'react';
 import { render, act } from '@testing-library/react';
 import { ModelViewer } from './ModelViewer';

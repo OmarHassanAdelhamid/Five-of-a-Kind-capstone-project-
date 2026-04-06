@@ -1,4 +1,9 @@
-// This component is used to display the float input field (scale factor, voxel size)
+/**
+ * Numeric text input with validation styling for dialog forms.
+ *
+ * @author Khalid Farag, Olivia Reich
+ * @lastModified 2026/04/05
+ */
 const FLOAT_REGEX = /^-?\d*\.?\d*$/;
 
 // Props for the FloatInputField component

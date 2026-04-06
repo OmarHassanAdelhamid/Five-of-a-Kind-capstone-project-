@@ -1,4 +1,9 @@
-// This component is used to display the project name field (project name, suffix)
+/**
+ * Project name input for the new-project dialog.
+ *
+ * @author Olivia Reich
+ * @lastModified 2026/04/05
+ */
 import type { RefObject } from 'react';
 
 // Props for the ProjectNameField component

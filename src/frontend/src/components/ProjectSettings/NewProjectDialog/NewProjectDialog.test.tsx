@@ -1,3 +1,9 @@
+/**
+ * Tests for the new-project dialog.
+ *
+ * @author Khalid Farag, Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { NewProjectDialog } from './NewProjectDialog';

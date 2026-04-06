@@ -1,4 +1,12 @@
-// This file is used to draw the grid canvas
+/**
+ * Canvas drawing for the orthographic layer view: cell layout, selection highlights, and
+ * geometry helpers (e.g. point-in-polygon) for voxel picking.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/05
+ *
+ * External reference: https://github.com/netdur/canvas.layout.ts
+ */
 import type { LayerResponse, LayerVoxel } from '../../utils/api';
 
 // The type for the voxel position
@@ -20,8 +28,6 @@ export interface EmptyCellPosition {
   gridX: number;
   gridY: number;
 }
-
-// References: //HEAVILY INFLUENCED BY THIS REPO: https://github.com/netdur/canvas.layout.ts (MIT License)
 
 
 // Ray-casting algorithm: counts how many polygon edges a horizontal ray from

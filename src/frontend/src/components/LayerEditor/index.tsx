@@ -1,5 +1,9 @@
-// This component is used to edit the voxels in a layer
-
+/**
+ * Layer editor shell: combines the 2D grid, voxel property panel, and editing hooks.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/05
+ */
 import {
   forwardRef,
   useCallback,

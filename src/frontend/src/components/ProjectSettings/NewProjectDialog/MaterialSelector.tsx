@@ -1,4 +1,9 @@
-// This component is used to display the material selector (material id, add material)
+/**
+ * Material picker and optional “add material” flow for new project creation.
+ *
+ * @author Khalid Farag, Olivia Reich
+ * @lastModified 2026/04/05
+ */
 import { useMemo, useState } from 'react';
 
 const ADD_MATERIAL_VALUE = '__ADD_NEW_MATERIAL__';

@@ -1,4 +1,9 @@
-// This component is used to display the edit tab of the menu bar (undo, redo, cut, copy, paste, preferences)
+/**
+ * Edit menu: undo/redo and clipboard actions.
+ *
+ * @author Khalid Farag, Andrew Bovbel, Olivia Reich
+ * @lastModified 2026/04/05
+ */
 import type { BaseTabProps } from '../types';
 
 // Props for the EditTab component

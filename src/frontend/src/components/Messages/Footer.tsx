@@ -1,5 +1,9 @@
-// This component is used to display the footer of the model viewer (instructions for selecting voxels)
-
+/**
+ * Footer strip for secondary status and metadata.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 interface FooterProps {
   hasVoxels?: boolean;
 }
