@@ -73,6 +73,9 @@ interface ModelViewerProps {
   onVoxelsChanged?: () => void | Promise<void>;
   /** When `App` is loading project voxels over REST; takes priority in the status banner. */
   projectFetchStatus?: 'idle' | 'loading' | 'error';
+  /** When set with `onPartitionsPanelOpenChange`, the partitions slide-over is controlled by the parent (avoids duplicate panels). */
+  isPartitionsPanelOpen?: boolean;
+  onPartitionsPanelOpenChange?: (open: boolean) => void;
 }
 
 /** Exposes layer-editor clipboard helpers upward; inner UI stays encapsulated. */
@@ -99,6 +102,8 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
       onLayerEditorOpenChange,
       onVoxelsChanged,
       projectFetchStatus = 'idle',
+      isPartitionsPanelOpen: isPartitionsPanelOpenProp,
+      onPartitionsPanelOpenChange,
     },
     ref,
   ) {
@@ -173,12 +178,28 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
         setIsLayerEditorOpenLocal(open);
       }
     }, []);
-    const [isPartitionsPanelOpen, setIsPartitionsPanelOpen] = useState(false);
+    const [localPartitionsOpen, setLocalPartitionsOpen] = useState(false);
+    const partitionsPanelControlled =
+      isPartitionsPanelOpenProp !== undefined &&
+      onPartitionsPanelOpenChange !== undefined;
+    const isPartitionsPanelOpen = partitionsPanelControlled
+      ? isPartitionsPanelOpenProp!
+      : localPartitionsOpen;
+    const setPartitionsPanelOpen = useCallback(
+      (open: boolean) => {
+        if (partitionsPanelControlled) {
+          onPartitionsPanelOpenChange!(open);
+        } else {
+          setLocalPartitionsOpen(open);
+        }
+      },
+      [partitionsPanelControlled, onPartitionsPanelOpenChange],
+    );
 
     /** Mutually exclusive slide-out: opening the layer editor closes partitions. */
     useEffect(() => {
-      if (isLayerEditorOpen) setIsPartitionsPanelOpen(false);
-    }, [isLayerEditorOpen]);
+      if (isLayerEditorOpen) setPartitionsPanelOpen(false);
+    }, [isLayerEditorOpen, setPartitionsPanelOpen]);
 
     /** Instanced voxel colours: default mesh, active layer slice, selected voxel(s). */
     const COLOR_DEFAULT = 0x60a5fa;
@@ -951,24 +972,26 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
           onClick={() => {
             const nextOpen = !isPartitionsPanelOpen;
             if (nextOpen) setIsLayerEditorOpen(false);
-            setIsPartitionsPanelOpen(nextOpen);
+            setPartitionsPanelOpen(nextOpen);
           }}
           title={isPartitionsPanelOpen ? 'Close Partitions' : 'Open Partitions'}
         >
           <span className="partitions-tab-text">Partitions</span>
         </button>
-        <PartitionsPanel
-          isOpen={isPartitionsPanelOpen}
-          onClose={() => setIsPartitionsPanelOpen(false)}
-          projectName={projectName || null}
-          selectedPartition={selectedPartition}
-          onPartitionSelect={onPartitionSelect || (() => {})}
-        />
+        {!partitionsPanelControlled && (
+          <PartitionsPanel
+            isOpen={isPartitionsPanelOpen}
+            onClose={() => setPartitionsPanelOpen(false)}
+            projectName={projectName || null}
+            selectedPartition={selectedPartition}
+            onPartitionSelect={onPartitionSelect || (() => {})}
+          />
+        )}
         <button
           className={`layer-editor-tab ${isLayerEditorOpen ? 'open' : ''}`}
           onClick={() => {
             const nextOpen = !isLayerEditorOpen;
-            if (nextOpen) setIsPartitionsPanelOpen(false);
+            if (nextOpen) setPartitionsPanelOpen(false);
             setIsLayerEditorOpen(nextOpen);
           }}
           title={isLayerEditorOpen ? 'Close Layer Editor' : 'Open Layer Editor'}

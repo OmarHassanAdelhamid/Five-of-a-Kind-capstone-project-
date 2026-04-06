@@ -23,7 +23,7 @@ const mockSceneSetup = {
   grid: {},
 };
 
-jest.mock('../utils/threeUtils', () => ({
+jest.mock('../../utils/threeUtils', () => ({
   createScene: jest.fn(() => mockSceneSetup),
   setupCameraForGeometry: jest.fn(),
   setupCameraForVoxels: jest.fn(),

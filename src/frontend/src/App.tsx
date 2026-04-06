@@ -573,11 +573,13 @@ function App() {
   }, []);
 
   const handleOpenPartitionMenu = useCallback(() => {
+    setIsLayerEditorOpen(false);
     setIsPartitionsPanelOpen(true);
   }, []);
 
   const handleOpenLayerMenu = useCallback(() => {
     if (projectName.trim()) {
+      setIsPartitionsPanelOpen(false);
       setIsLayerEditingMode(true);
       setIsLayerEditorOpen(true);
     } else {
@@ -672,9 +674,7 @@ function App() {
             break;
           case 'l':
             e.preventDefault();
-            if (!isPartitionsPanelOpen) {
-              handleOpenLayerMenu();
-            }
+            handleOpenLayerMenu();
             break;
           case 'x':
             e.preventDefault();
@@ -698,7 +698,6 @@ function App() {
     handleOpenPartitionMenu,
     handleOpenLayerMenu,
     isLayerEditorOpen,
-    isPartitionsPanelOpen,
   ]);
 
   return (
@@ -808,6 +807,8 @@ function App() {
         selectedPartition={selectedPartition}
         onPartitionSelect={handlePartitionSelect}
         voxelSize={voxelSize}
+        isPartitionsPanelOpen={isPartitionsPanelOpen}
+        onPartitionsPanelOpenChange={setIsPartitionsPanelOpen}
         isLayerEditorOpen={isLayerEditorOpen}
         onLayerEditorOpenChange={setIsLayerEditorOpen}
         onVoxelsChanged={handleRefreshVoxels}
