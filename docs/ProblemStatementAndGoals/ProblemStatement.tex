@@ -39,13 +39,7 @@ files and/or interactions, major stakeholders, and the environment the project w
 software platform).
 
 \subsection{Problem}
-There is currently no CAD workflow that lets users take a finished 3D design and
-select sets of voxels (note: a voxel is a cube building block in a 3D printer) to assign
-properties (e.g. a material, or magnetization). Without automated voxelization and per-layer editing, researchers are
-forced to rebuild the object voxel-by-voxel (e.g., in COMSOL), manually choosing properties for each voxel. 
-This consumes hours per part and makes iteration fragile; if a mistake is made, there is no practical way to
-reselect or change a prior voxel’s properties without redoing subsequent work. Our system aims to remove this bottleneck and minimize the time needed for the workflow.
-
+There is currently no software that allows users to both design 3D models and automatically voxelize them into cubic units with support for assigning specific magnetization metadata to each voxel. As a result, current graduate students working with magnetic 3D printers are forced to construct the voxelized structures for their magnetic micro-robots manually. Given the small size of each voxel, models can consist of hundreds or thousands of voxels, each requiring individual creation and metadata assignment. This results in a slow, time-consuming, and inefficient workflow that limits productivity. As a result, graduate students are unable to focus on design iteration and experimentation and must instead spend significant time on manual construction of magnetic micro-robot systems.
 
 \subsection{Inputs and Outputs}
 \textbf{Inputs}
