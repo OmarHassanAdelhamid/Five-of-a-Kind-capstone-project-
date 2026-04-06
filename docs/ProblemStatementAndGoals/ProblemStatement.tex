@@ -79,14 +79,15 @@ This section details the environment in which the project will exist. This inclu
 
 
 \section{Goals}
-This section details the high-level goals of the project. 
+This section details the high-level goals of the project. Our ultimate goal is to improve the current workflow and systems being used by grad students in order to create the models for their 3D-printed magnetic micro robots. This goal will be achieved through the following aspects of the system:
 
 \begin{enumerate}
-  \item \textbf{Import:} Import a mesh CAD file (STL) to the system.
-  \item \textbf{Voxelization Algorithm:} Voxelize the mesh CAD file to a voxel grid.
-  \item \textbf{Layered UI \& Selection:} Provide a UI to browse layers from bottom to top and select voxels (single or multiple) within a layer.
-  \item \textbf{Property Assignment \& Editing:} Assign properties to selected voxels and allow re-selection and changes without restarting the design (with undo/redo).
-  \item \textbf{Export:} Generate a Java-readable file capturing per-voxel properties for the custom printer software.
+  \item \textbf{Import:} The system enables the import of mesh CAD files (STL) to decouple automated voxelization and metadata property assignment from the 3D model creation process. This allows users to leverage industry-standard CAD tools by designing models in external software.
+  \item \textbf{Voxelization Algorithm:} The system automates the process of voxelizing a mesh CAD file to eliminate the need for manual, voxel-by-voxel construction of structures and significantly reduce the time required to create complex models.
+  \item \textbf{Layered UI \& Selection:} The system provides simple and intuitive layer-based navigation, enabling users to efficiently access and interact with voxels throughout the entire structure.
+  \item \textbf{Property Assignment \& Editing:} The system enables efficient assignment and modification of material and magnetization properties, allowing precise customization of voxel metadata for the 3D printing process.
+  \item \textbf{Export:} The system supports exporting all necessary voxel data in a format compatible with the software that controls the 3D printing process, ensuring seamless integration with the existing 3D printer system.
+
 \end{enumerate}
 
 \section{Stretch Goals}
