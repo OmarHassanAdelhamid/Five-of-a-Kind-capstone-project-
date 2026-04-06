@@ -31,6 +31,7 @@ def create_voxel_db(project_path: str, coordinates: np.array):
     with VoxelDB(project_path) as db:
         db.upsert_many(rows)
         db.centre_structure()
+        db.apply_default_material_to_all_voxels()
         db.commit() 
     '''
     Note: get_partitions should only be called if the total number of voxels in

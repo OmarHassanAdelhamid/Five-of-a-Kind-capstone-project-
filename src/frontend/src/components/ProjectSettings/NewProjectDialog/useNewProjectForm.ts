@@ -1,11 +1,20 @@
+/**
+ * Form state, validation, and derived values for creating a project from an STL.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/05
+ */
 import { useState, useEffect, useRef } from 'react';
 import { fetchSTLDimensions } from '../../../utils/api';
 import type { UnitOption, ConfirmPayload } from './types';
 
+const DEFAULT_MATERIAL_IDS = [1, 2, 3];
+
+// Props for the useNewProjectForm component
 export const useNewProjectForm = (
   isOpen: boolean,
   stlFileName: string,
-  initialMaterials: string[],
+  initialMaterialIds: number[],
   onClose: () => void,
   onConfirm: (
     payload: ConfirmPayload,
@@ -14,9 +23,10 @@ export const useNewProjectForm = (
 ) => {
   const [suffix, setSuffix] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const initialMaterialsRef = useRef(initialMaterials);
-  initialMaterialsRef.current = initialMaterials;
+  const initialMaterialIdsRef = useRef(initialMaterialIds);
+  initialMaterialIdsRef.current = initialMaterialIds;
 
+  // Sets the model dimensions
   const [modelDimensions, setModelDimensions] = useState<{
     x: number;
     y: number;
@@ -26,26 +36,36 @@ export const useNewProjectForm = (
   const [modelUnits, setModelUnits] = useState<UnitOption>('mm');
   const [scaleFactor, setScaleFactor] = useState<string>('1');
   const [voxelSizeText, setVoxelSizeText] = useState<string>('1');
-  const [materials, setMaterials] = useState<string[]>(initialMaterials);
-  const [selectedMaterial, setSelectedMaterial] = useState<string>(
-    initialMaterials[0] ?? 'material1',
+  const [materialIds, setMaterialIds] = useState<number[]>(
+    initialMaterialIds.length ? [...initialMaterialIds].sort((a, b) => a - b) : [...DEFAULT_MATERIAL_IDS],
+  );
+  const [selectedMaterialId, setSelectedMaterialId] = useState<number>(
+    initialMaterialIds[0] ?? 1,
   );
   const [isCreating, setIsCreating] = useState(false);
   const [progressMessage, setProgressMessage] = useState<string>('');
 
+  // Sets the initial material ids
   useEffect(() => {
     if (isOpen) {
       if (inputRef.current) inputRef.current.focus();
       setSuffix('');
-      const mats = initialMaterialsRef.current;
+      const mats = initialMaterialIdsRef.current;
       setModelUnits('mm');
       setScaleFactor('1');
       setVoxelSizeText('1');
-      setSelectedMaterial(mats[0] ?? 'material1');
-      setMaterials(mats.length ? mats : ['material1', 'material2', 'material3']);
+      const normalized =
+        mats.length > 0
+          ? [...new Set(mats.filter((id) => Number.isInteger(id) && id >= 1))].sort(
+              (a, b) => a - b,
+            )
+          : [...DEFAULT_MATERIAL_IDS];
+      setMaterialIds(normalized);
+      setSelectedMaterialId(normalized[0] ?? 1);
     }
   }, [isOpen]);
 
+  // Fetches the STL dimensions
   useEffect(() => {
     if (!isOpen || !stlFileName) return;
 
@@ -65,18 +85,21 @@ export const useNewProjectForm = (
   const baseName = stlFileName.replace('.stl', '');
   const fullProjectName = suffix.trim() ? `${baseName}-${suffix.trim()}` : baseName;
 
+  // Parses the scale factor from the scale factor input
   const parseScaleFactor = (): number | null => {
     const n = Number(scaleFactor);
     if (!Number.isFinite(n) || n <= 0) return null;
     return n;
   };
 
+  // Parses the voxel size from the voxel size input
   const parseVoxelSize = (): number | null => {
     const n = Number(voxelSizeText);
     if (!Number.isFinite(n) || n <= 0) return null;
     return n;
   };
 
+  // Handles the submit event on the form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -102,7 +125,7 @@ export const useNewProjectForm = (
           modelUnits,
           scaleFactor: sf,
           voxelSize: vs,
-          defaultMaterial: selectedMaterial,
+          defaultMaterial: selectedMaterialId,
         },
         setProgressMessage,
       );
@@ -132,10 +155,10 @@ export const useNewProjectForm = (
     setScaleFactor,
     voxelSizeText,
     setVoxelSizeText,
-    materials,
-    setMaterials,
-    selectedMaterial,
-    setSelectedMaterial,
+    materialIds,
+    setMaterialIds,
+    selectedMaterialId,
+    setSelectedMaterialId,
     isCreating,
     progressMessage,
     baseName,

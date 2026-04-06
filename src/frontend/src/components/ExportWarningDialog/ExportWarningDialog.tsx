@@ -1,3 +1,10 @@
+/**
+ * Modal that lists export validation warnings and asks the user to confirm or cancel export.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/05
+ */
+// Props for the ExportWarningDialog component
 interface ExportWarningDialogProps {
   warnings: string[];
   onConfirm: () => void;
@@ -18,7 +25,8 @@ export const ExportWarningDialog = ({
 
         <div className="dialog-body" style={{ padding: '20px' }}>
           <p style={{ color: '#e2e8f0', marginBottom: '12px' }}>
-            The following issues were found. Are you sure you want to export anyway?
+            The following issues were found. Are you sure you want to export
+            anyway?
           </p>
           <ul style={{ color: '#fbbf24', paddingLeft: '20px', margin: 0 }}>
             {warnings.map((w, i) => (

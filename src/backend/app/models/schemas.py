@@ -47,20 +47,18 @@ class VoxelizeRequest(BaseModel):
     Args:
         stl_filename (str): filename of the stl to be voxelized.
         voxel_size (float): size of the voxel relative to 1 unit.
-        default_material (Optional[int]): default value of material across partitions.
-            if not provided, defaults to 1.
-        default_magnet (Optional[Tuple[float, float, float]]): default value of magnetization across
-            partitions. if not provided, defaults to [0, 0, 0].
+        default_material (int): default material ID (integer ≥ 1) for new voxels; defaults to 1.
+        default_magnet (Optional[Tuple[float, float, float]]): default magnetization across
+            partitions; defaults to (0, 0, 0).
         project_name (str): name of the file the voxel database should be created in.
     """
     stl_filename: str
     voxel_size: float
-    default_material: Optional[int] = 1
-    default_magnet: Optional[Tuple[float, float, float]] = [0.0, 0.0, 0.0]
+    default_material: int = 1
+    default_magnet: Optional[Tuple[float, float, float]] = (0.0, 0.0, 0.0)
     project_name: str
     model_units: Literal["µm", "mm", "cm"]
     scale_factor: float
-    default_material: str
 
 class RetrieveLayerRequest(BaseModel):
     """Which project partition and layer (by axis and index) the editor should load.
@@ -100,6 +98,21 @@ class UpdateVoxelsRequest(BaseModel):
     action: UpdateAction
     materialID: Optional[int] = None
     magnetization: Optional[Tuple[float, float]] = None
+
+class RenamePartitionRequest(BaseModel):
+    """
+    Renames a partition file (.db) within a project folder.
+
+    Args:
+        project_name: Project folder name under storage.
+        old_partition_name: Current filename (e.g. partition-x-0-y-0-z-0.db).
+        new_partition_name: New filename; must end with .db.
+    """
+
+    project_name: str
+    old_partition_name: str
+    new_partition_name: str
+
 
 class UpdateHistoryRequest(BaseModel):
     """Apply the next undo or redo to the given project partition.

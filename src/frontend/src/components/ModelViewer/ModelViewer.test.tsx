@@ -1,3 +1,9 @@
+/**
+ * Tests for the 3D ModelViewer viewport.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/04
+ */
 import React from 'react';
 import { render, act } from '@testing-library/react';
 import { ModelViewer } from './ModelViewer';
@@ -17,7 +23,7 @@ const mockSceneSetup = {
   grid: {},
 };
 
-jest.mock('../utils/threeUtils', () => ({
+jest.mock('../../utils/threeUtils', () => ({
   createScene: jest.fn(() => mockSceneSetup),
   setupCameraForGeometry: jest.fn(),
   setupCameraForVoxels: jest.fn(),

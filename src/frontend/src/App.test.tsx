@@ -522,7 +522,7 @@ describe('App', () => {
         voxelSize: expect.any(Number),
         modelUnits: 'mm',
         voxelUnits: 'mm',
-        defaultMaterial: 'material1',
+        defaultMaterial: 1,
       }),
     );
     expect(api.fetchAvailableProjects).toHaveBeenCalled();

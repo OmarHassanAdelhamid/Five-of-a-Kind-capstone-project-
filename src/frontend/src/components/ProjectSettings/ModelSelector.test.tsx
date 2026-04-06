@@ -1,3 +1,9 @@
+/**
+ * Tests for the STL model selector control.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/04
+ */
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ModelSelector } from './ModelSelector';

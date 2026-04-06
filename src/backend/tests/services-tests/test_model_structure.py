@@ -1,5 +1,6 @@
 import pytest
 from pathlib import Path
+
 from app.services.model_structure_service import VoxelDB
 
 TEST_VOXELS = [(0, 0, 0, 0.0, 0.0, 0.0),
@@ -192,3 +193,22 @@ def test_centre_structure_typical() -> None:
                         (0, 0, 0, 2.0, 2.0, 2.0),
                         (1, 1, 1, 3.0, 3.0, 3.0),
                         (2, 2, 2, 4.0, 4.0, 4.0)]
+
+
+def test_apply_default_material_sets_every_voxel_after_upsert(tmp_path: Path) -> None:
+    """Bulk insert only sets geometry; apply ensures project default material on all rows."""
+    p = tmp_path / "defaults.db"
+    rows = [
+        (0, 0, 0, 0.0, 0.0, 0.0),
+        (2, 1, 0, 2.0, 1.0, 0.0),
+    ]
+    with VoxelDB(p) as db:
+        db.init_schema(7, (0.0, 0.0, 0.0))
+        db.set_grid((0.0, 0.0, 0.0), 1.0)
+        db.upsert_many(rows)
+        db.apply_default_material_to_all_voxels()
+        db.commit()
+    with VoxelDB(p) as db:
+        db.cur.execute("SELECT material FROM voxels ORDER BY ix, iy, iz")
+        assert [r[0] for r in db.cur.fetchall()] == [7, 7]
+        assert db.get_meta("default_material") == "7"

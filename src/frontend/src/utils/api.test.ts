@@ -113,7 +113,8 @@ describe('api', () => {
       voxelSize: 0.1,
       projectName: 'proj',
       modelUnits: 'mm',
-      defaultMaterial: 'material1',
+      scaleFactor: 1,
+      defaultMaterial: 1,
     });
     expect(result.message).toBe('OK');
   });
@@ -265,7 +266,8 @@ describe('api', () => {
         voxelSize: 0.1,
         projectName: 'proj',
         modelUnits: 'mm',
-        defaultMaterial: 'material1',
+        scaleFactor: 1,
+        defaultMaterial: 1,
       })
     ).rejects.toThrow();
   });
@@ -282,7 +284,8 @@ describe('api', () => {
         voxelSize: 0.1,
         projectName: 'proj',
         modelUnits: 'mm',
-        defaultMaterial: 'material1',
+        scaleFactor: 1,
+        defaultMaterial: 1,
       })
     ).rejects.toThrow('Invalid voxel size');
   });
@@ -299,7 +302,8 @@ describe('api', () => {
         voxelSize: 0.1,
         projectName: 'proj',
         modelUnits: 'mm',
-        defaultMaterial: 'material1',
+        scaleFactor: 1,
+        defaultMaterial: 1,
       })
     ).rejects.toThrow('Validation failed');
   });

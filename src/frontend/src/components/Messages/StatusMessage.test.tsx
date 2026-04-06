@@ -1,3 +1,9 @@
+/**
+ * Tests for the primary status message line.
+ *
+ * @author Khalid Farag, Andrew Bovbel
+ * @lastModified 2026/04/04
+ */
 import { render } from '@testing-library/react';
 import { StatusMessage } from './StatusMessage';
 

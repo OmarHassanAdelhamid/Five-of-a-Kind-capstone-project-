@@ -1,4 +1,10 @@
-// This hook is used to handle the interaction with the grid
+/**
+ * Pointer and keyboard handlers for selecting, multi-selecting, and editing cells on the 2D
+ * layer grid.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/03
+ */
 import {
   useCallback,
   useEffect,
