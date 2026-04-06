@@ -1,3 +1,9 @@
+/**
+ * Footer strip for secondary status and metadata.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 interface FooterProps {
   hasVoxels?: boolean;
 }

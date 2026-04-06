@@ -1,3 +1,13 @@
+"""
+Runtime paths and CORS settings for the AutoVox FastAPI app: where STL and voxel data live,
+and which browser origins may call the API (with optional env override).
+
+Course / submission fill-ins:
+    @author Olivia Reich, Andrew Bovbel
+    @lastModified 2026/03/23
+
+"""
+
 from pathlib import Path
 import os
 import sys

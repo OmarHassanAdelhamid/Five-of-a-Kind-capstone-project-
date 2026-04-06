@@ -1,73 +1,98 @@
-import { useState } from 'react';
+/**
+ * Material picker and optional “add material” flow for new project creation.
+ *
+ * @author Khalid Farag, Olivia Reich
+ * @lastModified 2026/04/05
+ */
+import { useMemo, useState } from 'react';
 
 const ADD_MATERIAL_VALUE = '__ADD_NEW_MATERIAL__';
 
+function formatMaterialLabel(id: number): string {
+  return `Material ${id}`;
+}
+
+// Props for the MaterialSelector component
 interface MaterialSelectorProps {
-  materials: string[];
-  selectedMaterial: string;
-  onMaterialsChange: (materials: string[]) => void;
-  onSelectedChange: (material: string) => void;
+  materialIds: number[];
+  selectedMaterialId: number;
+  onMaterialIdsChange: (ids: number[]) => void;
+  onSelectedChange: (id: number) => void;
+}
+
+// Gets the next available material id
+export function nextAvailableMaterialId(ids: number[]): number {
+  if (ids.length === 0) return 1;
+  return Math.max(...ids) + 1;
 }
 
 export const MaterialSelector = ({
-  materials,
-  selectedMaterial,
-  onMaterialsChange,
+  materialIds,
+  selectedMaterialId,
+  onMaterialIdsChange,
   onSelectedChange,
 }: MaterialSelectorProps) => {
   const [isAddingMaterial, setIsAddingMaterial] = useState(false);
-  const [newMaterialName, setNewMaterialName] = useState('');
-  const [prevSelectedMaterial, setPrevSelectedMaterial] =
-    useState(selectedMaterial);
+  const [prevSelectedId, setPrevSelectedId] = useState(selectedMaterialId);
+
+  // Sorts the material ids
+  const sortedIds = useMemo(
+    () => [...materialIds].sort((a, b) => a - b),
+    [materialIds],
+  );
+
+  // Gets the next available material id
+  const idToAdd = useMemo(
+    () => nextAvailableMaterialId(sortedIds),
+    [sortedIds],
+  );
 
   return (
-    <div className="dialog-section">
-      <p className="dialog-hint-white">
-        <strong>Select default material:</strong>
+    <div className="dialog-section dialog-section--material">
+      <p className="dialog-section-title">Default material ID for new voxels</p>
+      <p className="dialog-hint dialog-hint--subtle">
+        Stored as an integer in the project (e.g. 1, 2, 3). Must be ≥ 1.
       </p>
 
       {!isAddingMaterial ? (
-        <div className="inline-row">
+        <div className="inline-row inline-row--material">
           <select
             id="material-select"
-            value={selectedMaterial}
+            value={String(selectedMaterialId)}
             onChange={(e) => {
               const val = e.target.value;
               if (val === ADD_MATERIAL_VALUE) {
-                setPrevSelectedMaterial(selectedMaterial);
+                setPrevSelectedId(selectedMaterialId);
                 setIsAddingMaterial(true);
-                setNewMaterialName('');
                 return;
               }
-              onSelectedChange(val);
+              onSelectedChange(Number(val));
             }}
-            className="material-select material-select--wide"
+            className="material-select"
+            aria-label="Default material ID"
           >
-            {materials.map((m) => (
-              <option key={m} value={m}>
-                {m}
+            {sortedIds.map((id) => (
+              <option key={id} value={String(id)}>
+                {formatMaterialLabel(id)}
               </option>
             ))}
-            <option value={ADD_MATERIAL_VALUE}>+ add material…</option>
+            <option value={ADD_MATERIAL_VALUE}>+ Add material ID…</option>
           </select>
         </div>
       ) : (
         <div className="add-material-panel">
-          <input
-            type="text"
-            value={newMaterialName}
-            onChange={(e) => setNewMaterialName(e.target.value)}
-            placeholder="material name"
-            className="add-material-input"
-          />
+          <p className="add-material-preview">
+            Adds <strong>material ID {idToAdd}</strong> (
+            {formatMaterialLabel(idToAdd)}) to the list and selects it as the
+            default.
+          </p>
           <div className="add-material-actions">
             <button
               type="button"
               className="dialog-button-small"
               onClick={() => {
                 setIsAddingMaterial(false);
-                setNewMaterialName('');
-                onSelectedChange(prevSelectedMaterial);
+                onSelectedChange(prevSelectedId);
               }}
             >
               Cancel
@@ -75,23 +100,16 @@ export const MaterialSelector = ({
             <button
               type="button"
               className="dialog-button-confirm dialog-button-small"
-              disabled={!newMaterialName.trim()}
               onClick={() => {
-                const name = newMaterialName.trim();
-                if (!name) return;
-
-                const existing = materials.find(
-                  (m) => m.toLowerCase() === name.toLowerCase(),
+                const nextId = nextAvailableMaterialId(sortedIds);
+                onMaterialIdsChange(
+                  [...sortedIds, nextId].sort((a, b) => a - b),
                 );
-                const finalName = existing ?? name;
-
-                if (!existing) onMaterialsChange([...materials, finalName]);
-                onSelectedChange(finalName);
+                onSelectedChange(nextId);
                 setIsAddingMaterial(false);
-                setNewMaterialName('');
               }}
             >
-              Add
+              Add ID {idToAdd}
             </button>
           </div>
         </div>

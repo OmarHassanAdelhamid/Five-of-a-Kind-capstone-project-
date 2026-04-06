@@ -1,2 +1,4 @@
 node_modules/
-release/
+# Tracked distributable: macOS zip (contains Autovox.app). Other release output stays local.
+release/*
+!release/*-mac.zip
