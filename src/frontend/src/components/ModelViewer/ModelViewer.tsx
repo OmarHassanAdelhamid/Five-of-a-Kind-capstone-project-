@@ -1,3 +1,14 @@
+/**
+ * Main 3D viewport for a project: loads the STL mesh from the API, renders voxel geometry,
+ * and connects pointer input to layer selection, multi-voxel selection, and the layer editor.
+ * Embeds status UI, partitions, and the layer editor alongside the canvas.
+ *
+ * @author Andrew Bovbel, Khalid Farag
+ * @lastModified 2026/04/04
+ *
+ *
+ * External reference for STL loading patterns: https://sbcode.net/threejs/loaders-stl/
+ */
 import {
   forwardRef,
   useCallback,
@@ -24,32 +35,47 @@ import { Footer } from '../Messages/Footer';
 import { LayerEditor, type LayerEditorHandle } from '../LayerEditor';
 import { PartitionsPanel } from '../PartitionPanel/PartitionsPanel';
 
-//HEAVILY INFLUENCED BY STL LOADER EXAMPLE https://sbcode.net/threejs/loaders-stl/
-
+/**
+ * Contract with `App`: which asset and voxel set are shown, how selection is expressed,
+ * and callbacks to keep global project / partition / layer state in sync with the canvas.
+ */
 interface ModelViewerProps {
+  /** Server STL id for the mesh; `null` means voxel-only view. */
   selectedModel: string | null;
+  /** World-space voxel centers for the active partition (drives instanced mesh). */
   voxelCoordinates: number[][];
+  /** Lets `App` show loading overlays and gate actions while the viewer prepares or fails. */
   onStatusChange: (status: 'loading' | 'ready' | 'error') => void;
+  /** Slice coordinate on `layerAxis` currently highlighted for editing. */
   selectedLayerZ?: number | null;
+  /** Which world axis “layers” are taken along (affects picking and tinting). */
   layerAxis?: 'z' | 'x' | 'y';
+  /** User picked a layer from the 3D view (or cleared it). */
   onLayerSelect?: (layerZ: number | null) => void;
+  /** Primary voxel under the HUD / single-selection UX. */
   onVoxelSelect?: (voxel: { coord: number[]; index: number } | null) => void;
+  /** Bulk selection for multi-voxel operations from the layer editor. */
   onVoxelsSelect?: (voxels: Set<number>) => void;
   selectedVoxelIndex?: number | null;
   selectedVoxelIndices?: Set<number>;
+  /** Array mirror of multi-select for consumers that diff on array identity. */
   selectedVoxelIndicesArray?: number[];
+  /** Whether the app is in a mode where layer slicing should be visually emphasized. */
   isLayerEditingMode?: boolean;
   projectName?: string;
   selectedPartition?: string | null;
   onPartitionSelect?: (partitionName: string) => void;
+  /** World size of one voxel edge (spacing in `threeUtils` instancing). */
   voxelSize: number;
   isLayerEditorOpen?: boolean;
   onLayerEditorOpenChange?: (open: boolean) => void;
+  /** After layer edits persist, parent may refetch or refresh derived state. */
   onVoxelsChanged?: () => void | Promise<void>;
-  /** When App is fetching voxel data for the current project (REST); drives StatusMessage. */
+  /** When `App` is loading project voxels over REST; takes priority in the status banner. */
   projectFetchStatus?: 'idle' | 'loading' | 'error';
 }
 
+/** Exposes layer-editor clipboard helpers upward; inner UI stays encapsulated. */
 export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
   function ModelViewer(
     {
@@ -76,17 +102,22 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
     },
     ref,
   ) {
+    /* --- DOM / Three scene object graph --- */
     const mountRef = useRef<HTMLDivElement | null>(null);
     const layerEditorRef = useRef<LayerEditorHandle | null>(null);
     const animationFrameRef = useRef<number | null>(null);
     const sceneRef = useRef<SceneSetup | null>(null);
     const modelRef = useRef<THREE.Mesh | null>(null);
+    /** Reserved for aligning voxels to pre-centered STL space (see `renderVoxelInstanced`). */
     const modelOriginalCenterRef = useRef<THREE.Vector3 | null>(null);
     const instancedMeshRef = useRef<THREE.InstancedMesh | null>(null);
+    /** Maps GPU instance id → logical voxel index and coordinates for picking feedback. */
     const instanceIdMapRef = useRef<Map<number, VoxelData>>(new Map());
     const selectedCubeRef = useRef<number | null>(null);
+    /* --- Pointer picking --- */
     const raycasterRef = useRef<THREE.Raycaster | null>(null);
     const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
+    /** Latest props mirrored into refs so canvas event handlers see up-to-date selection callbacks. */
     const layerAxisRef = useRef<'z' | 'x' | 'y'>(layerAxis);
     layerAxisRef.current = layerAxis;
     const isLayerEditingModeRef = useRef<boolean>(isLayerEditingMode);
@@ -103,10 +134,12 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
     selectedLayerZRef.current = selectedLayerZ;
     const selectedVoxelIndexRef = useRef(selectedVoxelIndex);
     selectedVoxelIndexRef.current = selectedVoxelIndex;
+    /* Local viewer health for StatusMessage (STL load, empty scene); may be overridden by `projectFetchStatus`. */
     const [viewerStatus, setViewerStatus] = useState<
       'loading' | 'ready' | 'error'
     >('loading');
     const [viewerMessage, setViewerMessage] = useState<string | null>(null);
+    /** Snapshot of the last voxel the HUD should describe (may overlap parent selection props). */
     const [selectedVoxel, setSelectedVoxel] = useState<{
       coord: number[];
       index: number;
@@ -115,6 +148,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
     const onLayerEditorOpenChangeRef = useRef(onLayerEditorOpenChange);
     onLayerEditorOpenChangeRef.current = onLayerEditorOpenChange;
 
+    /** Forwards paste/selection helpers from the nested layer editor to the parent ref. */
     useImperativeHandle(
       ref,
       () => ({
@@ -127,6 +161,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
       [],
     );
 
+    /** Layer editor drawer: parent-controlled when `isLayerEditorOpen` prop is passed; otherwise internal state. */
     const isLayerEditorOpen =
       isLayerEditorOpenProp !== undefined
         ? isLayerEditorOpenProp
@@ -140,15 +175,20 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
     }, []);
     const [isPartitionsPanelOpen, setIsPartitionsPanelOpen] = useState(false);
 
-    // Only one of layer editor or partitions panel can be open at once
+    /** Mutually exclusive slide-out: opening the layer editor closes partitions. */
     useEffect(() => {
       if (isLayerEditorOpen) setIsPartitionsPanelOpen(false);
     }, [isLayerEditorOpen]);
 
+    /** Instanced voxel colours: default mesh, active layer slice, selected voxel(s). */
     const COLOR_DEFAULT = 0x60a5fa;
     const COLOR_LAYER_SELECTED = 0xf59e0b;
     const COLOR_VOXEL_SELECTED = 0xef4444;
 
+    /**
+     * STL-backed scene: fetch mesh for `selectedModel`, draw optional voxels, run render loop
+     * and pointer routing for layer / multi-select while this model is active.
+     */
     useEffect(() => {
       if (!selectedModel) {
         return;
@@ -176,6 +216,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
 
       const loader = new STLLoader();
 
+      /* Async mesh fetch: on success the STL becomes the shaded reference object; voxels overlay if present. */
       loader.load(
         `${API_BASE_URL}/api/stl/${encodeURIComponent(selectedModel)}`,
         (geometry: THREE.BufferGeometry) => {
@@ -226,6 +267,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
           onStatusChange('ready');
         },
         undefined,
+        /* Surface network / API failures to the user instead of a blank canvas. */
         (error: unknown) => {
           console.error(`Failed to load STL model "${selectedModel}"`, error);
           if (!isMounted) return;
@@ -236,6 +278,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
         },
       );
 
+      /* Keep projection matched to the viewer panel when the window layout changes. */
       const handleResize = () => {
         if (!mountRef.current || !sceneRef.current) return;
         const { clientWidth, clientHeight } = mountRef.current;
@@ -246,7 +289,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
 
       window.addEventListener('resize', handleResize);
 
-      // Handle click events on voxels
+      /** Maps picks on the instanced voxel mesh to parent selection state (layer vs voxel, multi-select). */
       const handleClick = (event: MouseEvent) => {
         if (
           !sceneRef.current ||
@@ -280,6 +323,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
             const coord = voxelInfo.coord;
             const isModifierPressed = event.ctrlKey || event.metaKey;
 
+            /* Modifier + click: extend or shrink the multi-voxel set used by layer tools. */
             if (isModifierPressed) {
               const currentSelected = new Set(
                 Array.from(selectedVoxelIndicesRef.current),
@@ -295,8 +339,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
                 onVoxelsSelectRef.current(new Set(Array.from(currentSelected)));
               }
 
-              // Always update single voxel selection to the last clicked voxel
-              // This helps with display and ensures we track the most recent selection
+              // HUD should still name one “primary” voxel when multiple are selected.
               if (onVoxelSelectRef.current) {
                 if (currentSelected.has(voxelInfo.index)) {
                   onVoxelSelectRef.current(voxelInfo);
@@ -320,7 +363,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
                 }
               }
             } else {
-              // Single click - select layer (opens layer editor and enables layer mode in App)
+              /** Plain click: choose layer for editing (and surface that choice to `App`). */
               if (onLayerSelectRef.current) {
                 const col =
                   layerAxisRef.current === 'x'
@@ -361,6 +404,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
             selectedCubeRef.current = instanceId;
           }
         } else {
+          /* Clicked empty space: clear layer and voxel highlights in parent state. */
           if (onLayerSelectRef.current) onLayerSelectRef.current(null);
           if (onVoxelSelectRef.current) onVoxelSelectRef.current(null);
           if (onVoxelsSelectRef.current) onVoxelsSelectRef.current(new Set());
@@ -370,6 +414,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
         }
       };
 
+      /** Double-click: alternate shortcut for single-voxel focus (distinct from layer picking). */
       const handleDoubleClick = (event: MouseEvent) => {
         if (
           !sceneRef.current ||
@@ -421,6 +466,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
         handleDoubleClick,
       );
 
+      /* Presentation loop while an STL is shown: gentle spin plus orbit controls. */
       const animate = () => {
         animationFrameRef.current = requestAnimationFrame(animate);
         if (modelRef.current) {
@@ -437,6 +483,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
 
       animate();
 
+      /* Teardown when model changes or component unmounts: stop RAF, drop listeners, free GPU resources. */
       return () => {
         isMounted = false;
         if (animationFrameRef.current !== null) {
@@ -478,6 +525,10 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
       };
     }, [selectedModel, voxelCoordinates, onStatusChange, voxelSize]);
 
+    /**
+     * Voxel-only projects (no STL): render the instanced grid and the same picking model.
+     * When a scene already exists (e.g. after unloading STL), refresh voxel geometry without resetting the camera.
+     */
     useEffect(() => {
       if (selectedModel || voxelCoordinates.length === 0) {
         return;
@@ -487,6 +538,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
       if (!mountElement) return;
 
       const existingScene = sceneRef.current;
+      /* Rebuild only voxel geometry when the user already has a scene (e.g. switched data without new STL). */
       if (existingScene != null) {
         const savedPosition = existingScene.camera.position.clone();
         const savedTarget = existingScene.controls.target.clone();
@@ -562,6 +614,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
       };
       window.addEventListener('resize', handleResize);
 
+      /** Same picking contract as the STL-backed scene: layers, multi-select, clears. */
       const handleClick = (event: MouseEvent) => {
         if (
           !sceneRef.current ||
@@ -685,7 +738,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
               }
             }
             selectedCubeRef.current = instanceId;
-          } //vi
+          }
         } else {
           if (onLayerSelectRef.current) onLayerSelectRef.current(null);
           if (onVoxelSelectRef.current) onVoxelSelectRef.current(null);
@@ -695,6 +748,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
         }
       };
 
+      /** Double-click: toggle exclusive single-voxel highlight. */
       const handleDoubleClick = (event: MouseEvent) => {
         if (
           !sceneRef.current ||
@@ -746,6 +800,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
         handleDoubleClick,
       );
 
+      /* Voxel-only mode has no STL spin; loop exists to honor orbit/zoom input continuously. */
       const animate = () => {
         animationFrameRef.current = requestAnimationFrame(animate);
         if (sceneRef.current) {
@@ -789,6 +844,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
       };
     }, [selectedModel, voxelCoordinates, onStatusChange, voxelSize]);
 
+    /** Push selection and layer-edit highlights into per-instance colours on the voxel mesh. */
     useEffect(() => {
       if (!instancedMeshRef.current || instanceIdMapRef.current.size === 0)
         return;
@@ -800,6 +856,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
 
       const dummyColor = new THREE.Color();
 
+      /* Each instance: voxel highlight vs active layer slice on the current axis. */
       for (let i = 0; i < mesh.count; i++) {
         const data = instanceIdMapRef.current.get(i);
         if (!data) continue;
@@ -812,7 +869,6 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
           (selectedVoxelIndicesArray &&
             selectedVoxelIndicesArray.includes(data.index));
 
-        // Check Layer
         const isSelectedLayer =
           isLayerEditingMode &&
           selectedLayerZ !== null &&
@@ -843,6 +899,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
       voxelCoordinates,
     ]);
 
+    /** Status strip: project REST fetch errors override local viewer/STL errors for messaging. */
     const bannerStatus =
       projectFetchStatus === 'loading'
         ? 'loading'
@@ -855,14 +912,18 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
           'Could not load project voxels. Check that the API URL matches the desktop backend (port 8765).')
         : viewerMessage;
 
+    /** Canvas plus chrome: loading banner, voxel HUD, partition/layer tabs and drawers. */
     return (
       <div className="viewer" ref={mountRef}>
+        {/* Viewer + project fetch status; explains missing model or API errors. */}
         <StatusMessage
           status={bannerStatus}
           message={bannerMessage}
           selectedModel={selectedModel}
         />
+        {/* Short hint row when any voxel data exists. */}
         <Footer hasVoxels={voxelCoordinates.length > 0} />
+        {/* Floating readout for the current pick or multi-select count. */}
         {(selectedVoxel || selectedVoxelIndices.size > 0) && (
           <div className="voxel-info">
             <h4>
@@ -884,6 +945,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
             ) : null}
           </div>
         )}
+        {/* Edge tabs: only one slide-over (partitions vs layer editor) should dominate. */}
         <button
           className={`partitions-tab ${isPartitionsPanelOpen ? 'open' : ''}`}
           onClick={() => {
@@ -913,6 +975,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
         >
           <span className="layer-editor-tab-text">Layer Editor</span>
         </button>
+        {/* 2D slice editor bound to the 3D layer selection and partition context. */}
         <LayerEditor
           ref={layerEditorRef}
           projectName={projectName}

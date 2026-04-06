@@ -1,14 +1,23 @@
+"""
+Structured in-memory voxel types (optional refactor path): richer objects than raw tuples for
+passing voxel state between services. Not required by the current API path.
+
+Currently unused. At some point, should refactor to use these instead of list of tuples to standardize.
+
+Course / submission fill-ins:
+    @author Daniel Maurer
+    @lastModified 2026/02/20
+
+"""
+
 from typing import Optional, List
 from dataclasses import dataclass
 
-"""
-Currently unused. At some point, should refactor to use these instead of list of tuples to standardize.
-"""
-
 @dataclass(init=False, frozen=True) 
 class Voxel:
-    """
-    Datatype to represent an individual voxel outside of the database. Immutable as they are 
+    """One voxel’s indices, world position, material, and optional full magnetization tuple.
+
+    Datatype to represent an individual voxel outside of the database. Immutable as they are
     only used as transient pieces of data passed between classes.
 
     Args:
@@ -54,14 +63,15 @@ class Voxel:
 
 @dataclass(init=False, frozen=True)
 class ModelDelta:
-    """
+    """Before/after voxel sets for undo/redo; empty old or new list denotes add-only or delete-only.
+
     Datatype to represent a change to a model.
 
     Args:
         old_voxels (List[Voxels]): set of voxels; what they were previously.
         new_voxels (List[Voxels]): set of voxels; their new state.
-    
-    Notes: 
+
+    Notes:
         An empty list here is interpreted as either an addition (old = []) or deletion (new = []).
     """
     def __init__(self, old_voxels: List[Voxel], new_voxels: List[Voxel]):

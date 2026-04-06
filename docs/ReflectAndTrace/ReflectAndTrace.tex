@@ -421,7 +421,7 @@ Two extras were included as part of this project:
 \end{itemize}
 
 \section{Design Iteration (LO11 (PrototypeIterate))}
-
+\iffalse
 \plt{Explain how you arrived at your final design and implementation.  How did
 the design evolve from the first version to the final version?} 
 
@@ -429,14 +429,146 @@ the design evolve from the first version to the final version?}
 client should be part of the explanation.  For example, if you made changes in
 response to usability testing, explain what the testing found and what changes
 it led to.}
+\fi
 
+Our project's design went through a variety of differing versions during the timeline of 
+both terms. As it will be explained, many of these changes were prompted by the team balancing
+two things that conflicted at times. Our team strived to fulfull the goals that us and our 
+supervisor set at the beginning of the project and tried to construct a solution that meets
+every need. At the same time, our team had to consider not only technical feasibilities, but more
+importantly time constraints, and what was do-able whilst managing many other workloads. The major
+iterations of the project follow below.\\
 
+\noindent\textbf{Initial Iteration \& Project Vision}
+\newline
+At the beginning of the project, like with any other large undertaking, our team did not have a lot 
+to build off of and the size of the solution space was very large in our heads. With the added 
+confusion of infrequent meetings with our supervisor due to scheduling limitations, our initial vision 
+was at times misinformed. In spite of this, many core components of our project materialized early; 
+the solution would be a lightweight, standalone software that allowed users to convert CAD files 
+to a set of voxels that could then have magnetization vectors assigned to them. This resulted from 
+preliminary discussions with our supervisor which emphasized the need for something simple, unlike the software
+currently in use by their team, COMSOL. Initially, a lot of focus was placed on how CAD files would be 
+voxelized, as we planned to implement this ourselves. Key ideas about the interface, such as being able 
+to select layers to edit at a time, also came about from supervisor discussions, however initial designs
+would centre on editing within the 3D view itself - closer to more traditional or familiar CAD workflows.\\
+
+\noindent\textbf{Refinements after Supervisor Discussions}
+\newline
+Discussions with our supervisor during the development of the SRS led to a set of changes that ultimately
+shaped what the design looks like today, as well as what features were included. Most notable was the 
+addition of material assignment, which was left out from initial iterations as it was not mentoned in the
+original project description nor brought up in conversations. As we learned more about the work being done 
+and examples of models that would be built within our software, the scope began to gradually expand.
+For instance, the idea of creating a project from scratch (no CAD import) resulted from conversations about 
+small models with fewer than fifty voxels. The layer editing menu also resulted from conversations with one 
+of our supervisor's graduate students, who likened voxel editing to being able to select cells within an excel
+spreadsheet. It became clear that the interface design was key above all else, and that it needed to be 
+convienient, easy to learn, and reliable. With this expansion in scope, our group made the decision to use
+a pre-existing library for CAD voxelization and focus on interface iteration. In turn, this decision led to the
+feature of adding and deleting voxels, an idea that paid off later in the project, anticipating the potential
+for conversion errors.\\
+
+\noindent\textbf{Scope Changes after \& during Revision 0}
+\newline
+During the development of revision 0 and after its presentation to the course instructors, it became clear to 
+the group that the overall scope of the project would need to be reduced - not due to technical infeasibility, 
+but due to time constraints. Accordingly, core functionalities we knew the interface required were focused on, 
+with additional features left as potential future additions. For example, creation of projects from scratch was 
+scrapped entirely as this would be a niche use case. Materials would be limited to the maximum the printer can 
+currently support, and interface convienience features such as the ability to save favourite magnetizations
+or resetting voxels were put on hold. This scope reduction allowed the team to focus on making the core ideas
+the best they could be. These features are still retained in our documents both to maintain a history, and in the
+case they will be implemented in future iterations.\\
+
+\noindent\textbf{Changes during Usability Tests}
+\newline
+During the development of the VnV Report, as well as shortly before the revision 1 presentation, usability tests were
+held with our supervisor and her graduate students in order to receive feedback, which are summarized in greater 
+detail within the Usability Report extra. It was these meetings that led to the final implementation of AutoVox.
+Overall, major changes included:
+
+\begin{itemize}
+  \item\textbf{Improvements to project creation menus.} The workflow at the time was unintuitive, and certain options 
+  did not meet client needs. This was completely reworked and simplified, along with the development of a greeting screen 
+  specifically targeted at new users.
+  \item\textbf{Ability to rename partitions.} In order to keep track of the different parts of a project easier, instead of 
+  the auto-generated positional names.
+  \item\textbf{Clearer magnetization signifiers.} A checkmark was preferred at a glance, versus the original implementation 
+  idea of a toggleable highlight color or directional arrow.
+  \item\textbf{More guidance.} While users were able to pick up core features without instruction, it was clear that a manual
+  or quick-start guide would be extremely valuable to speed up initial understanding - which wsa developed further in between tests.
+\end{itemize}
+\noindent\textbf{Conclusions}
+\newline
+Overall, AutoVox's current status reflects the balance between large goals and feasibility, incorporating valuable feedback from
+stakeholders and the creativity of the team to result in a highly usable and powerful tool.
 
 \section{Design Decisions (LO12)}
-
+\iffalse
 \plt{Reflect and justify your design decisions.  How did limitations,
  assumptions, and constraints influence your decisions?  Discuss each of these
  separately.}
+\fi
+
+Our team's primary goal when developing the system's architecture was to make future
+modifications and additions as painless as possible, whilst serving the needs of our
+client and meeting the technical abilities of our team. Additionally, the features
+considered and how they were implemented were directly informed by the limitations and 
+constraints imposed upon the project, as well as assumptions made by the team.
+Below follows a brief overview of the architecture chosen and justification, followed by 
+sets of limitations, assumptions, and constraints that informed feature and design choices.\\
+
+\noindent\textbf{Architecture Overview}
+\begin{itemize}
+  \item\textbf{Model/View/Controller Setup.} Allows for separation of concerns between the
+  user interface and voxel model updates. Given how the interface evolved considerably
+  throughout the course of the project, this decision proved valuable.
+  \item\textbf{Encapsulated backend structures.} Each of the primary backend components, such as
+  how CAD files are processed or how project files are exported, are each broken down into
+  sub-components that are encapsulated. In this way, these modules can be swapped out for alternatives
+  should their performance stop meeting client needs.
+\end{itemize}
+
+\noindent\textbf{Limitations}
+\begin{itemize}
+  \item\textbf{Variable size of models.} This posed a two-fold issue - how to handle the files in 
+  the backend efficiently, and how to effectively present large models to users without overwhelming
+  them. To address this, we introduced model partitioning - breaking down a large file into a group of
+  smaller ones - and the ability to zoom in or out within the layer editor.
+  \item\textbf{Voxelization accuracy.} No matter how a CAD file is voxelized (eg. choice of algorithm 
+  or implementation), there will be some degree of artifacting, which increases in likelihood as voxel
+  size increases To address this, we included the ability to add and delete voxels. This had the additional
+  benefit of allowing users to construct model supports for printing within our editor, instead of being
+  forced to plan this within CAD software.
+\end{itemize}
+
+\noindent\textbf{Assumptions}
+\begin{itemize}
+  \item\textbf{Valid CAD file input.} AutoVox assumes STL files provided are fully enclosed and valid 
+  3D structures and will not attempt to perform repairs, as how a file could be completed is up to the
+  user's interpretation.
+  \item\textbf{Minimum processing power requirements.} We assumed that systems running AutoVox are 
+  sufficiently powerful to handle 3D-graphics, which encouraged us to adopt Three.js to implement more
+  taxing model visualizations.
+  \item\textbf{Library availability.} We assumed that the necessary libraries for AutoVox (eg. Trimesh)
+  are readily available on target devices.
+\end{itemize}
+
+\noindent\textbf{Constraints}
+\begin{itemize}
+  \item\textbf{Resource usage minimization and performance considerations.} Rendering of voxels was altered
+  to be done in parallel, and SQL was chosen to handle voxel models to take advantage of existing database 
+  algorithms.
+  \item\textbf{File stability hazards.} Our supervisor stressed that the current software in use crashed 
+  frequently causing lost work - to address this, we implemented automatic saving after each edit to the 
+  project. This also made saving much less taxing as saves were incremental and smaller instead of being
+  accumulated over time.
+  \item\textbf{Printer file intake support.} Compatibility with the existing printer software was crucial, but
+  our supervisor did add that the files it could intake could be altered. To minimize the amount of alteration,
+  we chose to export in a basic format that is supported by a maximal number of softwares, organized in a 
+  logical and simple way.
+\end{itemize}
 
 \section{Economic Considerations (LO23)}
 
@@ -472,15 +604,73 @@ technology?}
 
 \section{Reflection on Capstone}
 
-\plt{This question focuses on what you learned during the course of the capstone project.}
+% \plt{This question focuses on what you learned during the course of the capstone project.}
 
 \subsection{Which Courses Were Relevant}
 
-\plt{Which of the courses you have taken were relevant for the capstone project?}
+Several courses taken throughout the software engineering program contributed directly to the development of AutoVox.
+The table below maps each relevant course to the specific aspects of the project it supported.
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\caption{Courses Relevant to the Capstone Project}
+\label{tab:RelevantCourses} \\
+
+\hline
+\textbf{Course} & \textbf{Relevance to AutoVox} \\
+\hline
+\endfirsthead
+
+\hline
+\multicolumn{2}{c}{\textit{Table \thetable\ continued}} \\
+\hline
+\textbf{Course} & \textbf{Relevance to AutoVox} \\
+\hline
+\endhead
+
+SFWRENG 2AA4 -- Intro To Software Development &
+Established foundational software development habits including version control with Git, modular code organization, and collaboration practices that were applied throughout the project lifecycle. \\ \hline
+
+SFWRENG 2C03 -- Data Structures \& Algorithms &
+Directly relevant to voxelization and mesh processing. Efficient spatial data structures such as hash maps were used to store and query voxel grids, and algorithmic complexity considerations informed design decisions around large 3D datasets. \\ \hline
+
+SFWRENG 2OP3 -- Object-Oriented Programming &
+The module decomposition of AutoVox into distinct, encapsulated components (e.g., ImportModule, VoxelizationModule, VisualizationModule, ExportModule) directly applied OOP principles of encapsulation, inheritance, and polymorphism covered in this course. \\ \hline
+
+SFWRENG 3A04 -- Software Design III &
+Directly applicable to the architectural design of AutoVox. Concepts from this course including module guides, module interface specifications, architectural decomposition, and information hiding were the basis for the MG and MIS documents. \\ \hline
+
+SFWRENG 3RA3 -- Software Requirements \& Security Considerations &
+Core to the SRS and Hazard Analysis deliverables. The course's framework for writing verifiable functional and non-functional requirements, identifying stakeholders, and analyzing security risks was applied directly to AutoVox's documentation. \\ \hline
+
+SFWRENG 3S03 -- Software Testing &
+Essential for the VnV Plan and VnV Report. Test design techniques such as boundary value analysis, equivalence partitioning, and unit/integration/system testing strategies were used to plan and execute the AutoVox test suite. \\ \hline
+
+SFWRENG 4HC3 -- Human Computer Interfaces &
+Directly informed the UI/UX design of AutoVox and the usability testing extra. Concepts such as Norman's design principles and cognitive load guided interface decisions and the structured usability evaluations conducted with participants. \\ \hline
+
+SFWRENG 3DB3 -- Databases &
+A crucial part of the project was the ability to store and retrieve voxel data from a database. Ensuring that the database is efficient and scalable was essential for the project. This course provided the necessary knowledge to design and implement a database for the project. \\ \hline
+
+\end{longtable}
+
+These courses enabled the team to be successful with the capstone project by providing the necessary knowledge and skills to complete the project. They provided a team a foundation to build upon and a framework to follow.
 
 \subsection{Knowledge/Skills Outside of Courses}
 
-\plt{What skills/knowledge did you need to acquire for your capstone project
-that was outside of the courses you took?}
+A number of skills and areas of knowledge were required for AutoVox that were not covered in the courses taken during the program.
+
+\begin{itemize}
+
+  \item \textbf{3D Graphics and Rendering:} Working with a real-time 3D rendering library (Three.js) required self-directed learning. Topics such as scene graphs, camera projections, vertex and fragment shaders, instanced mesh rendering, and GPU memory management were not covered in any course and had to be learned through documentation and experimentation.
+
+  \item \textbf{Voxelization Algorithms:} Converting arbitrary triangle meshes to volumetric voxel representations is a specialized computational geometry topic not covered in the curriculum. The product uses existing libraries and tooling for mesh-to-voxel conversion rather than a custom implementation. However, the team still had to learn concepts such as ray casting, surface-to-volume conversion, and non-smooth geometry so that requirements and design documentation could describe the system's behaviour accurately.
+
+  \item \textbf{3D File Format Parsing:} The team did not implement an STL parser from scratch. On the server, meshes are read with the Python \texttt{trimesh} library for voxelization and dimension queries. In the client, the STL file served by the API is parsed with Three.js's \texttt{STLLoader} to build renderable geometry. Studying the STL specifications was still needed to document and reason about the file format. The team did not need to replace those libraries, but to write accurate technical documentation and interpret what the application shows.
+
+  \item \textbf{Desktop Application Development:} Building a cross-platform desktop application using Electron required learning how to bridge web technologies (HTML/CSS/JavaScript) with native OS capabilities, manage inter-process communication (IPC) between the main and renderer processes, and handle file system access securely.
+
+  \item \textbf{TypeScript and FastAPI:} While programming fundamentals were covered in courses, the specific TypeScript language, FastAPI framework required practical self-study to use effectively in a large multi-module project.
+
+\end{itemize}
 
 \end{document}
