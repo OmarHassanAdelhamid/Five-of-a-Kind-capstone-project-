@@ -112,6 +112,12 @@ function App() {
     [],
   );
 
+  useEffect(() => {
+    if (!projectName.trim()) {
+      setShowWelcomeModal(true);
+    }
+  }, []);
+
   // Persist project state so it survives page refreshes
   useEffect(() => {
     if (projectName) {
