@@ -1,3 +1,9 @@
+/**
+ * Tests for the status footer.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/04
+ */
 import { render } from '@testing-library/react';
 import { Footer } from './Footer';
 

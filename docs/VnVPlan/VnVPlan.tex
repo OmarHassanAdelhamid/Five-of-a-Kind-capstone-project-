@@ -68,27 +68,27 @@ in.}
 
 \pagenumbering{arabic}
 
-This document outlines the Verification and Validation (V\&V) Plan for \textbf{AutoVox}, developed by Team 10 --- \textit{Five of a Kind}. It describes how the system will be tested to ensure that all functional, non-functional, and safety requirements defined in the Software Requirements Specification (SRS) are satisfied. The plan establishes the strategies, team roles, and procedures that will be used to verify correctness, performance, and usability of the software.
+\noindent This document outlines the Verification and Validation (V\&V) Plan for \textbf{AutoVox}, developed by Team 10 --- \textit{Five of a Kind}. It describes how the system will be tested to ensure that all functional, non-functional, and safety requirements defined in the Software Requirements Specification (SRS) are satisfied. The plan establishes the strategies, team roles, and procedures that will be used to verify correctness, performance, and usability of the software.\\
 
-The document is organized into two main sections. The first section, \textbf{General Information}, provides background context including a summary of the system, testing objectives, project challenge level, and relevant supporting documents. The second section, \textbf{Plan}, outlines the structure of the V\&V process, identifies team responsibilities, and describes the approach for verifying the SRS through structured reviews, stakeholder feedback, and continuous validation throughout development.
+\noindent The document is organized into two main sections. The first section, \textbf{General Information}, provides background context including a summary of the system, testing objectives, project challenge level, and relevant supporting documents. The second section, \textbf{Plan}, outlines the structure of the V\&V process, identifies team responsibilities, and describes the approach for verifying the SRS through structured reviews, stakeholder feedback, and continuous validation throughout development.\\
 
 \section{General Information}
 
-The following subsections cover a basic summary of what AutoVox aims to accomplish, and what the high-level objectives of this verification and validation plan are. In addition, the challenge level of this project and the selected extra documentation that will be developed and tested under this document are covered, as well as any other relevant documentation that aids in this document's understanding. 
+The following subsections cover a basic summary of what AutoVox aims to accomplish, and what the high-level objectives of this verification and validation plan are. In addition, the challenge level of this project and the selected extra documentation that will be developed and tested under this document are covered, as well as any other relevant documentation that aids in this document's understanding. \\
 
 \subsection{Summary}
 
-The software system being tested is called \textbf{AutoVox}, developed by Team 10 --- \textit{Five of a Kind}. AutoVox is a desktop-based CAD enhancement tool that allows researchers and engineers to assign properties to individual voxels within a 3D model. It is designed to streamline the process of magnetization and material planning for multi-material 3D printing workflows within a research laboratory environment.
+The software system being tested is called \textbf{AutoVox}, developed by Team 10 --- \textit{Five of a Kind}. AutoVox is a desktop-based CAD enhancement tool that allows researchers and engineers to assign properties to individual voxels within a 3D model. It is designed to streamline the process of magnetization and material planning for multi-material 3D printing workflows within a research laboratory environment.\\
 
-Currently, these objects are modeled within COMSOL, requiring researchers to tediously build models from sketches voxel-by-voxel, and assign properties to each voxel individually. AutoVox removes this bottleneck by enabling users to import pre-built CAD models (e.g., from AutoCAD), automatically slice them into voxels, and interactively select single or multiple voxels to assign or modify its properties. The software also provides per-layer visualization, undo/redo functionality, and validation mechanisms to ensure complete and accurate voxel data before export.
+\noindent Currently, these objects are modeled within COMSOL, requiring researchers to tediously build models from sketches voxel-by-voxel, and assign properties to each voxel individually. AutoVox removes this bottleneck by enabling users to import pre-built CAD models (e.g., from AutoCAD), automatically slice them into voxels, and interactively select single or multiple voxels to assign or modify its properties. The software also provides per-layer visualization, undo/redo functionality, and validation mechanisms to ensure complete and accurate voxel data before export.\\
 
-The final output is a \textbf{Java-readable metadata file} that contains per-voxel property information, which integrates directly with the custom 3D printer pipeline used in the lab. By automating voxel processing and enabling efficient property editing, AutoVox dramatically reduces the time and effort required to prepare print-ready models, ensuring a faster, more reliable, and user-friendly workflow for advanced multi-material 3D printing research.
+\noindent The final output is a \textbf{Java-readable metadata file} that contains per-voxel property information, which integrates directly with the custom 3D printer pipeline used in the lab. By automating voxel processing and enabling efficient property editing, AutoVox dramatically reduces the time and effort required to prepare print-ready models, ensuring a faster, more reliable, and user-friendly workflow for advanced multi-material 3D printing research.\\
 
 \subsection{Objectives}
 
-The primary objective of the verification and validation (V\&V) process for \textbf{AutoVox} is to ensure that the system functions correctly, reliably, and efficiently according to the requirements defined in the Software Requirements Specification (SRS). The V\&V activities will confirm that each system component performs as intended, meets stakeholder expectations, and aligns with the project’s functional and non-functional goals.
+The primary objective of the verification and validation (V\&V) process for \textbf{AutoVox} is to ensure that the system functions correctly, reliably, and efficiently according to the requirements defined in the Software Requirements Specification (SRS). The V\&V activities will confirm that each system component performs as intended, meets stakeholder expectations, and aligns with the project’s functional and non-functional goals.\\
 
-Specifically, the objectives of V\&V are as follows:
+\noindent Specifically, the objectives of V\&V are as follows:\\
 
 \begin{itemize}
   \item \textbf{Correctness:} Verify that all functional requirements are implemented as specified, including accurate import, voxelization, visualization, editing, and export of CAD models.
@@ -99,42 +99,41 @@ Specifically, the objectives of V\&V are as follows:
   \item \textbf{Traceability:} Demonstrate that all SRS requirements are testable, measurable, and traceable through verification procedures and testing artifacts.
 \end{itemize}
 
-Overall, the V\&V process aims to provide stakeholders with confidence that \textbf{AutoVox} achieves its intended purpose as a robust, user-friendly, and trustworthy software solution for voxel-based magnetization design.
+\noindent Overall, the V\&V process aims to provide stakeholders with confidence that \textbf{AutoVox} achieves its intended purpose as a robust, user-friendly, and trustworthy software solution for voxel-based magnetization design.\\
 
 \subsection{Challenge Level and Extras}
 
-The challenge level for \textbf{AutoVox} is classified as \textbf{advanced}. The system integrates multiple complex subsystems, including 3D model import and voxelization, real-time voxel visualization and editing, magnetization and material assignment, and structured export to a custom printer pipeline. Each subsystem involves substantial technical and architectural considerations, such as handling large voxel datasets, maintaining UI synchronization, and ensuring data integrity across modules. These factors collectively establish the project as an advanced-level software system.
+\noindent The challenge level for \textbf{AutoVox} is classified as \textbf{advanced}. The system integrates multiple complex subsystems, including 3D model import and voxelization, real-time voxel visualization and editing, magnetization and material assignment, and structured export to a custom printer pipeline. Each subsystem involves substantial technical and architectural considerations, such as handling large voxel datasets, maintaining UI synchronization, and ensuring data integrity across modules. These factors collectively establish the project as an advanced-level software system.\\
 
-The extras included in this project are:
+\noindent The extras included in this project are:
 
 \begin{itemize}
   \item \textbf{User Manual:} A comprehensive guide explaining how to operate the software, including detailed instructions, annotated screenshots, and workflow examples. The manual emphasizes ease of use and clarity to enable independent operation by research personnel.
   \item \textbf{Usability Report:} A formal documentation of the usability testing process, summarizing user feedback, identified issues, and recommendations for improving interface design and user experience. The report also outlines the methodology used during testing, including participant demographics and task-based evaluations.
 \end{itemize}
 
-These extras complement the technical objectives of the project by ensuring that the final product is not only functionally correct but also accessible, intuitive, and well-documented for its target users.
+\noindent These extras complement the technical objectives of the project by ensuring that the final product is not only functionally correct but also accessible, intuitive, and well-documented for its target users.\\
 
 \subsection{Relevant Documentation}
 
-The documentation that supports the verification and validation (V\&V) process for \textbf{AutoVox} includes the Software Requirements Specification (SRS), Hazard Analysis (HA), Development Plan (DP), and Problem Statement and Goals. Each document serves a distinct purpose in guiding and supporting the testing strategy.
+\noindent The documentation that supports the verification and validation (V\&V) process for \textbf{AutoVox} includes the Software Requirements Specification (SRS), Hazard Analysis (HA), Development Plan (DP), and Problem Statement and Goals. Each document serves a distinct purpose in guiding and supporting the testing strategy.\\
 
-The \textbf{Software Requirements Specification (SRS)} defines all functional and non-functional requirements for the system. It provides the foundation for test case design, ensuring that every requirement can be verified through measurable criteria and traced throughout the V\&V process \citet{SRS}.
+\noindent The \textbf{Software Requirements Specification (SRS)} defines all functional and non-functional requirements for the system. It provides the foundation for test case design, ensuring that every requirement can be verified through measurable criteria and traced throughout the V\&V process \citet{SRS}.\\
 
-The \textbf{Hazard Analysis (HA)} identifies potential system hazards, their causes, and mitigation strategies. It establishes the safety requirements (SCRs) that must be verified to ensure the system operates safely and consistently under expected laboratory conditions \citet{HA}.
+\noindent The \textbf{Hazard Analysis (HA)} identifies potential system hazards, their causes, and mitigation strategies. It establishes the safety requirements (SCRs) that must be verified to ensure the system operates safely and consistently under expected laboratory conditions \citet{HA}.\\
 
-The \textbf{Development Plan (DP)} outlines the project’s workflow, coding standards, continuous integration setup, and proof-of-concept demonstration plan. It informs the structure and scheduling of testing activities by defining the methods and tools used during development \citet{DP}.
+\noindent The \textbf{Development Plan (DP)} outlines the project’s workflow, coding standards, continuous integration setup, and proof-of-concept demonstration plan. It informs the structure and scheduling of testing activities by defining the methods and tools used during development \citet{DP}.\\
 
-The \textbf{Problem Statement and Goals} document provides the original motivation, scope, and intended outcomes of the project. It ensures that the V\&V process remains aligned with the project’s high-level objectives and stakeholder expectations \citet{PS}.
+\noindent The \textbf{Problem Statement and Goals} document provides the original motivation, scope, and intended outcomes of the project. It ensures that the V\&V process remains aligned with the project’s high-level objectives and stakeholder expectations \citet{PS}.\\
 
-Finally, the project’s \textbf{GitHub Repository} serves as the central hub for all implementation artifacts, testing scripts, and documentation updates.\\
-\url{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project}
+\noindent Finally, the project’s \textbf{GitHub Repository} serves as the central hub for all implementation artifacts, testing scripts, and documentation updates: \url{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project}\\
 
-Together, these documents ensure that all verification and validation activities are traceable, comprehensive, and consistent with the system’s intended functionality and safety goals.
+\noindent Together, these documents ensure that all verification and validation activities are traceable, comprehensive, and consistent with the system’s intended functionality and safety goals.\\
+
 \section{Plan}
+\noindent The \textbf{Plan} section outlines the structure and approach of the verification and validation (V\&V) process for \textbf{AutoVox}. It describes the composition of the V\&V team, their assigned roles, and responsibilities across different testing domains, ensuring that all system components are thoroughly verified and validated. This section also details the planned approach for verifying the Software Requirements Specification (SRS), including the review strategy, feedback mechanisms, and formal verification methods that will be employed to confirm that all requirements are correct, testable, and traceable throughout development.\\
 
-The \textbf{Plan} section outlines the structure and approach of the verification and validation (V\&V) process for \textbf{AutoVox}. It describes the composition of the V\&V team, their assigned roles, and responsibilities across different testing domains, ensuring that all system components are thoroughly verified and validated. This section also details the planned approach for verifying the Software Requirements Specification (SRS), including the review strategy, feedback mechanisms, and formal verification methods that will be employed to confirm that all requirements are correct, testable, and traceable throughout development.
-
-The verification and validation (V\&V) efforts for \textbf{AutoVox} will be conducted by \textbf{Team 10 --- \textit{Five of a Kind}}. Each member plays a specific role to ensure that all functional, non-functional, and safety requirements are properly verified and validated. The distribution of responsibilities ensures comprehensive coverage of testing, documentation, and review activities across all project domains. Table~\ref{tab:roles} reflects these responsibilities, assigning each member a specific role.
+\noindent The verification and validation (V\&V) efforts for \textbf{AutoVox} will be conducted by \textbf{Team 10 --- \textit{Five of a Kind}}. Each member plays a specific role to ensure that all functional, non-functional, and safety requirements are properly verified and validated. The distribution of responsibilities ensures comprehensive coverage of testing, documentation, and review activities across all project domains. Table~\ref{tab:roles} reflects these responsibilities, assigning each member a specific role.\\
 
 \begin{table}[H]
 \centering
@@ -157,16 +156,17 @@ The verification and validation (V\&V) efforts for \textbf{AutoVox} will be cond
 \end{tabular}
 \end{table}
 
-These roles remain flexible in the case that there is notable overlap between the issues two (or more) roles focus on. For instance, if it were found that the implementation of a given feature drastically affects performance but satisfies functional requirements, some degree of coordination would need to take place between functional and non-functional testers as there would be overlap of responsibility and a need for close collaboration. Additionally, if one team member is less proficient at a specific task within their role, other members may of course provide assistance, given that the team member requesting help shares in their duties.
+\noindent These roles remain flexible in the case that there is notable overlap between the issues two (or more) roles focus on. For instance, if it were found that the implementation of a given feature drastically affects performance but satisfies functional requirements, some degree of coordination would need to take place between functional and non-functional testers as there would be overlap of responsibility and a need for close collaboration. Additionally, if one team member is less proficient at a specific task within their role, other members may of course provide assistance, given that the team member requesting help shares in their duties.\\
 
-This structure ensures that all verification and validation efforts—ranging from requirement coverage and performance testing to usability evaluation and safety assurance—are systematically planned, executed, and reviewed in collaboration with the supervisor.
+\noindent This structure ensures that all verification and validation efforts—ranging from requirement coverage and performance testing to usability evaluation and safety assurance—are systematically planned, executed, and reviewed in collaboration with the supervisor.\\
+
 \subsection{SRS Verification}
 
-Verification of the Software Requirements Specification (SRS) for \textbf{AutoVox} will follow a structured, multi-stage process to ensure that all requirements are correct, complete, testable, and traceable. This process includes internal reviews, supervisor meetings, peer review feedback, and continuous verification. Each activity is designed to improve requirement quality and maintain traceability between the SRS and subsequent project deliverables.
+\noindent Verification of the Software Requirements Specification (SRS) for \textbf{AutoVox} will follow a structured, multi-stage process to ensure that all requirements are correct, complete, testable, and traceable. This process includes internal reviews, supervisor meetings, peer review feedback, and continuous verification. Each activity is designed to improve requirement quality and maintain traceability between the SRS and subsequent project deliverables.\\
 
 \subsubsection{Internal Review and Checklist Verification}
 
-The first stage of SRS verification will involve a detailed internal review conducted by all team members. Each member will focus on a particular category of requirements:
+\noindent The first stage of SRS verification will involve a detailed internal review conducted by all team members. Each member will focus on a particular category of requirements:\\
 
 \begin{itemize}
   \item \textbf{Omar Abdelhamid} and \textbf{Daniel Maurer} will verify that all functional requirements are clear, consistent, and feasible to implement.
@@ -175,15 +175,15 @@ The first stage of SRS verification will involve a detailed internal review cond
   \item \textbf{Olivia Reich} will review documentation-related and usability-focused requirements for clarity and completeness.
 \end{itemize}
 
-\noindent See Table~\ref{tab:srs} for the checklist that will guide this review.
+\noindent See Table~\ref{tab:srs} for the checklist that will guide this review.\\
 
-All findings and issues identified during the review will be documented as GitHub issues and assigned to the appropriate team member for correction prior to the next SRS revision.
+\noindent All findings and issues identified during the review will be documented as GitHub issues and assigned to the appropriate team member for correction prior to the next SRS revision.\\
 
 \subsubsection{Supervisor Review}
 
-Following internal review, the team will conduct a structured SRS review meeting with the project supervisor. \textbf{Omar Abdelhamid} and \textbf{Daniel Maurer} will organize and co-lead the meeting, preparing a summary document highlighting high-risk and complex requirements that need confirmation (e.g., voxel visualization performance, data export structure, and UI synchronization accuracy).
+\noindent Following internal review, the team will conduct a structured SRS review meeting with the project supervisor. \textbf{Omar Abdelhamid} and \textbf{Daniel Maurer} will organize and co-lead the meeting, preparing a summary document highlighting high-risk and complex requirements that need confirmation (e.g., voxel visualization performance, data export structure, and UI synchronization accuracy).\\
 
-The review meeting will include:
+\noindent The review meeting will include:\\
 
 \begin{itemize}
   \item A walkthrough of the SRS to verify alignment between requirements and project scope.
@@ -192,11 +192,11 @@ The review meeting will include:
   \item An informal feedback session for the supervisor to provide clarifications or suggest modifications.
 \end{itemize}
 
-The feedback session will take the form of an informal interview, during which supervisor comments will be recorded for later formatting into individual GitHub issues. Comments will revolve around the SRS walkthrough and following discussion, as well as examination of the SRS itself if needed. Each comment will be linked to the corresponding requirement or section of the document and tracked until resolution. Follow-up actions will be reviewed in subsequent supervisor meetings.
+\noindent The feedback session will take the form of an informal interview, during which supervisor comments will be recorded for later formatting into individual GitHub issues. Comments will revolve around the SRS walkthrough and following discussion, as well as examination of the SRS itself if needed. Each comment will be linked to the corresponding requirement or section of the document and tracked until resolution. Follow-up actions will be reviewed in subsequent supervisor meetings.\\
 
 \subsubsection{Peer Review and Class Feedback}
 
-In addition to the supervisor review, the SRS will undergo peer evaluation during the class-wide review process. The primary reviewer team will assess the document’s clarity, consistency, and completeness. Their feedback will be formally logged and categorized according to:
+\noindent In addition to the supervisor review, the SRS will undergo peer evaluation during the class-wide review process. The primary reviewer team will assess the document’s clarity, consistency, and completeness. Their feedback will be formally logged and categorized according to:\\
 
 \begin{itemize}
   \item Readability and clarity of requirement descriptions.
@@ -205,13 +205,13 @@ In addition to the supervisor review, the SRS will undergo peer evaluation durin
   \item Appropriateness of fit criteria and testability.
 \end{itemize}
 
-All peer feedback will be integrated systematically into the SRS through a traceability table within an appendix, ensuring that each comment maps to a specific requirement and its revision status.
+\noindent All peer feedback will be integrated systematically into the SRS through a traceability table within an appendix, ensuring that each comment maps to a specific requirement and its revision status.\\
 
 \subsubsection{Continuous Verification and Traceability Maintenance}
 
-Throughout development, the team will maintain continuous verification of the SRS using GitHub issues, milestones, and project boards. Each requirement will be linked to corresponding design elements, test cases, and validation results. Regular bi-weekly internal reviews will verify that any new or modified requirements remain traceable and verifiable.
+\noindent Throughout development, the team will maintain continuous verification of the SRS using GitHub issues, milestones, and project boards. Each requirement will be linked to corresponding design elements, test cases, and validation results. Regular bi-weekly internal reviews will verify that any new or modified requirements remain traceable and verifiable.\\
 
-This iterative approach ensures that the SRS remains accurate, actionable, and aligned with the evolving implementation. Any changes introduced after supervisor or peer feedback will trigger updates to both the traceability matrix and the V\&V Plan to maintain consistency across documents.
+\noindent This iterative approach ensures that the SRS remains accurate, actionable, and aligned with the evolving implementation. Any changes introduced after supervisor or peer feedback will trigger updates to both the traceability matrix and the V\&V Plan to maintain consistency across documents.\\
 
 \begin{table}[H]
 \centering
@@ -249,11 +249,11 @@ Continuous Verification &
 \end{tabular}
 \end{table}
 
-\textbf{Summary:} This structured, multi-level verification process guarantees that the SRS for \textbf{AutoVox} is validated both internally and externally. Through continuous review, stakeholder feedback, and traceability enforcement, the team ensures that all requirements are precise, measurable, and fully verifiable before system testing begins.
+\noindent\textbf{Summary:} This structured, multi-level verification process guarantees that the SRS for \textbf{AutoVox} is validated both internally and externally. Through continuous review, stakeholder feedback, and traceability enforcement, the team ensures that all requirements are precise, measurable, and fully verifiable before system testing begins.\\
 
 \subsection{Design Verification}
 
-The design verification will primarily focus on the system framework and integrated architecture that details the system implementation. Verification will take place through structured classmate and supervisor reviews. Reviews conducted by classmates will be designed to emphasize the interface design that permits usage of external libraries, internal refactoring and the primary database structure that encapsulates all voxel metadata. Feedback will be created into GitHub issues and discussed amongst the group in order to determine the best course of action to effectively integrate the feedback in subsequent development cycles.\\
+\noindent The design verification will primarily focus on the system framework and integrated architecture that details the system implementation. Verification will take place through structured classmate and supervisor reviews. Reviews conducted by classmates will be designed to emphasize the interface design that permits usage of external libraries, internal refactoring and the primary database structure that encapsulates all voxel metadata. Feedback will be created into GitHub issues and discussed amongst the group in order to determine the best course of action to effectively integrate the feedback in subsequent development cycles.\\
 
 \noindent Reviews conducted with our supervisor, Dr. Onaizah, will primarily verify tolerance parameters within the output framework during integration with specialized 3D printing software. Diagrams may be developed to provide visual aids to help facilitate the technical conversations and enhance understanding. These diagrams will default to standard UML diagrams, unless a more simplified diagram is required due to disparity in technical proficiency.\\
 
@@ -294,7 +294,7 @@ External Data Integrity &
 
 \subsection{Verification and Validation Plan Verification}
 
-The verification \& validation testing plan will also incorporate peer reviews and certain testing methodologies. It will be evaluated on the following 4 key metric categories: coverage, test effectiveness, testing methodology, and traceability. Peer reviews will be centered around structured checklists that guide meaningful assessment on the scope and completeness of the verification \& validation plan. Completeness within the scope of the plan should effectively address system scalability in regard to the software’s ability to manage growth in project size, complexity, and anticipated functional demands. There will be emphasis placed on ensuring effective coverage of user interactions with 3D renditions and all voxel data management operations. Feedback will be created into GitHub issues and discussed amongst the group in order to determine the best course of action to effectively integrate the feedback in subsequent development cycles.\\
+\noindent The verification \& validation testing plan will also incorporate peer reviews and certain testing methodologies. It will be evaluated on the following 4 key metric categories: coverage, test effectiveness, testing methodology, and traceability. Peer reviews will be centered around structured checklists that guide meaningful assessment on the scope and completeness of the verification \& validation plan. Completeness within the scope of the plan should effectively address system scalability in regard to the software’s ability to manage growth in project size, complexity, and anticipated functional demands. There will be emphasis placed on ensuring effective coverage of user interactions with 3D renditions and all voxel data management operations. Feedback will be created into GitHub issues and discussed amongst the group in order to determine the best course of action to effectively integrate the feedback in subsequent development cycles.\\
 
 \noindent Feedback will be integrated with an interactive development approach. Established functionality within the system will not be considered complete until complete testing in accordance with the verification \& validation plan has been completed. During weekly group meetings, updates related to a specific feature will require a corresponding update regarding related test cases that will be established. Tests must also be documented as GitHub issues. Upon closing a test case, the results must be documented within the issue. Results will be evaluated against a pre-defined baseline success metrics. \\
 
@@ -334,7 +334,7 @@ Traceability &
 
 \subsection{Implementation Verification}
 
-Implementation verification will ensure that all segments of code strictly adhere to the requirements and constraints outlined in the SRS document as well as ensure adherence to the mandatory programming language’s conventions. Unit tests will be used in order to validate the core functionalities with the system. Pytest will likely be the primary testing framework for unit tests relating to the system components' development in Python. In a similar manner, Jest will be used to facilitate unit testing with the UI/UX of our system. Test cases will primarily focus on testing the functionality related to voxel modification requirements identified in F1-F4.\\
+\noindent Implementation verification will ensure that all segments of code strictly adhere to the requirements and constraints outlined in the SRS document as well as ensure adherence to the mandatory programming language’s conventions. Unit tests will be used in order to validate the core functionalities with the system. Pytest will likely be the primary testing framework for unit tests relating to the system components' development in Python. In a similar manner, Jest will be used to facilitate unit testing with the UI/UX of our system. Test cases will primarily focus on testing the functionality related to voxel modification requirements identified in F1-F4.\\
 
 \noindent Static analysis will be conducted to ensure accordance with PEP 8, which is the official style guide for writing Python code. There will also be code inspections to verify secure and consistent file handling across all interconnected systems prior to running the code.  This is in accordance with SCR1, SCR4, and SCR5.\\
 
@@ -353,7 +353,7 @@ Implementation verification will ensure that all segments of code strictly adher
 \item large database interaction (NF232, SCR3)
 \end{itemize}
 
-Table~\ref{tab:impl} details a checklist that will be utilized throughout implementation verification to ensure completeness.
+\noindent Table~\ref{tab:impl} details a checklist that will be utilized throughout implementation verification to ensure completeness.\\
 
 \begin{table}[H]
 \centering
@@ -392,7 +392,7 @@ Traceability &
 
 \subsection{Automated Testing and Verification Tools}
 
-\textbf{Unit Testing Framework (backend):} Since the backend of our system will be coded in Python, the primary testing framework used will be PyTest. This framework was chosen due to its flexible testing framework that can be scaled to support complex function testing. \\
+\noindent\textbf{Unit Testing Framework (backend):} Since the backend of our system will be coded in Python, the primary testing framework used will be PyTest. This framework was chosen due to its flexible testing framework that can be scaled to support complex function testing. \\
 
 \noindent\textbf{Code coverage tools  in PyTest:} PyTest offers a variety of tools, including the usage of the coverage.py library (pytest-cov), which allows extensive code coverage. It is able to monitor the program during execution and report what parts of the code have been executed. The plugin pytest-mock also provides a convenient way to mock objects and functions, including those in external libraries. This will be useful for testing an external voxel slicing library.\\
 
@@ -404,10 +404,10 @@ Traceability &
 
 \subsection{Software Validation}
 
-\textit{User Test Group}\\
+\noindent\textit{User Test Group}\\
 \noindent To validate the usability of the system, a specialized test group will be selected based on the current typical users of the 3D printer. Testing will take the form of exploratory and acceptance testing. Users will be provided a list of tasks that they will attempt to navigate through with no prior instruction. The goal is to assess the system on the following aspects: usability, accessibility, discoverability, natural flow of interaction and system behaviour.\\
 
-\noindent The list of tasks will closely relate to essential requirements. The list of tasks will depend on the current status of the project. However, tasks may include:
+\noindent The list of tasks will closely relate to essential requirements. The list of tasks will depend on the current status of the project. However, tasks may include:\\
 \begin{itemize}
 \item create a new project with a given CAD file (F221)
 \item generate a 3D image with a given voxel size (F213)
@@ -431,12 +431,11 @@ Traceability &
 
 \section{System Tests}
 
-This section outlines the tests for verifying both functional and nonfunctional requirements of the system. It helps ensure that the system meets stakeholders' expectations. This section includes
-tests covering the essential aspects of the systems requirements.
+\noindent This section outlines the tests for verifying both functional and nonfunctional requirements of the system. It helps ensure that the system meets stakeholders' expectations. This section includes tests covering the essential aspects of the systems requirements.
 
 \subsection{Tests for Functional Requirements}
 
-The subsections below outline tests corresponding to functional requirements in the SRS.
+\noindent The subsections below outline tests corresponding to functional requirements in the SRS.
 Each test is associated with a unique functional area, helping to confirm that the system meets
 the specified requirements. 
 
@@ -1006,7 +1005,7 @@ and user interface interactions as specified in requirements F231 through F2310.
 
 \subsubsection{Export Manager Tests}
 
-This section covers the tests for ensuring the Export Manager correctly
+\noindent This section covers the tests for ensuring the Export Manager correctly
 handles file export operations, property validation, and data integrity
 as specified in requirements F241 through F245.
 
@@ -1171,7 +1170,7 @@ How will they be done?  In cases like code (or document) walkthroughs, who will
 be involved? Be specific.}
 \fi
 
-The following subsections outline tests corresponding to non-functional requirements in the SRS. Instead of organizing these tests by each component, tests are grouped into common non-functional areas of testing.
+\noindent The following subsections outline tests corresponding to non-functional requirements in the SRS. Instead of organizing these tests by each component, tests are grouped into common non-functional areas of testing.\\
 
 \subsubsection{Usability and Look \& Feel}
 
@@ -1475,7 +1474,7 @@ are implicitly tested for by the following system tests and/or unit tests.
 
 \subsection{Traceability Between Test Cases and Requirements}
 
-The following tables show the traceability between test cases and their corresponding functional requirements, and demonstrate that complete coverage is achieved.
+\noindent The following tables show the traceability between test cases and their corresponding functional requirements, and demonstrate that complete coverage is achieved.\\
 
 \iffalse
 \wss{Provide a table that shows which test cases are supporting which
@@ -1729,7 +1728,7 @@ The following tables show the traceability between test cases and their correspo
 
 \section{Unit Test Description}
 
-To avoid repeating repetitive information, to view the full set of unit tests, view the backend test cases within src/backend/tests
+\noindent To avoid repeating repetitive information, to view the full set of unit tests, view the backend test cases within src/backend/tests
 and frontend tests within src/frontend (all test files have test as suffix). For backend unit tests, cases were selected with the aim
 to execute each if statement or possibility either way, as well as triggering foreseeable error cases that should be verifiably caught.
 Names of all test cases were also made to be self-descriptive, not requiring additional documentation within the code to explain what they

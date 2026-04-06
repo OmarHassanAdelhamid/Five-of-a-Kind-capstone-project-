@@ -1,6 +1,13 @@
+/**
+ * File menu: new/open project, save, export, and related shortcuts.
+ *
+ * @author Khalid Farag, Andrew Bovbel, Olivia Reich
+ * @lastModified 2026/04/05
+ */
 import { useState } from 'react';
 import type { BaseTabProps } from '../types';
 
+// Props for the FileTab component
 interface FileTabProps extends BaseTabProps {
   onOpenFile?: () => void;
   onOpenFileSelect?: (modelName: string) => void;
@@ -34,6 +41,7 @@ export const FileTab = ({
   const [openFileSubmenu, setOpenFileSubmenu] = useState(false);
   const [openProjectSubmenu, setOpenProjectSubmenu] = useState(false);
 
+  // Handles the click on a menu item
   const handleItemClick = (handler?: (() => void) | null) => {
     if (handler) handler();
     onClose();
@@ -41,12 +49,14 @@ export const FileTab = ({
     setOpenProjectSubmenu(false);
   };
 
+  // Handles the selection of a model
   const handleModelSelect = (modelName: string) => {
     if (onOpenFileSelect) onOpenFileSelect(modelName);
     onClose();
     setOpenFileSubmenu(false);
   };
 
+  // Handles the selection of a project
   const handleProjectSelect = (projectName: string) => {
     if (onOpenProjectSelect) onOpenProjectSelect(projectName);
     onClose();
@@ -69,10 +79,7 @@ export const FileTab = ({
               onMouseEnter={() => setOpenFileSubmenu(true)}
               onMouseLeave={() => setOpenFileSubmenu(false)}
             >
-              <button
-                className="menu-dropdown-item"
-                disabled={false}
-              >
+              <button className="menu-dropdown-item" disabled={false}>
                 <span>Open File...</span>
                 <span className="menu-submenu-arrow">▶</span>
               </button>

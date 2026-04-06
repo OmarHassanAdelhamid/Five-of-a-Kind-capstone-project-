@@ -1,3 +1,9 @@
+/**
+ * Tests for the 2D layer grid component.
+ *
+ * @author Khalid Farag, Andrew Bovbel
+ * @lastModified 2026/04/04
+ */
 import { render, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Layer2DGrid } from '../Layer2DGrid';

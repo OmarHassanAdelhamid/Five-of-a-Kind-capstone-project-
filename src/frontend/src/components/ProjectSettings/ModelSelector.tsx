@@ -1,10 +1,17 @@
-import type { ChangeEvent } from 'react'
+/**
+ * Dropdown (and related UI) for choosing which uploaded STL is active.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
+import type { ChangeEvent } from 'react';
 
+// Props for the ModelSelector component
 interface ModelSelectorProps {
-  models: string[]
-  selectedModel: string | null
-  onModelChange: (model: string) => void
-  disabled?: boolean
+  models: string[];
+  selectedModel: string | null;
+  onModelChange: (model: string) => void;
+  disabled?: boolean;
 }
 
 export const ModelSelector = ({
@@ -13,21 +20,25 @@ export const ModelSelector = ({
   onModelChange,
   disabled,
 }: ModelSelectorProps) => {
+  // Handles the change event on the model select
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value
+    const value = event.target.value;
     if (value) {
-      onModelChange(value)
+      onModelChange(value);
     }
-  }
+  };
 
   return (
-    <div className="model-selector">
-      <label htmlFor="model-select">Active model</label>
+    <div className="project-settings-block model-selector">
+      <label className="project-settings-label" htmlFor="model-select">
+        Active model (STL)
+      </label>
       <select
         id="model-select"
         value={selectedModel ?? ''}
         onChange={handleChange}
         disabled={disabled || models.length === 0}
+        className="project-settings-select project-settings-select--full"
       >
         {models.length === 0 && <option value="">No models available</option>}
         {models.map((model) => (
@@ -37,6 +48,5 @@ export const ModelSelector = ({
         ))}
       </select>
     </div>
-  )
-}
-
+  );
+};

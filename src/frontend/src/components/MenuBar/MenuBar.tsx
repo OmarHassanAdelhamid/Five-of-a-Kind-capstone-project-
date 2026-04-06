@@ -1,3 +1,9 @@
+/**
+ * Top application menu bar composing File, Edit, View, Selection, and Help tabs.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import { useState, useRef, useEffect } from 'react';
 import { FileTab } from './FileTab/FileTab';
 import { EditTab } from './EditTab/EditTab';
@@ -5,6 +11,7 @@ import { ViewTab } from './ViewTab/ViewTab';
 import { SelectionTab } from './SelectionTab/SelectionTab';
 import { HelpTab } from './HelpTab/HelpTab';
 
+// Props for the MenuBar component
 interface MenuBarProps {
   onOpenFile?: () => void;
   onOpenFileSelect?: (modelName: string) => void;
@@ -41,6 +48,7 @@ interface MenuBarProps {
   canCopy?: boolean;
 }
 
+// Names of the tabs in the menu bar
 type TabName = 'File' | 'Edit' | 'View' | 'Selection' | 'Help';
 
 export const MenuBar = ({
@@ -81,6 +89,7 @@ export const MenuBar = ({
   const [activeMenu, setActiveMenu] = useState<TabName | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // If you click outside the menu bar, close it
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -91,10 +100,12 @@ export const MenuBar = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Handles the click on a menu item
   const handleMenuClick = (name: TabName) => {
     setActiveMenu(activeMenu === name ? null : name);
   };
 
+  // Handles the closing of a menu item
   const handleClose = () => setActiveMenu(null);
 
   return (
