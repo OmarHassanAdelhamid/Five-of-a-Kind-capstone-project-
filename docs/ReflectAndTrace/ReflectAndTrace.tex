@@ -470,6 +470,29 @@ TA & Assertions in VnV Report are not clear & Add more detailed explanations to 
 \newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/450/changes/388b8b62bf0d3344265e395a87143bc13284b13e}{Commit 388b8b6}
 \newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/450}{Pull \#450} \\ \hline
 
+TA & Import time wording was too vague and needed better interpretation of the observed scalability trend & Revised the performance discussion to explain that import times increase sub-linearly with voxel count and clarified the interpretation of scalability behaviour. & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/439}{Issue \#439}
+\newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/commit/fdf9ee2}{Commit fdf9ee2}
+\newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/467}{Pull \#467} \\ \hline
+
+TA & Error bars in Figures 2 and 3 were not supported by repeated trials or variance data & Removed the unsupported error bars from the figures so the graphs now show only the measured values presented in the report. & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/438}{Issue \#438}
+\newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/commit/fdf9ee2}{Commit fdf9ee2}
+\newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/467}{Pull \#467} \\ \hline
+
+TA & Table 4 was not clearly explained and the meaning of latency was unclear & Added explicit discussion around Table 4, defined latency in this context as user interaction count rather than elapsed time, and explained what the results show about workflow efficiency. & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/437}{Issue \#437}
+\newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/commit/fdf9ee2}{Commit fdf9ee2}
+\newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/467}{Pull \#467} \\ \hline
+
+TA & Figures should use vector graphics for better quality in the final document & Replaced the report figures with PDF vector graphics to improve clarity and rendering quality in the compiled document. & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/436}{Issue \#436}
+\newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/commit/fdf9ee2}{Commit fdf9ee2}
+\newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/467}{Pull \#467} \\ \hline
+
+TA & Functional requirement test descriptions were too dense and some unimplemented features were incorrectly treated as executed tests & Reorganized the functional requirement test descriptions into clearer expected-result and actual-result format, and updated tests tied to unimplemented stretch-goal features to be marked as out of scope and not executed. & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/435}{Issue \#435}
+\newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/commit/fdf9ee2}{Commit fdf9ee2}
+\newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/467}{Pull \#467} \\ \hline
+
+TA & Maintainability and security evaluation needed clearer checklist-based wording & Updated the maintainability and security sections to describe the evaluation using a structured checklist-based approach instead of only stating that the code was reviewed. & \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/issues/433}{Issue \#433}
+\newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/commit/fdf9ee2}{Commit fdf9ee2}
+\newline\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/pull/467}{Pull \#467} \\ \hline
 \end{longtable}
 
 \section{Challenge Level and Extras}
@@ -715,26 +738,39 @@ Given the specialized but growing market in research and advanced manufacturing,
 
 \section{Reflection on Project Management (LO24)}
 
-\plt{This question focuses on processes and tools used for project management.}
-
 \subsection{How Does Your Project Management Compare to Your Development Plan}
 
-\plt{Did you follow your Development plan, with respect to the team meeting plan, 
-team communication plan, team member roles and workflow plan.  Did you use the 
-technology you planned on using?}
+Overall, the project followed the original Development Plan reasonably well, but with some practical adjustments. The team maintained regular meetings and communication through GitHub and messaging platforms, which aligned with the planned communication strategy. Roles were generally respected, but in practice there was flexibility, with members occasionally taking on tasks outside their original responsibilities when needed.
+
+The planned workflow using GitHub issues, pull requests, and version control was followed consistently and became one of the strongest aspects of the project. The technologies initially selected were also used throughout the project, with no major deviations.
+
+However, some parts of the plan, such as strict adherence to timelines and fully structured task breakdowns, were not followed as closely as intended, especially during busier academic periods.
 
 \subsection{What Went Well?}
 
-\plt{What went well for your project management in terms of processes and 
-technology?}
+One of the main strengths of the project management approach was the consistent use of GitHub for tracking progress. Issues, commits, and pull requests were used effectively to organize work and maintain traceability. This made it easier to understand what changes were made and why.
+
+Team communication was also effective, with members staying responsive and coordinating well when tasks needed to be completed quickly. Collaboration during debugging and integration phases worked particularly well, as team members were willing to support each other and resolve issues together.
+
+Additionally, the team adapted well when requirements changed or when certain features were re-scoped, allowing the project to stay on track without major disruptions.
 
 \subsection{What Went Wrong?}
 
-\plt{What went wrong in terms of processes and technology?}
+One of the main challenges was inconsistent task planning and time estimation. Some tasks took longer than expected, while others were underestimated, which led to periods of rushed work close to deadlines.
+
+There were also cases where features were initially planned but later identified as unnecessary or out of scope, which resulted in wasted effort early on. This was especially noticeable in the VnV process, where some tests had to be reclassified as stretch goals after development decisions changed.
+
+Another issue was that not all documentation and testing decisions were aligned early in the process, which required revisions later to ensure consistency between the implementation and the VnV report.
 
 \subsection{What Would you Do Differently Next Time?}
 
-\plt{What will you do differently for your next project?}
+For future projects, a more realistic and flexible planning approach would be used, with better time estimation and buffer time built into the schedule. Tasks would be broken down more clearly from the beginning to reduce ambiguity and improve accountability.
+
+There would also be earlier validation of which features are essential versus stretch goals, to avoid spending time on functionality that may later be removed or deprioritized.
+
+In addition, stronger alignment between development and documentation would be maintained throughout the project, rather than leaving adjustments until the final stages. Regular internal reviews of documentation would help ensure consistency and reduce last-minute revisions.
+
+Finally, maintaining the strong use of GitHub workflows would remain a priority, as it was one of the most effective aspects of the project.
 
 \section{Reflection on Capstone}
 
