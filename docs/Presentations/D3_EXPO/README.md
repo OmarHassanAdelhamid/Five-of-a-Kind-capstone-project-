@@ -2,4 +2,4 @@
 
 The folders and files for this folder are as follows:
 
-expo.pdf - the poster as printed for the expo event
+- `SE-Group10.pdf` The poster as printed for the expo event.
