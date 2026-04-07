@@ -315,26 +315,28 @@ The verification \& validation testing plan will also incorporate peer reviews a
 \textbf{Criteria} & \textbf{Verification Tasks} \\ \hline
 Coverage &
 \begin{itemize}
-\item Quantitative evaluation metrics defined.
-\item Established configuration of testing domains.
-\item Established coverage cases.
-\item Quantitative coverage summaries.
+\item Quantitative metrics stated explicitly (e.g.\ line/branch coverage targets per milestone, or interaction-count baselines for UI flows).
+\item Testing domains listed (backend, frontend, integration, usability, performance) with primary tools named (Pytest, Jest, manual scripts).
+\item Coverage cases named: which SRS subsystems (Import, Visualization, Editing, Export) have at least one system or unit test trace.
+\item Each major milestone includes a short coverage summary table or CI artifact reference, not only narrative text.
 \end{itemize} \\ \hline
 Testing Methodology &
 \begin{itemize}
-\item Established baseline success metrics.
-\item Testing classification completed.
+\item Baseline success metrics defined per test type.
+\item Tests classified (automated unit/integration, manual exploratory, performance, usability).
+\item Mutation or fault-injection scope identified where used.
 \end{itemize} \\ \hline
 Traceability &
 \begin{itemize}
-\item Test tracking integrated within GitHub issues.
-\item Formalized feedback process.
+\item GitHub issues or project labels link tests to requirement IDs; closing an issue references the test run or commit.
+\item Peer or TA feedback on the V\&V plan logged as issues with accept/reject and document revision tracked.
 \end{itemize} \\ \hline
 \end{tabular}
 \end{table}
 
 
 \subsection{Implementation Verification}
+\label{sec:impl-verification}
 
 Implementation verification will ensure that all segments of code strictly adhere to the requirements and constraints outlined in the SRS document as well as ensure adherence to the mandatory programming language’s conventions. Unit tests will be used in order to validate the core functionalities with the system. Pytest will likely be the primary testing framework for unit tests relating to the system components' development in Python. In a similar manner, Jest will be used to facilitate unit testing with the UI/UX of our system. Test cases will primarily focus on testing the functionality related to voxel modification requirements identified in F1-F4.\\
 
@@ -351,7 +353,7 @@ Implementation verification will ensure that all segments of code strictly adher
 \noindent Testing will also be done to evaluate the performance of implementation. In accordance with thresholds as defined in associated requirements, it will be evaluated as follows:
 \begin{itemize}
 \item data processing across file input and output workflows (NF212, NF242)
-\item optimized interface responsiveness (F223)
+\item interface responsiveness for multi-perspective navigation and partition switching (F223), measured against the interaction-count or latency budgets documented in the performance tests (not an abstract ``optimality'' claim)
 \item large database interaction (NF232, SCR3)
 \end{itemize}
 
@@ -368,25 +370,27 @@ Table~\ref{tab:impl} details a checklist that will be utilized throughout implem
 \textbf{Category} & \textbf{Verification Tasks} \\ \hline
 Functionality &
 \begin{itemize}
-\item Defined test case sets for component requirements (SRS, S.2).
-\item Visual rendering validation.
-\item Voxel modification validation.
+\item Test case sets mapped to SRS requirement IDs (S.2); each automated test name or description references the FR/NFR it exercises where practical.
+\item Backend: Pytest suites pass for voxel editing, persistence, and export behaviours tied to F231--F239.
+\item Frontend: Jest (and manual smoke steps where automation is impractical) pass for viewer, partition navigation, and layer tools tied to F221--F223.
+\item Regression: known small STL/voxel test models re-run after viewer or slicing changes to confirm end-to-end consistency.
 \end{itemize} \\ \hline
 Quality &
 \begin{itemize}
-\item Structured code walkthrough completed.
-\item Static analysis in accordance with the development environment.
-\item Weekly code reviews conducted.
+\item At least one structured code review per PR touching application logic; reviewers apply the numbered workflow in Section~\ref{sec:code-review-steps}.
+\item Static analysis: Python PEP~8 enforcement, TypeScript/ESLint clean for frontend.
+\item Security-focused inspection of file import/export and path handling before release candidates (SCR1, SCR4, SCR5).
 \end{itemize} \\ \hline
 Performance &
 \begin{itemize}
-\item File handling benchmarks.
-\item User interaction processing time benchmarks.
-\item Database interaction benchmarks.
+\item Import/export throughput or timing benchmarks recorded against NF212/NF242 expectations for representative file sizes.
+\item UI: interaction counts or latency for core flows (import, rotate/zoom, partition change, export) compared to documented baselines from the VnV performance tests.
+\item Database: query or transaction benchmarks for large projects against NF232/SCR3 where applicable.
 \end{itemize} \\ \hline
 Traceability &
 \begin{itemize}
-\item Test tracking integrated within GitHub issues.
+\item GitHub issues and PRs reference requirement IDs; closed issues state what was verified or deferred.
+\item Coverage reports (pytest-cov, Jest) archived or linked in CI artifacts for major milestones.
 \end{itemize} \\ \hline
 \end{tabular}
 \end{table}
