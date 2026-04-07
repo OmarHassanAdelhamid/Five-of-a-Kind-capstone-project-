@@ -1,5 +1,8 @@
 # Makefile for compiling .tex files
 
+# Shared fragments (no \documentclass); only \input by other documents
+FRAGMENTS := ./Comments.tex ./Common.tex ./Reflection.tex
+
 # Define the pdflatex command
 PDFLATEX_CMD = pdflatex -interaction=nonstopmode
 
@@ -16,8 +19,11 @@ define COMPILE_BIBTEX
 	cd $(dir $1) && $(BIBTEX_CMD)
 endef
 
-# Default target: Compile all .tex files if no specific target is given
-all: $(patsubst %.tex, %.pdf, $(wildcard **/*.tex))
+# All standalone .tex files under docs/ (excludes fragment inputs)
+STANDALONE_TEX := $(filter-out $(FRAGMENTS),$(shell find . -name '*.tex'))
+
+# Default target: compile every standalone document
+all: $(patsubst %.tex,%.pdf,$(STANDALONE_TEX))
 
 # Rule for compiling .tex to .pdf
 %.pdf: %.tex
