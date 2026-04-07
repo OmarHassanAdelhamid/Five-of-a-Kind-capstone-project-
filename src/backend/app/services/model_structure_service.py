@@ -41,6 +41,10 @@ class VoxelDB:
         self.cur.execute("CREATE INDEX IF NOT EXISTS idx_voxels_iz ON voxels(iz);")
         self._migrate_magnetization_columns() # for legacy dbs.
         self._migrate_material_values()       # for legacy dbs with string material IDs.
+        self.set_meta("default_material", str(default_material))
+        self.set_meta("default_magnet_magnitude", str(d_mm))
+        self.set_meta("default_magnet_polar", str(d_mp))
+        self.set_meta("default_magnet_azimuth", str(d_ma))
         self.conn.commit()
 
     def _migrate_magnetization_columns(self) -> None:
@@ -125,6 +129,16 @@ class VoxelDB:
             VALUES (?, ?, ?, ?, ?, ?)""", 
             list(rows)
         )
+
+    def apply_default_material_to_all_voxels(self) -> None:
+        """Set every voxel's material to the project default."""
+        raw = self.get_meta("default_material")
+        if raw is None:
+            raw = self._get_default_property("material")
+        if raw is None:
+            return
+        dm = self._parse_material_int(raw)
+        self.cur.execute("UPDATE voxels SET material = ?", (dm,))
         
     # to add a single voxel
     def add_voxel(self, ix: int, iy: int, iz: int) -> None:
@@ -253,11 +267,21 @@ class VoxelDB:
             )
 
     def _get_default_property(self, property_name: str):
-        # helper to return default values for each column.
+        meta_key = {
+            "material": "default_material",
+            "magnet_magnitude": "default_magnet_magnitude",
+            "magnet_polar": "default_magnet_polar",
+            "magnet_azimuth": "default_magnet_azimuth",
+        }.get(property_name)
+        if meta_key is not None:
+            v = self.get_meta(meta_key)
+            if v is not None:
+                return v
         self.cur.execute("PRAGMA table_info(voxels)")
         for col in self.cur.fetchall():
             if col[1] == property_name:
-                return col[4] # default value is listed in col[4]
+                return col[4] 
+        return None
 
     def commit(self) -> None: # closes database, but file still exists
         self.conn.commit()

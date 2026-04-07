@@ -1,3 +1,9 @@
+/**
+ * Tests for the new-project dialog.
+ *
+ * @author Khalid Farag, Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { NewProjectDialog } from './NewProjectDialog';
@@ -47,8 +53,7 @@ describe('NewProjectDialog', () => {
         projectName: 'box',
         modelUnits: 'mm',
         voxelSize: 1,
-        voxelUnits: 'mm',
-        defaultMaterial: 'material1',
+        defaultMaterial: 1,
       }),
     );
     expect(onClose).toHaveBeenCalled();
@@ -71,8 +76,7 @@ describe('NewProjectDialog', () => {
         projectName: 'box-v1',
         modelUnits: 'mm',
         voxelSize: 1,
-        voxelUnits: 'mm',
-        defaultMaterial: 'material1',
+        defaultMaterial: 1,
       }),
     );
   });
@@ -175,23 +179,18 @@ describe('NewProjectDialog', () => {
     const modelCm = container.querySelector<HTMLInputElement>(
       'input[name="modelUnits"][value="cm"]',
     );
-    const voxelNm = container.querySelector<HTMLInputElement>(
-      'input[name="voxelUnits"][value="nm"]',
-    );
     if (modelCm) await userEvent.click(modelCm);
-    if (voxelNm) await userEvent.click(voxelNm);
     await userEvent.click(getByRole('button', { name: /Create Project/ }));
     expect(onConfirm).toHaveBeenCalledWith(
       expect.objectContaining({
         modelUnits: 'cm',
-        voxelUnits: 'nm',
       }),
     );
   });
 
-  it('add material flow: select add then add new material', async () => {
+  it('add material flow: assigns next material ID and submits', async () => {
     const onConfirm = jest.fn();
-    const { getByRole, getByPlaceholderText } = render(
+    const { getByRole } = render(
       <NewProjectDialog
         isOpen
         stlFileName="box.stl"
@@ -205,13 +204,11 @@ describe('NewProjectDialog', () => {
         target: { value: '__ADD_NEW_MATERIAL__' },
       });
     }
-    const nameInput = getByPlaceholderText('material name');
-    await userEvent.type(nameInput, 'steel');
-    await userEvent.click(getByRole('button', { name: 'Add' }));
+    await userEvent.click(getByRole('button', { name: /Add ID 4/ }));
     await userEvent.click(getByRole('button', { name: /Create Project/ }));
     expect(onConfirm).toHaveBeenCalledWith(
       expect.objectContaining({
-        defaultMaterial: 'steel',
+        defaultMaterial: 4,
       }),
     );
   });
@@ -237,7 +234,7 @@ describe('NewProjectDialog', () => {
     if (cancelInPanel) await userEvent.click(cancelInPanel as HTMLElement);
     expect(
       (document.getElementById('material-select') as HTMLSelectElement)?.value,
-    ).toBe('material1');
+    ).toBe('1');
   });
 
   it('voxel size input allows decimal', () => {
@@ -256,8 +253,8 @@ describe('NewProjectDialog', () => {
     expect(voxelInput.value).toBe('1.5');
   });
 
-  it('add material with empty name does nothing', async () => {
-    const { getByRole, getByPlaceholderText } = render(
+  it('add material panel shows next ID before confirming', async () => {
+    const { getByText } = render(
       <NewProjectDialog
         isOpen
         stlFileName="box.stl"
@@ -271,9 +268,7 @@ describe('NewProjectDialog', () => {
         target: { value: '__ADD_NEW_MATERIAL__' },
       });
     }
-    const addBtn = getByRole('button', { name: 'Add' });
-    await userEvent.click(addBtn);
-    expect(getByPlaceholderText('material name')).toBeInTheDocument();
+    expect(getByText(/material ID 4/i)).toBeInTheDocument();
   });
 
   it('voxel size allows empty string', () => {
@@ -292,29 +287,35 @@ describe('NewProjectDialog', () => {
     expect(voxelInput.value).toBe('');
   });
 
-  it('add material with duplicate name (case-insensitive) keeps existing', async () => {
+  it('second add uses next sequential material ID', async () => {
     const onConfirm = jest.fn();
-    const { getByRole, getByPlaceholderText } = render(
+    const { getByRole } = render(
       <NewProjectDialog
         isOpen
         stlFileName="box.stl"
-        initialMaterials={['Steel', 'Copper']}
+        initialMaterialIds={[1, 2]}
         onClose={jest.fn()}
         onConfirm={onConfirm}
       />,
     );
-    const materialSelect = document.getElementById('material-select');
+    let materialSelect = document.getElementById('material-select');
     if (materialSelect) {
       fireEvent.change(materialSelect, {
         target: { value: '__ADD_NEW_MATERIAL__' },
       });
     }
-    await userEvent.type(getByPlaceholderText('material name'), 'steel');
-    await userEvent.click(getByRole('button', { name: 'Add' }));
+    await userEvent.click(getByRole('button', { name: /Add ID 3/ }));
+    materialSelect = document.getElementById('material-select');
+    if (materialSelect) {
+      fireEvent.change(materialSelect, {
+        target: { value: '__ADD_NEW_MATERIAL__' },
+      });
+    }
+    await userEvent.click(getByRole('button', { name: /Add ID 4/ }));
     await userEvent.click(getByRole('button', { name: /Create Project/ }));
     expect(onConfirm).toHaveBeenCalledWith(
       expect.objectContaining({
-        defaultMaterial: 'Steel',
+        defaultMaterial: 4,
       }),
     );
   });

@@ -1,5 +1,9 @@
-// This component is used to display a 2D grid of voxels
-
+/**
+ * 2D layer viewport: wires canvas drawing and interaction hooks to the layer editor.
+ *
+ * @author Khalid Farag
+ * @lastModified 2026/04/03
+ */
 import { useCallback, useEffect, useRef } from 'react';
 import type { LayerResponse, LayerVoxel } from '../../utils/api';
 import {

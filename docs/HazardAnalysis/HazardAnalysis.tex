@@ -101,11 +101,27 @@ successfully deploy a safe and reliable software system.
 
 \section{Scope and Purpose of Hazard Analysis}
 
-\textbf{Scope:} 
-This hazard analysis examines the potential risks and failures that may arise during the development and operation of the voxel-based design platform used for automating multi-material 3D printing. The analysis covers all major stages of the system’s lifecycle, including CAD model import, voxelization, visualization, editing, and export. Each of these stages introduces possible hazards such as file corruption, rendering issues, data loss, or miscommunication between the user interface and internal processes. The scope also considers hazards resulting from external factors such as hardware limitations, printer software compatibility, and computational resource constraints. The analysis is limited to hazards directly related to the software system and its interactions, and excludes physical hardware malfunctions or the user misuse outside normal operating conditions.
+\noindent This hazard analysis examines the potential risks and failures that may arise during the development and operation 
+of the voxel-based design platform used for automating multi-material 3D printing. The analysis covers all major stages 
+of the system’s lifecycle, including CAD model import, voxelization, visualization, editing, and export. Each of these 
+stages introduces possible hazards such as file corruption, rendering issues, data loss, or miscommunication between the 
+user interface and internal processes. The scope also considers hazards resulting from external factors such as hardware 
+limitations, printer software compatibility, and computational resource constraints. The analysis is limited to hazards 
+directly related to the software system and its interactions, and excludes physical hardware malfunctions or the user misuse 
+outside normal operating conditions. See the list below for a high-level overview of hazard classes within the scope of this analysis.\\
 
-\textbf{Purpose:} 
-The purpose of this hazard analysis is to identify, evaluate, and mitigate risks that could compromise the reliability, safety, or effectiveness of the voxel design platform. Conducting this analysis helps the development team anticipate failures early in the project lifecycle, reduce potential losses of time, data, and materials, and improve the system’s overall dependability. The findings from this process will inform safety requirements, guide testing and validation efforts, and contribute to the creation of a robust, efficient, and trustworthy tool for research and development in multi-material 3D printing.
+\begin{itemize}
+    \item \textbf{File processing failures:} Includes import and export issues, incorrect saving or lack of saves that could lead to progress loss or errors in printing.
+    \item \textbf{Lack of user protections:} Includes not protecting users from inputting incorrect form data, or otherwise actions that allow users to perform actions that result in either data loss or unbeneficial model edits.
+    \item \textbf{Visualization failures:} Includes rendering issues that lead to user misinput or lack of rendering entirely leading to delays in model iteration and development.
+\end{itemize}
+
+\noindent The purpose of this hazard analysis is to identify, evaluate, and mitigate risks that could compromise the reliability, 
+safety, or effectiveness of the voxel design platform. Conducting this analysis helps the development team anticipate 
+failures early in the project lifecycle, reduce potential losses of time, data, and materials, and improve the system’s 
+overall dependability. The findings from this process will inform safety requirements, guide testing and validation efforts, 
+and contribute to the creation of a robust, efficient, and trustworthy tool for research and development in multi-material 
+3D printing.
 
 \section{System Boundaries and Components}
 
@@ -238,6 +254,8 @@ Export Manager & File format is exported in the incorrect format & \textbullet{}
 \hline
 Full System & User progress is lost & \textbullet{} Unexpected software bug that causes the system to crash, which causes the system to lose its state. \newline \textbullet{} The user experiences a hardware malfunction (e.g., power loss, memory failure), which causes the system to lose its state. & \textbullet{} User loses signifcant work and would need to re-do the work. \newline \textbullet{} User will start getting frustrated and lose trust in the system. \newline \textbullet{} User will lose signicant time in the total workflow of their design due to the need to re-do the work. & The system shall implement a auto-saving mechanism to periodically save the state of the user's process to allow for recovery in case of a system shutdown or failure. & F236, NF241, SCR6, SCR7 & H6 \\
 \hline
+Editing Manger and Export Manager & Exported file contains incorrect magnetization vectors or material IDs. & \textbullet{} Unexpected software bug that allows user to input invalid values & \textbullet{} The custom 3D printer software cannot read the file correctly due to the unexpected value, causing the program to crash or malfunction. \newline \textbullet{} Considerable time can be wasted if the error is not caught by the user. & The system should validate that magnetization vectors and material IDs conform to expectations before exporting, or restrict the user input space. & F231, F233, F241, SCR4 & H7 \\
+\hline
 \end{tabular}
 \end{table}
 \end{landscape}
@@ -283,55 +301,55 @@ Note that \autoref{tab:sym} includes constants from SRS S.2, with the addition o
 \begin{enumerate}
 \renewcommand{\labelenumi}{SCR \arabic{enumi}.}
 
-\item \emph{The system shall validate the imported CAD files for their format correctness before processing the model.}\\
+\item \hypertarget{scr1}{}\emph{The system shall validate the imported CAD files for their format correctness before processing the model.}\\
     \quad {\bf Rationale:} The corrupted files can cause the system to fail and prevent successful voxelization to the workflow disruption.\\
     \quad {\bf Fit Criterion:} \texttt{INPUT\_FILE\_VALIDATION\_THRESH} of the imported files must pass the validation checks, and the system should reject any files that fail to do so.\\
     \quad {\bf Associated Hazards:} H1\\
     \quad {\bf Priority:} High
 
-\item \emph{The system shall check if the device has enough memory and GPU capabilities before attempting to render 3D models and voxel grids.}\\
+\item \hypertarget{scr2}{}\emph{The system shall check if the device has enough memory and GPU capabilities before attempting to render 3D models and voxel grids.}\\
     \quad {\bf Rationale:} Insufficient memory or outdated GPU drivers can cause rendering failures with the system, preventing users from visualizing their models and proceeding with property assignments.\\
     \quad {\bf Fit Criterion:} The hardware where the system is running on must have at least \texttt{MIN\_RENDER\_MEMORY} of memory, and the GPU driver must be compatible with the system.\\
     \quad {\bf Associated Hazards:} H2\\
     \quad {\bf Priority:} Low
 
-\item \emph{The system shall maintain real-time synchronization between the UI component of selected/edited voxels and the backend data model.}\\
+\item \hypertarget{scr3}{}\emph{The system shall maintain real-time synchronization between the UI component of selected/edited voxels and the backend data model.}\\
     \quad {\bf Rationale:} Any failures in this synchronization can lead to the user editing unintended voxels, causing incorrect property assignment and loss of user trust in system accuracy.\\
     \quad {\bf Fit Criterion:} \texttt{UI\_SYNC\_ACCURACY} of voxel selections and edits must be accurately reflected in both UI display and backend data model.\\
     \quad {\bf Associated Hazards:} H3\\
     \quad {\bf Priority:} High
 
-\item \emph{The system shall validate all magnetization and material properties before exporting the file containing the metadata for all voxels.}\\
+\item \hypertarget{scr4}{}\emph{The system shall validate all magnetization and material properties before exporting the file containing the metadata for all voxels.}\\
     \quad {\bf Rationale:} Missing these important information can cause excessive time and material waste, and in some cases can cause printer failures.\\
-    \quad {\bf Fit Criterion:} \texttt{EXPORT\_COMPLETENESS\_THRESH} of exported files must contain complete magnetization and material property data for all voxels.\\
-    \quad {\bf Associated Hazards:} H4\\
+    \quad {\bf Fit Criterion:} \texttt{EXPORT\_COMPLETENESS\_THRESH} of exported files must contain complete and correct magnetization and material property data for all voxels.\\
+    \quad {\bf Associated Hazards:} H4, H7\\
     \quad {\bf Priority:} Low
 
-\item \emph{The system shall validate the metadata file format and structure before exporting the file, ensuring that it is compatible with the next system that will read the file.}\\
+\item \hypertarget{scr5}{}\emph{The system shall validate the metadata file format and structure before exporting the file, ensuring that it is compatible with the next system that will read the file.}\\
     \quad {\bf Rationale:} Incorrect metadata format can cause the custom 3D printer program to crash, preventing the user from continuing with the workflow, leading to user frustration.\\
     \quad {\bf Fit Criterion:} \texttt{METADATA\_FORMAT\_VALIDATION} of exported metadata files must match the required structure and format expected by the next system that will read the file.\\
     \quad {\bf Associated Hazards:} H5\\
     \quad {\bf Priority:} High
 
-\item \emph{The system shall implement auto-saving functionality to preserve user progress and enable recovery from any system crashes or hardware failures.}\\
+\item \hypertarget{scr6}{}\emph{The system shall implement auto-saving functionality to preserve user progress and enable recovery from any system crashes or hardware failures.}\\
     \quad {\bf Rationale:} Any system crashes or hardware failures can lead to signicant amount of work loss, which would require the user to restart the workflow from scratch, which would be very time consuming and frustrating.\\
     \quad {\bf Fit Criterion:} The system must automatically save user progress every \texttt{AUTO\_SAVE\_INTERVAL}.\\
     \quad {\bf Associated Hazards:} H6\\
     \quad {\bf Priority:} High
 
-\item \emph{The system shall provide undo/redo functionality to allow users to correct their mistakes without losing signifcant work.}\\
+\item \hypertarget{scr7}{}\emph{The system shall provide undo/redo functionality to allow users to correct their mistakes without losing signifcant work.}\\
     \quad {\bf Rationale:} Human errors in design are common and users need the ability to easily correct these mistakes without restarting the process.\\
     \quad {\bf Fit Criterion:} The system must maintain an undo history of at least \texttt{UNDO\_HISTORY\_SIZE} actions and provide clear undo/redo controls.\\
     \quad {\bf Associated Hazards:} H6\\
     \quad {\bf Priority:} Medium
 
-\item \emph{The system shall limit the number of voxels that can be selected simultaneously to prevent any performance issues.}\\
+\item \hypertarget{scr8}{}\emph{The system shall limit the number of voxels that can be selected simultaneously to prevent any performance issues.}\\
     \quad {\bf Rationale:} Selecting too many voxels at a time can cause system slowdowns, UI freezing and an overall poor user experience.\\
     \quad {\bf Fit Criterion:} The system must limit voxel selection to a maximum of \texttt{MAX\_VOXEL\_SELECTION} voxels at any time and provide clear feedback when limits are reached.\\
     \quad {\bf Associated Hazards:} H3\\
     \quad {\bf Priority:} Low
 
-\item \emph{The system shall provide progress updates and timeout handling for long running operations such as importing/exporting the file, and voxelization.}\\
+\item \hypertarget{scr9}{}\emph{The system shall provide progress updates and timeout handling for long running operations such as importing/exporting the file, and voxelization.}\\
     \quad {\bf Rationale:} Large CAD files can take significant time to process, and users need feedback on progress to avoid waiting indefinitely.\\
     \quad {\bf Fit Criterion:} All import and export operations must timeout after \texttt{FILE\_IMPORT\_EXPORT\_TIMEOUT}, and all operations exceeding \texttt{FEEDBACK\_UPDATE\_TIME} must provide progress updates.\\
     \quad {\bf Associated Hazards:} H1, H2\\
@@ -350,19 +368,19 @@ In this section, we will state which safety requirements will be implemented as 
 
 Requirements that will be implemented as part of the capstone timeline, as they are considered to be high priority, and will be implemented first:
 \begin{itemize}
-    \item SCR 1
-    \item SCR 3
-    \item SCR 5
-    \item SCR 6
-    \item SCR 7
+    \item \hyperlink{scr1}{SCR 1}
+    \item \hyperlink{scr3}{SCR 3}
+    \item \hyperlink{scr5}{SCR 5}
+    \item \hyperlink{scr6}{SCR 6}
+    \item \hyperlink{scr7}{SCR 7}
 \end{itemize}
 
 Requirements that will be implemented in the future, as they are considered lower priority, and will only be implemented if time permits:
 \begin{itemize}
-    \item SCR 2
-    \item SCR 4
-    \item SCR 8
-    \item SCR 9
+    \item \hyperlink{scr2}{SCR 2}
+    \item \hyperlink{scr4}{SCR 4}
+    \item \hyperlink{scr8}{SCR 8}
+    \item \hyperlink{scr9}{SCR 9}
 \end{itemize}
 
 \iffalse

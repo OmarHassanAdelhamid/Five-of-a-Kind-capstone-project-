@@ -181,7 +181,19 @@ likely change throughout the year.}
 
 The following table outlines the initial role assignments for each team member at the start of the project.
 Roles may rotate or shift throughout the year as the project evolves and according to the situation.
-Multiple members may take on the same role (e.g.\ in the case of Domain Expert and Code Reviewer).
+Multiple members may take on the same role (e.g.\ in the case of Domain Expert and Code Reviewer).\\
+
+Current role assignments were determined based on both individual interests and the strengths each team member identified during discussions. It has been established within the team that all members are expected to reflect individually on their performance in fulfilling their assigned roles as well as on the contributions of their teammates after each milestone. Transitioning team members to different roles will only occur if one of the following circumstances occurs:
+
+\begin{enumerate}
+  \renewcommand{\labelenumi}{(\arabic{enumi})}
+  \item A team member expresses interest in trying a new role.
+  \item A team member feels that another team member is underperforming and has not sufficiently fulfilled the responsibilities of their role.
+\end{enumerate}
+
+If either of the above two events occurs, the protocol is that the team will plan out a specific meeting to reassess individual responsibilities and determine how roles should be redistributed.\\
+
+The following table outlines the initial role assignments for each team member at the start of the project.
 
 \begin{center}
 \begin{tabularx}{\textwidth}{lX}
@@ -254,7 +266,7 @@ to assist in any technical review related to their subject matter of expertise.
 \fi
 
 This section details how Git will be used throughout the project, as well as how Continuous Integration/Deployment will be implemented. Git will be utilized as the primary, centralized collaboration space for both project
-source code and its related documentation. The repository will maintain one permanent protected branch:
+source code and its related documentation. The GitHub repository can be found at \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/}{GitHub Repository}. The repository will maintain one permanent protected branch:
 
 \begin{itemize}
   \item \texttt{main} --- the stable branch representing the latest submitted or
@@ -283,21 +295,20 @@ A milestone will be created for each deliverable (both documentation and revisio
 created will be associated with it. Issue templates will be used in the following ways:
 
 \begin{itemize}
-  \item lecture: to track attendance as well as general notes/questions
-  \item meeting(s): to record meeting minutes, attendance, and catch up members that miss the meeting
-  \item peer review: to request another team review a given section
+  \item lecture - to track attendance as well as general notes/questions
+  \item meeting(s) - to record meeting minutes, attendance, and catch up members that miss the meeting
+  \item peer revie - to request another team review a given section
 \end{itemize}
 
-Additionally, for general issues, new general labels will be created:
+Additionally, all issues will be categorized under a specific label to ensure clear organization and efficient tracking. The following are examples of general labels expected to be used:
 
 \begin{itemize}
-  \item documentation
-  \item bug
-  \item Peer Implementation
-  \item enhancement
-  \item lecture
-  \item meeting
-  \item reflection
+  \item documentation - tasks and document components involved in the creation of new documents.
+  \item reflection - tasks related to reflection components within a document
+  \item bug - known bugs in the code that must be resolved
+  \item enhancement - features in the code that currently meet basic functional requirements but require further refinement to enhance performance, usability, or reliability
+  \item lecture - upcoming lecture that all team members are required to attend
+  \item meeting - upcoming scheduled meeting that all team members are required to attend
 \end{itemize}
 
 For larger tasks, specific labels will be created to allow for quick searching through issues.
@@ -430,9 +441,17 @@ CAD file, we will then:
 There are two primary risks associated with this demo:
 
 \begin{enumerate}
-  \item \textbf{Unfamiliarity with dependencies may result in difficuties with file conversion.} As time worked on the project increases, so will familiarity, but for the proof of concept, group members will be largely unfamiliar with both libraries needed to work with CAD files and Dr. Onaizah's current codebase. Given that this file converting pipeline is a key feature of the sofware to be developed, demonstrating that a simple file can be converted successfully will be the major part of the demo.
-  \item \textbf{File converting time is longer than converting the model manually.} While stakeholders have stated that process automation is the ultimate goal, the fact remains that our software should be reasonably more efficient than the current solution which requires re-building the model by hand. If the software that is built does not provide a more efficient process, our group will need to re-analyse how the files are converted from the CAD file into our software. This may require further investigation into different methods of handling the initial files that will potentially speed up the process, or reconsidering if the scope regarding voxel customisability should be paired back for initial iterations. For the demo, we plan to show that a simple CAD file can be converted in a similarly short amount of time.
+  \item \textbf{Unfamiliarity with dependencies may result in difficuties with file conversion.} As time worked on the project increases, so will familiarity, but for the proof of concept, group members will be largely unfamiliar with both libraries needed to work with CAD files and Dr. Onaizah’s current codebase.
+  \begin{itemize}
+    \item[] \textit{Relevant Risk Mitigation Considerations:} If there is difficulty converting the file due to limited knowledge of the required dependencies, the group will need to reassess how CAD files are processed within the system. This may require additional time spent understanding and experimenting with the libraries used for CAD file handling as well as further analysis of Dr. Onaizah’s existing codebase. The team may also need to review relevant documents and seek out existing examples to deepen our knowledge of the file conversion process. For the demo, the primary objective will be to demonstrate that a simple CAD file can be successfully converted, validating the core functionality of the pipeline. 
+  \end{itemize}
+  \item \textbf{File converting time is longer than converting the model manually.} While stakeholders have stated that process automation is the ultimate goal, the fact remains that our software should be reasonably more efficient than the current solution, which requires rebuilding the model by hand.
+  \begin{itemize}
+    \item[] \textit{Relevant Risk Mitigation Considerations:} If the software that is built does not provide a more efficient process, our group will need to reanalyze how the files are converted from the CAD file into our software. This may require further investigation into different methods of handling the initial files that will potentially speed up the process. This may include strategies such as optimizing mesh before conversion, using more efficient file formats, parallelizing the voxelization process, or optimizing how files are loaded and parsed. It may also require reconsidering if the scope regarding voxel customizability should be paired back for initial iterations. For the demo, we plan to show that a simple CAD file can be converted in a similarly short amount of time.
+  \end{itemize}
+
 \end{enumerate}
+
 
 A secondary risk is that rendering the model in 3D may be slow. Initial iterations may be laggy 
 due to lack of group experience with 3D rendering. High memory usage may result from 
@@ -480,31 +499,62 @@ Topics to discuss include the following:
 This section details what technologies are expected to be utilized in the project; it is subject
 to change as the project progresses and difficulties are found.\\
 
-The implementation of this project will be primarily web-based, with a
-browser-accessible frontend and a local server backend with local saves on the client machine. The frontend will be
-developed using \textbf{TypeScript} and \textbf{React}, with
-\textbf{Redux Toolkit} for state management. For 3D voxel visualization and
-interaction, the project expects to use \textbf{Three.js}, integrated with
-React for rendering and manipulation.
+\subsection{Languages}
 
-On the backend, the project anticipates using \textbf{Python} with
-\textbf{FastAPI} to provide REST endpoints for validating and normalizing voxel
-data, as well as managing persistence. A local instance of
-\textbf{PostgreSQL} is expected for structured storage of voxel geometries,
-materials, and related metadata.
+\textbf{\textit{TypeScript (with React) — For Frontend Development}}
+\begin{itemize}
+  \item React is a widely used and well-developed library that enables the development of responsive, modular, and component-based user interfaces.
+  \item TypeScript enhances code maintainability through type safety and improved error detection compared to JavaScript.
+  \item These features are especially important as the system is expected to evolve alongside the magnetic 3D printer, requiring a scalable and maintainable code.
+\end{itemize}
 
-For code quality, the frontend will adopt \textbf{ESLint} as a linter, with
-\textbf{Jest} for unit and integration testing. The backend will rely on
-\textbf{pytest} for automated testing, with a tentative coverage goal of
-approximately 80\%. Code coverage reporting will be handled with tools such as
-\textbf{Istanbul}.
+\textbf{\textit{Python — For Backend Development}}
+\begin{itemize}
+  \item Python integrates well with frameworks such as FastAPI, allowing for efficient development of RESTful APIs.
+  \item The language provides strong support for scientific and computational libraries, which are beneficial for handling voxel data and model processing.
+  \item Python is widely used in the industry, which makes it a practical and easy choice for development and future expansion. It is also a well-known language within our group.
+\end{itemize}
 
-Version control and project management will be conducted through
-\textbf{git}, \textbf{GitHub}, and \textbf{GitHub Projects}, which will serve
-as the central platforms for collaboration, task tracking, and issue
-management. Continuous integration will be performed using
-\textbf{GitHub Actions}, with automated checks for linting, tests, and coverage
-included in the pipeline.
+\subsection{External Libraries}
+
+To support complex functionality, the team will leverage the following external libraries:\\
+
+\textbf{\textit{Three.js — For 3D Visualization Implementation}}
+\begin{itemize}
+  \item It is one of the most widely used libraries for real-time web-based 3D graphics.
+  \item It integrates well with React, making it suitable for building interactive voxel-based visualizations.
+\end{itemize}
+
+\textbf{\textit{Redux Toolkit — For State Management}}
+\begin{itemize}
+  \item It enables predictable and scalable management of application state.
+  \item As the interface becomes more complex, it simplifies state management compared to relying solely on local component state.
+\end{itemize}
+
+\textbf{\textit{FastAPI — For Backend Framework}}
+\begin{itemize}
+  \item It allows backend REST endpoints to be built for validating and normalizing voxel data within the system.
+  \item It provides high performance and automatic API documentation.
+  \item It integrates well with Python-based data processing workflows.
+\end{itemize}
+
+\subsection{Data Storage}
+
+\textbf{\textit{PostgreSQL — Local Instance, For Structured Storage}}
+\begin{itemize}
+  \item It supports relational data models, making it well-suited for storing voxel geometries and associated metadata.
+  \item It provides strong querying capabilities and data consistency compared to file-based storage approaches, which is important for handling large datasets derived from high voxel counts.
+  \item It allows for future scalability if the system expands beyond local usage.
+\end{itemize}
+
+\subsection{Linter Tools \& Unit Testing}
+
+For code quality, the frontend will adopt \textbf{ESLint} as a linter, with \textbf{Jest} for unit and integration testing. The backend will rely on \textbf{pytest} for automated testing, with a tentative coverage goal of approximately 80\%. Code coverage reporting will be handled using tools such as \textbf{Istanbul}. These tools were selected because several members of the team are familiar with them and they are compatible with the chosen frontend and backend technologies.
+
+\subsection{Version Control and Project Management}
+
+Version control and project management will be conducted using \textbf{git}, \textbf{GitHub}, and \textbf{GitHub Projects}, which will serve as the central platforms for collaboration, task tracking, and issue management. Continuous integration will be implemented using \textbf{GitHub Actions}, with automated checks for linting, tests, and coverage included in the pipeline. These were chosen due to the team’s familiarity with them.
+
 
 \section{Coding Standard}
 
@@ -513,6 +563,8 @@ included in the pipeline.
 \fi
 This section details complementary coding standards that will be enforced in this project, 
 aligning with the expected technologies listed above.\\
+
+\subsection{Coding Standards and Guidelines}
 
 To ensure consistency, maintainability, and readability, the project will adopt
 established coding standards for all areas of development.
@@ -550,6 +602,22 @@ Across both frontend and backend:
 
 These conventions aim to produce code that is readable, maintainable, and
 collaborative.
+
+\subsection{Coding Standards Implementation Strategy}
+
+To ensure the coding standards are enforced, the team has chosen to integrate the following practices into the development workflow:
+
+\begin{itemize}
+  \item \textbf{All code changes must be submitted through a pull request}, allowing for review and explicit approval from at least one other team member before being merged into the main branch.
+  \item \textbf{At least one designated Code Reviewer} (as specified in Section 6, Team Member Roles) \textbf{must approve the pull request prior to merging}. In particular, this will include verification of the following:
+  \begin{itemize}
+      \item adherence to established naming conventions and project structure (e.g., camelCase/PascalCase for frontend and snake\_case/PascalCase for backend)
+      \item adherence to DRY principles
+  \end{itemize}
+  \item \textbf{All commit messages must clearly describe the changes made}, including relevant context and references to associated issues when applicable.
+  \item \textbf{Unit tests must be included for critical functionality.}
+  \item \textbf{All pull requests must pass CI checks}, including successful test execution and linting, prior to approval and merge.
+\end{itemize}
 
 \newpage{}
 

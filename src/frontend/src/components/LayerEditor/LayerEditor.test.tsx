@@ -1,3 +1,9 @@
+/**
+ * Tests for the layer editor.
+ *
+ * @author Khalid Farag, Andrew Bovbel
+ * @lastModified 2026/04/04
+ */
 import React from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

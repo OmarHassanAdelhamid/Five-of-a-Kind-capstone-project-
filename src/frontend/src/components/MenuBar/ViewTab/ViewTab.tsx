@@ -1,5 +1,12 @@
+/**
+ * View menu: toggles for layer view, partitions, and related UI.
+ *
+ * @author Andrew Bovbel
+ * @lastModified 2026/04/05
+ */
 import type { BaseTabProps } from '../types';
 
+// Props for the ViewTab component
 interface ViewTabProps extends BaseTabProps {
   onOpenPartitionMenu?: () => void;
   onOpenLayerMenu?: () => void;
@@ -14,6 +21,7 @@ export const ViewTab = ({
   onOpenLayerMenu,
   onHighlightAll,
 }: ViewTabProps) => {
+  // Handles the click on a menu item
   const handleItemClick = (handler?: (() => void) | null) => {
     if (handler) handler();
     onClose();

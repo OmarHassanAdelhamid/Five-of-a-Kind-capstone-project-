@@ -1,5 +1,5 @@
 import app.routers.project_router as pr_r
-from app.models.schemas import VoxelizeRequest
+from app.models.schemas import VoxelizeRequest, RenamePartitionRequest
 from unittest.mock import MagicMock, patch
 import pytest
 import numpy as np
@@ -79,6 +79,64 @@ def test_list_partitions_no_projects() -> None:
             pr_r.list_partitions("missing_project")
 
         assert exc.value.status_code == 404
+
+
+def test_rename_partition_success(tmp_path) -> None:
+    proj = tmp_path / "myproj"
+    proj.mkdir()
+    old = proj / "partition-x-0-y-0-z-0.db"
+    old.write_bytes(b"x")
+
+    with patch.object(pr_r, "PROJECT_STORAGE_DIR", tmp_path):
+        result = pr_r.rename_partition(
+            RenamePartitionRequest(
+                project_name="myproj",
+                old_partition_name="partition-x-0-y-0-z-0.db",
+                new_partition_name="custom-name.db",
+            )
+        )
+
+    assert result["new_partition_name"] == "custom-name.db"
+    assert not old.exists()
+    assert (proj / "custom-name.db").exists()
+
+
+def test_rename_partition_conflict(tmp_path) -> None:
+    proj = tmp_path / "myproj"
+    proj.mkdir()
+    (proj / "a.db").write_bytes(b"a")
+    (proj / "b.db").write_bytes(b"b")
+
+    with patch.object(pr_r, "PROJECT_STORAGE_DIR", tmp_path):
+        with pytest.raises(HTTPException) as exc:
+            pr_r.rename_partition(
+                RenamePartitionRequest(
+                    project_name="myproj",
+                    old_partition_name="a.db",
+                    new_partition_name="b.db",
+                )
+            )
+        assert exc.value.status_code == 409
+
+
+def test_rename_partition_no_op_same_name(tmp_path) -> None:
+    proj = tmp_path / "myproj"
+    proj.mkdir()
+    f = proj / "same.db"
+    f.write_bytes(b"x")
+
+    with patch.object(pr_r, "PROJECT_STORAGE_DIR", tmp_path):
+        result = pr_r.rename_partition(
+            RenamePartitionRequest(
+                project_name="myproj",
+                old_partition_name="same.db",
+                new_partition_name="same.db",
+            )
+        )
+
+    assert result["new_partition_name"] == "same.db"
+    assert f.exists()
+
 
 @patch("app.routers.project_router.mt.find_surface")
 @patch("app.routers.project_router.pm.read_voxels")
@@ -167,7 +225,7 @@ async def test_get_surface_route_empty_partition(mock_history, mock_proj_m, mock
 @patch("app.routers.project_router.pm")
 @patch("app.routers.project_router.vx.get_voxel_coordinates")
 @patch("app.routers.project_router.vx.voxelize")
-@patch("app.routers.project_router.ms.create_mesh")
+@patch("app.routers.project_router.ms.load_stl_mesh")
 @pytest.mark.asyncio
 async def test_voxelize_typical_case(mock_mesh, mock_voxelize, mock_coords, mock_pm, mock_os) -> None:
     with patch.object(pr_r, "STL_STORAGE_DIR") as mock_stl_storage, \
@@ -186,7 +244,7 @@ async def test_voxelize_typical_case(mock_mesh, mock_voxelize, mock_coords, mock
         mock_os.path.join = os.path.join
 
         result = await pr_r.voxelize_stl(VoxelizeRequest(stl_filename="file1.stl", voxel_size=0.5, project_name="proj_test",
-                model_units="mm", scale_factor=1.0, default_material="material1"))
+                model_units="mm", scale_factor=1.0, default_material=1))
         assert result == {
             "message": f"Voxelization Status of STL file (file1.stl): Success",
             "project_folder": "ex_dir/proj_test-dir",
@@ -194,11 +252,11 @@ async def test_voxelize_typical_case(mock_mesh, mock_voxelize, mock_coords, mock
             "voxel_size": 0.5
         }
 
-        mock_mesh.assert_called_once_with("fake_file", file_type="stl")
+        mock_mesh.assert_called_once()
         mock_pm.set_user_req.assert_called_once_with("fake_mesh", 1.0)
         mock_voxelize.assert_called_once_with("fake_mesh", 0.5)
         mock_coords.assert_called_once_with(mock_array)
-        mock_pm.initialize_voxel_db.assert_called_once_with("ex_dir/proj_test-dir/proj_test", "fake_translation", 0.5, "material1", [0.0, 0.0, 0.0])
+        mock_pm.initialize_voxel_db.assert_called_once_with("ex_dir/proj_test-dir/proj_test", "fake_translation", 0.5, 1, (0.0, 0.0, 0.0))
         mock_pm.create_voxel_db.assert_called_once_with("ex_dir/proj_test-dir/proj_test", "fake_coords")
 
 @pytest.mark.asyncio
@@ -210,7 +268,7 @@ async def test_voxelize_non_existent_stl() -> None:
 
         with pytest.raises(HTTPException) as exc:
             await pr_r.voxelize_stl(VoxelizeRequest(stl_filename="file1.stl", voxel_size=0.5, project_name="proj_test",
-                model_units="mm", scale_factor=1.0, default_material="material1"))
+                model_units="mm", scale_factor=1.0, default_material=1))
 
         assert exc.value.status_code == 404
         assert exc.value.detail == "Filename file1.stl not found on server!"

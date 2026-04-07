@@ -1,5 +1,12 @@
+/**
+ * Edit menu: undo/redo and clipboard actions.
+ *
+ * @author Khalid Farag, Andrew Bovbel, Olivia Reich
+ * @lastModified 2026/04/05
+ */
 import type { BaseTabProps } from '../types';
 
+// Props for the EditTab component
 interface EditTabProps extends BaseTabProps {
   canCut?: boolean;
   onUndo?: () => void;
@@ -30,6 +37,7 @@ export const EditTab = ({
   canPaste = false,
   canCopy = false,
 }: EditTabProps) => {
+  // Handles the click on a menu item
   const handleItemClick = (handler?: (() => void) | null) => {
     if (handler) handler();
     onClose();

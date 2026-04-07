@@ -20,6 +20,7 @@ import {
 } from './utils/api';
 import { ExportWarningDialog } from './components/ExportWarningDialog/ExportWarningDialog';
 import type { LayerEditorHandle } from './components/LayerEditor';
+import { HELP_LINKS } from './constants/helpLinks';
 
 function App() {
   /** Drives StatusMessage while /api/project voxel payload is loading (parent state; ModelViewer owns STL mesh status). */
@@ -122,6 +123,12 @@ function App() {
     },
     [],
   );
+
+  useEffect(() => {
+    if (!projectName.trim()) {
+      setShowWelcomeModal(true);
+    }
+  }, []);
 
   // Persist project state so it survives page refreshes
   useEffect(() => {
@@ -340,7 +347,7 @@ function App() {
         modelUnits: 'µm' | 'mm' | 'cm';
         scaleFactor: number;
         voxelSize: number;
-        defaultMaterial: string;
+        defaultMaterial: number;
       },
       onProgress?: (message: string) => void,
     ) => {
@@ -567,11 +574,13 @@ function App() {
   }, []);
 
   const handleOpenPartitionMenu = useCallback(() => {
+    setIsLayerEditorOpen(false);
     setIsPartitionsPanelOpen(true);
   }, []);
 
   const handleOpenLayerMenu = useCallback(() => {
     if (projectName.trim()) {
+      setIsPartitionsPanelOpen(false);
       setIsLayerEditingMode(true);
       setIsLayerEditorOpen(true);
     } else {
@@ -599,15 +608,15 @@ function App() {
   }, []);
 
   const handleViewManual = useCallback(() => {
-    window.open('/docs', '_blank');
+    window.open(HELP_LINKS.userManualPdf, '_blank');
   }, []);
 
   const handleLicense = useCallback(() => {
-    alert('License information would be displayed here.');
+    window.open(HELP_LINKS.license, '_blank');
   }, []);
 
   const handlePrivacy = useCallback(() => {
-    alert('Privacy statement would be displayed here.');
+    window.open(HELP_LINKS.privacy, '_blank');
   }, []);
 
   const handleAbout = useCallback(() => {
@@ -666,9 +675,7 @@ function App() {
             break;
           case 'l':
             e.preventDefault();
-            if (!isPartitionsPanelOpen) {
-              handleOpenLayerMenu();
-            }
+            handleOpenLayerMenu();
             break;
           case 'x':
             e.preventDefault();
@@ -692,7 +699,6 @@ function App() {
     handleOpenPartitionMenu,
     handleOpenLayerMenu,
     isLayerEditorOpen,
-    isPartitionsPanelOpen,
   ]);
 
   return (
@@ -802,6 +808,8 @@ function App() {
         selectedPartition={selectedPartition}
         onPartitionSelect={handlePartitionSelect}
         voxelSize={voxelSize}
+        isPartitionsPanelOpen={isPartitionsPanelOpen}
+        onPartitionsPanelOpenChange={setIsPartitionsPanelOpen}
         isLayerEditorOpen={isLayerEditorOpen}
         onLayerEditorOpenChange={setIsLayerEditorOpen}
         onVoxelsChanged={handleRefreshVoxels}

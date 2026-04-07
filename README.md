@@ -88,18 +88,30 @@ To rebuild the zip from source: from `src/app`, run `npm install` (once) then `n
 ```
 AutoVox/
 ├── src/
-│   ├── frontend/          # React + Vite app
-│   │   └── src/
-│   │       ├── components/    # ModelViewer, LayerEditor, Layer2DGrid, ...
-│   │       └── utils/         # API client, Three.js helpers
+│   ├── frontend/          # React + Vite UI
+│   ├── app/               # Electron shell (desktop); `npm run pack` → release/
 │   └── backend/           # FastAPI app
 │       └── app/
 │           ├── routers/       # stl, project, edit, export endpoints
 │           └── services/      # voxelization, editing, history, export
-│   └── app/               # Electron desktop app; release DMG under release/
-├── docs/                  # SRS, design docs, VnV plans (LaTeX)
-└── refs/                  # Reference papers and materials
+├── docs/                  # Capstone docs: SRS, design, VnV, reflections (see docs/README.md)
+├── refs/                  # Reference papers and materials
+└── test/                  # Notes on automated tests (see test/README.md)
 ```
+
+More detail: [src/README.md](src/README.md).
+
+---
+
+## Repository files
+
+| File | Purpose |
+| ---- | ------- |
+| [INSTALL.md](INSTALL.md) | Packaged desktop app: build, first run, uninstall |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute (issues, PRs, tests) |
+| [CodeOfConduct.md](CodeOfConduct.md) | Contributor Covenant community standards |
+| [LICENSE](LICENSE) | MIT License |
+| [PRIVACY.md](PRIVACY.md) | Local processing and GitHub / community privacy notes |
 
 ---
 

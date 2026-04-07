@@ -1,6 +1,7 @@
 import { render, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
+import { HELP_LINKS } from './constants/helpLinks';
 import * as api from './utils/api';
 import React from 'react';
 import type { LayerEditorHandle } from './components/LayerEditor';
@@ -280,7 +281,8 @@ describe('App', () => {
     );
   });
 
-  it('Help > License shows alert', async () => {
+  it('Help > License opens LICENSE on GitHub', async () => {
+    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
     let result: ReturnType<typeof render>;
     await act(async () => {
       result = render(<App />);
@@ -293,7 +295,8 @@ describe('App', () => {
         result!.getByRole('button', { name: /^license$/i }),
       );
     });
-    expect(alertMock).toHaveBeenCalled();
+    expect(openSpy).toHaveBeenCalledWith(HELP_LINKS.license, '_blank');
+    openSpy.mockRestore();
   });
 
   it('Help > Credits shows alert', async () => {
@@ -420,7 +423,8 @@ describe('App', () => {
     expect(result!.getByTestId('model-viewer')).toBeInTheDocument();
   });
 
-  it('Help > Privacy shows alert', async () => {
+  it('Help > Privacy opens PRIVACY.md on GitHub', async () => {
+    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
     let result: ReturnType<typeof render>;
     await act(async () => {
       result = render(<App />);
@@ -433,7 +437,8 @@ describe('App', () => {
         result!.getByRole('button', { name: /privacy statement/i }),
       );
     });
-    expect(alertMock).toHaveBeenCalled();
+    expect(openSpy).toHaveBeenCalledWith(HELP_LINKS.privacy, '_blank');
+    openSpy.mockRestore();
   });
 
   it('New Project confirm shows alert when voxelizeModel fails', async () => {
@@ -522,7 +527,7 @@ describe('App', () => {
         voxelSize: expect.any(Number),
         modelUnits: 'mm',
         voxelUnits: 'mm',
-        defaultMaterial: 'material1',
+        defaultMaterial: 1,
       }),
     );
     expect(api.fetchAvailableProjects).toHaveBeenCalled();
@@ -731,20 +736,6 @@ describe('App', () => {
     expect(alertMock).toHaveBeenCalledWith(
       expect.stringContaining('Voxel Editor'),
     );
-  });
-
-  it('Help > License shows alert', async () => {
-    let result: ReturnType<typeof render>;
-    await act(async () => {
-      result = render(<App />);
-    });
-    await act(async () => {
-      await userEvent.click(result!.getByRole('button', { name: 'Help' }));
-    });
-    await act(async () => {
-      await userEvent.click(result!.getByText('License'));
-    });
-    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('License'));
   });
 
   it('Help > Credits shows alert', async () => {
@@ -970,7 +961,7 @@ describe('App', () => {
     expect(alertMock).toHaveBeenCalledWith('History server error');
   });
 
-  it('Help > View Manual opens /docs in new tab', async () => {
+  it('Help > View Manual opens user manual PDF on GitHub', async () => {
     const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
     let result: ReturnType<typeof render>;
     await act(async () => {
@@ -984,7 +975,7 @@ describe('App', () => {
         result!.getByRole('button', { name: /view manual/i }),
       );
     });
-    expect(openSpy).toHaveBeenCalledWith('/docs', '_blank');
+    expect(openSpy).toHaveBeenCalledWith(HELP_LINKS.userManualPdf, '_blank');
     openSpy.mockRestore();
   });
 

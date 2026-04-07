@@ -1,5 +1,8 @@
-# Automated tests
+# Test layout
 
-The folders and files for this folder are as follows:
+Automated tests are **not** centralized in this top-level `test/` folder. They run from each component:
 
-Describe ...
+- **Frontend:** `src/frontend` — `npm test` (Jest + Testing Library).
+- **Backend:** `src/backend` — `pytest` (see `pytest.ini` / `requirements.txt`).
+
+Use this folder only if you add integration tests that should stay separate from `src/`. Currently the project relies on per-package test suites above.
