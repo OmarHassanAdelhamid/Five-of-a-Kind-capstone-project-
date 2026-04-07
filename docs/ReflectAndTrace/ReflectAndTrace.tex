@@ -650,12 +650,65 @@ sets of limitations, assumptions, and constraints that informed feature and desi
 
 \section{Economic Considerations (LO23)}
 
-\plt{Is there a market for your product? What would be involved in marketing your 
-product? What is your estimate of the cost to produce a version that you could 
-sell?  What would you charge for your product?  How many units would you have to 
-sell to make money? If your product isn't something that would be sold, like an 
-open source project, how would you go about attracting users?  How many potential 
-users currently exist?}
+\subsection{Market Viability}
+
+As technology advances, there is a growing demand for tools that streamline advanced 3D modeling workflows, particularly in emerging fields such as micro-robotics, biomedical engineering, and additive manufacturing. AutoVox targets researchers, engineers, and developers seeking to explore the expanding capabilities of 3D printing. Our software will enable the creation of innovative applications that depend on the precise control of magnetic and material properties within a structure.\\
+
+While existing tools such as AutoCAD and CONSOL allow intuitive creation of a 3D model, they lack support for features such as automated voxelization and metadata assignment. For those constantly looking to advance in the field, experimentation is an essential part of the process when creating those advancements. The significant time required to create models during prototyping and experimentation contributes to inefficiencies in the development process and represents a direct cost to both users and organizations. To our users, AutoVox represents a way to reduce time, cost, and effort associated with model development while enabling faster experimentation. As a result, this can help streamline the usage of magnetic 3D printing workflows within different fields, increasing our software's applicability across a broader user base.
+
+\subsection{Marketing Strategy}
+
+To promote AutoVox, we propose:
+
+\begin{itemize}
+    \item \textbf{Academic \& Research Partnerships:} Collaborate with research labs (e.g., HeART) and universities exploring magnetization in emerging engineering domains—such as micro-robotics and advanced biomedical applications—would enable early adoption of the software within their workflows.
+    \item \textbf{3D Modeling Software Partnerships:} Explore potential collaboration with 3D modeling software providers to enable seamless integration between model creation and voxel processing. While each platform addresses distinct concerns—model design and voxel-based customization—this partnership allows both tools to complement one another, promoting an efficient and cohesive workflow that benefits users of both systems.
+    \item \textbf{Outreach with Physical Demonstrations:} Showcase real-world use cases (e.g., magnetic micro-robot fabrication) where the software streamlines the creation of complex components with precise and customizable magnetic properties. This may include conferences, presentations, videos, and technical reports.
+    \item \textbf{Freemium Model:} Provide a free version that supports basic voxelization, allowing users to explore the software’s capabilities, while offering advanced features (e.g., metadata customization, partitioning, and export optimization) through premium tiers.
+\end{itemize}    
+
+\subsection{Production Costs}
+
+Developing a production-ready version of AutoVox will likely requirement investment across the following areas:
+
+\begin{itemize}
+    \item \textbf{Development:} It is reasonable to assume that \$15,000–\$25,000 would be spent to extend the current prototype into a robust application. This would include UI improvements, backend optimization, and additional features. This estimate reflects freelance development rates for full-stack systems involving Python and JavaScript/TypeScript.
+    \item \textbf{Maintenance \& Application Hosting:} Estimated at \$500–\$1,000 per month, covering cloud storage (for voxel datasets), backend hosting, and ongoing updates.
+    \item \textbf{Research \& Testing:} Currently, the system has been tested exclusively on a 3D printer in McMaster's HeART Lab. However, for broader adoption, it must be compatible with a range of 3D printers that may vary in specifications. This means it is reasonable to assume that additional costs, estimated at around \$5,000 – \$10,000, may arise from validating the system across diverse real-world environments, including testing with different printers and simulation tools to prevent potential damage to high-cost equipment.
+    \item \textbf{Marketing:} To effectively promote the product, we would focus on academic outreach, technical content creation, and in-person demonstrations. To support these efforts, an initial outreach budget of approximately \$3,000–\$5,000 is a reasonable estimate for engaging external audiences and increasing product visibility.
+\end{itemize}  
+
+Overall, first-year operational costs are estimated to be \$25,000–\$40,000, depending on feature scope and adoption scale.
+
+\subsection{Pricing & Profitability}
+
+Once the software is further refined, it could adopt a freemium model to provide basic functionality at no cost while charging for advanced features and integrations. The tiers included in this model have been defined below: \\
+
+\noindent \textbf{Free Tier:} The basic features of STL model importation, voxelization and file exportation would be included in this tier to promote accessibility and encourage adoption. This tier allows trust to be built with potential premium users by demonstrating the software’s ability to accurately process and decompose their models before they commit to purchasing the advanced features that allow them to further edit the model. \\
+
+\noindent \textbf{Individual Tier:} Priced at \$5/month or \$50/year, this paid tier unlocks advanced features including . . .
+\begin{itemize}
+    \item metadata assignment for both material & magnetization properties
+    \item layer editing tools
+    \item structure modification through adding and removing specific voxels
+    \item a higher limit to the number of projects that can be saved at a given time in comparison to the free tier
+\end{itemize} \\
+
+\noindent \textbf{Enterprise \& Research Tier:}
+Priced at \$500–\$1,500/year per lab or team, this tier includes:
+\begin{itemize}
+    \item multi-project management
+    \item support for real-time collaboration, allowing multiple users within the same team to concurrently access, edit and interact with a model
+    \item unlimited project creation
+    \item priority support
+\end{itemize}
+
+\noindent To break even at an estimated \$40,000 annual cost, AutoVox would require:
+\begin{center}
+    \textit{approx. 800 users at \$50/year \hspace{0.3cm} OR \hspace{0.3cm} approx. 40 enterprise licenses at \$1{,}000/year}
+\end{center}
+
+Given the specialized but growing market in research and advanced manufacturing, this represents a realistic adoption target, particularly through academic partnerships.
 
 \section{Reflection on Project Management (LO24)}
 
