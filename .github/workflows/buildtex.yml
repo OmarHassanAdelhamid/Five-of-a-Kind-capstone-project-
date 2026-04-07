@@ -41,14 +41,33 @@ jobs:
           run: |
             apk add make
             cd docs
-            for file in ${{ env.CHANGED_FILES }}; do 
-              dir=$(dirname "$file" | cut -d'/' -f2-)
-              make -B "$dir/$(basename "$file" .tex).pdf" 
+            TO_BUILD=""
+            for file in ${{ env.CHANGED_FILES }}; do
+              [ -z "$file" ] && continue
+              case "$(basename "$file")" in
+                Comments.tex|Common.tex|Reflection.tex) continue ;;
+              esac
+              TO_BUILD="$TO_BUILD $file"
             done
+            TO_BUILD=$(echo $TO_BUILD | xargs)
+            if [ -n "$TO_BUILD" ]; then
+              for file in $TO_BUILD; do
+                dir=$(dirname "$file" | cut -d'/' -f2-)
+                make -B "$dir/$(basename "$file" .tex).pdf"
+              done
+            elif printf '%s\n' ${{ env.CHANGED_FILES }} | grep -qE '(Comments|Common|Reflection)\.tex$'; then
+              echo "Only shared fragment(s) changed; rebuilding all standalone PDFs."
+              make all
+            else
+              echo "No LaTeX sources to compile."
+            fi
       - name: Handle existing PDF changes
         run: |
-          # Stash any existing uncommitted changes to PDF files
-          git stash push -m "Temporary stash of existing PDF changes" docs/*.pdf || true
+          # Stash any existing uncommitted changes to PDF files (any depth under docs/)
+          mapfile -t PDFS < <(find docs -name '*.pdf' 2>/dev/null || true)
+          if [ ${#PDFS[@]} -gt 0 ]; then
+            git stash push -m "Temporary stash of existing PDF changes" -- "${PDFS[@]}" || true
+          fi
           # Switch to main branch and pull latest changes
           git checkout main
           git pull origin main
@@ -56,5 +75,5 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: 'Add/Update PDF${{ env.PLURAL_S }} for changed LaTeX file${{ env.PLURAL_S }}: ${{ env.CHANGED_FILENAMES }}'
-          file_pattern: 'docs/*.pdf'
+          file_pattern: 'docs/**/*.pdf'
           branch: main

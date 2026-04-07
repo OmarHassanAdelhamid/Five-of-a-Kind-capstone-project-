@@ -101,165 +101,418 @@ The following subsections report on each functional test case defined in the VnV
 \subsection{CAD File Import and Project Management Tests (Import Manager)}
 
 \begin{enumerate}
+%\item \textbf{test-FR-IM-1 Valid CAD File Import for New Project}
+
+%\hspace{1.5em} The valid CAD file acceptance test ensures that the system correctly processes a syntactically valid STL file and creates a new project with the imported model ready for voxel slicing and visualization. A valid STL file was provided as input through the import interface, and the expected result was that the system should accept the file, create the project, and initiate the voxel slicing process. The actual result confirmed that the system successfully accepted the file and created the project.
 \item \textbf{test-FR-IM-1 Valid CAD File Import for New Project}
 
-\hspace{1.5em} The valid CAD file acceptance test ensures that the system correctly processes a syntactically valid STL file and creates a new project with the imported model ready for voxel slicing and visualization. A valid STL file was provided as input through the import interface, and the expected result was that the system should accept the file, create the project, and initiate the voxel slicing process. The actual result confirmed that the system successfully accepted the file and created the project.
+\hspace{1.5em} This test ensures that the system correctly processes a valid STL file and creates a new project ready for voxel slicing and visualization.
 
+The expected result was that the system accepts the file, creates a new project, and initiates the voxel slicing process.
+
+The actual result confirmed that the system successfully accepted the file and created the project as expected.
+
+%\item \textbf{test-FR-IM-2 Past Project File Import}
+
+%\hspace{1.5em} This test verifies that the system correctly loads a previously saved project file with magnetization and material properties preserved. A saved project file was selected from the file/project list, and the expected result was that the system loads the project and preserves all properties. The actual result confirmed that the system correctly loaded the project and voxel data; partitions and voxelized coordinates were fetched as expected.
 \item \textbf{test-FR-IM-2 Past Project File Import}
 
-\hspace{1.5em} This test verifies that the system correctly loads a previously saved project file with magnetization and material properties preserved. A saved project file was selected from the file/project list, and the expected result was that the system loads the project and preserves all properties. The actual result confirmed that the system correctly loaded the project and voxel data; partitions and voxelized coordinates were fetched as expected.
+\hspace{1.5em} This test verifies that the system correctly loads a previously saved project file while preserving magnetization and material properties.
 
+The expected result was that the system loads the project and retains all associated properties.
+
+The actual result confirmed that the system successfully loaded the project and voxel data, and that partitions and voxelized coordinates were retrieved as expected.
+%\item \textbf{test-FR-IM-3 Invalid File Format Handling}
+
+%\hspace{1.5em} The invalid file format test ensures that the system rejects unsupported file types and provides clear feedback. A non-STL file (e.g., .txt, .jpg, .pdf) was provided as input, and the expected result was that the system should reject the file and display an error indicating unsupported format. The actual result confirmed that the system correctly rejected non-.stl files and displayed the appropriate alert.
 \item \textbf{test-FR-IM-3 Invalid File Format Handling}
 
-\hspace{1.5em} The invalid file format test ensures that the system rejects unsupported file types and provides clear feedback. A non-STL file (e.g., .txt, .jpg, .pdf) was provided as input, and the expected result was that the system should reject the file and display an error indicating unsupported format. The actual result confirmed that the system correctly rejected non-.stl files and displayed the appropriate alert.
+\hspace{1.5em} This test ensures that the system rejects unsupported file types and provides appropriate user feedback.
+
+The expected result was that the system rejects non-STL files and displays an error indicating an unsupported format.
+
+The actual result confirmed that the system correctly rejected non-.stl files and displayed the appropriate error message.
+
 \end{enumerate}
 
 \subsection{Model Configuration and Slicing Tests (Import Manager)}
 
 \begin{enumerate}
+%\item \textbf{test-FR-IM-4 Voxel Size Configuration}
+
+%\hspace{1.5em} This test ensures that the system applies user-specified voxel dimensions and slices the model into voxels of the requested size. Custom voxel dimensions were provided as input, and the expected result was that the system applies the dimensions and slices the model accordingly. The actual result confirmed that the system correctly applied voxel dimensions and slicing.
 \item \textbf{test-FR-IM-4 Voxel Size Configuration}
 
-\hspace{1.5em} This test ensures that the system applies user-specified voxel dimensions and slices the model into voxels of the requested size. Custom voxel dimensions were provided as input, and the expected result was that the system applies the dimensions and slices the model accordingly. The actual result confirmed that the system correctly applied voxel dimensions and slicing.
+\hspace{1.5em} This test ensures that the system applies user-specified voxel dimensions and slices the model accordingly.
+
+The expected result was that the system applies the specified dimensions and generates voxels of the requested size.
+
+The actual result confirmed that the system correctly applied the voxel dimensions and performed slicing as expected.
+
+
+%\item \textbf{test-FR-IM-5 Model Scaling Functionality}
+
+%\hspace{1.5em} This test verifies that the system scales the model to the desired printing size before slicing while maintaining geometric integrity. Model dimensions were modified via the interface, and the expected result was that the model is scaled appropriately. The actual result confirmed that the system correctly applied model scaling.
 
 \item \textbf{test-FR-IM-5 Model Scaling Functionality}
 
-\hspace{1.5em} This test verifies that the system scales the model to the desired printing size before slicing while maintaining geometric integrity. Model dimensions were modified via the interface, and the expected result was that the model is scaled appropriately. The actual result confirmed that the system correctly applied model scaling.
+\hspace{1.5em} This test verifies that the system scales the model to the desired size before slicing while maintaining geometric integrity.
 
+The expected result was that the model is scaled correctly based on the specified dimensions.
+
+The actual result confirmed that the system correctly applied model scaling as expected.
+
+%\item \textbf{test-FR-IM-6 Partial Voxel Resolution}
+
+%\hspace{1.5em} This test ensures that the system correctly resolves partial voxels and preserves model integrity when surfaces intersect voxel boundaries. A model with such geometry was imported, and the expected result was correct resolution and preservation of accuracy. The actual result confirmed correct behaviour.
 \item \textbf{test-FR-IM-6 Partial Voxel Resolution}
 
-\hspace{1.5em} This test ensures that the system correctly resolves partial voxels and preserves model integrity when surfaces intersect voxel boundaries. A model with such geometry was imported, and the expected result was correct resolution and preservation of accuracy. The actual result confirmed correct behaviour.
+\hspace{1.5em} This test ensures that the system correctly resolves partial voxels when surfaces intersect voxel boundaries while preserving model integrity.
 
+The expected result was that partial voxels are accurately represented without loss of geometric detail.
+
+The actual result confirmed that the system correctly resolved partial voxels and maintained model accuracy.
+
+%\item \textbf{test-FR-IM-7 Model Division for Display}
+
+%\hspace{1.5em} This test verifies that when a model contains more than MAX\_DISPLAY voxels, the system partitions it into manageable display sections. A large model was imported, and the expected result was partitioning without exceeding the threshold. The actual result confirmed that the system correctly partitioned the model.
 \item \textbf{test-FR-IM-7 Model Division for Display}
 
-\hspace{1.5em} This test verifies that when a model contains more than MAX\_DISPLAY voxels, the system partitions it into manageable display sections. A large model was imported, and the expected result was partitioning without exceeding the threshold. The actual result confirmed that the system correctly partitioned the model.
+\hspace{1.5em} This test verifies that when a model exceeds the MAX\_DISPLAY voxel threshold, the system partitions it into manageable display sections.
+
+The expected result was that the model is divided into partitions without exceeding the display limit.
+
+The actual result confirmed that the system correctly partitioned the model as expected.
+
 \end{enumerate}
 
 \subsection{3D Model Rendering and Display Tests (Visualization Manager)}
 
 \begin{enumerate}
+%\item \textbf{test-FR-VM-1 3D Model Rendition with Clear Voxel Visualization}
+
+%\hspace{1.5em} This test ensures that the Visualization Manager renders a 3D model with clear visualization of individual voxels and distinct boundaries. Sliced voxel data was provided to the viewer, and the expected result was correct rendering with status reporting (e.g., loading then ready). The actual result confirmed that the ModelViewer component renders and invokes voxel rendering utilities correctly.
 \item \textbf{test-FR-VM-1 3D Model Rendition with Clear Voxel Visualization}
 
-\hspace{1.5em} This test ensures that the Visualization Manager renders a 3D model with clear visualization of individual voxels and distinct boundaries. Sliced voxel data was provided to the viewer, and the expected result was correct rendering with status reporting (e.g., loading then ready). The actual result confirmed that the ModelViewer component renders and invokes voxel rendering utilities correctly.
+\hspace{1.5em} This test ensures that the Visualization Manager renders a 3D model with clear visualization of individual voxels and distinct boundaries.
+
+The expected result was that the system correctly renders the voxelized model and provides appropriate status updates (e.g., loading and ready).
+
+The actual result confirmed that the ModelViewer component successfully rendered the model and invoked the voxel rendering utilities as expected.
+
+%\item \textbf{test-FR-VM-2 Partition Navigation Functionality}
+
+%\hspace{1.5em} This test verifies that users can navigate between model partitions and access all display sections. Partition selection was exercised via the Partitions panel (open, select partition, verify selected state). The expected result was that the system fetches partitions and allows selection. The actual result confirmed that \texttt{fetchPartitions} was called, partition names were displayed, and \texttt{onPartitionSelect} was invoked correctly.
 
 \item \textbf{test-FR-VM-2 Partition Navigation Functionality}
 
-\hspace{1.5em} This test verifies that users can navigate between model partitions and access all display sections. Partition selection was exercised via the Partitions panel (open, select partition, verify selected state). The expected result was that the system fetches partitions and allows selection. The actual result confirmed that \texttt{fetchPartitions} was called, partition names were displayed, and \texttt{onPartitionSelect} was invoked correctly.
+\hspace{1.5em} This test verifies that users can navigate between model partitions and access all display sections through the interface.
+
+The expected result was that the system retrieves available partitions and allows users to select and switch between them.
+
+The actual result confirmed that partitions were successfully retrieved, displayed, and that selection between partitions functioned as expected.
+
+%\item \textbf{test-FR-VM-3 Multi-Perspective 3D Model Interaction}
+
+%\hspace{1.5em} This test ensures that the system provides intuitive rotate and zoom controls for multi-perspective viewing. Interface controls for rotation and zoom were used; the expected result was responsive interaction. The actual result confirmed that the viewer component and controls behave as required.
 
 \item \textbf{test-FR-VM-3 Multi-Perspective 3D Model Interaction}
 
-\hspace{1.5em} This test ensures that the system provides intuitive rotate and zoom controls for multi-perspective viewing. Interface controls for rotation and zoom were used; the expected result was responsive interaction. The actual result confirmed that the viewer component and controls behave as required.
+\hspace{1.5em} This test ensures that the system provides intuitive rotation and zoom controls for multi-perspective viewing of the model.
+
+The expected result was that users can interact with the model smoothly through rotation and zoom operations.
+
+The actual result confirmed that the system supports responsive and intuitive model interaction as expected.
+
 \end{enumerate}
 
 \subsection{Layer Focus and Voxel Selection Tests (Visualization Manager)}
 
 \begin{enumerate}
+%\item \textbf{test-FR-VM-4 Layer Isolation Functionality}
+
+%\hspace{1.5em} This test verifies that users can isolate a specific layer to facilitate property assignments. The Layer Editor was opened with a project and partition, and layer data was fetched; the expected result was that the selected layer is isolated and the layer editor displays layers. The actual result confirmed that \texttt{fetchLayers} was called with correct parameters and the Layer Editor and Layer2DGrid displayed canvas and layer navigation.
+
 \item \textbf{test-FR-VM-4 Layer Isolation Functionality}
 
-\hspace{1.5em} This test verifies that users can isolate a specific layer to facilitate property assignments. The Layer Editor was opened with a project and partition, and layer data was fetched; the expected result was that the selected layer is isolated and the layer editor displays layers. The actual result confirmed that \texttt{fetchLayers} was called with correct parameters and the Layer Editor and Layer2DGrid displayed canvas and layer navigation.
+\hspace{1.5em} This test verifies that users can isolate a specific layer to facilitate property assignments within the model.
+
+The expected result was that the selected layer is isolated and displayed in the layer editor with accessible layer data.
+
+The actual result confirmed that the system successfully isolated the selected layer and displayed it correctly within the layer editor.
+
+%\item \textbf{test-FR-VM-5 Voxel Selection Highlighting}
+
+%\hspace{1.5em} This test ensures that the system provides clear visual feedback for which voxels are selected within a layer. Click and Lasso mode buttons were used and canvas selection was exercised; the expected result was distinct highlighting and correct mode behaviour. The actual result confirmed that Click and Lasso modes and selection handling work as specified.
 
 \item \textbf{test-FR-VM-5 Voxel Selection Highlighting}
 
-\hspace{1.5em} This test ensures that the system provides clear visual feedback for which voxels are selected within a layer. Click and Lasso mode buttons were used and canvas selection was exercised; the expected result was distinct highlighting and correct mode behaviour. The actual result confirmed that Click and Lasso modes and selection handling work as specified.
+\hspace{1.5em} This test ensures that the system provides clear visual feedback for selected voxels within a layer.
+
+The expected result was that selected voxels are distinctly highlighted and that both click and lasso selection modes function correctly.
+
+The actual result confirmed that voxel selection was clearly indicated and that both selection modes operated as expected.
 \end{enumerate}
 
 \subsection{Material and Magnetization Tracking Tests (Visualization Manager)}
 
 \begin{enumerate}
+%\item \textbf{test-FR-VM-6 Material Assignment Visual Tracking}
+
+%\hspace{1.5em} This test verifies that voxel colours update to indicate material assignment completeness. Material IDs were assigned to voxels in the layer editor; the expected result was updated colours and clear feedback. The actual result confirmed that material assignment and colour updates behave correctly.
+
 \item \textbf{test-FR-VM-6 Material Assignment Visual Tracking}
 
-\hspace{1.5em} This test verifies that voxel colours update to indicate material assignment completeness. Material IDs were assigned to voxels in the layer editor; the expected result was updated colours and clear feedback. The actual result confirmed that material assignment and colour updates behave correctly.
+\hspace{1.5em} This test verifies that voxel colours update to reflect material assignment.
+
+The expected result was that assigned materials are visually indicated through updated voxel colours, providing clear feedback to the user.
+
+The actual result confirmed that material assignment was correctly reflected through voxel colour updates as expected.
+
+%\item \textbf{test-FR-VM-7 Magnetization Assignment Visual Tracking}
+
+%\hspace{1.5em} This test ensures that voxels show magnetization assignment (e.g., arrow or indicator). Magnetization was assigned to voxels; the expected result was clear visual indication. The actual result confirmed correct behaviour.
 
 \item \textbf{test-FR-VM-7 Magnetization Assignment Visual Tracking}
 
-\hspace{1.5em} This test ensures that voxels show magnetization assignment (e.g., arrow or indicator). Magnetization was assigned to voxels; the expected result was clear visual indication. The actual result confirmed correct behaviour.
+\hspace{1.5em} This test ensures that voxels display a clear visual indication of magnetization assignment.
+
+The expected result was that assigned magnetization is visibly represented on the voxels (e.g., through an indicator or marker).
+
+The actual result confirmed that magnetization assignments were correctly displayed with clear visual feedback.
 \end{enumerate}
 
 \subsection{Integration Tests (Import to Visualization)}
 
 \begin{enumerate}
+%\item \textbf{test-FR-INT-1 Import to Visualization Data Transfer}
+
+%\hspace{1.5em} This test ensures that when a valid CAD file is imported, the Visualization Manager receives complete voxel data and renders the 3D model without data loss or corruption. A valid CAD file was imported and the project was loaded; the expected result was successful transfer and rendering. The actual result confirmed that the application loads models, loads projects and voxel data, and the model viewer receives and renders data correctly.
+
 \item \textbf{test-FR-INT-1 Import to Visualization Data Transfer}
 
-\hspace{1.5em} This test ensures that when a valid CAD file is imported, the Visualization Manager receives complete voxel data and renders the 3D model without data loss or corruption. A valid CAD file was imported and the project was loaded; the expected result was successful transfer and rendering. The actual result confirmed that the application loads models, loads projects and voxel data, and the model viewer receives and renders data correctly.
+\hspace{1.5em} This test ensures that when a valid CAD file is imported, the Visualization Manager receives complete voxel data and renders the 3D model without data loss or corruption.
+
+The expected result was that voxel data is successfully transferred from the import process to the visualization component and rendered correctly.
+
+The actual result confirmed that the system successfully transferred voxel data and rendered the model without data loss or corruption.
 \end{enumerate}
 
 \subsection{Editing Manager Tests}
 
 \begin{enumerate}
+%\item \textbf{test-FR-EM-1 Individual Voxel Magnetization Assignment} and \textbf{test-FR-EM-2 Group Voxel Magnetization Assignment}
+
+%\hspace{1.5em} These tests verify that the system correctly processes single and bulk magnetization assignment (F231). The expected result was that assigned magnetization is saved and visually updated. The actual result confirmed that the backend saves magnetization and the UI supports assignment.
+
 \item \textbf{test-FR-EM-1 Individual Voxel Magnetization Assignment} and \textbf{test-FR-EM-2 Group Voxel Magnetization Assignment}
 
-\hspace{1.5em} These tests verify that the system correctly processes single and bulk magnetization assignment (F231). The expected result was that assigned magnetization is saved and visually updated. The actual result confirmed that the backend saves magnetization and the UI supports assignment.
+\hspace{1.5em} These tests verify that the system correctly supports both individual and group magnetization assignment for voxels.
+
+The expected result was that assigned magnetization values are correctly applied, saved, and visually reflected on the selected voxels.
+
+The actual result confirmed that magnetization assignments were successfully applied and displayed for both individual and group selections as expected.
+
+%\item \textbf{test-FR-EM-3 Favourite Magnetization Vector Management}
+
+%\hspace{1.5em} This test ensures that users can create and reuse favourite magnetization vectors (F232). The expected result was that vectors are saved to the favourite bar and can be selected. The actual result confirmed correct behaviour.
 
 \item \textbf{test-FR-EM-3 Favourite Magnetization Vector Management}
 
-\hspace{1.5em} This test ensures that users can create and reuse favourite magnetization vectors (F232). The expected result was that vectors are saved to the favourite bar and can be selected. The actual result confirmed correct behaviour.
+\hspace{1.5em} This test was intended to verify that users can create and reuse favourite magnetization vectors.
+
+The expected result was that magnetization vectors could be saved and selected from a favourites list.
+
+The test was not executed as this feature was determined to be out of scope for the final system and is no longer considered a required functionality.
+
+%\item \textbf{test-FR-EM-4} and \textbf{test-FR-EM-5 Individual and Group Voxel Material Assignment}
+
+%\hspace{1.5em} These tests verify single and bulk material assignment (F233). The expected result was that material IDs are saved and displayed. The actual result confirmed correct behaviour.
 
 \item \textbf{test-FR-EM-4} and \textbf{test-FR-EM-5 Individual and Group Voxel Material Assignment}
 
-\hspace{1.5em} These tests verify single and bulk material assignment (F233). The expected result was that material IDs are saved and displayed. The actual result confirmed correct behaviour.
+\hspace{1.5em} These tests verify that the system supports both individual and group material assignment for voxels.
+
+The expected result was that material IDs are correctly applied, saved, and visually reflected on the selected voxels.
+
+The actual result confirmed that material assignments were successfully applied and displayed for both individual and group selections as expected.
+
+%\item \textbf{test-FR-EM-6 Material Label Assignment}
+
+%\hspace{1.5em} This test ensures that material IDs can be associated with labels (e.g., ``Steel'' for ID 1) (F234). The actual result confirmed correct behaviour.
 
 \item \textbf{test-FR-EM-6 Material Label Assignment}
 
-\hspace{1.5em} This test ensures that material IDs can be associated with labels (e.g., ``Steel'' for ID 1) (F234). The actual result confirmed correct behaviour.
+\hspace{1.5em} This test ensures that material IDs can be associated with descriptive labels (e.g., ``Steel'' for ID 1).
+
+The expected result was that users can assign labels to material IDs and that these labels are correctly stored and displayed.
+
+The actual result confirmed that material labels were successfully assigned and reflected as expected.
+
+%\item \textbf{test-FR-EM-7 Property Replication Across Layers}
+
+%\hspace{1.5em} This test verifies that properties can be copied from one layer to another (F235). The actual result confirmed correct behaviour.
 
 \item \textbf{test-FR-EM-7 Property Replication Across Layers}
 
-\hspace{1.5em} This test verifies that properties can be copied from one layer to another (F235). The actual result confirmed correct behaviour.
+\hspace{1.5em} This test was intended to verify that properties can be copied from one layer to another.
 
+The expected result was that selected properties are replicated accurately across layers.
+
+The test was not executed as this feature was identified as a stretch goal and was not implemented in the final system, and is therefore considered out of scope.
+
+%\item \textbf{test-FR-EM-8 Auto Save Functionality}
+
+%\hspace{1.5em} This test ensures that the system automatically saves changes after property assignment (F236). The actual result confirmed that the project is saved to the database as expected.
 \item \textbf{test-FR-EM-8 Auto Save Functionality}
 
-\hspace{1.5em} This test ensures that the system automatically saves changes after property assignment (F236). The actual result confirmed that the project is saved to the database as expected.
+\hspace{1.5em} This test ensures that the system automatically saves changes after property assignment.
 
+The expected result was that any changes made to voxel properties are automatically saved without requiring manual user action.
+
+The actual result confirmed that changes were automatically saved as expected.
+
+
+%\item \textbf{test-FR-EM-9 Edit History Access and Revert}
+
+%\hspace{1.5em} This test verifies that users can undo and redo edits (F237). With a project loaded, Undo and Redo were triggered; the expected result was that the history API is called with the correct action. The actual result confirmed that \texttt{updateHistory} was called with \texttt{undo} and \texttt{redo}.
 \item \textbf{test-FR-EM-9 Edit History Access and Revert}
 
-\hspace{1.5em} This test verifies that users can undo and redo edits (F237). With a project loaded, Undo and Redo were triggered; the expected result was that the history API is called with the correct action. The actual result confirmed that \texttt{updateHistory} was called with \texttt{undo} and \texttt{redo}.
+\hspace{1.5em} This test was intended to verify that users can undo and redo edits within the system.
 
+The expected result was that users can revert and reapply changes through undo and redo functionality.
+
+The test was not executed as this feature was identified as a stretch goal and was not implemented in the final system, and is therefore considered out of scope.
+
+%\item \textbf{test-FR-EM-10 Entire Layer Selection and Assignment}
+
+%\hspace{1.5em} This test verifies layer-level selection and assignment (F238). The actual result confirmed that layer list and layer access work correctly.
 \item \textbf{test-FR-EM-10 Entire Layer Selection and Assignment}
 
-\hspace{1.5em} This test verifies layer-level selection and assignment (F238). The actual result confirmed that layer list and layer access work correctly.
+\hspace{1.5em} This test verifies that users can select an entire layer and apply assignments to all voxels within that layer.
 
+The expected result was that all voxels in the selected layer are correctly identified and updated with the assigned properties.
+
+The actual result confirmed that layer selection and assignment were successfully applied as expected.
+
+%\item \textbf{test-FR-EM-11} and \textbf{test-FR-EM-12 Manual Voxel Addition and Deletion}
+
+%\hspace{1.5em} These tests ensure that users can add and remove voxels (F239). The actual result confirmed correct add/delete behaviour and error handling for non-existent voxels.
 \item \textbf{test-FR-EM-11} and \textbf{test-FR-EM-12 Manual Voxel Addition and Deletion}
 
-\hspace{1.5em} These tests ensure that users can add and remove voxels (F239). The actual result confirmed correct add/delete behaviour and error handling for non-existent voxels.
+\hspace{1.5em} These tests ensure that users can manually add and remove voxels within the model.
+
+The expected result was that voxels can be added or deleted correctly, and that appropriate error handling is triggered when attempting to modify non-existent voxels.
+
+The actual result confirmed that voxel addition and deletion operations functioned correctly and that error handling behaved as expected.
+
+%\item \textbf{test-FR-EM-13} and \textbf{test-FR-EM-14 Individual and Group Voxel Property Reset}
+
+%\hspace{1.5em} These tests verify that users can reset material and magnetization on selected voxels (F2310). The actual result confirmed correct reset behaviour,
 
 \item \textbf{test-FR-EM-13} and \textbf{test-FR-EM-14 Individual and Group Voxel Property Reset}
 
-\hspace{1.5em} These tests verify that users can reset material and magnetization on selected voxels (F2310). The actual result confirmed correct reset behaviour,
+\hspace{1.5em} These tests were intended to verify that users can reset material and magnetization properties on selected voxels.
+
+The expected result was that selected voxels are restored to their default material and magnetization values.
+
+The test was not executed as this feature was identified as a stretch goal and was not implemented in the final system, and is therefore considered out of scope.
+
+%\item \textbf{test-FR-EM-15 Manual Save Functionality}
+
+%\hspace{1.5em} This test ensures that the user can manually save the project (F2311). Save was triggered from the File menu (and via Ctrl+S); the expected result was that the download/save API is invoked and confirmation is shown. The actual result confirmed correct behaviour including no-project alert.
 
 \item \textbf{test-FR-EM-15 Manual Save Functionality}
 
-\hspace{1.5em} This test ensures that the user can manually save the project (F2311). Save was triggered from the File menu (and via Ctrl+S); the expected result was that the download/save API is invoked and confirmation is shown. The actual result confirmed correct behaviour including no-project alert.
+\hspace{1.5em} This test was intended to verify that users can manually save the project.
+
+The expected result was that users can trigger a save action and receive confirmation that the project has been saved.
+
+The test was not executed as manual save functionality was replaced by an auto-save mechanism in the final system, and is therefore considered out of scope.
 \end{enumerate}
 
 \subsection{Export Manager Tests}
 
 \begin{enumerate}
+%\item \textbf{test-FR-XM-1 Property Validation for Complete Magnetization} and \textbf{test-FR-XM-2 Property Validation for Incomplete Magnetization}
+
+%\hspace{1.5em} These tests verify that the system validates magnetization (and material) completeness before export and prevents export of incomplete models (F241). The expected result was validation and appropriate errors or prompts. The actual result confirmed that validation and error handling work correctly.
 \item \textbf{test-FR-XM-1 Property Validation for Complete Magnetization} and \textbf{test-FR-XM-2 Property Validation for Incomplete Magnetization}
 
-\hspace{1.5em} These tests verify that the system validates magnetization (and material) completeness before export and prevents export of incomplete models (F241). The expected result was validation and appropriate errors or prompts. The actual result confirmed that validation and error handling work correctly.
+\hspace{1.5em} These tests were intended to verify that the system validates magnetization completeness before export and prevents export of incomplete models.
 
+The expected result was that the system checks for completeness of magnetization data and provides appropriate errors or prompts when validation fails.
+
+The test was not executed as this validation functionality is not applicable in the final system and is therefore considered out of scope.
+
+%\item \textbf{test-FR-XM-3 Standalone File Export}
+
+%\hspace{1.5em} This test verifies that the system can export a standalone file with all voxel metadata (F242). Export/CSV download was exercised; the expected result was that the file is created and saved. The actual result confirmed that the download API is called and blob handling works.
 \item \textbf{test-FR-XM-3 Standalone File Export}
 
-\hspace{1.5em} This test verifies that the system can export a standalone file with all voxel metadata (F242). Export/CSV download was exercised; the expected result was that the file is created and saved. The actual result confirmed that the download API is called and blob handling works.
+\hspace{1.5em} This test verifies that the system can export a standalone file containing all voxel metadata.
 
+The expected result was that the file is correctly generated and successfully saved by the user.
+
+The actual result confirmed that the file was successfully exported and saved as expected.
+
+%\item \textbf{test-FR-XM-4 Project Export in Native Format}
+
+%\hspace{1.5em} This test ensures that users can export the project in native format (F243). The actual result confirmed correct export and error handling for non-existent or invalid project.
 \item \textbf{test-FR-XM-4 Project Export in Native Format}
 
-\hspace{1.5em} This test ensures that users can export the project in native format (F243). The actual result confirmed correct export and error handling for non-existent or invalid project.
+\hspace{1.5em} This test ensures that users can export the project in its native format.
 
+The expected result was that the system generates a valid project file and handles errors appropriately for non-existent or invalid projects.
+
+The actual result confirmed that project export functioned correctly and that error handling behaved as expected.
+
+%\item \textbf{test-FR-XM-5 Export Progress Tracking}
+
+%\hspace{1.5em} This test verifies that users receive feedback during export (F244). The actual result is supported by export flow and UI behaviour.
 \item \textbf{test-FR-XM-5 Export Progress Tracking}
 
-\hspace{1.5em} This test verifies that users receive feedback during export (F244). The actual result is supported by export flow and UI behaviour.
+\hspace{1.5em} This test was intended to verify that users receive feedback during the export process.
 
+The expected result was that the system provides progress updates or indicators while exporting files.
+
+The test was not executed as this feature was identified as a stretch goal and was not implemented in the final system, and is therefore considered out of scope.
+
+%\item \textbf{test-FR-XM-6 Model Summary Export}
+
+%\hspace{1.5em} This test ensures that the system can export a model with summary option (F245). The actual result confirmed correct behaviour.
 \item \textbf{test-FR-XM-6 Model Summary Export}
 
-\hspace{1.5em} This test ensures that the system can export a model with summary option (F245). The actual result confirmed correct behaviour.
+\hspace{1.5em} This test was intended to verify that the system can export a model with an additional summary of its properties.
 
+The expected result was that the exported file includes both voxel data and a summary of model properties.
+
+The test was not executed as this functionality is not applicable in the final system and is therefore considered out of scope.
+
+%\item \textbf{test-FR-XM-7 Export Failure Recovery}
+
+%\hspace{1.5em} This test verifies that if export is interrupted, original project data remains intact (F241). The actual result confirmed that project data is not corrupted on simulated failure.
+
+%\item \textbf{test-FR-XM-8 Export Performance Validation}
+
+%\hspace{1.5em} This test ensures that export meets the minimum rate threshold (F241). The actual result is supported by performance testing and backend validation.
 \item \textbf{test-FR-XM-7 Export Failure Recovery}
 
-\hspace{1.5em} This test verifies that if export is interrupted, original project data remains intact (F241). The actual result confirmed that project data is not corrupted on simulated failure.
+\hspace{1.5em} This test verifies that if an export operation is interrupted, the original project data remains intact.
+
+The expected result was that no data corruption occurs and the original project state is preserved after a failed export.
+
+The actual result confirmed that project data remained intact and was not corrupted during simulated failure conditions.
 
 \item \textbf{test-FR-XM-8 Export Performance Validation}
 
-\hspace{1.5em} This test ensures that export meets the minimum rate threshold (F241). The actual result is supported by performance testing and backend validation.
+\hspace{1.5em} This test ensures that the export process meets the required performance thresholds.
+
+The expected result was that export operations complete within acceptable performance limits.
+
+The actual result confirmed that export performance met the required thresholds as expected.
+
+
 \end{enumerate}
 
 \medskip
@@ -331,7 +584,7 @@ Additional qualitative feedback suggested that edited voxels could be made more 
 Overall, the results demonstrate that the system satisfies the usability requirements defined in the VnV plan, with the majority of evaluated features receiving the highest usability rating.
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{images/usability_chart.png}
+\includegraphics[width=0.8\textwidth]{images/usability_chart.pdf}
 \caption{User Usability Survey Results}
 \end{figure}
 
@@ -403,15 +656,17 @@ The relationship between voxel count and import time is illustrated in Figure~\r
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{images/import_scalability.png}
+\includegraphics[width=0.8\textwidth]{images/import_scalability.pdf}
 \caption{Import Time vs Voxel Count}
 \label{fig:import_scalability}
 \end{figure}
 
 User interaction counts were measured for core system actions including model import, viewing operations, voxel editing, and export.
+The results of operation latency, measured in terms of user interaction counts rather than time, are summarized in Table~\ref{tab:operation-latency}.
 \begin{table}[H]
 \centering
-\caption{Operation Latency Results}
+\caption{Operation Latency Results (Measured in User Interaction Counts)}
+\label{tab:operation-latency}
 \begin{tabular}{|c|c|}
 \hline
 \textbf{Operation} & \textbf{Interactions} \\
@@ -426,12 +681,12 @@ Export Project & 3 \\
 \hline
 \end{tabular}
 \end{table}
-
+In this context, latency is defined as the number of user interactions required to complete a task rather than elapsed time. This approach reflects usability and efficiency, as fewer interactions indicate a more streamlined workflow. The results show that both simple and complex operations require a low and consistent number of interactions, demonstrating that the system maintains efficient user interaction regardless of task complexity.
 The latency for the various operations is visualized in Figure~\ref{fig:operation_latency}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{images/operation_latency.png}
+\includegraphics[width=0.8\textwidth]{images/operation_latency.pdf}
 \caption{Operation Latency Measurements}
 \label{fig:operation_latency}
 \end{figure}
@@ -440,7 +695,7 @@ Resource usage during testing remained within acceptable limits. CPU usage range
 
 \subsubsection{Discussion}
 
-The results demonstrate that the system scales appropriately with increasing voxel counts while maintaining acceptable performance. Import times increased gradually as model size grew, indicating that the voxelization and visualization pipeline handles larger models efficiently.
+The results demonstrate that the system scales appropriately with increasing voxel counts while maintaining acceptable performance. Import times increase with voxel count; however, the increase is sub-linear rather than strictly linear. This indicates that the system scales efficiently as model size grows, since the rate of increase in processing time slows relative to the increase in voxel count. This behavior suggests that the voxelization and import pipeline is optimized and does not degrade significantly for larger models.%Import times increased gradually as model size grew, indicating that the voxelization and visualization pipeline handles larger models efficiently.
 
 Core editing operations such as voxel selection and modification were executed with minimal latency, allowing users to interact with the voxel editor without noticeable delay. Export operations required slightly more processing time due to file writing and data serialization but remained within acceptable limits.
 
@@ -1394,6 +1649,7 @@ The following section analyzes the code coverage of the TypeScript code in the f
 \end{figure}
 
 The frontend codebase has an overall code coverage of 83.08\% for statements, 65.98\% for branches, 85.39\% for functions, and 84.14\% for lines. The code coverage overall met the VnV Plan's requirement of 50\%. The team will continue to improve the coverage of the frontend codebase in the future.
+\nocite{*}
 \bibliographystyle{plainnat}
 \bibliography{../../refs/References}
 
