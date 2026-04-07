@@ -15,4 +15,4 @@ The important folders and files for this folder are as follows:
 
 This document contains all defined requirements, and includes further information about goals & stakeholders, detailed development plans, and traces between requirements and other sections of documentation.
 
-Usage: Run `make pdf` to regenerate documentation as `index.pdf`. Rename and replace SRS.pdf with this generated file.
+Usage: Run `make pdf` to regenerate documentation.
