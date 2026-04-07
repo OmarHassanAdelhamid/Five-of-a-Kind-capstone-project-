@@ -1729,11 +1729,28 @@ are implicitly tested for by the following system tests and/or unit tests.
 
 \section{Unit Test Description}
 
-\noindent To avoid repeating repetitive information, to view the full set of unit tests, view the backend test cases within src/backend/tests
-and frontend tests within src/frontend (all test files have test as suffix). For backend unit tests, cases were selected with the aim
-to execute each if statement or possibility either way, as well as triggering foreseeable error cases that should be verifiably caught.
-Names of all test cases were also made to be self-descriptive, not requiring additional documentation within the code to explain what they
-test (e.g. the entire test case is in the name of the function).
+\noindent To avoid repeating repetitive information, to view the full set of unit tests, view the backend test cases within 
+\href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/tree/main/src/backend/tests}{src/backend/tests}
+and frontend tests within \href{https://github.com/OmarHassanAdelhamid/Five-of-a-Kind-capstone-project-/tree/main/src/frontend}{src/frontend} 
+(all test files have test as suffix). For backend unit tests, cases were selected with the aim
+to execute each if statement or possibility either way, as well as triggering foreseeable error cases that should be verifiably caught. 
+Edge cases were also identified by inspecting each function, investigating potential misinputs, and creating a test case for the specific
+misinput to observe the behavior. Testing with a combination of mocks and real files was also performed to balance testing upper-level modules
+in isolation, as well as ensuring lower-level modules can operate on the actual files AutoVox deals with. \\
+
+\noindent Some major test classes are as follows:\\
+
+\begin{itemize}
+  \item \textbf{Model Editing Tests}: Testing that both valid and invalid model edits to properties and additions/deletions are handled correctly.
+  \item \textbf{Model Surface Finding Tests}: A set of tests to ensure the correct and minimal number of voxels are being returned from models for rendering.
+  \item \textbf{Model Tracking Tests:} Testing that valid and invalid requests from the model are returned as expected.
+  \item \textbf{Edit Router Tests:} Testing of a crucial interaction controller router implementation through mocking. Aimed to cover edge cases that would likely not happen from the frontend to verify that odd behavior would not occur.
+  \item \textbf{Project Management Router Tests:} A set of tests for another important interaction controller implementation through mocking that covers that the correct services and functions are being called during project creation.
+\end{itemize}
+
+\noindent Test cases were organized in frontend and backend into one file per module, with folders for each set of modules (e.g. in the backend, 
+test files were split between routers and services). Names of all test cases were also made to be self-descriptive, not requiring additional documentation within the code to explain what they
+test (e.g. the entire test case is in the name of the function). 
 
 \clearpage
 
@@ -1745,14 +1762,8 @@ test (e.g. the entire test case is in the name of the function).
 \clearpage
 
 \section{Appendix}
-
-This is where you can place additional information.
-
 \subsection{Symbolic Parameters}
-
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
-
+This section illustrates all symbolic parameters used in the above system tests in one place for maintenance and consultation ease.
 
 \begin{itemize}
   \item \textbf{OPTIMAL\_VOXEL\_SIZE} = 5.5nm
