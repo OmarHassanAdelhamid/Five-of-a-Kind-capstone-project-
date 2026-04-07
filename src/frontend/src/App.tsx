@@ -54,6 +54,7 @@ function App() {
   const [isPartitionsPanelOpen, setIsPartitionsPanelOpen] = useState(false);
   const [exportWarnings, setExportWarnings] = useState<string[]>([]);
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
+  const [defaultMaterial, setDefaultMaterial] = useState<number>(1);
   const [welcomeInitialStep, setWelcomeInitialStep] = useState<
     | 'choice'
     | 'select-model'
@@ -257,31 +258,34 @@ function App() {
     }
   }, [projectName, selectedPartition]);
 
-  const handleDownloadCSV = useCallback(async (force = false) => {
-    if (!projectName.trim()) {
-      alert('Please select a project to download.');
-      return;
-    }
+  const handleDownloadCSV = useCallback(
+    async (force = false) => {
+      if (!projectName.trim()) {
+        alert('Please select a project to download.');
+        return;
+      }
 
-    try {
-      const blob = await downloadVoxelCSV(projectName, projectName, force);
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${projectName}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } catch (error) {
-      console.error('Failed to download CSV', error);
-      alert(
-        error instanceof Error
-          ? error.message
-          : 'Failed to download CSV. Please try again.',
-      );
-    }
-  }, [projectName]);
+      try {
+        const blob = await downloadVoxelCSV(projectName, projectName, force);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${projectName}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } catch (error) {
+        console.error('Failed to download CSV', error);
+        alert(
+          error instanceof Error
+            ? error.message
+            : 'Failed to download CSV. Please try again.',
+        );
+      }
+    },
+    [projectName],
+  );
 
   // Menu handlers
   const handleOpenFile = useCallback(() => {
@@ -363,6 +367,7 @@ function App() {
         defaultMaterial,
       } = payload;
 
+      setDefaultMaterial(defaultMaterial);
       try {
         onProgress?.('Voxelizing model...');
         const res = await voxelizeModel({
@@ -827,6 +832,7 @@ function App() {
         selectedVoxelIndices={selectedVoxels}
         selectedVoxelIndicesArray={selectedVoxelIndicesArray}
         isLayerEditingMode={isLayerEditingMode}
+        defaultMaterial={defaultMaterial}
       />
     </div>
   );

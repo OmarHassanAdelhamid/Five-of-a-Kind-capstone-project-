@@ -4,8 +4,9 @@
  * @author Khalid Farag
  * @lastModified 2026/04/03
  */
-import { useCallback, useEffect, useRef } from 'react';
+import { use, useCallback, useEffect, useRef, useState } from 'react';
 import type { LayerResponse, LayerVoxel } from '../../utils/api';
+import { DEFAULT_LAYER_MATERIALS } from '../LayerEditor/layerMaterialsDefaults';
 import {
   drawGridCanvas,
   type VoxelPosition,
@@ -34,6 +35,7 @@ interface Layer2DGridProps {
   onLayerDown?: () => void;
   canGoUp?: boolean;
   canGoDown?: boolean;
+  defaultMaterial?: number;
 }
 
 export const Layer2DGrid = ({
@@ -56,11 +58,13 @@ export const Layer2DGrid = ({
   onLayerDown,
   canGoUp = false,
   canGoDown = false,
+  defaultMaterial,
 }: Layer2DGridProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   // Position data populated by draw and consumed by interaction handlers
   const voxelPositionsRef = useRef<VoxelPosition[]>([]);
   const emptyCellPositionsRef = useRef<EmptyCellPosition[]>([]);
+  const [cellDefaultColor, setCellDefaultColor] = useState<string>(cellColor);
 
   // Interaction handlers
   const {
@@ -85,6 +89,14 @@ export const Layer2DGrid = ({
     onVoxelsRemove,
   });
 
+  useEffect(() => {
+    setCellDefaultColor(
+      defaultMaterial != null
+        ? materialColors[defaultMaterial] || cellColor
+        : cellColor,
+    );
+  }, [defaultMaterial, materialColors, cellColor]);
+
   // Draws the grid onto the canvas using the drawGridCanvas function
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -96,7 +108,7 @@ export const Layer2DGrid = ({
       height,
       zoom,
       materialColors,
-      cellColor,
+      cellColor: cellDefaultColor,
       selectedCellColor,
       backgroundColor,
       selectedVoxelIndices,

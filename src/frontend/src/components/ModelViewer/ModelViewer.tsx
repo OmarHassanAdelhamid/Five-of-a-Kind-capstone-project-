@@ -76,6 +76,7 @@ interface ModelViewerProps {
   /** When set with `onPartitionsPanelOpenChange`, the partitions slide-over is controlled by the parent (avoids duplicate panels). */
   isPartitionsPanelOpen?: boolean;
   onPartitionsPanelOpenChange?: (open: boolean) => void;
+  defaultMaterial?: number;
 }
 
 /** Exposes layer-editor clipboard helpers upward; inner UI stays encapsulated. */
@@ -104,6 +105,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
       projectFetchStatus = 'idle',
       isPartitionsPanelOpen: isPartitionsPanelOpenProp,
       onPartitionsPanelOpenChange,
+      defaultMaterial,
     },
     ref,
   ) {
@@ -1011,6 +1013,7 @@ export const ModelViewer = forwardRef<LayerEditorHandle, ModelViewerProps>(
           isOpen={isLayerEditorOpen}
           onClose={() => setIsLayerEditorOpen(false)}
           onVoxelsChanged={onVoxelsChanged}
+          defaultMaterial={defaultMaterial}
         />
       </div>
     );

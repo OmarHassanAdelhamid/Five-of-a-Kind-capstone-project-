@@ -38,6 +38,7 @@ interface LayerEditorProps {
   isOpen: boolean;
   onClose: () => void;
   onVoxelsChanged?: () => void | Promise<void>;
+  defaultMaterial?: number;
 }
 
 export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
@@ -53,6 +54,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
       isOpen,
       onClose,
       onVoxelsChanged,
+      defaultMaterial,
     },
     ref,
   ) {
@@ -258,6 +260,7 @@ export const LayerEditor = forwardRef<LayerEditorHandle, LayerEditorProps>(
               }}
               canGoUp={canGoUp}
               canGoDown={canGoDown}
+              defaultMaterial={defaultMaterial}
             />
             <div className="layer-header-block">
               {selectedLayerData && (
