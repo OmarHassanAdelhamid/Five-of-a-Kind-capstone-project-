@@ -111,6 +111,7 @@ More detail: [src/README.md](src/README.md).
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute (issues, PRs, tests) |
 | [CodeOfConduct.md](CodeOfConduct.md) | Contributor Covenant community standards |
 | [LICENSE](LICENSE) | MIT License |
+| [PRIVACY.md](PRIVACY.md) | Local processing and GitHub / community privacy notes |
 
 ---
 

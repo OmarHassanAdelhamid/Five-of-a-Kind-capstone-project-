@@ -20,6 +20,7 @@ import {
 } from './utils/api';
 import { ExportWarningDialog } from './components/ExportWarningDialog/ExportWarningDialog';
 import type { LayerEditorHandle } from './components/LayerEditor';
+import { HELP_LINKS } from './constants/helpLinks';
 
 function App() {
   /** Drives StatusMessage while /api/project voxel payload is loading (parent state; ModelViewer owns STL mesh status). */
@@ -607,15 +608,15 @@ function App() {
   }, []);
 
   const handleViewManual = useCallback(() => {
-    window.open('/docs', '_blank');
+    window.open(HELP_LINKS.userManualPdf, '_blank');
   }, []);
 
   const handleLicense = useCallback(() => {
-    alert('License information would be displayed here.');
+    window.open(HELP_LINKS.license, '_blank');
   }, []);
 
   const handlePrivacy = useCallback(() => {
-    alert('Privacy statement would be displayed here.');
+    window.open(HELP_LINKS.privacy, '_blank');
   }, []);
 
   const handleAbout = useCallback(() => {
